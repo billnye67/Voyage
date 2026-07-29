@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Project · Code a Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;padding:24px 16px 60px}
+  .wrap{max-width:680px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .hero{background:#2a1e4a;color:#fff;border-radius:18px;padding:24px 24px 22px;margin-bottom:12px;box-shadow:5px 5px 0 rgba(42,30,74,.2);position:relative;overflow:hidden}
+  .hero .kick{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c3b6e8;margin-bottom:8px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:1.08;margin-bottom:8px}
+  .hero p{font-size:15px;line-height:1.5;color:#e5dff5;max-width:90%}
+  .emoji{position:absolute;right:2px;top:-4px;font-size:74px;opacity:.16;transform:rotate(-12deg)}
+  .pbarwrap{display:flex;align-items:center;gap:12px;margin:16px 2px 20px}
+  .pbar{flex:1;height:8px;border-radius:5px;background:var(--blue-line);overflow:hidden}
+  .pfill{height:100%;width:0;background:var(--green);transition:width .35s}
+  .pcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+  .ms{background:var(--card);border:1.5px solid var(--blue-line);border-radius:15px;padding:18px 20px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(27,79,138,.07)}
+  .ms.done{border-color:var(--green)}
+  .ms-head{display:flex;gap:14px;align-items:flex-start}
+  .ms-num{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#2a1e4a;color:#fff;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center}
+  .ms.done .ms-num{background:var(--green)}
+  .ms-title{font-size:18px;font-weight:600;font-family:'Fraunces',serif}
+  .ms-goal{font-size:15px;line-height:1.55;color:var(--ink);margin:3px 0 0}
+  .ms-body{margin-top:14px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:12px;background:rgba(27,79,138,.09);color:var(--blue);padding:4px 10px;border-radius:6px}
+  .chip.math{background:rgba(240,102,63,.1);color:var(--accent)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;padding:8px 14px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .btn.soft{border-color:var(--blue-line);box-shadow:none;color:var(--blue)}
+  .reveal{display:none;margin-top:12px;font-size:14.5px;line-height:1.6;background:var(--paper);border-radius:10px;padding:12px 14px}
+  .reveal.show{display:block}
+  .reveal b{color:var(--ink)}
+  .coach{border-left:3px solid var(--accent)}
+  .mathlink{font-size:13px;color:var(--blue);text-decoration:none;font-weight:600;display:inline-block;margin-top:8px}
+  .mathlink:hover{text-decoration:underline}
+  .proof{margin-top:14px;border-top:1px dashed var(--blue-line);padding-top:14px}
+  .proof label{font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+  .drop{margin-top:8px;border:2px dashed var(--blue-line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:var(--muted);font-size:14px}
+  .drop:hover{border-color:var(--blue);color:var(--blue)}
+  .thumb{margin-top:10px;border-radius:10px;max-width:220px;border:1.5px solid var(--green)}
+  .donetag{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:13.5px;margin-top:10px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">Voyage</div><div class="crumb">Project · Grade 4</div></div>
+
+  <div class="hero">
+    <div class="emoji">\uD83C\uDFAE</div>
+    <div class="kick">Your project this month</div>
+    <h1>Code a game you can actually play</h1>
+    <p>Not \u201cdesign a game on paper\u201d \u2014 you\u2019ll <b>program</b> a real 2D game that runs, that you and your friends can play. Stuck? Ask for a hint. Screenshot each win \u2014 that\u2019s your proof. The math shows up right when your game needs it.</p>
+  </div>
+
+  <div class="pbarwrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 6 done</div>
+  </div>
+
+  <div id="milestones"></div>
+</div>
+
+<script>
+const PROJECT = {
+  id:"game_g4",
+  milestones:[
+    { id:"m1", title:"Get your character on screen", goal:"Make a character (a \u201csprite\u201d) show up on the screen. That\u2019s your hero.",
+      coach:"Start in Scratch (free, blocks you snap together) or a simple JS canvas if you\u2019re bold. Just get ONE thing to appear \u2014 a cat, a ship, a blob. Everything sits on a grid: the sprite has an x position (left-right) and a y position (up-down). Getting it to show up means giving it a spot on that grid.",
+      materials:["a computer","Scratch (scratch.mit.edu) \u2014 free, no download"],
+      math:[["coordinates (x, y)","4.G.1"],["place value","4.NBT.1"]], photo:"a screenshot of your character on screen" },
+    { id:"m2", title:"Make it move", goal:"Control your character with the arrow keys (or taps). Left, right, up, down.",
+      coach:"Moving = changing the x or y number a little bit every time a key is pressed. Right = add to x. Left = subtract from x. Up = subtract from y (screens count down from the top \u2014 sneaky!). If it moves the wrong way, you\u2019ve got a plus where you need a minus.",
+      materials:["your project from step 1"],
+      math:[["add & subtract","4.NBT.4"],["coordinates","4.G.1"]], photo:"a screenshot (or clip) of it moving" },
+    { id:"m3", title:"Add something to dodge or grab", goal:"Spawn coins to collect or enemies to dodge \u2014 things that appear and move.",
+      coach:"Decide: collect (coins) or avoid (enemies)? Make them appear at a spot and move across. Want them to keep coming? Spawn one every few seconds \u2014 that\u2019s a pattern with a rule. When your hero touches one, something should happen (we\u2019ll score it next step).",
+      materials:["your game so far"],
+      math:[["patterns","4.OA.5"],["factors & multiples","4.OA.4"]], photo:"a screenshot with coins/enemies in it" },
+    { id:"m4", title:"Make it keep score", goal:"Every coin grabbed adds points. Show the score on screen and watch it climb.",
+      coach:"A score is a number that goes up. Grab a coin \u2192 add points. Want a coin worth 10? Then 7 coins = 7 \u00d7 10. That\u2019s where multiplication sneaks into your game. Show the running total on screen so the player sees it grow.",
+      materials:["your game so far"],
+      math:[["multiplication","4.NBT.5"],["add & subtract","4.NBT.4"],["place value","4.NBT.1"]], photo:"a screenshot showing your score" },
+    { id:"m5", title:"Add winning and losing", goal:"Make the game end \u2014 a win when you hit a target score, a loss when you run out.",
+      coach:"A win/lose is a comparison: IF score is greater than or equal to your target \u2192 you win. IF lives hit 0 \u2192 game over. That \u201cis this number bigger than that number\u201d check is exactly comparing numbers \u2014 your game literally runs on it.",
+      materials:["your game so far"],
+      math:[["compare numbers","4.NBT.2"],["word problems","4.OA.3"]], photo:"a screenshot of your win or game-over screen" },
+    { id:"m6", title:"Make it yours & balance it", goal:"Customize it, then playtest: is it too easy or too hard? Log scores and tune it.",
+      coach:"Play it a bunch, write down the scores. Too easy (everyone wins fast)? Speed up the enemies. Too hard? Slow them down. Chart your playtest scores to SEE if it\u2019s balanced \u2014 that chart is a line plot. Real game designers do exactly this.",
+      materials:["your finished game","a place to log playtest scores"],
+      math:[["line plots","4.MD.4"],["patterns","4.OA.5"],["rounding","4.NBT.3"]], photo:"a screenshot of your final game + score log" }
+  ]
+};
+
+const SAVE_KEY = 'voyage_project_'+PROJECT.id;
+let state = { done:{} };
+try{ const r=localStorage.getItem(SAVE_KEY); if(r) state=JSON.parse(r); }catch(e){}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function render(){
+  const box = document.getElementById('milestones');
+  box.innerHTML = PROJECT.milestones.map((m,i)=>{
+    const done = !!state.done[m.id];
+    const mathChips = m.math.map(x=>`<span class="chip math">${x[0]}</span>`).join('');
+    const mathLinks = m.math.map(x=>`<a class="mathlink" href="math-course.html#${x[1]}">Learn: ${x[0]} \u2192</a>`).join('<br>');
+    return `
+    <div class="ms ${done?'done':''}" data-id="${m.id}">
+      <div class="ms-head">
+        <div class="ms-num">${done?'\u2714':i+1}</div>
+        <div style="flex:1">
+          <div class="ms-title">${m.title}</div>
+          <p class="ms-goal">${m.goal}</p>
+        </div>
+      </div>
+      <div class="ms-body">
+        <div class="row">
+          <button class="btn soft" data-act="hint">I\u2019m stuck \u2014 hint</button>
+          <button class="btn soft" data-act="mats">What do I use?</button>
+          ${mathChips}
+        </div>
+        <div class="reveal coach" data-role="hint"><b>Coach:</b> ${m.coach}<div>${mathLinks}</div></div>
+        <div class="reveal" data-role="mats"><b>You\u2019ll use:</b><br>\u2022 ${m.materials.join('<br>\u2022 ')}</div>
+        <div class="proof">
+          ${ done
+            ? `<div class="donetag">\u2714 Done \u2014 screenshot saved to your record</div><div data-role="thumbwrap"></div><button class="btn soft" data-act="redo" style="margin-top:10px;font-size:12px;padding:5px 10px">Redo</button>`
+            : `<label>Prove it: upload ${m.photo}</label>
+               <div class="drop" data-act="pick">\uD83D\uDCF8 &nbsp;tap to add a screenshot</div>
+               <input type="file" accept="image/*" class="hidden" data-role="file">
+               <div data-role="thumbwrap"></div>` }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const n = Object.keys(state.done).length;
+  document.getElementById('pcount').textContent = `${n} / ${PROJECT.milestones.length} done`;
+  document.getElementById('pfill').style.width = (n/PROJECT.milestones.length*100)+'%';
+  wire();
+}
+function wire(){
+  document.querySelectorAll('.ms').forEach(card=>{
+    const id = card.dataset.id;
+    card.querySelector('[data-act="hint"]')?.addEventListener('click',()=>toggle(card,'hint'));
+    card.querySelector('[data-act="mats"]')?.addEventListener('click',()=>toggle(card,'mats'));
+    const pick = card.querySelector('[data-act="pick"]');
+    const file = card.querySelector('[data-role="file"]');
+    if(pick && file){
+      pick.addEventListener('click',()=>file.click());
+      file.addEventListener('change',e=>{
+        const f=e.target.files[0]; if(!f) return;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+          card.querySelector('[data-role="thumbwrap"]').innerHTML=`<img class="thumb" src="${ev.target.result}">`;
+          state.done[id]=true; save(); setTimeout(render,500);
+        };
+        reader.readAsDataURL(f);
+      });
+    }
+    card.querySelector('[data-act="redo"]')?.addEventListener('click',()=>{ delete state.done[id]; save(); render(); });
+  });
+}
+function toggle(card,role){ card.querySelector(`[data-role="${role}"]`).classList.toggle('show'); }
+render();
+</script>
+</body>
+</html>

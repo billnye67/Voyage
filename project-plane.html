@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Project · Build a Plane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3f0e6; --ink:#16233a; --blue:#1b4f8a; --blue-line:#b9cbdf;
+    --accent:#f0663f; --muted:#5d6b7e; --grid:rgba(27,79,138,.10); --card:#fbfaf5; --green:#2e7d5b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;padding:24px 16px 60px}
+  .wrap{max-width:680px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+  .hero{background:var(--blue);color:#fff;border-radius:18px;padding:24px 24px 22px;margin-bottom:12px;box-shadow:5px 5px 0 rgba(27,79,138,.2);position:relative;overflow:hidden}
+  .hero .kick{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#bcd4ee;margin-bottom:8px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:1.08;margin-bottom:8px}
+  .hero p{font-size:15px;line-height:1.5;color:#e3edf7;max-width:90%}
+  .plane{position:absolute;right:-6px;top:-6px;font-size:76px;opacity:.14;transform:rotate(-18deg)}
+
+  .pbarwrap{display:flex;align-items:center;gap:12px;margin:16px 2px 20px}
+  .pbar{flex:1;height:8px;border-radius:5px;background:var(--blue-line);overflow:hidden}
+  .pfill{height:100%;width:0;background:var(--green);transition:width .35s}
+  .pcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+
+  .ms{background:var(--card);border:1.5px solid var(--blue-line);border-radius:15px;padding:18px 20px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(27,79,138,.07)}
+  .ms.done{border-color:var(--green)}
+  .ms-head{display:flex;gap:14px;align-items:flex-start}
+  .ms-num{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--blue);color:#fff;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center}
+  .ms.done .ms-num{background:var(--green)}
+  .ms-title{font-size:18px;font-weight:600;font-family:'Fraunces',serif}
+  .ms-goal{font-size:15px;line-height:1.55;color:var(--ink);margin:3px 0 0}
+  .ms-body{margin-top:14px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:12px;background:rgba(27,79,138,.09);color:var(--blue);padding:4px 10px;border-radius:6px}
+  .chip.math{background:rgba(240,102,63,.1);color:var(--accent)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;padding:8px 14px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .btn.soft{border-color:var(--blue-line);box-shadow:none;color:var(--blue)}
+  .reveal{display:none;margin-top:12px;font-size:14.5px;line-height:1.6;background:var(--paper);border-radius:10px;padding:12px 14px}
+  .reveal.show{display:block}
+  .reveal b{color:var(--ink)}
+  .coach{border-left:3px solid var(--accent)}
+  .mathlink{font-size:13px;color:var(--blue);text-decoration:none;font-weight:600;display:inline-block;margin-top:10px}
+  .mathlink:hover{text-decoration:underline}
+  .proof{margin-top:14px;border-top:1px dashed var(--blue-line);padding-top:14px}
+  .proof label{font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+  .drop{margin-top:8px;border:2px dashed var(--blue-line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:var(--muted);font-size:14px}
+  .drop:hover{border-color:var(--blue);color:var(--blue)}
+  .thumb{margin-top:10px;border-radius:10px;max-width:200px;border:1.5px solid var(--green)}
+  .donetag{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:13.5px;margin-top:10px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">Voyage</div><div class="crumb">Project · Grade 4</div></div>
+
+  <div class="hero">
+    <div class="plane">\u2708\uFE0F</div>
+    <div class="kick">Your project this month</div>
+    <h1>Build a plane that actually flies</h1>
+    <p>Not a kit. You figure it out with stuff around the house. Get stuck? Ask for a hint. Snap a photo at each win \u2014 that\u2019s your proof. The math you need shows up right when you need it.</p>
+  </div>
+
+  <div class="pbarwrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 6 done</div>
+  </div>
+
+  <div id="milestones"></div>
+</div>
+
+<script>
+/* ============================================================
+   PROJECT DATA — the plane. Goal-driven milestones (not baby
+   steps). Each has a coach hint, material ideas, the math it
+   pulls in (links into the course), and a photo checkpoint.
+   ============================================================ */
+const PROJECT = {
+  id:"plane_g4",
+  milestones:[
+    { id:"m1", title:"Get something in the air", goal:"Make any quick flyer and throw it a few different ways. Measure how far each one goes.",
+      coach:"Start dead simple \u2014 a folded paper plane counts. Throw it 5 times, changing one thing each time (harder, softer, tilt up, tilt down). Measure each throw with a ruler or by counting floor tiles. You\u2019re not building the real plane yet \u2014 you\u2019re getting a feel for what makes things fly.",
+      materials:["paper","a ruler or floor tiles to measure"],
+      math:[["measurement","4.MD.1"],["line plots","4.MD.4"]], photo:"a photo of your throw-distance log" },
+    { id:"m2", title:"Build wings that lift", goal:"Figure out a wing shape and size that keeps your plane up. Both wings have to match.",
+      coach:"Bigger wings usually mean more lift but more drag \u2014 test it. Cut wings from a foam food tray or cardboard. Here\u2019s the key: fold the plane in half first so both wings are cut identical. If one wing is bigger, it\u2019ll spin instead of fly. Ask yourself: how do I know both wings are exactly the same?",
+      materials:["foam food tray or cardboard","scissors","tape"],
+      math:[["area & perimeter","4.MD.3"],["symmetry","4.G.3"]], photo:"a photo of your cut wings" },
+    { id:"m3", title:"Balance it so it flies straight", goal:"Get your plane to glide level instead of nose-diving or flipping. It\u2019s all about where the weight sits.",
+      coach:"If it nose-dives, the weight\u2019s too far forward. If it flips up and stalls, too far back. Slide the wings forward/back, or add a paperclip to the nose bit by bit. Try moving it about 1/4 of the way, test, adjust. You\u2019re hunting for the balance point.",
+      materials:["paperclips (for nose weight)","tape"],
+      math:[["fractions","4.NF.4"],["add & subtract","4.NBT.4"]], photo:"a photo of your balanced plane" },
+    { id:"m4", title:"Engineer the propeller", goal:"Make a propeller that actually spins freely, powered by a rubber band. This is the hard one.", hard:true,
+      coach:"This is the part that separates a glider from a real plane \u2014 take your time. The prop needs to spin FREE on its shaft. Try: a bead or bottlecap as the bearing (it lets the shaft spin), a bent paperclip as the shaft, and blades cut from a plastic bottle or stiff cardstock. If it won\u2019t spin, the hole\u2019s too tight or the shaft\u2019s bent. Send a photo and I\u2019ll tell you what to fix. The blade angle matters \u2014 too flat and it won\u2019t bite the air.",
+      materials:["a bead or bottlecap (bearing)","paperclip (shaft)","plastic bottle or cardstock (blades)","rubber band (the motor)"],
+      math:[["angles","4.MD.5"],["protractor","4.MD.6"]], photo:"a photo (or video) of your prop spinning" },
+    { id:"m5", title:"Wind it up and fly", goal:"Rubber band = your engine. Wind the prop, launch, and measure how far and how long it flies.",
+      coach:"Wind the prop to twist up the rubber band \u2014 count your winds so you can repeat it. Launch level, not straight up. Measure the distance and time the airtime. Now you\u2019ve got real numbers: winds in, distance out. That relationship is where the math lives.",
+      materials:["your plane","a way to measure distance","a timer (a phone works)"],
+      math:[["multiplication","4.NBT.5"],["word problems","4.OA.2"]], photo:"a photo of your first real flight" },
+    { id:"m6", title:"Beat your own record", goal:"Change ONE thing, fly again, log it. Keep chasing a farther flight. Track every attempt.",
+      coach:"Real engineers change one variable at a time \u2014 if you change three things you won\u2019t know which one helped. Try: more winds, less nose weight, a steeper wing. Fly, measure, write it down. Make a chart of your flights over time and watch your best distance climb. That chart is proof you improved.",
+      materials:["your plane","your flight log"],
+      math:[["line plots","4.MD.4"],["patterns","4.OA.5"],["rounding","4.NBT.3"]], photo:"a photo of your flight log + best distance" }
+  ]
+};
+
+const SAVE_KEY = 'voyage_project_'+PROJECT.id;
+let state = { done:{} };
+try{ const r=localStorage.getItem(SAVE_KEY); if(r) state=JSON.parse(r); }catch(e){}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function render(){
+  const box = document.getElementById('milestones');
+  box.innerHTML = PROJECT.milestones.map((m,i)=>{
+    const done = !!state.done[m.id];
+    const mathChips = m.math.map(x=>`<span class="chip math">${x[0]}</span>`).join('');
+    const mathLinks = m.math.map(x=>`<a class="mathlink" href="math-course.html#${x[1]}">Learn: ${x[0]} \u2192</a>`).join('<br>');
+    return `
+    <div class="ms ${done?'done':''}" data-id="${m.id}">
+      <div class="ms-head">
+        <div class="ms-num">${done?'\u2714':i+1}</div>
+        <div style="flex:1">
+          <div class="ms-title">${m.title}${m.hard?' <span style="font-size:12px;color:var(--accent);font-family:\'Space Mono\',monospace;">\u2605 the hard one</span>':''}</div>
+          <p class="ms-goal">${m.goal}</p>
+        </div>
+      </div>
+      <div class="ms-body">
+        <div class="row">
+          <button class="btn soft" data-act="hint">I\u2019m stuck \u2014 hint</button>
+          <button class="btn soft" data-act="mats">What can I use?</button>
+          ${mathChips}
+        </div>
+        <div class="reveal coach" data-role="hint"><b>Coach:</b> ${m.coach}<div>${mathLinks}</div></div>
+        <div class="reveal" data-role="mats"><b>Stuff from around the house:</b><br>\u2022 ${m.materials.join('<br>\u2022 ')}</div>
+        <div class="proof">
+          ${ done
+            ? `<div class="donetag">\u2714 Done \u2014 photo saved to your record</div><div data-role="thumbwrap"></div><button class="btn soft" data-act="redo" style="margin-top:10px;font-size:12px;padding:5px 10px">Redo</button>`
+            : `<label>Prove it: upload ${m.photo}</label>
+               <div class="drop" data-act="pick">\uD83D\uDCF8 &nbsp;tap to add a photo</div>
+               <input type="file" accept="image/*" class="hidden" data-role="file">
+               <div data-role="thumbwrap"></div>` }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // progress
+  const n = Object.keys(state.done).length;
+  document.getElementById('pcount').textContent = `${n} / ${PROJECT.milestones.length} done`;
+  document.getElementById('pfill').style.width = (n/PROJECT.milestones.length*100)+'%';
+
+  wire();
+}
+
+function wire(){
+  document.querySelectorAll('.ms').forEach(card=>{
+    const id = card.dataset.id;
+    card.querySelector('[data-act="hint"]')?.addEventListener('click',()=>toggle(card,'hint'));
+    card.querySelector('[data-act="mats"]')?.addEventListener('click',()=>toggle(card,'mats'));
+    const pick = card.querySelector('[data-act="pick"]');
+    const file = card.querySelector('[data-role="file"]');
+    if(pick && file){
+      pick.addEventListener('click',()=>file.click());
+      file.addEventListener('change',e=>{
+        const f=e.target.files[0]; if(!f) return;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+          const wrap=card.querySelector('[data-role="thumbwrap"]');
+          wrap.innerHTML=`<img class="thumb" src="${ev.target.result}">`;
+          state.done[id]=true; save(); setTimeout(render,500);
+        };
+        reader.readAsDataURL(f);
+      });
+    }
+    card.querySelector('[data-act="redo"]')?.addEventListener('click',()=>{ delete state.done[id]; save(); render(); });
+  });
+}
+function toggle(card,role){ card.querySelector(`[data-role="${role}"]`).classList.toggle('show'); }
+
+render();
+</script>
+  <script src="tutor-widget.js"></script>
+</body>
+</html>

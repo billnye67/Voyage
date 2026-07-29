@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Grade 4 Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3f0e6; --ink:#16233a; --blue:#1b4f8a; --blue-line:#b9cbdf;
+    --accent:#f0663f; --muted:#5d6b7e; --grid:rgba(27,79,138,.10); --card:#fbfaf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;
+  }
+  .app{display:flex;max-width:1080px;margin:0 auto;min-height:100vh}
+
+  /* ---------- SIDEBAR: skill menu ---------- */
+  .side{width:290px;flex-shrink:0;border-right:1.5px solid var(--blue-line);padding:22px 16px;background:rgba(251,250,245,.6)}
+  .side .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px;margin-bottom:2px}
+  .side .sub{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .domain{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--blue-line)}
+  .skill-btn{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:none;border:none;cursor:pointer;
+    padding:9px 10px;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);line-height:1.25;margin-bottom:1px}
+  .skill-btn:hover{background:rgba(27,79,138,.07)}
+  .skill-btn.active{background:var(--blue);color:#fff;box-shadow:2px 2px 0 rgba(27,79,138,.25)}
+  .skill-btn .check{flex-shrink:0;font-size:13px;color:var(--blue-line);width:16px;text-align:center}
+  .skill-btn.done .check{color:#2e7d5b}
+  .skill-btn.active .check{color:#fff}
+  .skill-btn.done .stitle{color:var(--muted)}
+  .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
+  .stitle{flex:1}
+
+  /* ---------- MAIN: lesson player ---------- */
+  .main{flex:1;padding:26px 30px 60px;min-width:0}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .progress{display:flex;gap:6px;margin-bottom:22px}
+  .progress .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line);transition:background .25s}
+  .progress .seg.on{background:var(--blue)}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:28px 26px;min-height:340px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;line-height:1.15;margin-bottom:14px}
+  .card p{font-size:16px;line-height:1.6;margin-bottom:12px}
+  .card p b{font-weight:600}
+  .payoff{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:15.5px;margin-top:4px}
+  .payoff b{font-weight:700}
+  .qlist{margin:8px 0}
+  .qlist .q{font-size:16px;line-height:1.5;padding:8px 0;border-bottom:1px dashed var(--blue-line)}
+  .qlist .q:last-child{border-bottom:none}
+  .ans{color:#2e7d5b;font-weight:600;margin-left:6px;display:none}
+  .ans.show{display:inline}
+  .figure{margin:8px 0}
+  .figure svg{width:100%;height:auto;max-width:420px;display:block;margin:0 auto}
+  .amx{fill:rgba(27,79,138,.10);stroke:var(--blue);stroke-width:1.5}
+  .aml{font-family:'Space Mono',monospace;font-size:11px;fill:var(--muted)}
+  .amt{font-family:'Space Grotesk',sans-serif;fill:var(--ink)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;padding:10px 18px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.ghost{border-color:var(--blue-line);box-shadow:none;color:var(--muted)}
+  .btn.sm{font-size:13px;padding:7px 13px;box-shadow:2px 2px 0 var(--ink)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+  .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
+  .proj-note b{color:var(--accent);font-style:normal}
+  @media(max-width:760px){
+    .app{flex-direction:column}
+    .side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .main{padding:22px 18px 50px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side">
+    <div class="brand">Voyage</div>
+    <div class="sub">Grade 4 · Math</div>
+    <div id="pcount" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px"></div>
+    <div id="pbar" style="height:5px;border-radius:3px;background:var(--blue-line);margin-bottom:6px;overflow:hidden"><div id="pfill" style="height:100%;width:0;background:#2e7d5b;transition:width .3s"></div></div>
+    <button class="btn ghost sm" id="resetBtn" style="font-size:11px;padding:4px 9px;margin-bottom:10px">Reset progress</button>
+    <div id="menu"></div>
+  </nav>
+  <main class="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="progress" id="progress"></div>
+    <div class="card" id="card"></div>
+    <div class="nav">
+      <button class="btn ghost" id="back">Back</button>
+      <span class="crumb" id="counter" style="margin:0"></span>
+      <button class="btn" id="next">Next</button>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   COURSE DATA — all 28 grade-4 math skills. This is the whole
+   math course as data. To add a subject/grade, you make another
+   object like this. The player below never changes.
+   Each skill = 4 cards: learn / example / practice / prove-it.
+   `proj` = where this skill shows up in a real build (the hook).
+   ============================================================ */
+const COURSE = {
+  subject: "Grade 4 Math",
+  domains: [
+  { name:"Operations & Algebraic Thinking", skills:[
+    { code:"4.OA.1", title:"Multiplication as comparison", proj:"Your plane flies \u201c3 times as far\u201d after a tweak \u2014 that\u2019s this.",
+      cards:[
+        {tag:"Learn", body:`<p>You know 5 \u00d7 3 means \u201c5 groups of 3.\u201d There\u2019s a second way to read it: as a <b>comparison</b>. \u201c15 is <b>3 times as many as</b> 5\u201d means 15 = 3 \u00d7 5.</p><p>The phrase <b>\u201ctimes as many\u201d</b> is the signal. It always means multiply.</p>`},
+        {tag:"Example", body:`<p>A whale is <b>6 times as heavy</b> as an orca. An orca is 5 tons.</p><p>6 times as heavy \u2192 6 \u00d7 5 = <b>30 tons</b>. Say it back: \u201c30 is 6 times as many as 5.\u201d</p>`},
+        {tag:"Your turn", practice:[["Write \u201c24 is 4 times as many as 6\u201d as an equation","24 = 4 \u00d7 6"],["A sloth sleeps 5 times as long as a cat\u2019s 4 hours. How long?","20 hours"],["Ben has 3 stickers. Mia has 7 times as many. How many?","21"]]},
+        {tag:"Prove it", body:`<p>A student wrote \u201c8 is 2 times as many as 5.\u201d True? Explain how you know.</p>`, reveal:`2 \u00d7 5 = 10, not 8. \u201c2 times as many as 5\u201d is 10.`}
+      ]},
+    { code:"4.OA.2", title:"Multiply & divide word problems", proj:"Sharing coins between game rounds \u2014 multiply or divide? You decide.",
+      cards:[
+        {tag:"Learn", body:`<p>Word problems don\u2019t tell you the operation \u2014 the words do. <b>\u201ctimes as many,\u201d \u201ceach,\u201d \u201cper\u201d</b> usually mean multiply. <b>\u201cshared equally,\u201d \u201csplit into,\u201d \u201chow many groups\u201d</b> usually mean divide.</p><p>Building a bigger amount \u2192 multiply. Breaking one apart \u2192 divide.</p>`},
+        {tag:"Example", body:`<p>\u201c36 apples shared equally among 4 baskets.\u201d Shared equally \u2192 divide \u2192 36 \u00f7 4 = <b>9 per basket</b>.</p><p>Flip it: \u201c4 baskets, 9 each \u2014 how many total?\u201d \u2192 4 \u00d7 9 = 36. Same numbers, opposite jobs.</p>`},
+        {tag:"Your turn", practice:[["5 shelves hold 8 books each. How many books?","40"],["40 kids split into 5 equal teams. How many per team?","8"],["A rope 3 times as long as a 7 ft rope is how long?","21 ft"]]},
+        {tag:"Prove it", body:`<p>\u201c18 cookies shared equally by 3 friends.\u201d A student did 18 \u00d7 3 = 54. What went wrong?</p>`, reveal:`They multiplied. \u201cShared equally\u201d means divide: 18 \u00f7 3 = 6.`}
+      ]},
+    { code:"4.OA.3", title:"Multi-step problems & remainders", proj:"\u201cHow many rubber-band winds for 5 flights?\u201d \u2014 two steps, plus leftovers.",
+      cards:[
+        {tag:"Learn", body:`<p>Some problems take two or more steps \u2014 you find a hidden middle number first, then finish. And when division isn\u2019t even, the leftover is the <b>remainder</b>. What you do with it depends on the question.</p>`},
+        {tag:"Example", body:`<p>\u201cA bus holds 30 kids. 100 kids go.\u201d 100 \u00f7 30 = 3 remainder 10. Three buses hold 90 \u2014 but 10 kids are left standing, so round <b>up to 4 buses</b>.</p>`},
+        {tag:"Your turn", practice:[["A carton holds 6 eggs. You have 27. Full cartons and leftovers?","4 cartons, 3 left"],["Tickets cost $8. You have $50. How many can you buy?","6"],["24 kids in teams of 4, each team gets 3 markers. Total markers?","18"]]},
+        {tag:"Prove it", body:`<p>\u201c45 kids need vans holding 8 each.\u201d A student says 5 vans. Right?</p>`, reveal:`45 \u00f7 8 = 5 r 5. Five vans hold 40; 5 kids are left, so you need a 6th van. Answer is 6.`}
+      ]},
+    { code:"4.OA.4", title:"Factors, multiples, prime & composite", proj:"Splitting a spinner into equal parts \u2014 which numbers divide evenly?",
+      cards:[
+        {tag:"Learn", body:`<p>A <b>factor</b> divides evenly into a number (no remainder). A <b>multiple</b> is the flip side. A <b>prime</b> has exactly two factors (1 and itself). A <b>composite</b> has more than two. Find factors in pairs: 1\u00d712, 2\u00d76, 3\u00d74.</p>`},
+        {tag:"Example", body:`<p>Factors of 18: 1\u00d718, 2\u00d79, 3\u00d76. So <b>1, 2, 3, 6, 9, 18</b>. Six factors \u2192 <b>composite</b>.</p>`},
+        {tag:"Your turn", practice:[["List all factors of 20","1, 2, 4, 5, 10, 20"],["Is 13 prime or composite?","Prime"],["Name three multiples of 5","5, 10, 15 (any)"]]},
+        {tag:"Prove it", body:`<p>A student says 9 is prime. Prove them right or wrong by listing its factors.</p>`, reveal:`9 has factors 1, 3, 9 \u2014 three factors, so it\u2019s composite, not prime.`}
+      ]},
+    { code:"4.OA.5", title:"Generate & analyze patterns", proj:"Enemy waves that grow each level \u2014 a rule, plus what it secretly does.",
+      cards:[
+        {tag:"Learn", body:`<p>A pattern follows a <b>rule</b> \u2014 do the same thing each step. \u201cStart at 3, add 5\u201d \u2192 3, 8, 13, 18\u2026 The skill is two-way: make the pattern, <b>and</b> notice hidden features the rule never mentioned.</p>`},
+        {tag:"Example", body:`<p>\u201cStart at 2, add 4\u201d \u2192 2, 6, 10, 14, 18. Hidden feature: they\u2019re all even. The rule didn\u2019t say that \u2014 you spotted it.</p>`},
+        {tag:"Your turn", practice:[["Start at 1, multiply by 2. First 5 numbers?","1, 2, 4, 8, 16"],["Next: 5, 10, 15, 20, __?","25"],["In 4, 8, 12, 16\u2026 all even or all odd?","All even"]]},
+        {tag:"Prove it", body:`<p>Rule: \u201cstart at 7, add 10.\u201d A student writes 7, 17, 27, 38. One number breaks the rule \u2014 which?</p>`, reveal:`38 is wrong; 27 + 10 = 37.`}
+      ]}
+  ]},
+  { name:"Place Value & Big-Number Math", skills:[
+    { code:"4.NBT.1", title:"Place value to 1,000,000", proj:"Big high scores \u2014 why the left digit is worth way more.",
+      cards:[
+        {tag:"Learn", body:`<p>Each place is <b>10 times bigger</b> than the place to its right. In 3,330 the three 3s mean 3,000, 300, and 30 \u2014 the position decides the value.</p>`},
+        {tag:"Example", body:`<p>In 5,500, the left 5 is 5,000 and the right 5 is 500. 5,000 is <b>10 times</b> 500. Move one place left \u2192 \u00d710.</p>`},
+        {tag:"Your turn", practice:[["In 4,400, how many times bigger is the left 4?","10 times"],["Value of the 6 in 6,214?","6,000"],["Value of the 8 in 3,801?","800"]]},
+        {tag:"Prove it", body:`<p>A student says the left 2 in 2,200 is 10 times the other 2. Right? Explain.</p>`, reveal:`Yes \u2014 2,000 \u00f7 200 = 10. Each place to the left is \u00d710.`}
+      ]},
+    { code:"4.NBT.2", title:"Read, write & compare numbers", proj:"Ranking high scores on the leaderboard.",
+      cards:[
+        {tag:"Learn", body:`<p>Big numbers: digits (4,582), words (four thousand\u2026), or expanded (4,000 + 500 + 80 + 2). To compare, line up by place value, check left to right \u2014 the first different place decides it. <b>&gt;</b> greater, <b>&lt;</b> less.</p>`},
+        {tag:"Example", body:`<p>3,482 vs 3,600. Thousands match. Hundreds: 4 &lt; 6. So 3,482 <b>&lt;</b> 3,600 \u2014 you didn\u2019t even need the last digits.</p>`},
+        {tag:"Your turn", practice:[["Write 6,209 in expanded form","6,000 + 200 + 9"],["7,150 __ 7,105","&gt;"],["Write \u201cfive thousand forty\u201d as digits","5,040"]]},
+        {tag:"Prove it", body:`<p>A student says 2,899 &gt; 3,000 because 899 is big. What\u2019s the mistake?</p>`, reveal:`Thousands come first: 2 &lt; 3, so 2,899 &lt; 3,000.`}
+      ]},
+    { code:"4.NBT.3", title:"Rounding", proj:"Showing an \u201capprox distance\u201d on your flight log.",
+      cards:[
+        {tag:"Learn", body:`<p>Rounding finds the nearest clean number. Look at the digit <b>one place right</b> of where you\u2019re rounding: 5 or more \u2192 round up, 4 or less \u2192 stay. Everything right becomes zero.</p>`},
+        {tag:"Example", body:`<p>Round 3,472 to the nearest hundred. Hundreds digit is 4; one right is 7 (\u2265 5), so round up: <b>3,500</b>.</p>`},
+        {tag:"Your turn", practice:[["Round 62 to the nearest ten","60"],["Round 3,850 to the nearest hundred","3,900"],["Round 7,432 to the nearest thousand","7,000"]]},
+        {tag:"Prove it", body:`<p>A student rounds 448 to the nearest hundred and gets 500. Right?</p>`, reveal:`No \u2014 tens digit is 4 (less than 5), so round down to 400.`}
+      ]},
+    { code:"4.NBT.4", title:"Add & subtract big numbers", proj:"Totalling points across all your flight attempts.",
+      cards:[
+        {tag:"Learn", body:`<p>Stack them so place values line up. Work right to left. Past 9 in a column \u2192 <b>carry</b>. Can\u2019t subtract \u2192 <b>borrow</b> 10 from the next place.</p>`},
+        {tag:"Example", body:`<p>3,476 + 2,858: ones 6+8=14 (carry 1), tens 7+5+1=13 (carry 1), hundreds 4+8+1=13 (carry 1), thousands 3+2+1=6 \u2192 <b>6,334</b>.</p>`},
+        {tag:"Your turn", practice:[["452 + 379","831"],["800 \u2212 356","444"],["5,204 \u2212 1,678","3,526"]]},
+        {tag:"Prove it", body:`<p>A student does 268 + 145 = 303. Which column did they mess up?</p>`, reveal:`Real answer 413. Ones 8+5=13 needs a carry into tens \u2014 they dropped it.`}
+      ]},
+    { code:"4.NBT.5", title:"Multi-digit multiplication", proj:"Score = points-per-target \u00d7 targets hit. Your game literally needs this.", figure:true,
+      cards:[
+        {tag:"Learn", body:`<p>Never multiply the big number all at once. Break it into place-value pieces, multiply each, add. Picture a rectangle \u2014 <b>4 \u00d7 213</b> split into 200 + 10 + 3:</p>
+          <div class="figure"><svg viewBox="0 0 440 116">
+            <rect class="amx" x="30" y="24" width="240" height="64" rx="4"/><rect class="amx" x="274" y="24" width="86" height="64" rx="4"/><rect class="amx" x="364" y="24" width="56" height="64" rx="4"/>
+            <text class="aml" x="150" y="16" text-anchor="middle">200</text><text class="aml" x="317" y="16" text-anchor="middle">10</text><text class="aml" x="392" y="16" text-anchor="middle">3</text>
+            <text class="amt" x="150" y="50" text-anchor="middle" font-size="13">4\u00d7200</text><text class="amt" x="150" y="72" text-anchor="middle" font-size="17" font-weight="600">800</text>
+            <text class="amt" x="317" y="50" text-anchor="middle" font-size="12">4\u00d710</text><text class="amt" x="317" y="72" text-anchor="middle" font-size="16" font-weight="600">40</text>
+            <text class="amt" x="392" y="52" text-anchor="middle" font-size="11">4\u00d73</text><text class="amt" x="392" y="72" text-anchor="middle" font-size="15" font-weight="600">12</text>
+            <text class="amt" x="16" y="60" text-anchor="middle" font-size="15" font-weight="600">4</text>
+          </svg></div>
+          <div class="payoff">800 + 40 + 12 = <b>852</b>. One hard problem became three easy ones.</div>`},
+        {tag:"Example", body:`<p>34 \u00d7 12: split both \u2192 30+4 and 10+2. Four pieces: 30\u00d710=300, 4\u00d710=40, 30\u00d72=60, 4\u00d72=8. Add: <b>408</b>.</p>`},
+        {tag:"Your turn", practice:[["3 \u00d7 142","426"],["6 \u00d7 253","1,518"],["23 \u00d7 15","345"],["4 \u00d7 1,206","4,824"]]},
+        {tag:"Prove it", body:`<p>A student says 27 \u00d7 3 = 61. Break 27 into 20 + 7 \u2014 what piece did they miss?</p>`, reveal:`20\u00d73=60, 7\u00d73=21, total 81. They forgot the 7\u00d73=21.`}
+      ]},
+    { code:"4.NBT.6", title:"Division with remainders", proj:"Splitting your total coins evenly into shop items.",
+      cards:[
+        {tag:"Learn", body:`<p>Division asks \u201chow many equal groups?\u201d Break the number into friendly chunks you can divide, then combine. Leftover = <b>remainder</b>. Check: answer \u00d7 divisor + remainder = the original.</p>`},
+        {tag:"Example", body:`<p>96 \u00f7 4: split into 80 + 16. 80\u00f74=20, 16\u00f74=4 \u2192 <b>24</b>. Check: 24\u00d74=96. And 97 \u00f7 4 = 24 remainder 1.</p>`},
+        {tag:"Your turn", practice:[["84 \u00f7 4","21"],["75 \u00f7 5","15"],["50 \u00f7 6","8 remainder 2"]]},
+        {tag:"Prove it", body:`<p>A student says 68 \u00f7 4 = 16. Check by multiplying back.</p>`, reveal:`16\u00d74 = 64, not 68. Real answer 17 (17\u00d74 = 68).`}
+      ]}
+  ]},
+  { name:"Fractions & Decimals", skills:[
+    { code:"4.NF.1", title:"Equivalent fractions", proj:"Your health bar at 2/4 vs 1/2 \u2014 same amount, shown two ways.",
+      cards:[
+        {tag:"Learn", body:`<p>Different-looking fractions can be the same amount \u2014 1/2 and 2/4 both cover half. Multiply (or divide) top <b>and</b> bottom by the same number. More pieces, but each smaller, so the total stays equal.</p>`},
+        {tag:"Example", body:`<p>Is 3/4 = 6/8? Multiply 3/4 top and bottom by 2 \u2192 6/8. <b>Yes, equivalent</b>.</p>`},
+        {tag:"Your turn", practice:[["A fraction equal to 1/3 with denominator 6","2/6"],["Is 2/5 equal to 4/10?","Yes"],["Simplify 6/8","3/4"]]},
+        {tag:"Prove it", body:`<p>A student says 2/3 = 4/9 because they \u201cdoubled.\u201d What went wrong?</p>`, reveal:`Multiply BOTH by 2: 2/3 = 4/6, not 4/9.`}
+      ]},
+    { code:"4.NF.2", title:"Comparing fractions", proj:"Which power-up is stronger \u2014 3/4 charge or 2/3?",
+      cards:[
+        {tag:"Learn", body:`<p>Different bottoms? Two tricks: give them the <b>same denominator</b> then compare tops, or compare each to <b>1/2</b>. Same bottom \u2192 bigger top wins. Same top \u2192 <b>smaller</b> bottom wins (fewer, bigger pieces).</p>`},
+        {tag:"Example", body:`<p>3/4 vs 2/3. Common bottom 12: 9/12 vs 8/12. 9 &gt; 8, so <b>3/4 &gt; 2/3</b>.</p>`},
+        {tag:"Your turn", practice:[["1/2 __ 3/8","&gt;"],["2/5 __ 2/3","&lt;"],["Bigger: 5/6 or 3/6?","5/6"]]},
+        {tag:"Prove it", body:`<p>A student says 1/8 &gt; 1/4 because 8 &gt; 4. Mistake?</p>`, reveal:`Bigger bottom = smaller pieces. 1/8 &lt; 1/4.`}
+      ]},
+    { code:"4.NF.3", title:"Add & subtract fractions", proj:"Combining coin stacks measured in fractions.",
+      cards:[
+        {tag:"Learn", body:`<p>Same bottom? Add or subtract just the <b>tops</b> \u2014 the bottom stays (you\u2019re counting equal pieces). A top bigger than the bottom (like 5/4) is more than one whole \u2014 write it as a <b>mixed number</b>, 1 1/4.</p>`},
+        {tag:"Example", body:`<p>3/8 + 2/8 = 5/8. And 7/4 = 4/4 + 3/4 = <b>1 3/4</b>.</p>`},
+        {tag:"Your turn", practice:[["1/6 + 4/6","5/6"],["5/8 \u2212 2/8","3/8"],["Write 9/4 as a mixed number","2 1/4"]]},
+        {tag:"Prove it", body:`<p>A student says 2/5 + 1/5 = 3/10. What went wrong?</p>`, reveal:`They added the bottoms. Keep it: 2/5 + 1/5 = 3/5.`}
+      ]},
+    { code:"4.NF.4", title:"Multiply a fraction by a whole", proj:"\u201cMove 3/4 of the track, 3 times\u201d \u2014 how far total?",
+      cards:[
+        {tag:"Learn", body:`<p>It\u2019s repeated addition. 3 \u00d7 2/5 = 2/5 + 2/5 + 2/5 = 6/5. Shortcut: multiply the whole number by the <b>top only</b>, keep the bottom.</p>`},
+        {tag:"Example", body:`<p>4 \u00d7 3/8 = (4\u00d73)/8 = 12/8 = <b>1 1/2</b>.</p>`},
+        {tag:"Your turn", practice:[["2 \u00d7 1/4","1/2"],["5 \u00d7 2/3","3 1/3"],["3/4 cup, made 3 times","2 1/4 cups"]]},
+        {tag:"Prove it", body:`<p>A student says 3 \u00d7 2/5 = 6/15. Mistake?</p>`, reveal:`They multiplied the bottom too. Keep it: 6/5.`}
+      ]},
+    { code:"4.NF.5", title:"Tenths & hundredths", proj:"Money in your game shop \u2014 dimes and pennies.",
+      cards:[
+        {tag:"Learn", body:`<p>Fractions with bottoms of 10 or 100 connect to money and decimals. 3/10 = 30/100 (\u00d710 top and bottom). To add tenths and hundredths, rewrite tenths as hundredths first.</p>`},
+        {tag:"Example", body:`<p>4/10 + 25/100 \u2192 40/100 + 25/100 = <b>65/100</b>.</p>`},
+        {tag:"Your turn", practice:[["Write 7/10 as hundredths","70/100"],["2/10 + 30/100","50/100"],["Bigger: 6/10 or 50/100?","6/10"]]},
+        {tag:"Prove it", body:`<p>A student says 3/10 = 3/100. Equal?</p>`, reveal:`No \u2014 3/10 = 30/100. Tenths are ten times bigger.`}
+      ]},
+    { code:"4.NF.6", title:"Decimal notation", proj:"Showing shop prices as $0.62 instead of 62/100.",
+      cards:[
+        {tag:"Learn", body:`<p>A decimal is another way to write tenths and hundredths. First place after the dot = <b>tenths</b>, second = <b>hundredths</b>. 0.6 = 6/10, 0.62 = 62/100. Just like money.</p>`},
+        {tag:"Example", body:`<p>7/10 = <b>0.7</b>. 45/100 = <b>0.45</b>. 0.3 = 3/10.</p>`},
+        {tag:"Your turn", practice:[["Write 0.9 as a fraction","9/10"],["Write 58/100 as a decimal","0.58"],["Write 0.06 as a fraction","6/100"]]},
+        {tag:"Prove it", body:`<p>A student writes 4/100 as 0.4. Mistake?</p>`, reveal:`0.4 is 4/10, ten times too big. 4/100 = 0.04.`}
+      ]},
+    { code:"4.NF.7", title:"Comparing decimals", proj:"Which shop item is cheaper \u2014 $0.5 or $0.45?",
+      cards:[
+        {tag:"Learn", body:`<p>Compare place by place, left to right, decimal points lined up. Watch the trap: 0.5 is bigger than 0.45, because 0.5 = 0.50 and 50 &gt; 45. Adding a zero on the end doesn\u2019t change the value.</p>`},
+        {tag:"Example", body:`<p>0.3 vs 0.28 \u2192 0.30 vs 0.28. 30 &gt; 28, so <b>0.3 &gt; 0.28</b>.</p>`},
+        {tag:"Your turn", practice:[["0.7 __ 0.65","&gt;"],["0.4 __ 0.40","="],["Smallest first: 0.9, 0.19, 0.5","0.19, 0.5, 0.9"]]},
+        {tag:"Prove it", body:`<p>A student says 0.09 &gt; 0.9. Wrong \u2014 why?</p>`, reveal:`0.9 = 0.90 = 90 hundredths; 0.09 = 9 hundredths. 0.9 is much bigger.`}
+      ]}
+  ]},
+  { name:"Measurement & Data", skills:[
+    { code:"4.MD.1", title:"Unit conversions", proj:"Measuring your plane\u2019s wingspan in inches, then feet.",
+      cards:[
+        {tag:"Learn", body:`<p>Bigger unit \u2192 smaller unit: <b>multiply</b> (it takes more small units). Know these: 1 ft = 12 in, 1 m = 100 cm, 1 kg = 1,000 g, 1 hr = 60 min.</p>`},
+        {tag:"Example", body:`<p>Minutes in 4 hours? 4 \u00d7 60 = <b>240</b>.</p>`},
+        {tag:"Your turn", practice:[["Inches in 5 feet","60"],["Grams in 3 kilograms","3,000"],["Centimeters in 2 meters","200"]]},
+        {tag:"Prove it", body:`<p>A student says 2 feet = 14 inches. Mistake?</p>`, reveal:`They added 12 + 2. Multiply: 2 \u00d7 12 = 24 inches.`}
+      ]},
+    { code:"4.MD.2", title:"Measurement word problems", proj:"How much rubber-band \u201cfuel\u201d is left after two flights?",
+      cards:[
+        {tag:"Learn", body:`<p>Mix conversions with the four operations \u2014 time, money, amounts. Convert so units match <b>first</b>, then do the operation. You can\u2019t subtract minutes from hours until they match.</p>`},
+        {tag:"Example", body:`<p>Movie starts 2:15, lasts 1 hr 40 min. 2:15 + 1:00 = 3:15, + 40 = <b>3:55</b>.</p>`},
+        {tag:"Your turn", practice:[["$5.00 \u2212 $2.35","$2.65"],["2 L jug, pour out 750 mL. Left?","1,250 mL"],["Three 45 cm ribbons, total?","135 cm"]]},
+        {tag:"Prove it", body:`<p>\u201cA 2 m rope, cut off 60 cm.\u201d A student does 2 \u2212 60 = negative. Forgot what?</p>`, reveal:`Convert: 2 m = 200 cm, so 200 \u2212 60 = 140 cm.`}
+      ]},
+    { code:"4.MD.3", title:"Area & perimeter", proj:"Sizing your plane\u2019s wings \u2014 area is lift, perimeter is the edge.",
+      cards:[
+        {tag:"Learn", body:`<p><b>Perimeter</b> = distance around (add all sides). <b>Area</b> = space inside (length \u00d7 width for a rectangle). Perimeter is like fencing; area is like carpet.</p>`},
+        {tag:"Example", body:`<p>8 by 3 rectangle: perimeter = 8+3+8+3 = <b>22 cm</b>. Area = 8\u00d73 = <b>24 sq cm</b>. Note the units differ.</p>`},
+        {tag:"Your turn", practice:[["Perimeter of a 6 by 4 rectangle","20"],["Area of a 6 by 4 rectangle","24"],["Area of a square with 5 m sides","25 sq m"]]},
+        {tag:"Prove it", body:`<p>A student says the area of a 5 by 2 rectangle is 14. What did they find instead?</p>`, reveal:`Perimeter (5+2+5+2=14). Area is 5\u00d72 = 10.`}
+      ]},
+    { code:"4.MD.4", title:"Line plots", proj:"Plotting every flight\u2019s distance to see your plane improve.",
+      cards:[
+        {tag:"Learn", body:`<p>A <b>line plot</b> shows data as X marks over a number line \u2014 each X is one measurement. With fractions, the number line uses fraction marks. Read it by counting Xs; subtract to compare longest vs shortest.</p>`},
+        {tag:"Example", body:`<p>Pencils: 2 at 1/2 in, 3 at 3/4 in, 1 at 1 in. Longest \u2212 shortest = 1 \u2212 1/2 = <b>1/2 inch</b>.</p>`},
+        {tag:"Your turn", practice:[["4 Xs at 1/4, 2 Xs at 3/4 \u2014 how many total?","6"],["How many are 3/4 inch?","2"],["Difference longest vs shortest?","1/2"]]},
+        {tag:"Prove it", body:`<p>3 Xs at 1/2 and 2 Xs at 1. A student says 5 different lengths. Miscount?</p>`, reveal:`5 data points, but only 2 different lengths (1/2 and 1).`}
+      ]},
+    { code:"4.MD.5", title:"Understanding angles", proj:"How sharp is your plane\u2019s nose? That\u2019s an angle.",
+      cards:[
+        {tag:"Learn", body:`<p>An <b>angle</b> is the opening where two rays meet, measured in <b>degrees</b>. A full circle is 360\u00b0. A square corner is <b>90\u00b0</b> (a right angle). Wider opening = more degrees. Arm length doesn\u2019t matter.</p>`},
+        {tag:"Example", body:`<p>Right angle = 90\u00b0. Half of that = 45\u00b0. A straight line = 180\u00b0.</p>`},
+        {tag:"Your turn", practice:[["Degrees in a right angle","90"],["Degrees in a full circle","360"],["Is 120\u00b0 wider or narrower than a right angle?","Wider"]]},
+        {tag:"Prove it", body:`<p>A student says a longer-armed angle has more degrees than a short one with the same opening. Right?</p>`, reveal:`No \u2014 degrees measure the opening, not arm length. Same opening = same degrees.`}
+      ]},
+    { code:"4.MD.6", title:"Measuring angles (protractor)", proj:"Setting your wing angle precisely to fly straight.",
+      cards:[
+        {tag:"Learn", body:`<p>A <b>protractor</b> measures degrees. Center dot on the vertex, baseline on one ray, read where the other ray crosses. Trap: two scales \u2014 use the one that starts at <b>0</b> on your baseline ray.</p>`},
+        {tag:"Example", body:`<p>One ray on 0, the other crosses at 60 \u2192 <b>60\u00b0</b>. Read the wrong scale and you\u2019d get 120.</p>`},
+        {tag:"Your turn", practice:[["Where does the protractor\u2019s center go?","On the vertex"],["One ray on 0, other on 45 \u2014 the angle?","45\u00b0"],["Which scale do you read?","The one starting at 0 on your ray"]]},
+        {tag:"Prove it", body:`<p>A student reads 150\u00b0 but the angle is clearly narrower than a right angle. What happened?</p>`, reveal:`Wrong scale. A narrow angle is under 90\u00b0 \u2014 it\u2019s 30\u00b0, not 150\u00b0.`}
+      ]},
+    { code:"4.MD.7", title:"Adding & subtracting angles", proj:"Two wing flaps that together make the turn you want.",
+      cards:[
+        {tag:"Learn", body:`<p>Angles are <b>additive</b> \u2014 split a big angle into pieces and the pieces add to the whole. Missing piece = whole minus the known part.</p>`},
+        {tag:"Example", body:`<p>A straight line (180\u00b0) split into 110\u00b0 and __. 180 \u2212 110 = <b>70\u00b0</b>.</p>`},
+        {tag:"Your turn", practice:[["90\u00b0 split into 25\u00b0 and __","65\u00b0"],["40\u00b0 and 50\u00b0 combine into","90\u00b0"],["180\u00b0 with a 130\u00b0 piece \u2014 the other?","50\u00b0"]]},
+        {tag:"Prove it", body:`<p>A right angle is split into 30\u00b0 and 70\u00b0. A student says fine. Is it?</p>`, reveal:`No \u2014 30 + 70 = 100\u00b0, but a right angle is only 90\u00b0. Pieces can\u2019t exceed the whole.`}
+      ]}
+  ]},
+  { name:"Geometry", skills:[
+    { code:"4.G.1", title:"Lines and angles", proj:"Drawing your plane\u2019s frame \u2014 parallel wings, right-angle tail.",
+      cards:[
+        {tag:"Learn", body:`<p>Vocabulary to know cold: a <b>point</b> (spot), <b>line</b> (forever both ways), <b>segment</b> (two ends), <b>ray</b> (one end, forever the other way). Angles: <b>right</b> (90\u00b0), <b>acute</b> (&lt;90\u00b0), <b>obtuse</b> (&gt;90\u00b0). Lines: <b>parallel</b> (never meet) or <b>perpendicular</b> (cross at 90\u00b0).</p>`},
+        {tag:"Example", body:`<p>An <b>L</b> is a right angle. Rectangle\u2019s long sides are parallel. A pizza-slice tip is acute.</p>`},
+        {tag:"Your turn", practice:[["What type of angle is 120\u00b0?","Obtuse"],["Lines that never meet?","Parallel"],["A segment has how many endpoints?","Two"]]},
+        {tag:"Prove it", body:`<p>A student calls a 90\u00b0 angle \u201cacute.\u201d Correct name, and what does acute mean?</p>`, reveal:`90\u00b0 is a right angle. Acute means less than 90\u00b0.`}
+      ]},
+    { code:"4.G.2", title:"Classify shapes", proj:"Choosing shapes for your plane\u2019s parts by their properties.",
+      cards:[
+        {tag:"Learn", body:`<p>Sort shapes by <b>properties</b>: number of sides, parallel/perpendicular sides, angle types. A <b>right triangle</b> has one 90\u00b0 angle. A <b>rectangle</b> has 4 right angles. A <b>square</b> is a rectangle with equal sides.</p>`},
+        {tag:"Example", body:`<p>Right triangle? Check: 3 sides, and one 90\u00b0 angle. If all angles are under 90\u00b0, it\u2019s an acute triangle instead.</p>`},
+        {tag:"Your turn", practice:[["Right angles in a rectangle","4"],["What makes a triangle \u201cright\u201d?","One 90\u00b0 angle"],["Is a square also a rectangle?","Yes"]]},
+        {tag:"Prove it", body:`<p>A student says any triangle with a long side is a right triangle. Real rule?</p>`, reveal:`Side length doesn\u2019t matter \u2014 a right triangle needs a 90\u00b0 angle.`}
+      ]},
+    { code:"4.G.3", title:"Line symmetry", proj:"Both wings must match \u2014 that\u2019s a line of symmetry.",
+      cards:[
+        {tag:"Learn", body:`<p>A <b>line of symmetry</b> lets you fold a shape so both halves match exactly. Some shapes have none, some one, some many. Test: imagine folding \u2014 do the halves land on each other?</p>`},
+        {tag:"Example", body:`<p>A butterfly has a vertical line of symmetry \u2014 fold it, the wings match. A circle has infinite.</p>`},
+        {tag:"Your turn", practice:[["Lines of symmetry in a square","4"],["Does the letter T have one?","Yes, one vertical"],["Does the letter R?","No"]]},
+        {tag:"Prove it", body:`<p>A student says a rectangle has 4 lines of symmetry like a square. How many really, and why fewer?</p>`, reveal:`2 (one vertical, one horizontal). The diagonals fail because the sides aren\u2019t all equal.`}
+      ]}
+  ]}
+  ]
+};
+
+/* ============================================================
+   ENGINE — builds the menu, renders the selected skill's cards.
+   Don't edit this to add content; only edit COURSE above.
+   ============================================================ */
+/* ---- question generators: fresh auto-graded problems each round ---- */
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function norm(s){return String(s).toLowerCase().replace(/[\s,\$]/g,'').replace('remainder','r');}
+const GEN = {
+  "Multiplication as comparison":()=>{const n=rnd(2,9),b=rnd(2,12);return{q:`Write as a number: <b>${n} times as many as ${b}</b>`,a:n*b};},
+  "Multiply & divide word problems":()=>{const mult=[['shelves','books'],['rows','chairs'],['boxes','crayons'],['teams','players'],['bags','marbles']],div=[['baskets','apples'],['plates','cookies'],['friends','stickers'],['jars','candies'],['tables','cups']];if(Math.random()<.5){const c=mult[rnd(0,4)],a=rnd(3,9),b=rnd(3,9);return{q:`${a} ${c[0]} hold ${b} ${c[1]} each. How many ${c[1]} total?`,a:a*b};}const c=div[rnd(0,4)],g=rnd(3,8),e=rnd(3,9);return{q:`${g*e} ${c[1]} shared equally among ${g} ${c[0]}. How many per ${c[0].replace(/s$/,'')}?`,a:e};},
+  "Multi-step problems & remainders":()=>{const ctx=[['box','eggs'],['carton','bottles'],['van','kids'],['bag','apples'],['crate','books']][rnd(0,4)];const per=rnd(4,9),full=rnd(3,8),extra=rnd(1,per-1);return{q:`A ${ctx[0]} holds ${per} ${ctx[1]}. You have ${per*full+extra} ${ctx[1]}. How many FULL ${ctx[0]}s?`,a:full};},
+  "Factors, multiples, prime & composite":()=>{const pr=[2,3,5,7,11,13,17,19,23],co=[4,6,8,9,10,12,14,15,16,18,20,21];const up=Math.random()<.5;const n=up?pr[rnd(0,pr.length-1)]:co[rnd(0,co.length-1)];return{q:`Is <b>${n}</b> prime or composite?`,a:up?'prime':'composite'};},
+  "Generate & analyze patterns":()=>{const s=rnd(1,9),d=rnd(2,9);return{q:`What comes next? ${s}, ${s+d}, ${s+2*d}, ${s+3*d}, __`,a:s+4*d};},
+  "Place value to 1,000,000":()=>{const d=[rnd(1,9),rnd(1,9),rnd(0,9),rnd(0,9)];const num=d[0]*1000+d[1]*100+d[2]*10+d[3];const pl=[['thousands',1000,d[0]],['hundreds',100,d[1]],['tens',10,d[2]]][rnd(0,2)];return{q:`What is the VALUE of the ${pl[0]} digit in <b>${num.toLocaleString()}</b>?`,a:pl[2]*pl[1]};},
+  "Read, write & compare numbers":()=>{const a=rnd(1000,9999),b=rnd(1000,9999);return{q:`Compare with &gt;, &lt;, or =: <b>${a.toLocaleString()} __ ${b.toLocaleString()}</b>`,a:a>b?'>':a<b?'<':'='};},
+  "Rounding":()=>{const n=rnd(100,9999);const pl=[['ten',10],['hundred',100],['thousand',1000]][rnd(0,2)];return{q:`Round <b>${n.toLocaleString()}</b> to the nearest ${pl[0]}.`,a:Math.round(n/pl[1])*pl[1]};},
+  "Add & subtract big numbers":()=>{if(Math.random()<.5){const a=rnd(100,5000),b=rnd(100,5000);return{q:`${a.toLocaleString()} + ${b.toLocaleString()} = ?`,a:a+b};}const a=rnd(1000,9000),b=rnd(100,a);return{q:`${a.toLocaleString()} \u2212 ${b.toLocaleString()} = ?`,a:a-b};},
+  "Multi-digit multiplication":()=>{if(Math.random()<.5){const a=rnd(2,9),b=rnd(100,999);return{q:`${a} \u00d7 ${b} = ?`,a:a*b};}const a=rnd(11,49),b=rnd(11,29);return{q:`${a} \u00d7 ${b} = ?`,a:a*b};},
+  "Division with remainders":()=>{const b=rnd(2,9),q=rnd(3,20),r=rnd(0,b-1);return{q:`${b*q+r} \u00f7 ${b} = ?${r>0?' (write like: 7 r 2)':''}`,a:r>0?`${q} r ${r}`:q};},
+  "Equivalent fractions":()=>{const b=rnd(2,6),k=rnd(2,4);return{q:`Fill in the top number: <b>1/${b} = ?/${b*k}</b>`,a:k};},
+  "Comparing fractions":()=>{const d=rnd(3,10);let a=rnd(1,d-1),b=rnd(1,d-1);while(a===b)b=rnd(1,d-1);return{q:`Compare with &gt;, &lt;, or =: <b>${a}/${d} __ ${b}/${d}</b>`,a:a>b?'>':'<'};},
+  "Add & subtract fractions":()=>{const d=rnd(4,10),a=rnd(1,d-1),b=rnd(1,d-a);return{q:`${a}/${d} + ${b}/${d} = ? (like 3/${d})`,a:`${a+b}/${d}`};},
+  "Multiply a fraction by a whole":()=>{const n=rnd(2,6),a=rnd(1,5),b=rnd(2,8);return{q:`${n} \u00d7 ${a}/${b} = ? (like 6/${b})`,a:`${n*a}/${b}`};},
+  "Tenths & hundredths":()=>{const a=rnd(1,9);return{q:`Write <b>${a}/10</b> as hundredths (like 40/100)`,a:`${a*10}/100`};},
+  "Decimal notation":()=>{if(Math.random()<.5){const a=rnd(1,9);return{q:`Write <b>${a}/10</b> as a decimal`,a:`0.${a}`};}const a=rnd(10,99);return{q:`Write <b>${a}/100</b> as a decimal`,a:`0.${a}`};},
+  "Comparing decimals":()=>{const a=(rnd(1,9)/10),b=(rnd(10,99)/100);return{q:`Compare with &gt;, &lt;, or =: <b>${a.toFixed(1)} __ ${b.toFixed(2)}</b>`,a:a>b?'>':a<b?'<':'='};},
+  "Unit conversions":()=>{const o=[['feet','inches',12],['meters','centimeters',100],['kilograms','grams',1000],['hours','minutes',60]][rnd(0,3)];const n=rnd(2,9);return{q:`${n} ${o[0]} = ? ${o[1]}`,a:n*o[2]};},
+  "Measurement word problems":()=>{const have=rnd(3,9),spentC=rnd(100,have*100-50);return{q:`You have $${have}.00 and spend $${(spentC/100).toFixed(2)}. How much is left? (like 2.65)`,a:((have*100-spentC)/100).toFixed(2)};},
+  "Area & perimeter":()=>{const l=rnd(3,12),w=rnd(2,9);if(Math.random()<.5)return{q:`A rectangle is ${l} by ${w}. What is its AREA?`,a:l*w};return{q:`A rectangle is ${l} by ${w}. What is its PERIMETER?`,a:2*(l+w)};},
+  "Understanding angles":()=>{const o=[['a right angle',90],['a straight line',180],['a full circle',360],['half a right angle',45]][rnd(0,3)];return{q:`How many degrees is <b>${o[0]}</b>?`,a:o[1]};},
+  "Adding & subtracting angles":()=>{const whole=[90,180][rnd(0,1)],a=rnd(10,whole-10);return{q:`A ${whole}\u00b0 angle splits into ${a}\u00b0 and one more. What's the other angle?`,a:whole-a};},
+  "Lines and angles":()=>{const n=[rnd(20,80),rnd(100,160),90][rnd(0,2)];return{q:`Is a <b>${n}\u00b0</b> angle acute, right, or obtuse?`,a:n<90?'acute':n>90?'obtuse':'right'};},
+  "Line symmetry":()=>{const s=[['square',4],['rectangle',2],['equilateral triangle',3],['circle','infinite']][rnd(0,3)];return{q:`How many lines of symmetry does a <b>${s[0]}</b> have?${s[1]==='infinite'?' (write: infinite)':''}`,a:s[1]};}
+};
+let curGenFn=null, curAns=null, streak=0, mastered=false;
+const MASTER_GOAL=8;
+function renderDots(){ const d=document.getElementById('gendots'); if(!d) return; let s=''; for(let i=0;i<MASTER_GOAL;i++){ s+=`<span class="dot${i<streak?' on':''}">\u25cf</span>`; } d.innerHTML=s; }
+function refreshChecks(){ const dc=Object.keys(progress.done).length; const pc=document.getElementById('pcount'); if(pc) pc.textContent=`${dc} / ${flat.length} mastered \u00b7 ${Math.round(dc/flat.length*100)}%`; const pf=document.getElementById('pfill'); if(pf) pf.style.width=(dc/flat.length*100)+'%'; document.querySelectorAll('.skill-btn').forEach(b=>{ const idx=+b.dataset.i; const isDone=!!progress.done[flat[idx].code]; b.classList.toggle('done',isDone); const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb'; }); }
+function initGen(title){ curGenFn=GEN[title]; streak=0; mastered=!!progress.done[flat[si].code]; newProblem(); renderDots(); const inp=document.getElementById('genin'); if(inp) inp.addEventListener('keydown',e=>{ if(e.key==='Enter') checkGen(); }); }
+function newProblem(){ if(!curGenFn) return; const p=curGenFn(); curAns=p.a; const q=document.getElementById('genq'); if(q) q.innerHTML=p.q; const inp=document.getElementById('genin'); if(inp){inp.value='';inp.focus();} const fb=document.getElementById('genfb'); if(fb){fb.textContent='';fb.className='genfb';} }
+function checkGen(){ const inp=document.getElementById('genin'), fb=document.getElementById('genfb'); if(!inp||!fb) return; const v=inp.value.trim(); if(!v) return; let ok=norm(v)===norm(curAns); if(!ok){ const nv=parseFloat(v), na=parseFloat(curAns); if(!isNaN(nv)&&!isNaN(na)&&nv===na) ok=true; }
+  if(ok){ streak++; renderDots();
+    if(streak>=MASTER_GOAL){ fb.innerHTML='\u2714 <b>Mastered!</b> 8 in a row \u2014 next card unlocked.'; fb.className='genfb ok'; if(!mastered){ mastered=true; markSkillDone(si); refreshChecks(); const nb=document.getElementById('next'); if(nb){ nb.textContent='Next'; nb.style.opacity='1'; nb.style.cursor='pointer'; } } }
+    else { fb.textContent='Correct! \u2713'; fb.className='genfb ok'; setTimeout(newProblem,700); }
+  } else { streak=0; renderDots(); fb.innerHTML=`Not quite \u2014 the answer was <b>${curAns}</b>. Streak reset.`; fb.className='genfb no'; setTimeout(newProblem,1500); } }
+
+let flat = [];
+COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name, cards: s.cards.filter(c=>c.tag!=="Prove it")})));
+let si = 0;   // skill index
+let ci = 0;   // card index
+
+/* ---- progress: remembers finished skills + where you left off ---- */
+const SAVE_KEY = 'voyage_g4math_progress';
+let progress = { done:{}, lastSkill:0 };
+function loadProgress(){
+  try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) progress = JSON.parse(raw); }catch(e){}
+}
+function saveProgress(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); }catch(e){}
+}
+function markSkillDone(i){ progress.done[flat[i].code] = true; saveProgress(); }
+function resetProgress(){ progress = {done:{}, lastSkill:0}; saveProgress(); loadSkill(0); }
+
+function buildMenu(){
+  let html = '';
+  COURSE.domains.forEach((d,di)=>{
+    html += `<div class="domain">${d.name}</div>`;
+    d.skills.forEach(s=>{
+      const idx = flat.findIndex(f=>f.code===s.code);
+      html += `<button class="skill-btn" data-i="${idx}">
+        <span class="check">\u25cb</span>
+        <span class="stitle">${s.title}</span></button>`;
+    });
+  });
+  const m = document.getElementById('menu');
+  m.innerHTML = html;
+  m.addEventListener('click', e=>{
+    const b = e.target.closest('.skill-btn');
+    if(b) loadSkill(+b.dataset.i);
+  });
+}
+function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
+function go(d){
+  const cards = flat[si].cards;
+  const cur = cards[ci];
+  // hard gate: can't advance past the practice card until mastered
+  if(d>0 && cur.practice && GEN[flat[si].title] && !progress.done[flat[si].code]){
+    const fb=document.getElementById('genfb');
+    if(fb){ fb.innerHTML='\uD83D\uDD12 Get <b>8 in a row</b> to unlock the next card.'; fb.className='genfb no'; }
+    const inp=document.getElementById('genin'); if(inp) inp.focus();
+    return;
+  }
+  if(ci+d < 0) return;
+  if(ci+d >= cards.length){ if(si < flat.length-1) loadSkill(si+1); return; }
+  ci += d; render();
+}
+function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
+function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
+
+function render(){
+  const s = flat[si];
+  const c = s.cards[ci];
+  document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.code}  ${s.title}`;
+
+  let inner = `<div class="tag">${c.tag}</div>`;
+  if(ci===0) inner += `<h2>${s.title}</h2>`;
+
+  if(c.body) inner += c.body;
+
+  if(c.practice){
+    if(GEN[s.title]){
+      inner += `<div class="genwrap">
+        <div class="genq" id="genq"></div>
+        <div class="genrow"><input id="genin" type="text" inputmode="text" autocomplete="off" placeholder="Your answer"><button class="btn sm" data-act="gencheck">Check</button></div>
+        <div class="genfb" id="genfb"></div>
+        <div class="genmastery"><span class="genlabel">Get 8 in a row to master:</span> <span class="gendots" id="gendots"></span></div>
+        <button class="btn sm ghost" data-act="gennew" style="margin-top:12px">Skip \u2192</button>
+      </div>`;
+    } else {
+      inner += `<div class="qlist">`;
+      c.practice.forEach(q=> inner += `<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
+      inner += `</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
+    }
+  }
+  if(c.reveal){
+    inner += `<button class="btn sm" data-act="revealOne">Show the answer</button>
+      <div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`;
+  }
+  // project hook on the last card
+  if(ci===s.cards.length-1 && s.proj){
+    inner += `<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`;
+  }
+
+  document.getElementById('card').innerHTML = inner;
+  if(c.practice && GEN[s.title]) initGen(s.title);
+  if(document.getElementById('revBox') && c.reveal){ document.getElementById('revBox').classList.remove('show'); document.getElementById('revBox').style.display='none'; }
+
+  // progress
+  document.getElementById('progress').innerHTML = s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
+  document.getElementById('counter').textContent = `${ci+1} / ${s.cards.length}`;
+  document.getElementById('back').style.visibility = ci===0 ? 'hidden':'visible';
+  const _nb=document.getElementById('next');
+  const _gated = c.practice && GEN[s.title] && !progress.done[s.code];
+  _nb.textContent = _gated ? 'Master to unlock \uD83D\uDD12' : ((ci===s.cards.length-1) ? (si<flat.length-1?'Next skill \u2192':'Done') : 'Next');
+  _nb.style.opacity = _gated ? '.45' : '1';
+  _nb.style.cursor = _gated ? 'not-allowed' : 'pointer';
+
+  // reaching the last card completes NON-practice skills; practice skills complete via mastery
+  if(ci===s.cards.length-1 && !GEN[s.title]){ markSkillDone(si); }
+
+  // progress counter + bar
+  const doneCount = Object.keys(progress.done).length;
+  document.getElementById('pcount').textContent = `${doneCount} / ${flat.length} skills complete`;
+  document.getElementById('pfill').style.width = (doneCount/flat.length*100)+'%';
+
+  // active menu highlight + saved completion checks
+  document.querySelectorAll('.skill-btn').forEach(b=>{
+    const idx = +b.dataset.i;
+    const isDone = !!progress.done[flat[idx].code];
+    b.classList.toggle('active', idx===si);
+    b.classList.toggle('done', isDone);
+    const chk = b.querySelector('.check');
+    if(chk) chk.textContent = isDone ? '\u2714' : '\u25cb';
+  });
+}
+// fix reveal box toggle (show uses class)
+const style=document.createElement('style');
+style.textContent=`#revBox.show{display:block!important}
+.genwrap{margin-top:2px}
+.genq{font-size:20px;font-weight:600;margin-bottom:14px;min-height:26px;line-height:1.45}
+.genrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.genwrap input{font-family:'Space Grotesk',sans-serif;font-size:17px;padding:10px 13px;width:180px;border:1.5px solid var(--blue-line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+.genwrap input:focus{border-color:var(--blue)}
+.genfb{font-size:15px;font-weight:600;margin-top:10px;min-height:20px}
+.genfb.ok{color:#2e7d5b}
+.genfb.no{color:var(--accent)}
+.genmastery{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.genlabel{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.gendots{display:inline-flex;gap:5px}
+.gendots .dot{color:var(--blue-line);font-size:15px}
+.gendots .dot.on{color:#2e7d5b}`;
+document.head.appendChild(style);
+
+loadProgress();
+buildMenu();
+document.getElementById('back').addEventListener('click', ()=>go(-1));
+document.getElementById('next').addEventListener('click', ()=>go(1));
+document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset all progress?')) resetProgress(); });
+document.getElementById('card').addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]');
+  if(!b) return;
+  if(b.dataset.act==='reveal') reveal();
+  if(b.dataset.act==='revealOne') revealOne();
+  if(b.dataset.act==='gencheck') checkGen();
+  if(b.dataset.act==='gennew') newProblem();
+});
+loadSkill(progress.lastSkill || 0);
+</script>
+  <script src="tutor-widget.js"></script>
+</body>
+</html>

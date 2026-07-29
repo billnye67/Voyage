@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;padding:26px 16px 60px}
+  .wrap{max-width:720px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:24px}
+  .top .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+  .hello{font-family:'Fraunces',serif;font-weight:600;font-size:28px;margin-bottom:4px}
+  .subhello{font-size:15px;color:var(--muted);margin-bottom:24px}
+
+  .sec{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 12px;border-bottom:1px solid var(--blue-line);padding-bottom:6px}
+
+  /* course card */
+  a.tile{display:block;text-decoration:none;color:inherit}
+  .course{background:var(--blue);color:#fff;border-radius:16px;padding:20px 22px;box-shadow:4px 4px 0 rgba(27,79,138,.22);position:relative;overflow:hidden}
+  .course h3{font-family:'Fraunces',serif;font-weight:600;font-size:21px;margin-bottom:4px}
+  .course p{font-size:13.5px;color:#d6e4f2;margin-bottom:14px}
+  .course .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+  .course .fill{height:100%;background:#fff;width:0;transition:width .4s}
+  .course .stat{font-family:'Space Mono',monospace;font-size:12px;color:#eaf1f8;margin-top:8px}
+
+  /* project cards */
+  .projgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+  .proj{background:var(--card);border:1.5px solid var(--blue-line);border-radius:14px;padding:16px 17px;box-shadow:3px 3px 0 rgba(27,79,138,.07);transition:transform .1s,box-shadow .1s}
+  .proj:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 rgba(27,79,138,.1)}
+  .proj .ic{font-size:30px;margin-bottom:8px;display:block}
+  .proj h4{font-family:'Fraunces',serif;font-weight:600;font-size:17px;margin-bottom:3px}
+  .proj .tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .proj .bar{height:6px;border-radius:4px;background:var(--blue-line);overflow:hidden;margin-top:12px}
+  .proj .fill{height:100%;background:var(--green);width:0;transition:width .4s}
+  .proj .stat{font-size:12px;color:var(--muted);margin-top:6px}
+  .proj.done h4::after{content:" \u2714";color:var(--green)}
+
+  /* onboarding overlay */
+  .overlay{position:fixed;inset:0;background:rgba(22,35,58,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .obox{background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:28px 26px;max-width:400px;width:100%;box-shadow:6px 6px 0 var(--ink)}
+  .obox h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin-bottom:6px}
+  .obox p{font-size:14px;color:var(--muted);margin-bottom:18px}
+  .obox label{font-size:12px;font-family:'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+  .obox input,.obox select{width:100%;font-family:'Space Grotesk',sans-serif;font-size:16px;padding:11px 13px;border:1.5px solid var(--blue-line);border-radius:10px;background:#fff;color:var(--ink);margin-bottom:16px;outline:none}
+  .obox input:focus,.obox select:focus{border-color:var(--blue)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 20px;border-radius:11px;border:1.5px solid var(--ink);background:var(--accent);color:#fff;box-shadow:3px 3px 0 var(--ink);width:100%;transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .reset{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;margin-top:10px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+
+<!-- First-visit onboarding (saved locally for now; later fires after Stripe checkout) -->
+<div class="overlay hidden" id="onboard">
+  <div class="obox">
+    <h2>Welcome to Voyage \uD83D\uDC4B</h2>
+    <p>Let\u2019s set up your learner. Takes 10 seconds.</p>
+    <label>Kid\u2019s first name</label>
+    <input type="text" id="obName" placeholder="e.g. Max" autocomplete="off">
+    <label>Grade</label>
+    <select id="obGrade">
+      <option value="4">Grade 4</option>
+      <option value="5" disabled>Grade 5 (coming soon)</option>
+      <option value="6" disabled>Grade 6 (coming soon)</option>
+    </select>
+    <button class="btn" id="obStart">Start learning \u2192</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="top"><div class="brand">Voyage</div><div class="crumb" id="gradeCrumb">Grade 4</div></div>
+
+  <div class="hello" id="hello">Welcome back</div>
+  <div class="subhello">Here's what you're building this month, and your daily lessons.</div>
+
+  <div class="sec">This month's project</div>
+  <div id="featured"></div>
+
+  <div class="sec">Your subjects <span style="text-transform:none;letter-spacing:0;color:var(--muted)">· daily lessons</span></div>
+  <div class="projgrid" id="subjgrid"></div>
+
+  <div class="sec">More projects to explore</div>
+  <div class="projgrid" id="projgrid"></div>
+
+  <button class="reset" id="resetProfile">Not you? Reset learner</button>
+</div>
+
+<script>
+/* ---- profile (name + grade), saved locally for now ---- */
+const PROFILE_KEY = 'voyage_profile';
+let profile = null;
+try{ const r=localStorage.getItem(PROFILE_KEY); if(r) profile=JSON.parse(r); }catch(e){}
+
+/* ---- subjects (courses) ---- */
+const SUBJECTS = [
+  { title:"Math", tag:"28 skills", file:"math-course.html", key:"voyage_g4math_progress", total:28 },
+  { title:"Reading & Writing", tag:"26 skills", file:"ela-course.html", key:"voyage_g4ela_progress", total:26 },
+  { title:"Science", tag:"14 skills", file:"science-course.html", key:"voyage_g4sci_progress", total:14 },
+  { title:"Social Studies", tag:"14 skills", file:"social-studies-course.html", key:"voyage_g4ss_progress", total:14 }
+];
+
+/* ---- the projects on the menu ---- */
+const PROJECTS = [
+  { icon:"\u2708\uFE0F", title:"Build a plane", tag:"Flight \u00b7 physical", file:"project-plane.html", key:"voyage_project_plane_g4", total:6 },
+  { icon:"\uD83E\uDD16", title:"Guard Bot", tag:"Electronics \u00b7 kit", file:"project-guard-bot.html", key:"voyage_project_guardbot_g4", total:6 },
+  { icon:"\uD83D\uDD79\uFE0F", title:"Arcade game", tag:"Coding \u00b7 free", file:"project-arcade-game.html", key:"voyage_project_arcade_g4", total:6 }
+];
+
+function readDone(key){
+  try{ const r=localStorage.getItem(key); if(r){ const o=JSON.parse(r); return Object.keys(o.done||{}).length; } }catch(e){}
+  return 0;
+}
+
+function renderDash(){
+  document.getElementById('hello').textContent = profile?.name ? `Hey ${profile.name} \uD83D\uDC4B` : 'Welcome back';
+  document.getElementById('gradeCrumb').textContent = `Grade ${profile?.grade || 4}`;
+
+  // featured project = this month's (first in list)
+  const feat = PROJECTS[0];
+  const fd = readDone(feat.key);
+  document.getElementById('featured').innerHTML = `<a class="tile" href="${feat.file}">
+    <div class="course">
+      <h3>${feat.icon} ${feat.title}</h3>
+      <p>${feat.tag} \u2014 your build for this month. Lessons show up as you need them.</p>
+      <div class="bar"><div class="fill" style="width:${fd/feat.total*100}%;background:#fff"></div></div>
+      <div class="stat">${fd} / ${feat.total} steps done</div>
+    </div></a>`;
+
+  // subjects
+  document.getElementById('subjgrid').innerHTML = SUBJECTS.map(s=>{
+    const d = readDone(s.key);
+    const complete = d>=s.total;
+    return `<a class="tile" href="${s.file}">
+      <div class="proj ${complete?'done':''}">
+        <span class="ic">${s.title==='Math'?'\uD83D\uDD22':s.title==='Science'?'\uD83D\uDD2C':s.title==='Social Studies'?'\uD83C\uDF0E':'\u270D\uFE0F'}</span>
+        <h4>${s.title}</h4>
+        <div class="tag">${s.tag}</div>
+        <div class="bar"><div class="fill" style="width:${d/s.total*100}%"></div></div>
+        <div class="stat">${d} / ${s.total} skills</div>
+      </div></a>`;
+  }).join('');
+
+  // other projects (browsable)
+  document.getElementById('projgrid').innerHTML = PROJECTS.slice(1).map(p=>{
+    const d = readDone(p.key);
+    const complete = d>=p.total;
+    return `<a class="tile" href="${p.file}">
+      <div class="proj ${complete?'done':''}">
+        <span class="ic">${p.icon}</span>
+        <h4>${p.title}</h4>
+        <div class="tag">${p.tag}</div>
+        <div class="bar"><div class="fill" style="width:${d/p.total*100}%"></div></div>
+        <div class="stat">${d} / ${p.total} steps</div>
+      </div></a>`;
+  }).join('');
+}
+
+function showOnboard(){ document.getElementById('onboard').classList.remove('hidden'); }
+function hideOnboard(){ document.getElementById('onboard').classList.add('hidden'); }
+
+document.getElementById('obStart').addEventListener('click', ()=>{
+  const name = document.getElementById('obName').value.trim();
+  const grade = document.getElementById('obGrade').value;
+  profile = { name: name || 'friend', grade };
+  try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }catch(e){}
+  hideOnboard();
+  renderDash();
+});
+
+document.getElementById('resetProfile').addEventListener('click', ()=>{
+  if(confirm('Reset the learner profile? (Your course/project progress stays.)')){
+    try{ localStorage.removeItem(PROFILE_KEY); }catch(e){}
+    profile=null; showOnboard();
+  }
+});
+
+/* first visit → onboarding; otherwise → dashboard */
+if(!profile){ showOnboard(); }
+renderDash();
+</script>
+  <script src="tutor-widget.js"></script>
+</body>
+</html>

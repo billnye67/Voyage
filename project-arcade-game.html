@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Project · Arcade Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;padding:24px 16px 60px}
+  .wrap{max-width:680px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .hero{background:#7a2e1f;color:#fff;border-radius:18px;padding:24px 24px 22px;margin-bottom:12px;box-shadow:5px 5px 0 rgba(122,46,31,.2);position:relative;overflow:hidden}
+  .hero .kick{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#f0c3b6;margin-bottom:8px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:1.08;margin-bottom:8px}
+  .hero p{font-size:15px;line-height:1.5;color:#f5e2dc;max-width:92%}
+  .emoji{position:absolute;right:4px;top:-2px;font-size:70px;opacity:.16;transform:rotate(-10deg)}
+  .spec{background:rgba(240,102,63,.1);border:1.5px solid var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.55}
+  .spec b{color:var(--accent)}
+  .pbarwrap{display:flex;align-items:center;gap:12px;margin:0 2px 20px}
+  .pbar{flex:1;height:8px;border-radius:5px;background:var(--blue-line);overflow:hidden}
+  .pfill{height:100%;width:0;background:var(--green);transition:width .35s}
+  .pcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+  .ms{background:var(--card);border:1.5px solid var(--blue-line);border-radius:15px;padding:18px 20px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(27,79,138,.07)}
+  .ms.done{border-color:var(--green)}
+  .ms-head{display:flex;gap:14px;align-items:flex-start}
+  .ms-num{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#7a2e1f;color:#fff;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center}
+  .ms.done .ms-num{background:var(--green)}
+  .ms-title{font-size:18px;font-weight:600;font-family:'Fraunces',serif}
+  .ms-goal{font-size:15px;line-height:1.55;color:var(--ink);margin:3px 0 0}
+  .ms-body{margin-top:14px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:12px;background:rgba(27,79,138,.09);color:var(--blue);padding:4px 10px;border-radius:6px}
+  .chip.math{background:rgba(240,102,63,.1);color:var(--accent)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;padding:8px 14px;border-radius:9px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .btn.soft{border-color:var(--blue-line);box-shadow:none;color:var(--blue)}
+  .reveal{display:none;margin-top:12px;font-size:14.5px;line-height:1.6;background:var(--paper);border-radius:10px;padding:12px 14px}
+  .reveal.show{display:block}
+  .reveal b{color:var(--ink)}
+  .coach{border-left:3px solid var(--accent)}
+  .mathlink{font-size:13px;color:var(--blue);text-decoration:none;font-weight:600;display:inline-block;margin-top:8px}
+  .mathlink:hover{text-decoration:underline}
+  .proof{margin-top:14px;border-top:1px dashed var(--blue-line);padding-top:14px}
+  .proof label{font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+  .drop{margin-top:8px;border:2px dashed var(--blue-line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:var(--muted);font-size:14px}
+  .drop:hover{border-color:var(--blue);color:var(--blue)}
+  .thumb{margin-top:10px;border-radius:10px;max-width:220px;border:1.5px solid var(--green)}
+  .donetag{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:13.5px;margin-top:10px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">Voyage</div><div class="crumb">Project · Grade 4</div></div>
+
+  <div class="hero">
+    <div class="emoji">\uD83D\uDD79\uFE0F</div>
+    <div class="kick">Your project this month</div>
+    <h1>Build a game your friends can\u2019t beat</h1>
+    <p>Code a real one-button dodge game \u2014 and tune it until it\u2019s genuinely hard but fair. The win isn\u2019t \u201cit runs.\u201d The win is your friends playing it over and over trying to beat your best score.</p>
+  </div>
+
+  <div class="spec">
+    <b>The spec:</b> a one-button game where your character auto-runs and you tap to jump. It must get <b>faster every 15 seconds</b>, be <b>winnable in under 2 minutes</b> by a skilled player, and be <b>impossible to win by just mashing</b>. Score = distance survived. Hitting all that means tuning the numbers with real playtest data.
+  </div>
+
+  <div class="pbarwrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 6 done</div>
+  </div>
+
+  <div id="milestones"></div>
+</div>
+
+<script>
+const PROJECT = {
+  id:"arcade_g4",
+  milestones:[
+    { id:"m1", title:"Get your runner running", goal:"Make a character that moves across the screen on its own. It should just keep going.",
+      coach:"Start in Scratch or a JS canvas. Your character auto-runs \u2014 it moves a set amount every frame, no input needed yet. Everything sits on an x/y grid; \u201crunning\u201d is adding to its position over and over. Get it gliding across the screen and looping. That\u2019s your engine.",
+      materials:["a computer","Scratch (free) or a code editor"],
+      math:[["coordinates","4.G.1"],["patterns","4.OA.5"]], photo:"a screenshot of your runner moving" },
+    { id:"m2", title:"Make it jump on one button", goal:"One button (or tap) makes your character jump, then fall back down. Just one control.",
+      coach:"Press = go up, then gravity pulls it back down. Up means subtracting from y (screens count down from the top). Falling means adding back. Tune the jump: too weak and it can\u2019t clear anything, too floaty and it feels wrong. You\u2019re controlling motion with numbers.",
+      materials:["your project so far"],
+      math:[["add & subtract","4.NBT.4"],["coordinates","4.G.1"]], photo:"a screenshot/clip of it jumping" },
+    { id:"m3", title:"Add obstacles to dodge", goal:"Obstacles come at your runner. Hit one = game over. Clear it = keep going.",
+      coach:"Spawn obstacles that move toward the player. When one comes every few seconds, that\u2019s a pattern with a rule. The gap between them and their height decides if a jump can clear them \u2014 those are numbers you\u2019ll tune later. For now: obstacle touches player \u2192 game over.",
+      materials:["your game so far"],
+      math:[["patterns","4.OA.5"],["factors & multiples","4.OA.4"]], photo:"a screenshot with obstacles coming" },
+    { id:"m4", title:"Score by distance + make it ramp up", goal:"Score = how far you got. And every 15 seconds, the game speeds up (that\u2019s the spec).",
+      coach:"Distance survived = your score, ticking up as you run. Now the spec: every 15 seconds, increase the speed. Speed \u00d7 time is the ramp \u2014 that\u2019s multiplication running your difficulty. Show the score on screen. The longer you last, the faster it gets, the higher you score.",
+      materials:["your game so far"],
+      math:[["multiplication","4.NBT.5"],["place value","4.NBT.1"],["patterns","4.OA.5"]], photo:"a screenshot of your score + speed ramp" },
+    { id:"m5", title:"Playtest: is it fair-but-hard?", goal:"Get real people to play it. Log their scores. Is it too easy, too hard, or just right?",
+      coach:"This is the real design work \u2014 you can\u2019t code your way out of it. Have 5+ people play, write down every score. Too many people winning fast? Too easy. Nobody getting past 10 seconds? Too hard. Chart the scores (a line plot) so you can SEE the shape. The spec says winnable-but-hard \u2014 does your data show that?",
+      materials:["your game","5+ playtesters","a score log"],
+      math:[["line plots","4.MD.4"],["compare numbers","4.NBT.2"],["fractions","4.NF.4"]], photo:"a screenshot of your playtest score chart" },
+    { id:"m6", title:"Tune it to hit the spec", goal:"Change the numbers \u2014 speed, gap size, ramp \u2014 until it matches the spec, then re-test.",
+      coach:"Change ONE number at a time (change three and you won\u2019t know what helped). Bump obstacle gap, or slow the ramp, or raise the jump. Re-test with real players, re-chart. Chase the target: a good player wins in under 2 minutes, a masher never does. When your data shows that, you\u2019ve hit the spec \u2014 and you\u2019ve got a real, tuned game.",
+      materials:["your game","your playtest data"],
+      math:[["line plots","4.MD.4"],["compare decimals","4.NF.7"],["rounding","4.NBT.3"]], photo:"a screenshot of your final game + tuned score chart" }
+  ]
+};
+
+const SAVE_KEY = 'voyage_project_'+PROJECT.id;
+let state = { done:{} };
+try{ const r=localStorage.getItem(SAVE_KEY); if(r) state=JSON.parse(r); }catch(e){}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function render(){
+  const box = document.getElementById('milestones');
+  box.innerHTML = PROJECT.milestones.map((m,i)=>{
+    const done = !!state.done[m.id];
+    const mathChips = m.math.map(x=>`<span class="chip math">${x[0]}</span>`).join('');
+    const mathLinks = m.math.map(x=>`<a class="mathlink" href="math-course.html#${x[1]}">Learn: ${x[0]} \u2192</a>`).join('<br>');
+    return `
+    <div class="ms ${done?'done':''}" data-id="${m.id}">
+      <div class="ms-head"><div class="ms-num">${done?'\u2714':i+1}</div>
+        <div style="flex:1"><div class="ms-title">${m.title}</div><p class="ms-goal">${m.goal}</p></div></div>
+      <div class="ms-body">
+        <div class="row">
+          <button class="btn soft" data-act="hint">I\u2019m stuck \u2014 hint</button>
+          <button class="btn soft" data-act="mats">What do I use?</button>
+          ${mathChips}
+        </div>
+        <div class="reveal coach" data-role="hint"><b>Coach:</b> ${m.coach}<div>${mathLinks}</div></div>
+        <div class="reveal" data-role="mats"><b>You\u2019ll use:</b><br>\u2022 ${m.materials.join('<br>\u2022 ')}</div>
+        <div class="proof">
+          ${ done
+            ? `<div class="donetag">\u2714 Done \u2014 saved to your record</div><div data-role="thumbwrap"></div><button class="btn soft" data-act="redo" style="margin-top:10px;font-size:12px;padding:5px 10px">Redo</button>`
+            : `<label>Prove it: upload ${m.photo}</label>
+               <div class="drop" data-act="pick">\uD83D\uDCF8 &nbsp;tap to add a screenshot</div>
+               <input type="file" accept="image/*" class="hidden" data-role="file">
+               <div data-role="thumbwrap"></div>` }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const n = Object.keys(state.done).length;
+  document.getElementById('pcount').textContent = `${n} / ${PROJECT.milestones.length} done`;
+  document.getElementById('pfill').style.width = (n/PROJECT.milestones.length*100)+'%';
+  wire();
+}
+function wire(){
+  document.querySelectorAll('.ms').forEach(card=>{
+    const id = card.dataset.id;
+    card.querySelector('[data-act="hint"]')?.addEventListener('click',()=>toggle(card,'hint'));
+    card.querySelector('[data-act="mats"]')?.addEventListener('click',()=>toggle(card,'mats'));
+    const pick = card.querySelector('[data-act="pick"]'), file = card.querySelector('[data-role="file"]');
+    if(pick && file){
+      pick.addEventListener('click',()=>file.click());
+      file.addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return;
+        const reader=new FileReader();
+        reader.onload=ev=>{ card.querySelector('[data-role="thumbwrap"]').innerHTML=`<img class="thumb" src="${ev.target.result}">`;
+          state.done[id]=true; save(); setTimeout(render,500); };
+        reader.readAsDataURL(f);
+      });
+    }
+    card.querySelector('[data-act="redo"]')?.addEventListener('click',()=>{ delete state.done[id]; save(); render(); });
+  });
+}
+function toggle(card,role){ card.querySelector(`[data-role="${role}"]`).classList.toggle('show'); }
+render();
+</script>
+  <script src="tutor-widget.js"></script>
+</body>
+</html>

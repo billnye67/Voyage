@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Project · Guard Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;padding:24px 16px 60px}
+  .wrap{max-width:680px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .hero{background:#123c2e;color:#fff;border-radius:18px;padding:24px 24px 22px;margin-bottom:12px;box-shadow:5px 5px 0 rgba(18,60,46,.2);position:relative;overflow:hidden}
+  .hero .kick{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a9d8c4;margin-bottom:8px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:1.08;margin-bottom:8px}
+  .hero p{font-size:15px;line-height:1.5;color:#dcefe6;max-width:92%}
+  .emoji{position:absolute;right:4px;top:-2px;font-size:70px;opacity:.16;transform:rotate(-10deg)}
+  .spec{background:rgba(240,102,63,.1);border:1.5px solid var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.55}
+  .spec b{color:var(--accent)}
+  .pbarwrap{display:flex;align-items:center;gap:12px;margin:0 2px 20px}
+  .pbar{flex:1;height:8px;border-radius:5px;background:var(--blue-line);overflow:hidden}
+  .pfill{height:100%;width:0;background:var(--green);transition:width .35s}
+  .pcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+  .ms{background:var(--card);border:1.5px solid var(--blue-line);border-radius:15px;padding:18px 20px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(27,79,138,.07)}
+  .ms.done{border-color:var(--green)}
+  .ms-head{display:flex;gap:14px;align-items:flex-start}
+  .ms-num{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#123c2e;color:#fff;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center}
+  .ms.done .ms-num{background:var(--green)}
+  .ms-title{font-size:18px;font-weight:600;font-family:'Fraunces',serif}
+  .ms-goal{font-size:15px;line-height:1.55;color:var(--ink);margin:3px 0 0}
+  .ms-body{margin-top:14px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:12px;background:rgba(27,79,138,.09);color:var(--blue);padding:4px 10px;border-radius:6px}
+  .chip.math{background:rgba(240,102,63,.1);color:var(--accent)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;padding:8px 14px;border-radius:9px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .btn.soft{border-color:var(--blue-line);box-shadow:none;color:var(--blue)}
+  .reveal{display:none;margin-top:12px;font-size:14.5px;line-height:1.6;background:var(--paper);border-radius:10px;padding:12px 14px}
+  .reveal.show{display:block}
+  .reveal b{color:var(--ink)}
+  .coach{border-left:3px solid var(--accent)}
+  .mathlink{font-size:13px;color:var(--blue);text-decoration:none;font-weight:600;display:inline-block;margin-top:8px}
+  .mathlink:hover{text-decoration:underline}
+  .proof{margin-top:14px;border-top:1px dashed var(--blue-line);padding-top:14px}
+  .proof label{font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+  .drop{margin-top:8px;border:2px dashed var(--blue-line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:var(--muted);font-size:14px}
+  .drop:hover{border-color:var(--blue);color:var(--blue)}
+  .thumb{margin-top:10px;border-radius:10px;max-width:220px;border:1.5px solid var(--green)}
+  .donetag{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:13.5px;margin-top:10px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">Voyage</div><div class="crumb">Project · Grade 4</div></div>
+
+  <div class="hero">
+    <div class="emoji">\uD83E\uDD16</div>
+    <div class="kick">Your project this month</div>
+    <h1>Build a Guard Bot</h1>
+    <p>A real robot that watches your room and reacts the second someone walks up. It has a job: guard your stuff. You build it, you code it, you tune it until it actually works.</p>
+  </div>
+
+  <div class="spec">
+    <b>The mission:</b> your bot must catch a person from <b>3 feet away</b>, react in <b>under 1 second</b>, and <b>not</b> false-alarm on a pet or a curtain. Hitting all three means tuning your sensor with real numbers \u2014 that\u2019s the whole challenge.
+  </div>
+
+  <div class="pbarwrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 6 done</div>
+  </div>
+
+  <div id="milestones"></div>
+</div>
+
+<script>
+const PROJECT = {
+  id:"guardbot_g4",
+  milestones:[
+    { id:"m1", title:"Wake the brain up", goal:"Get your micro:bit/Arduino powered on and make it do ONE thing you control \u2014 a light that turns on.",
+      coach:"Before sensors, prove the brain works. Plug it in, and make an LED light up on command. This is your \u201chello world.\u201d If the light works, the brain\u2019s alive and you can build on it. If not, check power and connections first \u2014 nothing else matters until this works.",
+      materials:["micro:bit or Arduino (in your kit)","USB cable / battery pack","an LED"],
+      math:[["place value","4.NBT.1"]], photo:"a photo of your light turning on" },
+    { id:"m2", title:"Give it eyes", goal:"Wire up the motion sensor and get it to notice when your hand moves in front of it.",
+      coach:"The PIR motion sensor outputs a number: low when still, high when something moves. Your job: read that number and light the LED when it spikes. Wave your hand \u2014 does the light react? The sensor \u201csees\u201d by watching that number change. You\u2019re turning a number into a reaction.",
+      materials:["motion (PIR) sensor","jumper wires","your bot from step 1"],
+      math:[["compare numbers","4.NBT.2"]], photo:"a photo of the sensor reacting to your hand" },
+    { id:"m3", title:"Make it sound the alarm", goal:"When motion is detected, trigger a buzzer + flashing light. A real alert.",
+      coach:"Now chain it: motion detected \u2192 buzzer ON + light FLASH. Decide the reaction \u2014 loud buzz? blinking pattern? A flash is just the light going on-off-on-off on a rhythm. That rhythm is a pattern with a rule (on for X, off for X). Your bot now has a voice.",
+      materials:["buzzer","your bot so far"],
+      math:[["patterns","4.OA.5"],["add & subtract","4.NBT.4"]], photo:"a photo/video of the alarm going off" },
+    { id:"m4", title:"Test its range", goal:"Find out how far your bot can actually detect. Walk up from far away and measure where it triggers.",
+      coach:"Time to get real numbers. Stand far back, walk toward it, mark where it FIRST triggers \u2014 measure that distance. Do it from a few angles (straight on, from the side). Log every distance. You\u2019ll probably find it\u2019s not the same from every angle. The mission needs 3 feet \u2014 are you hitting it?",
+      materials:["a tape measure","your bot","paper to log distances"],
+      math:[["measurement","4.MD.1"],["unit conversion","4.MD.1"],["line plots","4.MD.4"]], photo:"a photo of your distance-test log" },
+    { id:"m5", title:"Tune out the false alarms", goal:"Stop it screaming at the cat or the curtain. Adjust the sensitivity until it only catches people.",
+      coach:"This is the real engineering. The sensor has a sensitivity setting \u2014 a threshold number. Too low: it triggers on everything (false alarms). Too high: people sneak past. Test different threshold numbers, and for each, count how many false alarms vs real catches. Chart it. There\u2019s a sweet-spot number \u2014 find it with data, not guessing.",
+      materials:["your bot","something to log false alarms per setting"],
+      math:[["line plots","4.MD.4"],["compare decimals","4.NF.7"],["rounding","4.NBT.3"]], photo:"a photo of your sensitivity-vs-false-alarms chart" },
+    { id:"m6", title:"Deploy & upgrade", goal:"Mount it on your door and let it run. Then add ONE upgrade that makes it yours.",
+      coach:"Put it on guard duty for real \u2014 catch a sibling sneaking in. Then upgrade: a countdown before it arms? A secret disable code? Only active at night? Every upgrade is a new rule you design. Check the battery: how many hours does it last, how many triggers per charge? That\u2019s multiplication and division on your own machine.",
+      materials:["your finished bot","your upgrade idea"],
+      math:[["multiplication","4.NBT.5"],["division","4.NBT.6"],["word problems","4.OA.3"]], photo:"a photo/video of it catching someone" }
+  ]
+};
+
+const SAVE_KEY = 'voyage_project_'+PROJECT.id;
+let state = { done:{} };
+try{ const r=localStorage.getItem(SAVE_KEY); if(r) state=JSON.parse(r); }catch(e){}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function render(){
+  const box = document.getElementById('milestones');
+  box.innerHTML = PROJECT.milestones.map((m,i)=>{
+    const done = !!state.done[m.id];
+    const mathChips = m.math.map(x=>`<span class="chip math">${x[0]}</span>`).join('');
+    const mathLinks = m.math.map(x=>`<a class="mathlink" href="math-course.html#${x[1]}">Learn: ${x[0]} \u2192</a>`).join('<br>');
+    return `
+    <div class="ms ${done?'done':''}" data-id="${m.id}">
+      <div class="ms-head"><div class="ms-num">${done?'\u2714':i+1}</div>
+        <div style="flex:1"><div class="ms-title">${m.title}</div><p class="ms-goal">${m.goal}</p></div></div>
+      <div class="ms-body">
+        <div class="row">
+          <button class="btn soft" data-act="hint">I\u2019m stuck \u2014 hint</button>
+          <button class="btn soft" data-act="mats">What do I use?</button>
+          ${mathChips}
+        </div>
+        <div class="reveal coach" data-role="hint"><b>Coach:</b> ${m.coach}<div>${mathLinks}</div></div>
+        <div class="reveal" data-role="mats"><b>You\u2019ll use:</b><br>\u2022 ${m.materials.join('<br>\u2022 ')}</div>
+        <div class="proof">
+          ${ done
+            ? `<div class="donetag">\u2714 Done \u2014 saved to your record</div><div data-role="thumbwrap"></div><button class="btn soft" data-act="redo" style="margin-top:10px;font-size:12px;padding:5px 10px">Redo</button>`
+            : `<label>Prove it: upload ${m.photo}</label>
+               <div class="drop" data-act="pick">\uD83D\uDCF8 &nbsp;tap to add a photo/video frame</div>
+               <input type="file" accept="image/*" class="hidden" data-role="file">
+               <div data-role="thumbwrap"></div>` }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const n = Object.keys(state.done).length;
+  document.getElementById('pcount').textContent = `${n} / ${PROJECT.milestones.length} done`;
+  document.getElementById('pfill').style.width = (n/PROJECT.milestones.length*100)+'%';
+  wire();
+}
+function wire(){
+  document.querySelectorAll('.ms').forEach(card=>{
+    const id = card.dataset.id;
+    card.querySelector('[data-act="hint"]')?.addEventListener('click',()=>toggle(card,'hint'));
+    card.querySelector('[data-act="mats"]')?.addEventListener('click',()=>toggle(card,'mats'));
+    const pick = card.querySelector('[data-act="pick"]'), file = card.querySelector('[data-role="file"]');
+    if(pick && file){
+      pick.addEventListener('click',()=>file.click());
+      file.addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return;
+        const reader=new FileReader();
+        reader.onload=ev=>{ card.querySelector('[data-role="thumbwrap"]').innerHTML=`<img class="thumb" src="${ev.target.result}">`;
+          state.done[id]=true; save(); setTimeout(render,500); };
+        reader.readAsDataURL(f);
+      });
+    }
+    card.querySelector('[data-act="redo"]')?.addEventListener('click',()=>{ delete state.done[id]; save(); render(); });
+  });
+}
+function toggle(card,role){ card.querySelector(`[data-role="${role}"]`).classList.toggle('show'); }
+render();
+</script>
+  <script src="tutor-widget.js"></script>
+</body>
+</html>
