@@ -17,14 +17,14 @@
   var GLYPH = ''
     + '<svg viewBox="0 0 24 24" fill="none" class="vt-g">'
     +   '<ellipse cx="12" cy="12" rx="8.4" ry="3.2" fill="none" stroke="'+C.accent+'" stroke-width="1.4" opacity="0.45" transform="rotate(-24 12 12)"/>'
-    +   '<g transform="translate(12,12) rotate(-24)"><circle r="1.9" fill="'+C.accent+'">'
-    +     '<animateMotion class="vt-m" dur="4s" repeatCount="indefinite" rotate="0" path="M8.4,0 A8.4,3.2 0 1,1 -8.4,0 A8.4,3.2 0 1,1 8.4,0"/>'
-    +     '<animate class="vt-o" attributeName="opacity" values="0;1" keyTimes="0;0.5" dur="4s" repeatCount="indefinite" calcMode="discrete"/>'
+    +   '<g transform="translate(12,12) rotate(-24)"><circle r="1.9" fill="'+C.accent+'" opacity="0">'
+    +     '<animateMotion class="vt-m" dur="4s" begin="indefinite" repeatCount="indefinite" rotate="0" path="M8.4,0 A8.4,3.2 0 1,1 -8.4,0 A8.4,3.2 0 1,1 8.4,0"/>'
+    +     '<animate class="vt-o" attributeName="opacity" values="0;1" keyTimes="0;0.5" dur="4s" begin="indefinite" repeatCount="indefinite" calcMode="discrete"/>'
     +   '</circle></g>'
     +   '<circle cx="12" cy="12" r="4.3" fill="currentColor"/>'
-    +   '<g transform="translate(12,12) rotate(-24)"><circle r="1.9" fill="'+C.accent+'">'
-    +     '<animateMotion class="vt-m" dur="4s" repeatCount="indefinite" rotate="0" path="M8.4,0 A8.4,3.2 0 1,1 -8.4,0 A8.4,3.2 0 1,1 8.4,0"/>'
-    +     '<animate class="vt-o" attributeName="opacity" values="1;0" keyTimes="0;0.5" dur="4s" repeatCount="indefinite" calcMode="discrete"/>'
+    +   '<g transform="translate(12,12) rotate(-24)"><circle r="1.9" fill="'+C.accent+'" opacity="0">'
+    +     '<animateMotion class="vt-m" dur="4s" begin="indefinite" repeatCount="indefinite" rotate="0" path="M8.4,0 A8.4,3.2 0 1,1 -8.4,0 A8.4,3.2 0 1,1 8.4,0"/>'
+    +     '<animate class="vt-o" attributeName="opacity" values="1;0" keyTimes="0;0.5" dur="4s" begin="indefinite" repeatCount="indefinite" calcMode="discrete"/>'
     +   '</circle></g>'
     + '</svg>';
 
@@ -168,9 +168,9 @@
       }
       return { role:m.role, content:m.content };
     });
-    return fetch('https://api.anthropic.com/v1/messages', {
+    return fetch('https://voyage-tutor.superjames735.workers.dev', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, system:systemPrompt(), messages:apiMessages })
+      body: JSON.stringify({ system:systemPrompt(), messages:apiMessages })
     }).then(function(r){ return r.json(); }).then(function(data){
       var text=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
       return text || 'Hmm, I didn\u2019t catch that \u2014 can you say it again?';
@@ -193,13 +193,17 @@
 
     var typing=bubble('tutor','<span class="vt-typing">thinking\u2026</span>');
     typing.classList.add('think');
-    typing.querySelectorAll('animateMotion,animate').forEach(function(a){ a.setAttribute('dur','1s'); if(a.beginElement){ try{a.beginElement();}catch(e){} } });
+    var anims=typing.querySelectorAll('.vt-m,.vt-o');
+    anims.forEach(function(a){ if(a.beginElement){ try{a.beginElement();}catch(e){} } });
+    function stopOrbit(){ anims.forEach(function(a){ if(a.endElement){ try{a.endElement();}catch(e){} } }); }
     callTutor().then(function(reply){
+      stopOrbit();
       typing.classList.remove('think');
       typing.querySelector('.vt-bub').innerHTML=renderText(reply);
       convo.push({ role:'assistant', content:reply });
       chat.scrollTop=chat.scrollHeight;
     }).catch(function(err){
+      stopOrbit();
       typing.classList.remove('think');
       typing.querySelector('.vt-bub').innerHTML=renderText('I couldn\u2019t reach my brain just now \u2014 on your live site this connects through your own setup. (Error: '+err.message+')');
     });
