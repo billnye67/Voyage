@@ -19,30 +19,17 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  [id]{scroll-margin-top:88px}
   body{
     font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);
     background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
   .mono{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
 
-  /* SITE HEADER — full-width bar, logo hard left, nav hard right */
-  .site-header{position:relative;z-index:20;border-bottom:1px solid rgba(27,79,138,.10);
-    background:rgba(243,240,230,.82);backdrop-filter:saturate(140%) blur(6px)}
-  .site-header .bar{max-width:1600px;margin:0 auto;padding:16px 40px;
-    display:flex;align-items:center;justify-content:space-between;gap:24px}
-  .brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:inherit}
+  header{padding:26px 0 8px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:baseline;gap:10px}
   .brand .name{font-family:'Fraunces',serif;font-weight:700;font-size:26px}
   .brand .tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
-  .site-nav{display:flex;align-items:center;gap:34px}
-  .site-nav a{font-size:14.5px;font-weight:500;color:var(--ink);text-decoration:none;opacity:.78;
-    transition:opacity .15s,color .15s}
-  .site-nav a:hover{opacity:1;color:var(--blue)}
-  .site-nav a.nav-login{font-family:'Space Mono',monospace;font-size:12.5px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--blue);opacity:1;
-    border:1.5px solid var(--blue);border-radius:2px;padding:9px 16px}
-  .site-nav a.nav-login:hover{background:var(--blue);color:var(--paper)}
 
   /* HERO — the only section with the drafting-paper grid */
   .hero-outer{position:relative;overflow:hidden;border-bottom:1px solid var(--blue-line)}
@@ -55,8 +42,7 @@
     mask-image:linear-gradient(to bottom,#000 60%,transparent);
   }
   /* trajectory arc — top-right corner only */
-  .traj{position:absolute;top:14px;left:50%;transform:translateX(-50%);
-    width:100%;max-width:1280px;height:250px;z-index:0;pointer-events:none;overflow:visible}
+  .traj{position:absolute;top:20px;right:0;width:58%;height:260px;z-index:0;pointer-events:none;overflow:visible}
   .traj svg{position:absolute;inset:0;width:100%;height:100%}
   .traj .arc{stroke:rgba(27,79,138,.28);stroke-width:1.5;fill:none;stroke-dasharray:4 5}
   .traj .arc-solid{stroke:rgba(240,102,63,.55);stroke-width:2;fill:none;
@@ -64,8 +50,8 @@
   .traj .lbl{font-family:'Space Mono',monospace;font-size:11px;fill:rgba(27,79,138,.4)}
   .traj .orbit-eq{font-family:'Space Mono',monospace;font-size:12px;fill:rgba(27,79,138,.22)}
 
-  .hero{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:72px;
-    align-items:center;padding:56px 0 72px}
+  .hero{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;
+    align-items:center;padding:34px 0 46px}
   .hero .kicker{margin-bottom:16px}
   .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.6vw,54px);line-height:1.03;
     letter-spacing:-.02em;margin-bottom:20px}
@@ -117,8 +103,7 @@
   .numwrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);border-radius:2px}
   .stat-label{margin-top:14px;font-size:13px;line-height:1.45;color:var(--muted);max-width:20ch;margin-left:auto;margin-right:auto}
   .stats-note{text-align:center;margin-top:30px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#a3adba}
-  .seafloor{position:absolute;left:50%;transform:translateX(-50%);bottom:0;
-    width:100%;max-width:1500px;height:132px;pointer-events:none;overflow:hidden}
+  .seafloor{position:absolute;left:0;right:0;bottom:0;height:140px;pointer-events:none;overflow:hidden}
   .seafloor svg{width:100%;height:100%;display:block}
   .fish{animation:none}
   .fish.f1{animation:roam1 22s ease-in-out infinite}
@@ -385,11 +370,7 @@
   }
 
   @media(max-width:800px){
-    .site-header .bar{padding:14px 20px}
-    .site-nav{gap:14px}
-    .site-nav a:not(.nav-login){display:none}
-    .brand .tag{display:none}
-    .hero{grid-template-columns:1fr;gap:26px;padding:34px 0 46px}
+    .hero{grid-template-columns:1fr;gap:26px}
     .build{max-width:360px}
     .grid2{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
@@ -432,21 +413,6 @@
 </head>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="chalk" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter></defs></svg><body>
 
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="index.html">
-      <span class="name">Voyage</span>
-      <span class="tag">// learn by building</span>
-    </a>
-    <nav class="site-nav">
-      <a href="#how-it-works">How it works</a>
-      <a href="#curriculum">Curriculum</a>
-      <a href="#founder-story">Our story</a>
-      <a class="nav-login" href="account.html">Log in</a>
-    </nav>
-  </div>
-</header>
-
 <div class="hero-outer">
   <div class="traj" aria-hidden="true">
     <svg viewBox="0 0 1000 300" preserveAspectRatio="xMaxYMin meet">
@@ -474,6 +440,13 @@
   </div>
 
   <div class="wrap">
+    <header>
+      <div class="brand">
+        <span class="name">Voyage</span>
+        <span class="tag">// learn by building</span>
+      </div>
+    </header>
+
     <section class="hero">
       <div class="hero-copy">
         <div class="kicker mono">For homeschool &amp; virtual students</div>
@@ -930,7 +903,7 @@
     <div class="eyebrow">The difference</div>
     <h2 class="band-title">Most homeschool software teaches kids to sit still.<br><span class="accent-word">Voyage teaches them to build.</span></h2>
 
-    <div class="grades" id="curriculum">
+    <div class="grades">
       <div class="grade-card">
         <div class="grade-img"><img src="img/grade_elem.jpg" alt="Young student building a snap-circuit kit"></div>
         <div class="grade-body">
@@ -981,7 +954,7 @@
 </section>
 
 <!-- ========== HOW IT WORKS (numbered, big) ========== -->
-<section class="band band-paper process2" id="how-it-works">
+<section class="band band-paper process2">
   <div class="ruler-seam" aria-hidden="true"><svg viewBox="0 0 1600 30" preserveAspectRatio="xMidYMid slice">
     <rect x="0" y="0" width="1600" height="30" fill="#ecc25f"/>
     <rect x="0" y="0" width="1600" height="2.5" fill="#f7dc95"/>
