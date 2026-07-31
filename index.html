@@ -418,19 +418,19 @@
     <svg viewBox="0 0 1000 300" preserveAspectRatio="xMaxYMin meet">
       <!-- stars clustered tight around the rocket -->
       <g class="stars">
-        <path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/>
-        <path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/>
-        <path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/>
-        <circle cx="530" cy="45" r="3" fill="rgba(27,79,138,.6)"/>
-        <circle cx="465" cy="120" r="2.6" fill="rgba(240,102,63,.6)"/>
-        <circle cx="560" cy="135" r="3" fill="rgba(27,79,138,.55)"/>
-        <circle cx="620" cy="60" r="2.4" fill="rgba(27,79,138,.5)"/>
+        <g transform="translate(560,55) scale(0.62) translate(-560,-55)"><path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/></g>
+        <g transform="translate(600,110) scale(0.62) translate(-600,-110)"><path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/></g>
+        <g transform="translate(470,70) scale(0.62) translate(-470,-70)"><path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/></g>
+        <circle cx="530" cy="45" r="1.86" fill="rgba(27,79,138,.6)"/>
+        <circle cx="465" cy="120" r="1.61" fill="rgba(240,102,63,.6)"/>
+        <circle cx="560" cy="135" r="1.86" fill="rgba(27,79,138,.55)"/>
+        <circle cx="620" cy="60" r="1.49" fill="rgba(27,79,138,.5)"/>
       </g>
 
       <!-- arc + rocket -->
       <path class="arc" d="M 500 90 C 700 90 890 120 985 260"/>
       <path class="arc-solid" style="--al:600" d="M 500 90 C 700 90 890 120 985 260"/>
-      <g class="rocket" transform="translate(500,90) rotate(-88)">
+      <g class="rocket" transform="translate(500,90) rotate(-88) scale(0.62)">
         <path d="M 0 -22 Q 10 -4 8 14 L -8 14 Q -10 -4 0 -22 Z" fill="#fff" stroke="#16233a" stroke-width="2"/>
         <circle cx="0" cy="-6" r="4" fill="#1b4f8a"/>
         <path d="M -8 14 L -16 22 L -8 5 Z" fill="#1b4f8a"/>
