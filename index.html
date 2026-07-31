@@ -19,17 +19,31 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
+  [id]{scroll-margin-top:84px}
   body{
     font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);
     background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
   .mono{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
 
-  header{padding:26px 0 8px;display:flex;align-items:center;justify-content:space-between}
-  .brand{display:flex;align-items:baseline;gap:10px}
-  .brand .name{font-family:'Fraunces',serif;font-weight:700;font-size:26px}
-  .brand .tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
+  /* SITE HEADER — full-width bar, logo hard left, nav hard right */
+  .site-header{position:relative;z-index:20;background:var(--ink);
+    border-bottom:2px solid var(--accent)}
+  .site-header .bar{max-width:1640px;margin:0 auto;padding:16px 44px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:inherit}
+  .brand .name{font-family:'Fraunces',serif;font-weight:700;font-size:26px;color:var(--paper)}
+  .brand .tag{font-family:'Space Mono',monospace;font-size:11px;color:rgba(243,240,230,.6);letter-spacing:.1em}
+  .site-nav{display:flex;align-items:center;gap:32px}
+  .site-nav a{font-size:14.5px;font-weight:500;color:var(--paper);text-decoration:none;opacity:.82;
+    transition:opacity .15s,color .15s}
+  .site-nav a:hover{opacity:1;color:#fff}
+  .site-nav a.nav-login{font-family:'Space Mono',monospace;font-size:12.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--paper);opacity:1;
+    border:1.5px solid rgba(243,240,230,.6);border-radius:2px;padding:9px 16px;
+    transition:background .15s,color .15s,border-color .15s}
+  .site-nav a.nav-login:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 
   /* HERO — the only section with the drafting-paper grid */
   .hero-outer{position:relative;overflow:hidden;border-bottom:1px solid var(--blue-line)}
@@ -42,7 +56,7 @@
     mask-image:linear-gradient(to bottom,#000 60%,transparent);
   }
   /* trajectory arc — top-right corner only */
-  .traj{position:absolute;top:20px;right:0;width:58%;height:260px;z-index:0;pointer-events:none;overflow:visible}
+  .traj{position:absolute;top:58px;right:0;width:58%;height:160px;z-index:0;pointer-events:none;overflow:visible}
   .traj svg{position:absolute;inset:0;width:100%;height:100%}
   .traj .arc{stroke:rgba(27,79,138,.28);stroke-width:1.5;fill:none;stroke-dasharray:4 5}
   .traj .arc-solid{stroke:rgba(240,102,63,.55);stroke-width:2;fill:none;
@@ -50,14 +64,14 @@
   .traj .lbl{font-family:'Space Mono',monospace;font-size:11px;fill:rgba(27,79,138,.4)}
   .traj .orbit-eq{font-family:'Space Mono',monospace;font-size:12px;fill:rgba(27,79,138,.22)}
 
-  .hero{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:56px;
-    align-items:center;padding:40px 0 56px}
+  .hero{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;
+    align-items:center;padding:28px 0 52px}
   .hero .kicker{margin-bottom:16px}
-  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.4vw,62px);line-height:1.03;
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.6vw,54px);line-height:1.03;
     letter-spacing:-.02em;margin-bottom:20px}
   .hero h1 .u{position:relative;color:var(--accent);white-space:nowrap}
   .hero h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:.05em;height:.13em;background:var(--accent);opacity:.28;border-radius:2px}
-  .hero p{font-size:clamp(16px,1.5vw,20px);color:var(--muted);max-width:52ch;margin-bottom:26px}
+  .hero p{font-size:clamp(16px,1.9vw,19px);color:var(--muted);max-width:52ch;margin-bottom:26px}
   .cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;text-decoration:none;
     font-weight:600;font-size:17px;padding:16px 26px;border-radius:2px;box-shadow:4px 4px 0 var(--ink);
     transition:transform .12s,box-shadow .12s}
@@ -66,7 +80,7 @@
   .hero .sub{margin-top:14px;font-family:'Space Mono',monospace;font-size:12.5px;color:var(--muted)}
 
   /* animated build panel (right) */
-  .build{position:relative;margin-top:0;width:min(100%,440px);margin-left:auto;border:1.5px solid var(--blue);border-radius:3px;background:rgba(255,255,255,.55);
+  .build{position:relative;margin-top:36px;border:1.5px solid var(--blue);border-radius:3px;background:rgba(255,255,255,.55);
     aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
   .build .corner{position:absolute;width:11px;height:11px;border:1.5px solid var(--accent)}
   .build .c1{top:6px;left:6px;border-right:0;border-bottom:0}
@@ -370,8 +384,12 @@
   }
 
   @media(max-width:800px){
-    .hero{grid-template-columns:1fr;gap:26px}
-    .build{width:min(100%,360px);margin-left:0}
+    .site-header .bar{padding:13px 20px}
+    .site-nav{gap:12px}
+    .site-nav a:not(.nav-login){display:none}
+    .brand .tag{display:none}
+    .hero{grid-template-columns:1fr;gap:26px;padding:36px 0 46px}
+    .build{max-width:360px}
     .grid2{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .traj{opacity:.5}
@@ -414,23 +432,38 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="chalk" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter></defs></svg><body>
 
 <div class="hero-outer">
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="name">Voyage</span>
+        <span class="tag">// learn by building</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#how-it-works">How it works</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="#founder-story">Our story</a>
+        <a class="nav-login" href="account.html">Log in</a>
+      </nav>
+    </div>
+  </header>
+
   <div class="traj" aria-hidden="true">
     <svg viewBox="0 0 1000 300" preserveAspectRatio="xMaxYMin meet">
       <!-- stars clustered tight around the rocket -->
       <g class="stars">
-        <g transform="translate(560,55) scale(0.62) translate(-560,-55)"><path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/></g>
-        <g transform="translate(600,110) scale(0.62) translate(-600,-110)"><path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/></g>
-        <g transform="translate(470,70) scale(0.62) translate(-470,-70)"><path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/></g>
-        <circle cx="530" cy="45" r="1.86" fill="rgba(27,79,138,.6)"/>
-        <circle cx="465" cy="120" r="1.61" fill="rgba(240,102,63,.6)"/>
-        <circle cx="560" cy="135" r="1.86" fill="rgba(27,79,138,.55)"/>
-        <circle cx="620" cy="60" r="1.49" fill="rgba(27,79,138,.5)"/>
+        <path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/>
+        <path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/>
+        <path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/>
+        <circle cx="530" cy="45" r="3" fill="rgba(27,79,138,.6)"/>
+        <circle cx="465" cy="120" r="2.6" fill="rgba(240,102,63,.6)"/>
+        <circle cx="560" cy="135" r="3" fill="rgba(27,79,138,.55)"/>
+        <circle cx="620" cy="60" r="2.4" fill="rgba(27,79,138,.5)"/>
       </g>
 
       <!-- arc + rocket -->
-      <path class="arc" d="M 500 90 C 700 90 890 120 985 260"/>
-      <path class="arc-solid" style="--al:600" d="M 500 90 C 700 90 890 120 985 260"/>
-      <g class="rocket" transform="translate(500,90) rotate(-88) scale(0.62)">
+      <path class="arc" d="M 500 90 C 700 76 880 84 985 252"/>
+      <path class="arc-solid" style="--al:600" d="M 500 90 C 700 76 880 84 985 252"/>
+      <g class="rocket" transform="translate(500,90) rotate(-88)">
         <path d="M 0 -22 Q 10 -4 8 14 L -8 14 Q -10 -4 0 -22 Z" fill="#fff" stroke="#16233a" stroke-width="2"/>
         <circle cx="0" cy="-6" r="4" fill="#1b4f8a"/>
         <path d="M -8 14 L -16 22 L -8 5 Z" fill="#1b4f8a"/>
@@ -440,13 +473,6 @@
   </div>
 
   <div class="wrap">
-    <header>
-      <div class="brand">
-        <span class="name">Voyage</span>
-        <span class="tag">// learn by building</span>
-      </div>
-    </header>
-
     <section class="hero">
       <div class="hero-copy">
         <div class="kicker mono">For homeschool &amp; virtual students</div>
@@ -903,7 +929,7 @@
     <div class="eyebrow">The difference</div>
     <h2 class="band-title">Most homeschool software teaches kids to sit still.<br><span class="accent-word">Voyage teaches them to build.</span></h2>
 
-    <div class="grades">
+    <div class="grades" id="curriculum">
       <div class="grade-card">
         <div class="grade-img"><img src="img/grade_elem.jpg" alt="Young student building a snap-circuit kit"></div>
         <div class="grade-body">
@@ -954,7 +980,7 @@
 </section>
 
 <!-- ========== HOW IT WORKS (numbered, big) ========== -->
-<section class="band band-paper process2">
+<section class="band band-paper process2" id="how-it-works">
   <div class="ruler-seam" aria-hidden="true"><svg viewBox="0 0 1600 30" preserveAspectRatio="xMidYMid slice">
     <rect x="0" y="0" width="1600" height="30" fill="#ecc25f"/>
     <rect x="0" y="0" width="1600" height="2.5" fill="#f7dc95"/>
