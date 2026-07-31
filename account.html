@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+  .card{background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:30px 28px;max-width:420px;width:100%;box-shadow:6px 6px 0 var(--ink)}
+  .brand{font-family:'Fraunces',serif;font-weight:700;font-size:26px;margin-bottom:2px}
+  .tagline{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin-bottom:5px}
+  .sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.4}
+  label{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+  input,select{width:100%;font-family:'Space Grotesk',sans-serif;font-size:16px;padding:11px 13px;border:1.5px solid var(--blue-line);border-radius:10px;background:#fff;color:var(--ink);margin-bottom:15px;outline:none}
+  input:focus,select:focus{border-color:var(--blue)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 20px;border-radius:11px;border:1.5px solid var(--ink);background:var(--accent);color:#fff;box-shadow:3px 3px 0 var(--ink);width:100%;transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.secondary{background:#fff;color:var(--ink)}
+  .swap{font-size:13px;color:var(--muted);text-align:center;margin-top:16px}
+  .swap a{color:var(--blue);cursor:pointer;text-decoration:underline;font-weight:600}
+  .err{background:#fdecea;border:1.5px solid var(--accent);color:#a53225;font-size:13px;padding:9px 12px;border-radius:9px;margin-bottom:14px;display:none}
+  .err.show{display:block}
+  .hidden{display:none}
+
+  /* roster */
+  .kidrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--blue-line);border-radius:12px;padding:13px 15px;margin-bottom:11px}
+  .kidrow .av{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;font-size:18px;flex-shrink:0}
+  .kidrow .info{flex:1}
+  .kidrow .info .nm{font-weight:600;font-size:16px}
+  .kidrow .info .gr{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .kidrow .enter{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:8px 14px;border-radius:9px;border:1.5px solid var(--ink);background:var(--accent);color:#fff;box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s;white-space:nowrap}
+  .kidrow .enter:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .addkid{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;padding:12px;border-radius:11px;border:1.5px dashed var(--blue);background:transparent;color:var(--blue);width:100%;margin-top:4px}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--blue-line)}
+  .foot .who{font-size:12px;color:var(--muted)}
+  .foot .logout{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">Voyage</div>
+  <div class="tagline">Family account</div>
+
+  <div class="err" id="err"></div>
+
+  <!-- CREATE ACCOUNT -->
+  <div id="viewSignup" class="hidden">
+    <h2>Create your family account</h2>
+    <p class="sub">One account for the whole family. You'll add each kid next.</p>
+    <label>Your name (parent/guardian)</label>
+    <input type="text" id="suName" placeholder="e.g. Sarah" autocomplete="off">
+    <label>Email</label>
+    <input type="email" id="suEmail" placeholder="you@email.com" autocomplete="off">
+    <label>Password</label>
+    <input type="password" id="suPass" placeholder="At least 6 characters">
+    <button class="btn" id="suBtn">Create account →</button>
+    <div class="swap">Already have an account? <a id="toLogin">Log in</a></div>
+  </div>
+
+  <!-- LOG IN -->
+  <div id="viewLogin" class="hidden">
+    <h2>Welcome back</h2>
+    <p class="sub">Log in to your family account.</p>
+    <label>Email</label>
+    <input type="email" id="liEmail" placeholder="you@email.com" autocomplete="off">
+    <label>Password</label>
+    <input type="password" id="liPass" placeholder="Your password">
+    <button class="btn" id="liBtn">Log in →</button>
+    <div class="swap">New here? <a id="toSignup">Create an account</a></div>
+  </div>
+
+  <!-- KID ROSTER -->
+  <div id="viewRoster" class="hidden">
+    <h2 id="rosterHi">Your learners</h2>
+    <p class="sub">Pick who's learning today, or add another kid.</p>
+    <div id="kidList"></div>
+    <button class="addkid" id="addKidBtn">+ Add a kid</button>
+    <div class="foot">
+      <span class="who" id="whoami"></span>
+      <button class="logout" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <!-- ADD KID -->
+  <div id="viewAddKid" class="hidden">
+    <h2>Add a kid</h2>
+    <p class="sub">Each kid gets their own lessons and progress.</p>
+    <label>Kid's first name</label>
+    <input type="text" id="akName" placeholder="e.g. Max" autocomplete="off">
+    <label>Grade</label>
+    <select id="akGrade">
+      <option value="4">Grade 4</option>
+      <option value="5" disabled>Grade 5 (coming soon)</option>
+      <option value="6" disabled>Grade 6 (coming soon)</option>
+    </select>
+    <button class="btn" id="akBtn">Add kid →</button>
+    <div class="swap"><a id="akCancel">Cancel</a></div>
+  </div>
+</div>
+
+<script>
+const ACCT_KEY = 'voyage_account';
+let acct = null;
+try{ const r=localStorage.getItem(ACCT_KEY); if(r) acct=JSON.parse(r); }catch(e){}
+
+function save(){ try{ localStorage.setItem(ACCT_KEY, JSON.stringify(acct)); }catch(e){} }
+function show(id){
+  ['viewSignup','viewLogin','viewRoster','viewAddKid'].forEach(v=>{
+    document.getElementById(v).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+  hideErr();
+}
+function showErr(m){ const e=document.getElementById('err'); e.textContent=m; e.classList.add('show'); }
+function hideErr(){ document.getElementById('err').classList.remove('show'); }
+function uid(){ return 'k'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+/* ---------- routing on load ---------- */
+function route(){
+  if(!acct){ show('viewSignup'); return; }
+  if(!acct.loggedIn){ show('viewLogin'); return; }
+  renderRoster();
+  show('viewRoster');
+}
+
+/* ---------- signup ---------- */
+document.getElementById('suBtn').addEventListener('click', ()=>{
+  const name=document.getElementById('suName').value.trim();
+  const email=document.getElementById('suEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('suPass').value;
+  if(!name) return showErr('Enter your name.');
+  if(!email || !email.includes('@')) return showErr('Enter a valid email.');
+  if(pass.length<6) return showErr('Password needs at least 6 characters.');
+  acct = { parentName:name, email:email, pass:pass, kids:[], activeKidId:null, loggedIn:true };
+  save();
+  renderRoster(); show('viewRoster');
+});
+document.getElementById('toLogin').addEventListener('click', ()=>show('viewLogin'));
+
+/* ---------- login ---------- */
+document.getElementById('liBtn').addEventListener('click', ()=>{
+  const email=document.getElementById('liEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('liPass').value;
+  if(!acct){ return showErr('No account found on this device. Create one first.'); }
+  if(email!==acct.email || pass!==acct.pass){ return showErr('Email or password is wrong.'); }
+  acct.loggedIn=true; save();
+  renderRoster(); show('viewRoster');
+});
+document.getElementById('toSignup').addEventListener('click', ()=>show('viewSignup'));
+
+/* ---------- roster ---------- */
+function renderRoster(){
+  document.getElementById('rosterHi').textContent = acct.parentName ? `${acct.parentName}'s learners` : 'Your learners';
+  document.getElementById('whoami').textContent = acct.email;
+  const list=document.getElementById('kidList');
+  if(!acct.kids.length){
+    list.innerHTML = `<p class="sub" style="margin-bottom:8px">No kids added yet. Add your first one below.</p>`;
+    return;
+  }
+  list.innerHTML = acct.kids.map(k=>`
+    <div class="kidrow">
+      <div class="av">${(k.name[0]||'?').toUpperCase()}</div>
+      <div class="info"><div class="nm">${k.name}</div><div class="gr">Grade ${k.grade}</div></div>
+      <button class="enter" data-id="${k.id}">Enter →</button>
+    </div>`).join('');
+  list.querySelectorAll('.enter').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      acct.activeKidId=b.getAttribute('data-id'); save();
+      window.location.href='home.html';
+    });
+  });
+}
+document.getElementById('addKidBtn').addEventListener('click', ()=>show('viewAddKid'));
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  acct.loggedIn=false; acct.activeKidId=null; save(); show('viewLogin');
+});
+
+/* ---------- add kid ---------- */
+document.getElementById('akBtn').addEventListener('click', ()=>{
+  const name=document.getElementById('akName').value.trim();
+  const grade=document.getElementById('akGrade').value;
+  if(!name) return showErr('Enter the kid\u2019s name.');
+  acct.kids.push({ id:uid(), name:name, grade:grade });
+  save();
+  document.getElementById('akName').value='';
+  renderRoster(); show('viewRoster');
+});
+document.getElementById('akCancel').addEventListener('click', ()=>{ renderRoster(); show('viewRoster'); });
+
+route();
+</script>
+</body>
+</html>

@@ -60,23 +60,6 @@
 </head>
 <body>
 
-<!-- First-visit onboarding (saved locally for now; later fires after Stripe checkout) -->
-<div class="overlay hidden" id="onboard">
-  <div class="obox">
-    <h2>Welcome to Voyage \uD83D\uDC4B</h2>
-    <p>Let\u2019s set up your learner. Takes 10 seconds.</p>
-    <label>Kid\u2019s first name</label>
-    <input type="text" id="obName" placeholder="e.g. Max" autocomplete="off">
-    <label>Grade</label>
-    <select id="obGrade">
-      <option value="4">Grade 4</option>
-      <option value="5" disabled>Grade 5 (coming soon)</option>
-      <option value="6" disabled>Grade 6 (coming soon)</option>
-    </select>
-    <button class="btn" id="obStart">Start learning \u2192</button>
-  </div>
-</div>
-
 <div class="wrap">
   <div class="top"><div class="brand">Voyage</div><div class="crumb" id="gradeCrumb">Grade 4</div></div>
 
@@ -92,14 +75,22 @@
   <div class="sec">More projects to explore</div>
   <div class="projgrid" id="projgrid"></div>
 
-  <button class="reset" id="resetProfile">Not you? Reset learner</button>
+  <button class="reset" id="resetProfile">Switch learner / account</button>
 </div>
 
 <script>
-/* ---- profile (name + grade), saved locally for now ---- */
-const PROFILE_KEY = 'voyage_profile';
-let profile = null;
-try{ const r=localStorage.getItem(PROFILE_KEY); if(r) profile=JSON.parse(r); }catch(e){}
+/* ---- identity comes from the family account (account.html) ---- */
+const ACCT_KEY = 'voyage_account';
+let acct = null, profile = null;
+try{ const r=localStorage.getItem(ACCT_KEY); if(r) acct=JSON.parse(r); }catch(e){}
+// guard: must be logged in with a kid selected, else go to the front door
+if(!acct || !acct.loggedIn || !acct.activeKidId){
+  window.location.replace('account.html');
+} else {
+  const kid = (acct.kids||[]).find(k=>k.id===acct.activeKidId);
+  if(!kid){ window.location.replace('account.html'); }
+  else { profile = { name: kid.name, grade: kid.grade }; }
+}
 
 /* ---- subjects (courses) ---- */
 const SUBJECTS = [
@@ -165,28 +156,13 @@ function renderDash(){
   }).join('');
 }
 
-function showOnboard(){ document.getElementById('onboard').classList.remove('hidden'); }
-function hideOnboard(){ document.getElementById('onboard').classList.add('hidden'); }
-
-document.getElementById('obStart').addEventListener('click', ()=>{
-  const name = document.getElementById('obName').value.trim();
-  const grade = document.getElementById('obGrade').value;
-  profile = { name: name || 'friend', grade };
-  try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }catch(e){}
-  hideOnboard();
-  renderDash();
-});
-
+/* switch learner / manage account → back to the front door */
 document.getElementById('resetProfile').addEventListener('click', ()=>{
-  if(confirm('Reset the learner profile? (Your course/project progress stays.)')){
-    try{ localStorage.removeItem(PROFILE_KEY); }catch(e){}
-    profile=null; showOnboard();
-  }
+  window.location.href='account.html';
 });
 
-/* first visit → onboarding; otherwise → dashboard */
-if(!profile){ showOnboard(); }
-renderDash();
+/* only render if the guard let us through (profile is set) */
+if(profile){ renderDash(); }
 </script>
   <script src="tutor-widget.js"></script>
 </body>
