@@ -24,7 +24,7 @@
     font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);
     background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 32px}
   .mono{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
 
   /* SITE HEADER — full-width bar, logo hard left, nav hard right */
@@ -67,11 +67,11 @@
   .hero{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;
     align-items:center;padding:28px 0 52px}
   .hero .kicker{margin-bottom:16px}
-  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.6vw,54px);line-height:1.03;
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.4vw,64px);line-height:1.03;
     letter-spacing:-.02em;margin-bottom:20px}
   .hero h1 .u{position:relative;color:var(--accent);white-space:nowrap}
   .hero h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:.05em;height:.13em;background:var(--accent);opacity:.28;border-radius:2px}
-  .hero p{font-size:clamp(16px,1.9vw,19px);color:var(--muted);max-width:52ch;margin-bottom:26px}
+  .hero p{font-size:clamp(16px,1.6vw,21px);color:var(--muted);max-width:50ch;margin-bottom:26px}
   .cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;text-decoration:none;
     font-weight:600;font-size:17px;padding:16px 26px;border-radius:2px;box-shadow:4px 4px 0 var(--ink);
     transition:transform .12s,box-shadow .12s}
@@ -80,7 +80,7 @@
   .hero .sub{margin-top:14px;font-family:'Space Mono',monospace;font-size:12.5px;color:var(--muted)}
 
   /* animated build panel (right) */
-  .build{position:relative;margin-top:36px;border:1.5px solid var(--blue);border-radius:3px;background:rgba(255,255,255,.55);
+  .build{position:relative;margin-top:36px;width:min(100%,420px);margin-left:auto;border:1.5px solid var(--blue);border-radius:3px;background:rgba(255,255,255,.55);
     aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
   .build .corner{position:absolute;width:11px;height:11px;border:1.5px solid var(--accent)}
   .build .c1{top:6px;left:6px;border-right:0;border-bottom:0}
@@ -389,7 +389,7 @@
     .site-nav a:not(.nav-login){display:none}
     .brand .tag{display:none}
     .hero{grid-template-columns:1fr;gap:26px;padding:36px 0 46px}
-    .build{max-width:360px}
+    .build{width:min(100%,360px);margin-left:0}
     .grid2{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .traj{opacity:.5}
@@ -451,19 +451,19 @@
     <svg viewBox="0 0 1000 300" preserveAspectRatio="xMaxYMin meet">
       <!-- stars clustered tight around the rocket -->
       <g class="stars">
-        <path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/>
-        <path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/>
-        <path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/>
-        <circle cx="530" cy="45" r="3" fill="rgba(27,79,138,.6)"/>
-        <circle cx="465" cy="120" r="2.6" fill="rgba(240,102,63,.6)"/>
-        <circle cx="560" cy="135" r="3" fill="rgba(27,79,138,.55)"/>
-        <circle cx="620" cy="60" r="2.4" fill="rgba(27,79,138,.5)"/>
+        <g transform="translate(560,55) scale(0.62) translate(-560,-55)"><path d="M 560 55 l 4 11 l 11 4 l -11 4 l -4 11 l -4 -11 l -11 -4 l 11 -4 z" fill="rgba(240,102,63,.75)"/></g>
+        <g transform="translate(600,110) scale(0.62) translate(-600,-110)"><path d="M 600 110 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" fill="rgba(27,79,138,.65)"/></g>
+        <g transform="translate(470,70) scale(0.62) translate(-470,-70)"><path d="M 470 70 l 2.5 6 l 6 2.5 l -6 2.5 l -2.5 6 l -2.5 -6 l -6 -2.5 l 6 -2.5 z" fill="rgba(27,79,138,.6)"/></g>
+        <circle cx="530" cy="45" r="1.86" fill="rgba(27,79,138,.6)"/>
+        <circle cx="465" cy="120" r="1.61" fill="rgba(240,102,63,.6)"/>
+        <circle cx="560" cy="135" r="1.86" fill="rgba(27,79,138,.55)"/>
+        <circle cx="620" cy="60" r="1.49" fill="rgba(27,79,138,.5)"/>
       </g>
 
       <!-- arc + rocket -->
-      <path class="arc" d="M 500 90 C 700 76 880 84 985 252"/>
-      <path class="arc-solid" style="--al:600" d="M 500 90 C 700 76 880 84 985 252"/>
-      <g class="rocket" transform="translate(500,90) rotate(-88)">
+      <path class="arc" d="M 500 90 C 700 78 862 92 988 136"/>
+      <path class="arc-solid" style="--al:520" d="M 500 90 C 700 78 862 92 988 136"/>
+      <g class="rocket" transform="translate(500,90) rotate(-88) scale(0.62)">
         <path d="M 0 -22 Q 10 -4 8 14 L -8 14 Q -10 -4 0 -22 Z" fill="#fff" stroke="#16233a" stroke-width="2"/>
         <circle cx="0" cy="-6" r="4" fill="#1b4f8a"/>
         <path d="M -8 14 L -16 22 L -8 5 Z" fill="#1b4f8a"/>
