@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Tenths &amp; hundredths</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--fill:#1b4f8a;--fill2:#7aa8cc}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* 10x10 grid */
+  .g100{display:grid;grid-template-columns:repeat(10,1fr);gap:0;width:100%;max-width:300px;margin:16px auto 6px;
+    border:2.5px solid var(--ink);background:var(--ink)}
+  .g100.sm{max-width:200px}
+  .gc{aspect-ratio:1;background:#fff;border:.5px solid rgba(22,35,58,.35);transition:background .12s}
+  .gc.on{background:var(--fill)}
+  .gc.on2{background:var(--fill2)}
+  .gc.r10{border-bottom:2px solid var(--ink)}
+  .glab{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px}
+  .pours{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
+  .pour{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;padding:10px 14px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .pour:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
+    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6;text-align:center}
+  .pinned b{color:var(--blue);font-weight:700}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:104px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.C.5</div>
+    <h1>Tenths &amp; hundredths</h1>
+    <p>Your sticker album page holds exactly 100 stickers — ten rows of ten. Some packs come as a full row, some come as single stickers. You need to fill the page to an exact amount without going over.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.C.5</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Tenths &amp; hundredths</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var count=0,wonCount=0,hist=[];
+var TASKS=[
+  {n:30,txt:'Fill exactly <b>3/10</b> of the page. Row packs only.'},
+  {n:47,txt:'Now exactly <b>47/100</b>. You will need both pack types.'},
+  {n:55,txt:'Now <b>3/10 plus 25/100</b>. Work out the total as you go.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function gridHTML(id,small){
+  var h='<div class="g100'+(small?' sm':'')+'" id="'+id+'">';
+  for(var i=0;i<100;i++){
+    var lastInRow=(Math.floor(i/10)<9 && i%10===0);
+    h+='<div class="gc"></div>';
+  }
+  return h+'</div>';
+}
+function paintGrid(id,n,n2){
+  var g=el(id);if(!g)return;
+  for(var i=0;i<100;i++){
+    g.children[i].className='gc'+(i<n?' on':(n2&&i<n+n2?' on2':''));
+  }
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Fill the page exactly</h2>';
+  h+='<p>The page has 100 spaces. One full row is <b>1/10</b> of the page. One single sticker is <b>1/100</b>.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="pinned">Row pack = <b>10 stickers = 1/10</b> &nbsp;|&nbsp; single = <b>1 sticker = 1/100</b></div>';
+  h+=gridHTML('g');
+  h+='<div class="glab" id="gl">0 / 100</div>';
+  h+='<div class="pours"><button class="pour" onclick="add(10)">+ 1 row (1/10)</button><button class="pour" onclick="add(1)">+ 1 sticker (1/100)</button><button class="pour" onclick="clr()">clear</button></div>';
+  h+='<div class="verdict" id="v">Page is empty.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  count=0;hist=[];upd();
+}
+function add(n){
+  if(wonCount>=TASKS.length)return;
+  if(count+n>100)return;
+  count+=n;hist.push(n===10?'1/10':'1/100');upd();
+}
+function clr(){count=0;hist=[];upd();}
+function upd(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  paintGrid('g',count);
+  el('gl').textContent=count+' / 100';
+  var v=el('v');
+  if(count===0){v.className='verdict';v.textContent='Page is empty.';return;}
+  var tenths=Math.floor(count/10),left=count%10;
+  var asFrac=count+'/100'+(left===0?' = '+tenths+'/10':'');
+  if(count===T.n){
+    v.className='verdict exact';
+    v.innerHTML='✓ <b>'+asFrac+'</b>';
+    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},1500);}
+  }
+  else if(count<T.n){v.className='verdict short';v.innerHTML=asFrac+' — '+(T.n-count)+' spaces short.';}
+  else{v.className='verdict over';v.innerHTML=asFrac+' — '+(count-T.n)+' too many. Press clear.';}
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>One row is ten singles</h2>';
+  h+='<p>Every time you pressed the row pack, ten spaces filled. So a tenth and ten hundredths are the same stickers.</p>';
+  h+='<div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">';
+  h+='<div><div class="glab">1/10 — one row</div>'+gridHTML('ga',true)+'</div>';
+  h+='<div><div class="glab">10/100 — ten singles</div>'+gridHTML('gb',true)+'</div></div>';
+  h+='<table><tr><th>Tenths</th><th>Same as</th></tr>';
+  h+='<tr><td>1/10</td><td>10/100</td></tr><tr><td>3/10</td><td>30/100</td></tr><tr><td>7/10</td><td>70/100</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>To turn tenths into hundredths, multiply top and bottom by 10 — the same move you used for equivalent fractions. <b>3/10 = 30/100.</b></p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  paintGrid('ga',10);paintGrid('gb',10);
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>You put down <b>6/10</b> of a page, then add <b>3/100</b> more.</p>';
+  h+='<div class="ask"><div class="q">How many spaces are filled? Type it like 45/100.</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="?/100"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+gridHTML('gp')+'<div class="glab">dark = the 6 rows &nbsp;·&nbsp; light = the 3 singles</div><p>Six rows is 60 spaces. Three more singles makes 63.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone){el('ph').classList.remove('hide');paintGrid('gp',60,3);}
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/\s/g,'');
+  var fb=el('pfb');
+  if(raw==='63/100'){fb.className='fb ok';fb.innerHTML='<b>Yes — 63/100.</b> The 6 rows are 60 spaces, plus 3 singles.';}
+  else if(raw==='9/110'||raw==='9/100'){fb.className='fb no';fb.innerHTML='<b>That counted 6 rows as 6 spaces.</b> A row is ten spaces, so 6/10 is 60/100. Total is <b>63/100</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>63/100</b>. Turn the tenths into hundredths first: 6/10 = 60/100, then add 3.';}
+  el('ph').classList.remove('hide');paintGrid('gp',60,3);predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>You can only add pieces that are the same size</h2>';
+  h+='<p>A row and a single sticker are not the same size, so you cannot count them together as they are.</p>';
+  h+='<p>Trade the rows for singles first. Six rows becomes sixty singles. Now everything is the same size and you can just count.</p>';
+  h+='<div class="goal"><div class="lab">The move</div><p>Rewrite the tenths as hundredths, then add. <b>6/10 + 3/100 = 60/100 + 3/100 = 63/100.</b></p></div>';
+  h+='<p>This is the same rule as adding fractions: the bottoms have to match before you can count.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Nia says 3/10 + 25/100 = 28/100</h2>';
+  h+='<p>Her reason: <i>"3 plus 25 is 28, and the bottom is 100."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNia()">Fill the page and count</button></div>';
+  h+='<div id="nh" class="hide">'+gridHTML('gn')+'<div class="glab">dark = 3/10 &nbsp;·&nbsp; light = 25/100</div></div>';
+  h+='<div id="nfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNia();
+}
+function testNia(){
+  el('nh').classList.remove('hide');paintGrid('gn',30,25);
+  var fb=el('nfb');fb.className='fb no';
+  fb.innerHTML='<b>Nia is wrong.</b> Count the filled spaces: <b>55</b>, not 28. She treated 3/10 as 3 spaces, but it is 3 rows — thirty spaces. Trade first: 3/10 = 30/100, then 30 + 25 = <b>55/100</b>.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'4/10 is the same as what?',a:['4/100','40/100','14/100','400/100'],correct:1,
+   why:'Each row is 10 spaces, so 4 rows is 40 spaces. Multiply top and bottom by 10.'},
+  {q:'2/10 + 35/100 = ?',a:['37/110','55/100','37/100','20/135'],correct:1,
+   why:'Trade the rows for singles first, then count: 20 + 35 = 55.'},
+  {q:'Why can you not just count 5/10 and 6/100 together as they are?',
+   a:['Because a row and a single are not the same size','Because 100 is too big','Because 100 spaces is too many to count','You can, it is 11/110'],correct:0,
+   why:'A row and a single sticker are not the same size. Trade the rows for singles first, then count.'},
+  {q:'70/100 is the same as what?',a:['7/10','70/10','7/100','17/10'],correct:0,
+   why:'70 spaces is 7 full rows, and each row is a tenth.'},
+  {q:'A page has 8/10 filled. How many single spaces is that?',a:['8','18','80','800'],correct:2,
+   why:'8 rows of 10 spaces each is 80 spaces.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.5']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trade tenths for hundredths and add them together.</p></div><p style="margin-top:14px">Next: writing these as <b>decimals</b>.</p>';}
+  else h+='<p style="margin-top:16px">Go back to Nia. She counted 3 rows as 3 spaces — that is the whole trap.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;count=0;hist=[];wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
