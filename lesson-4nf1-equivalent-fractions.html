@@ -137,7 +137,8 @@ function beat1(){
   h+='<div class="chal locked" id="c3"><div class="chalnum">Challenge 3</div><div class="chaltxt">Do it once more. <b>Three different ways</b> to eat the same amount.</div><div class="chalstate" id="s3">locked</div></div>';
   h+='<div class="barlab" style="margin-top:18px">Your bar — click a piece to eat up to it</div>'+barHTML('barB',pieces,true,true);
   h+='<div class="ctrl"><label>Cut your bar into</label><input type="range" min="2" max="12" value="'+pieces+'" oninput="setPieces(this.value)"><span class="readout" id="pr">'+pieces+'</span></div>';
-  h+='<div class="verdict" id="v">Click a piece of your bar.</div>';
+  h+='<div class="ctrl" style="justify-content:center"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+  h+='<div class="verdict" id="v">Click a piece of your bar, then lock it in.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" disabled onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
   shade('barA',1);shade('barB',shaded);
@@ -161,20 +162,35 @@ function setPieces(v){
 function fillTo(i){shaded=(shaded===i+1)?i:i+1;shade('barB',shaded);check();}
 function check(){
   var v=el('v');if(!v)return;
+  var key=shaded+'/'+pieces;
+  if(shaded===0){v.className='verdict';v.textContent='Click a piece of your bar, then lock it in.';return;}
+  v.className='verdict';
+  v.textContent='You have eaten '+key+'. Lock it in when you are sure.';
+}
+function lockIn(){
+  var v=el('v');if(shaded===0)return;
   var val=shaded/pieces,key=shaded+'/'+pieces;
-  if(shaded===0){v.className='verdict';v.textContent='Click a piece of your bar.';return;}
+  var first=Object.keys(won).length===0;
   if(Math.abs(val-0.5)<1e-9){
-    v.className='verdict exact';
-    var first=Object.keys(won).length===0;
-    var okForC1=(pieces===4);
-    if(!won[key]){
-      if(first&&!okForC1){v.textContent='That is the same amount — but Challenge 1 asks for 4 pieces. Set the slider to 4.';return;}
-      won[key]=true;paintChals();
+    if(first&&pieces!==4){
+      v.className='verdict long';
+      v.textContent='Same amount, but Challenge 1 asks for 4 pieces. Set the slider to 4.';
+      return;
     }
+    if(won[key]){
+      v.className='verdict long';
+      v.textContent='You already used '+key+'. Try a different number of pieces.';
+      return;
+    }
+    v.className='verdict exact';
     v.textContent='✓ '+key+' is exactly the same as Jamie\'s half.';
+    won[key]=true;paintChals();
+  } else {
+    v.className='verdict long';
+    v.textContent='✗ '+key+' is not the same as Jamie\'s half. Half means the dark part ends on the line. Starting over.';
+    shaded=0;shade('barB',0);
+    setTimeout(function(){if(step===0)check();},2300);
   }
-  else if(val<0.5){v.className='verdict short';v.textContent='Less than Jamie — '+key+' stops short of the line.';}
-  else{v.className='verdict long';v.textContent='More than Jamie — '+key+' goes past the line.';}
 }
 
 /* ---------- BEAT 2 ---------- */
