@@ -56,25 +56,6 @@
   .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
   .proj-note b{color:var(--accent);font-style:normal}
   #revBox.show{display:block!important}
-  .mcwrap{margin-top:2px}
-  .mq{font-size:18px;font-weight:600;margin-bottom:14px;line-height:1.45}
-  .mopts{display:flex;flex-direction:column;gap:9px}
-  .mopt{font-family:'Space Grotesk',sans-serif;font-size:15.5px;text-align:left;cursor:pointer;padding:12px 15px;border:1.5px solid var(--blue-line);border-radius:11px;background:#fff;color:var(--ink);transition:transform .06s,border-color .1s}
-  .mopt:hover:not(:disabled){border-color:var(--blue);transform:translateX(2px)}
-  .mopt:disabled{cursor:default}
-  .mopt.right{border-color:#2e7d5b;background:rgba(46,125,91,.1);color:#2e7d5b;font-weight:600}
-  .mopt.wrong{border-color:var(--accent);background:rgba(240,102,63,.1);color:var(--accent)}
-  .genfb{font-size:15px;font-weight:600;margin-top:14px;min-height:20px}
-  .genfb.ok{color:#2e7d5b}
-  .genfb.no{color:var(--accent)}
-  .genmastery{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .genlabel{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-  .gendots{display:inline-flex;gap:5px}
-  .gendots .dot{color:var(--blue-line);font-size:15px}
-  .gendots .dot.on{color:#2e7d5b}
-  .genrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .genrow input{font-family:'Space Grotesk',sans-serif;font-size:16px;padding:11px 14px;width:200px;border:1.5px solid var(--blue-line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
-  .genrow input:focus{border-color:var(--blue)}
   @media(max-width:760px){.app{flex-direction:column}.side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}.main{padding:22px 18px 50px}}
 </style>
 </head>
@@ -107,7 +88,7 @@ const COURSE = {
   { name:"Energy & Motion", skills:[
     { title:"Energy & speed", proj:"Your plane flies farther when it moves faster \u2014 that\u2019s more energy.",
       cards:[
-        {tag:"Learn", body:`<p><b>Energy</b> is what lets something move or change. Everything that moves has energy \u2014 a rolling ball, a running dog, a flying plane. Without energy, nothing would move at all.</p><p>Here\u2019s the big idea for this lesson: <b>the faster something moves, the more energy it has.</b> Speed and energy go together. The same ball has only a little energy when it rolls slowly, and a lot more energy when it rolls fast.</p><p>You can\u2019t see energy by itself \u2014 but you can see what it <i>does</i>. More energy means more power to push, knock over, or hit hard. That\u2019s why a fast ball knocks down more pins than a slow one, and why running into something fast hurts more than walking into it.</p>`},
+        {tag:"Learn", body:`<p><b>Energy</b> is what makes things move and happen. The <b>faster</b> something moves, the <b>more energy</b> it has. A slow rolling ball has a little; a fast one has a lot \u2014 which is why the fast one knocks things over harder.</p>`},
         {tag:"Example", body:`<div class="ex">Roll a marble slowly into a cup \u2014 barely moves it. Roll it fast \u2014 it launches the cup. Same marble, more speed, more energy.</div>`},
         {tag:"Your turn", practice:[["Which has more energy: a fast car or a slow car?","The fast car"],["If you speed something up, its energy goes up or down?","Up"]]},
         {tag:"Prove it", body:`<p>Why does a fast-pitched ball hurt more than a slow toss?</p>`, reveal:`The faster ball has more energy, so it hits with more force. Speed = more energy.`}
@@ -214,208 +195,8 @@ const COURSE = {
 };
 
 /* ---- engine (same as other courses) ---- */
-/* ---- mixed-format question pools + mastery gate (mc/tf/fib) ---- */
-const POOLS = {
-  "Energy & speed":[
-    {t:'fib',q:'Energy is what lets something move or ______.',a:'change'},
-    {t:'mc',q:'What does energy let something do?',o:['move or change','stay frozen forever','vanish'],a:0},
-    {t:'tf',q:'The faster something moves, the more energy it has.',a:true},
-    {t:'mc',q:'Two identical balls roll. Which one has more energy?',o:['the faster ball','the slower ball','they are equal'],a:0},
-    {t:'mc',q:'A bowling ball rolled fast knocks down ______ pins than one rolled slowly.',o:['more','fewer','the same'],a:0},
-    {t:'mc',q:'Why does running into a wall hurt more than walking into it?',o:['moving faster means more energy','walls get harder','walking is dangerous'],a:0},
-    {t:'tf',q:'A parked car has movement energy just like a car speeding down the road.',a:false},
-    {t:'fib',q:'Speeding an object up makes its energy go ______. (up/down)',a:'up',alt:['higher','increase','increases']},
-    {t:'tf',q:'A slow ball and a fast ball always have the exact same energy.',a:false},
-    {t:'mc',q:'Which statement is WRONG?',o:['A slow object has more energy than a fast one','Faster means more energy','Energy lets things move'],a:0},
-    {t:'mc',q:'You can\u2019t see energy itself. How do you know a fast ball has more?',o:['by what it does when it hits','by its color','by its smell'],a:0},
-    {t:'tf',q:'More energy means more power to push or knock something over.',a:true},
-    {t:'mc',q:'A cart rolls faster and faster down a hill. Its energy is\u2026',o:['increasing','decreasing','staying the same'],a:0},
-    {t:'mc',q:'Which would leave a bigger dent \u2014 a ball thrown fast or dropped gently?',o:['thrown fast','dropped gently','same dent'],a:0}],
-  "How energy moves":[
-    {t:'mc',q:'Which is a way energy travels?',o:['sound','a rock','a color'],a:0},
-    {t:'tf',q:'A campfire sends out heat and light energy.',a:true},
-    {t:'fib',q:'A wire carries ______ energy to power a gadget.',a:'electric',alt:['electrical','electricity']},
-    {t:'tf',q:'Energy cannot travel from one place to another.',a:false},
-    {t:'mc',q:'A speaker sends out which kind of energy?',o:['sound','taste','smell'],a:0},
-    {t:'mc',q:'The sun sends energy to Earth as\u2026',o:['light and heat','sound','electricity'],a:0},
-    {t:'tf',q:'Electric current can carry energy through a wire.',a:true},
-    {t:'fib',q:'When you feel warmth from a fire, that energy traveled as ______.',a:'heat'},
-    {t:'mc',q:'Which is NOT a way energy moves?',o:['a wooden chair','sound','light'],a:0},
-    {t:'tf',q:'A flashlight turns electric energy into light.',a:true},
-    {t:'mc',q:'You hear a drum. The energy reached your ears as\u2026',o:['sound','light','heat'],a:0},
-    {t:'fib',q:'Energy can move as sound, light, heat, or ______ current.',a:'electric',alt:['electrical']}],
-  "Collisions":[
-    {t:'tf',q:'When objects collide, energy transfers from one to the other.',a:true},
-    {t:'mc',q:'A moving marble hits a still marble. What transfers?',o:['energy','color','weight'],a:0},
-    {t:'fib',q:'Besides motion, collisions can also make sound and ______.',a:'heat'},
-    {t:'tf',q:'A bowling ball knocks down pins by transferring energy.',a:true},
-    {t:'mc',q:'When a fast ball hits a still ball, the still ball\u2026',o:['moves','disappears','gets colder'],a:0},
-    {t:'mc',q:'In a game of marbles, energy passes from the\u2026',o:['moving marble to the still one','still one to the wall only','air'],a:0},
-    {t:'tf',q:'A collision can turn some energy into sound you can hear.',a:true},
-    {t:'fib',q:'When two cars bump, energy ______ between them. (moves)',a:'transfers',alt:['moves','passes']},
-    {t:'mc',q:'Why do pins fly when a bowling ball hits them?',o:['energy transfers to them','they are scared','they are light only'],a:0},
-    {t:'tf',q:'In a collision, energy just disappears completely.',a:false},
-    {t:'mc',q:'A faster-moving object in a collision usually transfers\u2026',o:['more energy','less energy','no energy'],a:0},
-    {t:'tf',q:'You can sometimes feel heat after a hard collision.',a:true}],
-  "Energy converters":[
-    {t:'mc',q:'A speaker converts electricity into\u2026',o:['sound','light','water'],a:0},
-    {t:'tf',q:'A solar panel converts sunlight into electricity.',a:true},
-    {t:'fib',q:'A machine that changes energy from one form to another is an energy ______.',a:'converter'},
-    {t:'tf',q:'A wind-up toy stores energy and converts it back into motion.',a:true},
-    {t:'mc',q:'A rubber-band plane converts stored band energy into\u2026',o:['motion','sound','smell'],a:0},
-    {t:'mc',q:'A light bulb converts electricity into light and\u2026',o:['heat','sound','water'],a:0},
-    {t:'tf',q:'A buzzer converts electricity into sound.',a:true},
-    {t:'fib',q:'Winding a toy stores energy; releasing it converts it back into ______.',a:'motion',alt:['movement'],},
-    {t:'mc',q:'Which device converts sunlight into electricity?',o:['a solar panel','a buzzer','a hammer'],a:0},
-    {t:'tf',q:'Energy converters change energy from one kind to another.',a:true},
-    {t:'mc',q:'When you rub your hands together, motion energy converts into\u2026',o:['heat','light','sound only'],a:0},
-    {t:'fib',q:'A fan converts electric energy into ______ energy (of the moving blades).',a:'motion',alt:['movement','moving']}],
-  "What waves are":[
-    {t:'fib',q:'The height or strength of a wave is its ______.',a:'amplitude'},
-    {t:'tf',q:'A bigger amplitude means the wave carries more energy.',a:true},
-    {t:'mc',q:'A big rock dropped in a pond makes waves that are\u2026',o:['taller (more energy)','flat','frozen'],a:0},
-    {t:'tf',q:'Waves carry energy from place to place.',a:true},
-    {t:'mc',q:'Why does a loud sound shake things more than a quiet one?',o:['bigger amplitude, more energy','it is colder','it is smaller'],a:0},
-    {t:'mc',q:'The distance between wave tops is the\u2026',o:['wavelength','amplitude','color'],a:0},
-    {t:'tf',q:'A tiny pebble makes bigger waves than a huge rock.',a:false},
-    {t:'fib',q:'A loud sound has a ______ amplitude than a quiet sound. (bigger/smaller)',a:'bigger',alt:['larger','greater'],},
-    {t:'mc',q:'Waves can make a floating object\u2026',o:['bob up and down','vanish','turn to stone'],a:0},
-    {t:'tf',q:'Amplitude measures how spread out the waves are.',a:false},
-    {t:'mc',q:'More energy in a wave usually means a\u2026',o:['taller wave','flatter wave','frozen wave'],a:0},
-    {t:'fib',q:'Waves move energy without carrying the ______ along with it. (stuff/water)',a:'water',alt:['stuff','material','matter']}],
-  "How we see":[
-    {t:'tf',q:'You see an object when light bounces off it into your eyes.',a:true},
-    {t:'mc',q:'Why can\u2019t you see in a pitch-black room?',o:['no light is bouncing to your eyes','your eyes are closed','the room is small'],a:0},
-    {t:'tf',q:'Your eyes shoot out beams to see things.',a:false},
-    {t:'fib',q:'A red apple looks red because it bounces red ______ into your eyes.',a:'light'},
-    {t:'mc',q:'For you to see something, light must\u2026',o:['bounce off it into your eyes','disappear','turn to sound'],a:0},
-    {t:'mc',q:'A mirror lets you see yourself because it\u2026',o:['reflects light','makes light','eats light'],a:0},
-    {t:'tf',q:'Light needs to enter your eyes for you to see.',a:true},
-    {t:'fib',q:'When light bounces off a surface, we say the light is ______.',a:'reflected',alt:['reflecting','bounced'],},
-    {t:'mc',q:'In total darkness you can\u2019t see a red apple because\u2026',o:['no light bounces off it','the apple is gone','apples glow'],a:0},
-    {t:'tf',q:'A white shirt bounces back most of the light that hits it.',a:true},
-    {t:'mc',q:'Seeing works because your eyes\u2026',o:['receive light','send out light','make sound'],a:0},
-    {t:'tf',q:'You can see clearly in a room with no light at all.',a:false}],
-  "Sending signals with patterns":[
-    {t:'tf',q:'Information can be sent using patterns, like flashes or beeps.',a:true},
-    {t:'fib',q:'Morse code turns letters into dots and ______.',a:'dashes',alt:['dash']},
-    {t:'mc',q:'Computers store information as patterns of\u2026',o:['on and off','hot and cold','big and small'],a:0},
-    {t:'tf',q:'A lighthouse\u2019s flashing pattern can tell ships which lighthouse it is.',a:true},
-    {t:'mc',q:'To send a secret message with flashlights, you need\u2026',o:['an agreed pattern/code','more batteries','a phone'],a:0},
-    {t:'mc',q:'Morse code \u2018SOS\u2019 is a\u2026',o:['pattern of signals','type of boat','color'],a:0},
-    {t:'tf',q:'Patterns of light or sound can carry a message.',a:true},
-    {t:'fib',q:'A code is an agreed ______ used to send messages.',a:'pattern',alt:['system','patterns']},
-    {t:'mc',q:'Two friends flashing lights across a field are using\u2026',o:['a signal pattern','magic','heat'],a:0},
-    {t:'tf',q:'Information can only be sent by talking out loud.',a:false},
-    {t:'mc',q:'Computers turn everything into patterns of\u2026',o:['1s and 0s','colors only','smells'],a:0},
-    {t:'fib',q:'A lighthouse uses a flashing ______ so ships can tell it apart.',a:'pattern',alt:['signal','code']}],
-  "Structures for survival":[
-    {t:'mc',q:'What job do a plant\u2019s roots do?',o:['take in water','make sound','fly'],a:0},
-    {t:'tf',q:'Plant and animal parts (structures) help them survive.',a:true},
-    {t:'fib',q:'A cactus stores water in its thick ______.',a:'stem',alt:['stems']},
-    {t:'mc',q:'How do a duck\u2019s webbed feet help it?',o:['paddle through water','dig tunnels','fly higher'],a:0},
-    {t:'tf',q:'A structure like thorns can protect a plant.',a:true},
-    {t:'mc',q:'A heart is an internal structure that\u2026',o:['pumps blood','sees light','grows leaves'],a:0},
-    {t:'tf',q:'Roots help a plant take in water and stay in place.',a:true},
-    {t:'fib',q:'Sharp ______ help protect a cactus from animals.',a:'spines',alt:['spine','thorns','thorn']},
-    {t:'mc',q:'A polar bear\u2019s thick fur is a structure that helps it\u2026',o:['stay warm','swim faster only','fly'],a:0},
-    {t:'tf',q:'Every plant and animal structure has a job that helps it live.',a:true},
-    {t:'mc',q:'Which structure helps an animal sense its surroundings?',o:['eyes','a rock','a cloud'],a:0},
-    {t:'fib',q:'A fish uses gills to take in ______ from the water. (a gas)',a:'oxygen',alt:['air']}],
-  "Senses & the brain":[
-    {t:'fib',q:'Put in order: sense \u2192 ______ \u2192 respond.',a:'brain'},
-    {t:'tf',q:'An animal senses information, the brain processes it, then it responds.',a:true},
-    {t:'mc',q:'You touch something hot and yank your hand back. The brain\u2019s job was to\u2026',o:['decide it\u2019s danger','grow','sleep'],a:0},
-    {t:'tf',q:'Animals respond to the world before sensing anything.',a:false},
-    {t:'mc',q:'A Guard Bot\u2019s sensor is most like an animal\u2019s\u2026',o:['senses','stomach','tail'],a:0},
-    {t:'mc',q:'A deer hears a snap and runs. What sensed the snap?',o:['its ears','its legs','the ground'],a:0},
-    {t:'tf',q:'The brain processes information before the animal reacts.',a:true},
-    {t:'fib',q:'Eyes, ears, and nose are examples of ______. (how animals take in info)',a:'senses',alt:['sense','sense organs'],},
-    {t:'mc',q:'Which is the correct order?',o:['sense, brain, respond','respond, sense, brain','brain, respond, sense'],a:0},
-    {t:'tf',q:'A robot\u2019s code acts like the animal\u2019s brain, deciding what to do.',a:true},
-    {t:'mc',q:'You smell smoke and leave the room. Your nose did the\u2026',o:['sensing','deciding','running only'],a:0},
-    {t:'fib',q:'The body part that processes what the senses take in is the ______.',a:'brain'}],
-  "Weathering & erosion":[
-    {t:'fib',q:'Breaking rock into smaller pieces is called ______.',a:'weathering'},
-    {t:'mc',q:'What carries broken rock pieces away?',o:['erosion','nothing','sound'],a:0},
-    {t:'tf',q:'A river can slowly carve a canyon over a long time.',a:true},
-    {t:'tf',q:'Weathering and erosion happen instantly, in seconds.',a:false},
-    {t:'mc',q:'Which can cause weathering?',o:['ice, wind, and plant roots','only fire','only sound'],a:0},
-    {t:'mc',q:'The Grand Canyon was carved mostly by\u2026',o:['a river over a long time','one big storm','a truck'],a:0},
-    {t:'tf',q:'Wind can carry away small pieces of broken rock (erosion).',a:true},
-    {t:'fib',q:'Weathering breaks rock; ______ carries the pieces away.',a:'erosion'},
-    {t:'mc',q:'Plant roots growing into a crack can cause\u2026',o:['weathering','a rainbow','nothing'],a:0},
-    {t:'tf',q:'Weathering and erosion usually take a very long time.',a:true},
-    {t:'mc',q:'A tiny stream can carve a big canyon because\u2026',o:['it works over a very long time','it is very hot','it is magic'],a:0},
-    {t:'fib',q:'Ice, wind, and roots can all cause ______ that breaks rock.',a:'weathering'}],
-  "Rock layers & fossils":[
-    {t:'mc',q:'Which rock layer is usually oldest?',o:['the bottom','the top','the middle'],a:0},
-    {t:'tf',q:'Fossils in rock layers are clues to what lived there long ago.',a:true},
-    {t:'fib',q:'Sea-shell fossils on a mountain suggest the area was once ______.',a:'underwater',alt:['under water','ocean','sea','below water']},
-    {t:'tf',q:'Newer rock layers form on top of older ones.',a:true},
-    {t:'mc',q:'Rock layers and fossils tell us how a landscape\u2026',o:['changed over time','will never change','was painted'],a:0},
-    {t:'mc',q:'A fossil is\u2026',o:['a trace of something that lived long ago','a fresh plant','a type of cloud'],a:0},
-    {t:'tf',q:'The deepest rock layer is usually the youngest.',a:false},
-    {t:'fib',q:'Rock forms in ______, with older ones on the bottom.',a:'layers',alt:['layer']},
-    {t:'mc',q:'Finding fish fossils in a desert suggests it was once\u2026',o:['underwater','a city','on fire'],a:0},
-    {t:'tf',q:'Fossils and rock layers can record how land changed over time.',a:true},
-    {t:'mc',q:'Which layer formed first?',o:['the bottom one','the top one','they all formed at once'],a:0},
-    {t:'fib',q:'Scientists read rock ______ like pages in a history book.',a:'layers',alt:['layer']}],
-  "Maps of Earth":[
-    {t:'tf',q:'Maps can show patterns in Earth\u2019s features, like where volcanoes are.',a:true},
-    {t:'mc',q:'Do earthquakes happen randomly or in patterns?',o:['in patterns','totally randomly','never'],a:0},
-    {t:'fib',q:'Most volcanoes cluster around the Pacific in the \u2018Ring of ______.\u2019',a:'fire'},
-    {t:'tf',q:'A list of names shows location patterns better than a map.',a:false},
-    {t:'mc',q:'What tool helps you SEE where features cluster?',o:['a map','a clock','a ruler'],a:0},
-    {t:'mc',q:'Plotting volcanoes on a map shows they\u2026',o:['line up in patterns','are totally random','don\u2019t exist'],a:0},
-    {t:'tf',q:'Mountains, volcanoes, and earthquakes often appear in patterns.',a:true},
-    {t:'fib',q:'A ______ turns scattered facts into a picture you can read.',a:'map'},
-    {t:'mc',q:'Why is a map better than a list for spotting clusters?',o:['it shows location visually','it is longer','it uses more words'],a:0},
-    {t:'tf',q:'Earthquakes happen completely at random with no pattern.',a:false},
-    {t:'mc',q:'The \u2018Ring of Fire\u2019 is a pattern of volcanoes around the\u2026',o:['Pacific Ocean','Sahara Desert','North Pole'],a:0},
-    {t:'fib',q:'Maps help scientists spot ______ in where things happen.',a:'patterns',alt:['pattern']}],
-  "Natural resources & energy":[
-    {t:'mc',q:'Which is a renewable energy source?',o:['wind','coal','oil'],a:0},
-    {t:'tf',q:'Coal is non-renewable \u2014 once it\u2019s gone, it\u2019s gone for a very long time.',a:true},
-    {t:'fib',q:'Sun, wind, and water are ______ energy sources. (renewable / non-renewable)',a:'renewable'},
-    {t:'tf',q:'Oil will last forever no matter how much we use.',a:false},
-    {t:'mc',q:'A solar panel uses which natural resource?',o:['sunlight','coal','oil'],a:0},
-    {t:'mc',q:'Which is NON-renewable?',o:['oil','wind','sunlight'],a:0},
-    {t:'tf',q:'Wind power renews itself and doesn\u2019t run out.',a:true},
-    {t:'fib',q:'Coal and oil come from deep in the ______. (place)',a:'ground',alt:['earth'],},
-    {t:'mc',q:'Why might wind be better long-term than oil?',o:['it renews and won\u2019t run out','it is prettier','it is heavier'],a:0},
-    {t:'tf',q:'Sunlight is a renewable resource.',a:true},
-    {t:'mc',q:'A resource that can run out and won\u2019t come back soon is\u2026',o:['non-renewable','renewable','endless'],a:0},
-    {t:'fib',q:'The energy and materials we use come from natural ______.',a:'resources',alt:['resource']}],
-  "Natural hazards":[
-    {t:'tf',q:'Engineers can\u2019t stop hazards, but can design solutions to reduce damage.',a:true},
-    {t:'mc',q:'How do engineers protect buildings from earthquakes?',o:['design them to flex, not crack','paint them','make them taller only'],a:0},
-    {t:'fib',q:'Floods, earthquakes, and wildfires are examples of natural ______.',a:'hazards',alt:['hazard','disasters','disaster']},
-    {t:'tf',q:'You can completely stop an earthquake from happening.',a:false},
-    {t:'mc',q:'Reducing hazard damage uses the same thinking as\u2026',o:['an engineering project','a coloring page','a nap'],a:0},
-    {t:'mc',q:'Which helps reduce flood damage?',o:['building levees or dams','planting no trees','ignoring it'],a:0},
-    {t:'tf',q:'Engineers design solutions to lower the damage from hazards.',a:true},
-    {t:'fib',q:'A building that can ______ instead of crack survives earthquakes better.',a:'flex',alt:['bend','sway'],},
-    {t:'mc',q:'You can\u2019t stop a flood, but you can\u2026',o:['reduce its damage','make it rain more','pause time'],a:0},
-    {t:'tf',q:'Designing an earthquake-safe building is a kind of engineering.',a:true},
-    {t:'mc',q:'Which is a natural hazard?',o:['a wildfire','a birthday party','a math test'],a:0},
-    {t:'fib',q:'Engineers find the problem, design a fix, and ______ it. (check it works)',a:'test',alt:['test it']}]
-};
-function norm(s){return String(s).toLowerCase().trim().replace(/[.,!?'"\u2018\u2019\u201c\u201d]/g,'').replace(/\s+/g,' ');}
-let poolArr=null, curItem=null, mstreak=0, mMastered=false, lastQ=-1;
-const MGOAL=8;
-function mDots(){ const d=document.getElementById('mdots'); if(!d) return; let s=''; for(let i=0;i<MGOAL;i++) s+=`<span class="dot${i<mstreak?' on':''}">\u25cf</span>`; d.innerHTML=s; }
-function refreshChecks(){ const dc=Object.keys(progress.done).length; const pc=document.getElementById('pcount'); if(pc) pc.textContent=`${dc} / ${flat.length} mastered \u00b7 ${Math.round(dc/flat.length*100)}%`; const pf=document.getElementById('pfill'); if(pf) pf.style.width=(dc/flat.length*100)+'%'; document.querySelectorAll('.skill-btn').forEach(b=>{ const idx=+b.dataset.i; const isDone=!!progress.done[flat[idx].title]; b.classList.toggle('done',isDone); const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb'; }); }
-function initPool(title){ poolArr=POOLS[title]; mstreak=0; lastQ=-1; mMastered=!!progress.done[flat[si].title]; newPoolQ(); mDots(); }
-function newPoolQ(){ if(!poolArr) return; let _i=Math.floor(Math.random()*poolArr.length); if(poolArr.length>1){ let _t=0; while(_i===lastQ && _t<12){ _i=Math.floor(Math.random()*poolArr.length); _t++; } } lastQ=_i; curItem=poolArr[_i]; const it=curItem; const q=document.getElementById('mq'); if(q) q.innerHTML=it.q; const opts=document.getElementById('mopts'); if(opts){ if(it.t==='mc'){ opts.innerHTML=it.o.map((o,i)=>`<button class="mopt" data-opt="${i}">${o}</button>`).join(''); } else if(it.t==='tf'){ opts.innerHTML=`<button class="mopt" data-tf="1">True</button><button class="mopt" data-tf="0">False</button>`; } else if(it.t==='fib'){ opts.innerHTML=`<div class="genrow"><input id="fibin" type="text" autocomplete="off" placeholder="Type your answer"><button class="btn sm" data-act="fibcheck">Check</button></div>`; } } const fb=document.getElementById('mfb'); if(fb){fb.textContent='';fb.className='genfb';} const fibin=document.getElementById('fibin'); if(fibin){ fibin.focus(); fibin.addEventListener('keydown',e=>{ if(e.key==='Enter') checkFIB(); }); } }
-function lockOpts(chosenIdx,correctIdx){ document.querySelectorAll('.mopt').forEach((b,i)=>{ if(i===correctIdx) b.classList.add('right'); if(i===chosenIdx && chosenIdx!==correctIdx) b.classList.add('wrong'); b.disabled=true; }); }
-function grade(ok, correctText){ const fb=document.getElementById('mfb'); if(!fb) return; if(ok){ mstreak++; mDots(); if(mstreak>=MGOAL){ fb.innerHTML='\u2714 <b>Mastered!</b> 8 in a row \u2014 next card unlocked.'; fb.className='genfb ok'; if(!mMastered){ mMastered=true; markSkillDone(si); refreshChecks(); const nb=document.getElementById('next'); if(nb){ nb.textContent='Next'; nb.style.opacity='1'; nb.style.cursor='pointer'; } } } else { fb.textContent='Correct! \u2713'; fb.className='genfb ok'; setTimeout(newPoolQ,650); } } else { mstreak=0; mDots(); fb.innerHTML=`Not quite\u2014 answer: <b>${correctText}</b>. Streak reset.`; fb.className='genfb no'; setTimeout(newPoolQ,1600); } }
-function answerMC(idx){ const btns=document.querySelectorAll('.mopt'); if(btns[0]&&btns[0].disabled) return; lockOpts(idx,curItem.a); grade(idx===curItem.a, curItem.o[curItem.a]); }
-function answerTF(val){ const btns=document.querySelectorAll('.mopt'); if(btns[0]&&btns[0].disabled) return; const correctIdx=curItem.a?0:1; lockOpts(val?0:1,correctIdx); grade((!!val)===curItem.a, curItem.a?'True':'False'); }
-function checkFIB(){ const inp=document.getElementById('fibin'); if(!inp) return; const v=inp.value.trim(); if(!v) return; let ok=norm(v)===norm(curItem.a); if(!ok && curItem.alt) ok=curItem.alt.some(x=>norm(x)===norm(v)); inp.disabled=true; grade(ok, curItem.a); }
-
 let flat = [];
-COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name, cards: s.cards.filter(c=>c.tag!=="Prove it")})));
+COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name})));
 let si = 0, ci = 0;
 const SAVE_KEY = 'voyage_g4sci_progress';
 let progress = { done:{}, lastSkill:0 };
@@ -436,7 +217,7 @@ function buildMenu(){
   m.addEventListener('click',e=>{ const b=e.target.closest('.skill-btn'); if(b) loadSkill(+b.dataset.i); });
 }
 function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
-function go(d){ const cards=flat[si].cards; const cur=cards[ci]; if(d>0 && cur.practice && POOLS[flat[si].title] && !progress.done[flat[si].title]){ const fb=document.getElementById('mfb'); if(fb){ fb.innerHTML='\uD83D\uDD12 Get <b>8 in a row</b> to unlock the next card.'; fb.className='genfb no'; } return; } if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
+function go(d){ const cards=flat[si].cards; if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
 function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
 function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
 function render(){
@@ -446,26 +227,21 @@ function render(){
   if(ci===0) inner+=`<h2>${s.title}</h2>`;
   if(c.body) inner+=c.body;
   if(c.practice){
-    if(POOLS[s.title]){
-      inner+=`<div class="mcwrap"><div class="mq" id="mq"></div><div class="mopts" id="mopts"></div><div class="genfb" id="mfb"></div><div class="genmastery"><span class="genlabel">Get 8 in a row to master:</span> <span class="gendots" id="mdots"></span></div></div>`;
-    } else {
-      inner+=`<div class="qlist">`;
-      c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
-      inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
-    }
+    inner+=`<div class="qlist">`;
+    c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
+    inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
   }
   if(c.reveal){ inner+=`<button class="btn sm" data-act="revealOne">Show the answer</button><div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`; }
   if(ci===s.cards.length-1 && s.proj){ inner+=`<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`; }
   document.getElementById('card').innerHTML=inner;
-  if(c.practice && POOLS[s.title]) initPool(s.title);
   const doneCount=Object.keys(progress.done).length;
   document.getElementById('pcount').textContent=`${doneCount} / ${flat.length} skills complete`;
   document.getElementById('pfill').style.width=(doneCount/flat.length*100)+'%';
   document.getElementById('progress').innerHTML=s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
   document.getElementById('counter').textContent=`${ci+1} / ${s.cards.length}`;
   document.getElementById('back').style.visibility=ci===0?'hidden':'visible';
-  const _nb=document.getElementById('next'); const _gated=c.practice && POOLS[s.title] && !progress.done[s.title]; _nb.textContent=_gated?'Master to unlock \uD83D\uDD12':((ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next'); _nb.style.opacity=_gated?'.45':'1'; _nb.style.cursor=_gated?'not-allowed':'pointer';
-  if(ci===s.cards.length-1 && !POOLS[s.title]){ markSkillDone(si); }
+  document.getElementById('next').textContent=(ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next';
+  if(ci===s.cards.length-1){ markSkillDone(si); }
   document.querySelectorAll('.skill-btn').forEach(b=>{
     const idx=+b.dataset.i, isDone=!!progress.done[flat[idx].title];
     b.classList.toggle('active',idx===si);
@@ -478,9 +254,8 @@ buildMenu();
 document.getElementById('back').addEventListener('click',()=>go(-1));
 document.getElementById('next').addEventListener('click',()=>go(1));
 document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress?')) resetProgress(); });
-document.getElementById('card').addEventListener('click',e=>{ const opt=e.target.closest('[data-opt]'); if(opt){ answerMC(+opt.dataset.opt); return; } const tf=e.target.closest('[data-tf]'); if(tf){ answerTF(tf.dataset.tf==='1'); return; } const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='fibcheck') checkFIB(); if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
+document.getElementById('card').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
 loadSkill(progress.lastSkill||0);
 </script>
-  <script src="tutor-widget.js"></script>
 </body>
 </html>

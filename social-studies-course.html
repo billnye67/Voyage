@@ -56,25 +56,6 @@
   .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
   .proj-note b{color:var(--accent);font-style:normal}
   #revBox.show{display:block!important}
-  .mcwrap{margin-top:2px}
-  .mq{font-size:18px;font-weight:600;margin-bottom:14px;line-height:1.45}
-  .mopts{display:flex;flex-direction:column;gap:9px}
-  .mopt{font-family:'Space Grotesk',sans-serif;font-size:15.5px;text-align:left;cursor:pointer;padding:12px 15px;border:1.5px solid var(--blue-line);border-radius:11px;background:#fff;color:var(--ink);transition:transform .06s,border-color .1s}
-  .mopt:hover:not(:disabled){border-color:var(--blue);transform:translateX(2px)}
-  .mopt:disabled{cursor:default}
-  .mopt.right{border-color:#2e7d5b;background:rgba(46,125,91,.1);color:#2e7d5b;font-weight:600}
-  .mopt.wrong{border-color:var(--accent);background:rgba(240,102,63,.1);color:var(--accent)}
-  .genfb{font-size:15px;font-weight:600;margin-top:14px;min-height:20px}
-  .genfb.ok{color:#2e7d5b}
-  .genfb.no{color:var(--accent)}
-  .genmastery{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .genlabel{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-  .gendots{display:inline-flex;gap:5px}
-  .gendots .dot{color:var(--blue-line);font-size:15px}
-  .gendots .dot.on{color:#2e7d5b}
-  .genrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .genrow input{font-family:'Space Grotesk',sans-serif;font-size:16px;padding:11px 14px;width:200px;border:1.5px solid var(--blue-line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
-  .genrow input:focus{border-color:var(--blue)}
   @media(max-width:760px){.app{flex-direction:column}.side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}.main{padding:22px 18px 50px}}
 </style>
 </head>
@@ -214,206 +195,8 @@ const COURSE = {
 };
 
 /* ---- engine (same as other courses) ---- */
-/* ---- mixed-format question pools + mastery gate (mc/tf/fib) ---- */
-const POOLS = {
-  "Map skills":[
-    {t:'mc',q:'What does a compass rose show?',o:['directions (N, S, E, W)','the weather','the price'],a:0},
-    {t:'tf',q:'A map legend (key) tells you what the symbols mean.',a:true},
-    {t:'fib',q:'If you see a symbol you don\u2019t know, you check the map ______.',a:'legend',alt:['key']},
-    {t:'tf',q:'A map scale tells you the weather.',a:false},
-    {t:'mc',q:'A blue line on a map most likely means a\u2026',o:['river','road','forest'],a:0},
-    {t:'mc',q:'Which direction is opposite of North?',o:['South','East','West'],a:0},
-    {t:'tf',q:'A map scale helps you figure out real distance.',a:true},
-    {t:'fib',q:'North, South, East, and West are called the four ______. (compass points)',a:'directions',alt:['cardinal directions','points'],},
-    {t:'mc',q:'You want to know how far apart two towns really are. You use the\u2026',o:['scale','legend','title'],a:0},
-    {t:'tf',q:'On most maps, North is at the top.',a:true},
-    {t:'mc',q:'A small drawing of a tree on a map is a\u2026',o:['symbol','scale','compass'],a:0},
-    {t:'fib',q:'To find what a green area means, look in the ______.',a:'legend',alt:['key']}],
-  "The 5 U.S. regions":[
-    {t:'fib',q:'The United States is usually divided into ______ regions. (a number)',a:'5',alt:['five']},
-    {t:'mc',q:'Which is a U.S. region?',o:['the Midwest','the Sahara','the Amazon'],a:0},
-    {t:'tf',q:'The Southwest is known for hot, dry deserts.',a:true},
-    {t:'tf',q:'Every U.S. region has the exact same climate and land.',a:false},
-    {t:'mc',q:'Why do people in different regions live differently?',o:['geography and climate differ','they speak differently only','no reason'],a:0},
-    {t:'mc',q:'Which region is known for big cities like New York and cold winters?',o:['the Northeast','the Southwest','the West'],a:0},
-    {t:'tf',q:'A region is a large area with similar features.',a:true},
-    {t:'mc',q:'Which of these is NOT one of the five U.S. regions?',o:['the Arctic','the Midwest','the Southeast'],a:0},
-    {t:'fib',q:'The region with hot deserts like Arizona is the ______.',a:'southwest',alt:['south west']},
-    {t:'tf',q:'The West region includes mountains and the Pacific coast.',a:true},
-    {t:'mc',q:'Grouping states into regions helps us\u2026',o:['study them by shared features','memorize nothing','ignore geography'],a:0},
-    {t:'tf',q:'Regions are grouped mostly by their favorite sports teams.',a:false}],
-  "States, capitals & landforms":[
-    {t:'fib',q:'The United States has ______ states. (a number)',a:'50',alt:['fifty']},
-    {t:'tf',q:'A state capital is the city where its government sits.',a:true},
-    {t:'mc',q:'Which is a landform?',o:['a mountain','a car','a law'],a:0},
-    {t:'tf',q:'Rivers and mountains are examples of landforms.',a:true},
-    {t:'mc',q:'A state with many rivers might grow differently because rivers give\u2026',o:['water for farming and travel','more laws','colder winters only'],a:0},
-    {t:'mc',q:'A capital city is where a state\u2019s ______ meets.',o:['government','sports team','zoo'],a:0},
-    {t:'tf',q:'Every state has its own capital city.',a:true},
-    {t:'fib',q:'A flat, wide stretch of land good for farming is called a ______.',a:'plain',alt:['plains']},
-    {t:'mc',q:'Which is NOT a landform?',o:['a highway','a valley','a hill'],a:0},
-    {t:'tf',q:'A landform is a natural feature of the land.',a:true},
-    {t:'mc',q:'Mountains, rivers, and coasts all shape\u2026',o:['how people live there','the alphabet','nothing'],a:0},
-    {t:'fib',q:'Land next to the ocean is called the ______.',a:'coast',alt:['coastline','shore']}],
-  "How geography shapes life":[
-    {t:'tf',q:'Where people live shapes their jobs, food, and homes.',a:true},
-    {t:'mc',q:'Why might a coastal town have many fishers?',o:['the ocean is right there','it is cold','it has no roads'],a:0},
-    {t:'fib',q:'People in snowy places build homes designed for the ______.',a:'cold',alt:['snow','climate','weather']},
-    {t:'tf',q:'Geography has no effect on how people live.',a:false},
-    {t:'mc',q:'Desert homes are often built to\u2026',o:['stay cool and shaded','hold heavy snow','float'],a:0},
-    {t:'mc',q:'People on flat plains often work as\u2026',o:['farmers','deep-sea divers','ski instructors'],a:0},
-    {t:'tf',q:'Climate can affect what clothes people wear.',a:true},
-    {t:'fib',q:'A town by a big river might use the river for travel and ______.',a:'water',alt:['trade','fishing','farming']},
-    {t:'mc',q:'Why do mountain towns build steep roofs?',o:['so snow slides off','to look tall','for no reason'],a:0},
-    {t:'tf',q:'Everyone on Earth lives the same way no matter the geography.',a:false},
-    {t:'mc',q:'A place with rich soil and rain is good for\u2026',o:['growing crops','building spaceships only','nothing'],a:0},
-    {t:'tf',q:'Geography can affect the jobs people can do in a place.',a:true}],
-  "Why we have rules & laws":[
-    {t:'tf',q:'Laws help keep people safe and treat everyone fairly.',a:true},
-    {t:'mc',q:'Why do communities have laws?',o:['to keep people safe and fair','to make life boring','for no reason'],a:0},
-    {t:'fib',q:'A stop-at-red traffic rule is an example of a ______.',a:'law',alt:['rule']},
-    {t:'tf',q:'With no rules at all, a community would run more smoothly.',a:false},
-    {t:'mc',q:'A law is most like\u2026',o:['a fair rule everyone follows','a secret','a toy'],a:0},
-    {t:'mc',q:'Who makes and enforces laws for a community?',o:['the government','one random kid','nobody'],a:0},
-    {t:'tf',q:'Traffic laws help prevent crashes.',a:true},
-    {t:'fib',q:'Rules and laws help people live together ______. (fairly/unfairly)',a:'fairly',alt:['safely'],},
-    {t:'mc',q:'What might happen at a busy intersection with no traffic laws?',o:['crashes and chaos','perfect order','nothing changes'],a:0},
-    {t:'tf',q:'Laws only exist to punish people, never to protect them.',a:false},
-    {t:'mc',q:'A rule that says \u2018wear a seatbelt\u2019 mostly exists to\u2026',o:['keep people safe','slow people down','collect toys'],a:0},
-    {t:'tf',q:'Different places can have different laws.',a:true}],
-  "How democracy works":[
-    {t:'fib',q:'In a democracy, the ______ have the power.',a:'people',alt:['citizens']},
-    {t:'tf',q:'In a democracy, people vote to choose leaders and decisions.',a:true},
-    {t:'mc',q:'A class votes: beach 18, museum 10. What wins?',o:['the beach (majority)','the museum','neither'],a:0},
-    {t:'tf',q:'In a democracy, one person decides everything alone.',a:false},
-    {t:'mc',q:'Why is voting fairer than one person deciding?',o:['everyone gets a say','it is faster only','it costs less'],a:0},
-    {t:'fib',q:'When the choice with the most votes wins, that\u2019s called ______ rule.',a:'majority'},
-    {t:'tf',q:'Voting is one way citizens have a say in a democracy.',a:true},
-    {t:'mc',q:'In a democracy, leaders are chosen by\u2026',o:['the people\u2019s votes','a coin flip only','birth order'],a:0},
-    {t:'tf',q:'A democracy should still protect everyone\u2019s rights, even the people who lost the vote.',a:true},
-    {t:'mc',q:'If 30 people vote yes and 12 vote no, the group decision is\u2026',o:['yes','no','undecided'],a:0},
-    {t:'fib',q:'The word for choosing by casting a ballot is to ______.',a:'vote'},
-    {t:'tf',q:'In a democracy, only the king decides everything.',a:false}],
-  "The three branches":[
-    {t:'mc',q:'Which branch makes laws?',o:['Legislative (Congress)','Executive','Judicial'],a:0},
-    {t:'mc',q:'Which branch carries out laws?',o:['Executive (President)','Legislative','Judicial'],a:0},
-    {t:'fib',q:'The branch that decides what laws mean is the ______ branch.',a:'judicial'},
-    {t:'tf',q:'The three branches check each other so no one has too much power.',a:true},
-    {t:'tf',q:'The U.S. government has only one branch.',a:false},
-    {t:'mc',q:'The President is the head of which branch?',o:['Executive','Legislative','Judicial'],a:0},
-    {t:'mc',q:'Courts and judges are part of which branch?',o:['Judicial','Executive','Legislative'],a:0},
-    {t:'fib',q:'Congress belongs to the ______ branch.',a:'legislative'},
-    {t:'tf',q:'Splitting power into three branches is called \u2018checks and balances.\u2019',a:true},
-    {t:'mc',q:'Why split government into three branches?',o:['so no one branch gets too powerful','to make three flags','for no reason'],a:0},
-    {t:'tf',q:'The Judicial branch writes brand-new laws from scratch.',a:false},
-    {t:'fib',q:'Congress makes laws, the President carries them out, and courts decide what they ______.',a:'mean'}],
-  "Citizens: rights & responsibilities":[
-    {t:'mc',q:'Which is a RIGHT of a citizen?',o:['to speak freely','to litter','to skip all laws'],a:0},
-    {t:'tf',q:'Following laws and helping others are responsibilities.',a:true},
-    {t:'fib',q:'Rights come together with ______.',a:'responsibilities',alt:['responsibility','duties','duty']},
-    {t:'tf',q:'Citizens have rights but zero responsibilities.',a:false},
-    {t:'mc',q:'Why do rights come with responsibilities?',o:['to keep things fair for everyone','to make life hard','for no reason'],a:0},
-    {t:'mc',q:'Which is a RESPONSIBILITY of a citizen?',o:['following laws','ignoring everyone','breaking rules'],a:0},
-    {t:'tf',q:'Voting is both a right and a responsibility.',a:true},
-    {t:'fib',q:'Speaking your opinion freely is a ______ of citizens.',a:'right'},
-    {t:'mc',q:'You have the right to speak. Your responsibility is to\u2026',o:['let others speak too','talk over everyone','stay silent forever'],a:0},
-    {t:'tf',q:'Respecting other people is a responsibility of citizens.',a:true},
-    {t:'mc',q:'If everyone used rights but ignored responsibilities, things would be\u2026',o:['unfair and chaotic','perfectly fair','exactly the same'],a:0},
-    {t:'tf',q:'Helping your community is a citizen responsibility.',a:true}],
-  "Needs vs wants":[
-    {t:'mc',q:'Which is a NEED?',o:['food','a video game','candy'],a:0},
-    {t:'tf',q:'A want is something you\u2019d like but can live without.',a:true},
-    {t:'fib',q:'Water, food, and shelter are examples of ______. (needs / wants)',a:'needs',alt:['need']},
-    {t:'tf',q:'A new toy is a need.',a:false},
-    {t:'mc',q:'If money is tight, you should cover ______ first.',o:['needs','wants','neither'],a:0},
-    {t:'mc',q:'Which is a WANT?',o:['a fancy phone','clean water','a warm coat in winter'],a:0},
-    {t:'tf',q:'Shelter (a place to live) is a need.',a:true},
-    {t:'fib',q:'Something you would like but can live without is a ______.',a:'want'},
-    {t:'mc',q:'You have $5 and you\u2019re hungry. The smart choice is\u2026',o:['buy lunch','buy a toy','buy candy'],a:0},
-    {t:'tf',q:'Everyone\u2019s wants are exactly the same.',a:false},
-    {t:'mc',q:'Which pair is need, then want?',o:['food, then a game','a game, then food','toy, then candy'],a:0},
-    {t:'tf',q:'A coat in freezing weather counts as a need.',a:true}],
-  "Goods, services, producers & consumers":[
-    {t:'mc',q:'A haircut is a\u2026',o:['service','good','need only'],a:0},
-    {t:'fib',q:'Someone who makes or sells things is a ______.',a:'producer'},
-    {t:'tf',q:'A consumer is someone who buys or uses goods and services.',a:true},
-    {t:'mc',q:'An apple you can hold is a\u2026',o:['good','service','law'],a:0},
-    {t:'tf',q:'When you build a game friends play, you are the consumer.',a:false},
-    {t:'mc',q:'A teacher teaching a class is providing a\u2026',o:['service','good','law'],a:0},
-    {t:'fib',q:'A thing you can hold and use, like a toy, is a ______.',a:'good',alt:['goods']},
-    {t:'tf',q:'A baker who makes bread is a producer.',a:true},
-    {t:'mc',q:'When you buy and eat the bread, you are the\u2026',o:['consumer','producer','service'],a:0},
-    {t:'tf',q:'A dog-walking job is a good, not a service.',a:false},
-    {t:'mc',q:'Which pair is correct?',o:['producer makes, consumer uses','consumer makes, producer uses','both just watch'],a:0},
-    {t:'fib',q:'A job someone does for you, like fixing a car, is a ______.',a:'service'}],
-  "Money, trade & choices":[
-    {t:'fib',q:'Trading goods directly, with no money, is called ______.',a:'bartering',alt:['barter']},
-    {t:'tf',q:'Because money is limited, every choice has a trade-off.',a:true},
-    {t:'mc',q:'You have $10; a book and a game each cost $10. Buying the book means\u2026',o:['giving up the game','getting both','getting neither'],a:0},
-    {t:'tf',q:'You can buy everything you want because money never runs out.',a:false},
-    {t:'mc',q:'People use money to ______ for goods and services.',o:['trade','hide','eat'],a:0},
-    {t:'fib',q:'When you pick one thing and give up another, that\u2019s called a trade-______.',a:'off'},
-    {t:'tf',q:'Long ago, people traded goods directly before money existed.',a:true},
-    {t:'mc',q:'Why can\u2019t you buy everything you want?',o:['money is limited','stores are closed','it\u2019s illegal'],a:0},
-    {t:'tf',q:'Every spending choice means giving something else up.',a:true},
-    {t:'mc',q:'Swapping your sandwich for a friend\u2019s apple, with no money, is\u2026',o:['bartering','buying','saving'],a:0},
-    {t:'fib',q:'The thing you give up when you make a choice is the trade-off, also called opportunity ______.',a:'cost'},
-    {t:'tf',q:'Money makes trading easier than swapping goods directly.',a:true}],
-  "How we know about the past":[
-    {t:'fib',q:'A source from the actual time (a diary, photo) is a ______ source.',a:'primary'},
-    {t:'tf',q:'A textbook written long after an event is a secondary source.',a:true},
-    {t:'mc',q:'Which is a primary source about a war?',o:['a soldier\u2019s actual letter','a book written 100 years later','a modern cartoon'],a:0},
-    {t:'tf',q:'Primary sources are like eyewitnesses to the past.',a:true},
-    {t:'mc',q:'Why is a photo often trusted more than a story told 50 years later?',o:['it\u2019s from the moment itself','it is prettier','it is shorter'],a:0},
-    {t:'mc',q:'Which is a SECONDARY source?',o:['a history textbook','a diary from that year','an old photograph'],a:0},
-    {t:'tf',q:'An old letter written during an event is a primary source.',a:true},
-    {t:'fib',q:'We learn about the past by looking at ______. (clues left behind)',a:'evidence',alt:['sources','clues','artifacts']},
-    {t:'mc',q:'Which would a historian trust most for what happened in 1850?',o:['a letter from 1850','a movie from 2020','a guess'],a:0},
-    {t:'tf',q:'All sources about the past are equally trustworthy.',a:false},
-    {t:'fib',q:'A diary written by someone who was there is a ______ source.',a:'primary'},
-    {t:'mc',q:'A book written today ABOUT ancient Rome is a\u2026',o:['secondary source','primary source','a fake'],a:0}],
-  "How communities change over time":[
-    {t:'fib',q:'Studying why things happened is called cause and ______.',a:'effect'},
-    {t:'tf',q:'Communities change over time in population, jobs, and buildings.',a:true},
-    {t:'mc',q:'A town gets a railroad, so more people move in. The railroad is the\u2026',o:['cause','effect','neither'],a:0},
-    {t:'tf',q:'Communities never change over time.',a:false},
-    {t:'mc',q:'A new invention can change a community by\u2026',o:['causing ripple effects','doing nothing','erasing it instantly'],a:0},
-    {t:'mc',q:'A town gets a railroad (cause). More businesses open. That\u2019s the\u2026',o:['effect','cause','neither'],a:0},
-    {t:'tf',q:'The car led to new roads, gas stations, and suburbs.',a:true},
-    {t:'fib',q:'When one change leads to another, we call that cause and ______.',a:'effect'},
-    {t:'mc',q:'Which shows a community changing over time?',o:['a village grows into a city','a rock stays a rock','nothing happens'],a:0},
-    {t:'tf',q:'Historians look at why changes happened, not just what happened.',a:true},
-    {t:'mc',q:'A factory opens and the town population grows. The population growth is the\u2026',o:['effect','cause','symbol'],a:0},
-    {t:'tf',q:'One invention can cause many changes in a community.',a:true}],
-  "U.S. symbols & landmarks":[
-    {t:'mc',q:'What do the 50 stars on the U.S. flag stand for?',o:['the 50 states','50 presidents','50 years'],a:0},
-    {t:'tf',q:'The bald eagle is a symbol of the United States.',a:true},
-    {t:'fib',q:'The 13 stripes on the flag stand for the original 13 ______.',a:'colonies',alt:['colony']},
-    {t:'tf',q:'A flag is just decoration and stands for nothing.',a:false},
-    {t:'mc',q:'Why does a country use symbols like a flag?',o:['they carry shared meaning and pride','to waste cloth','for no reason'],a:0},
-    {t:'mc',q:'The Statue of Liberty is a\u2026',o:['famous U.S. landmark','type of food','state capital'],a:0},
-    {t:'tf',q:'Symbols stand for a country\u2019s ideas and history.',a:true},
-    {t:'fib',q:'The number of stars on the U.S. flag matches the number of ______.',a:'states'},
-    {t:'mc',q:'Which is a U.S. symbol?',o:['the bald eagle','a random rock','the number 7'],a:0},
-    {t:'tf',q:'The White House is where the President lives and works.',a:true},
-    {t:'mc',q:'A country uses a flag instead of just a name because a flag\u2026',o:['shows meaning at a glance','is cheaper','has no purpose'],a:0},
-    {t:'fib',q:'The Statue of ______ is a famous symbol of freedom in the U.S.',a:'liberty'}]
-};
-function norm(s){return String(s).toLowerCase().trim().replace(/[.,!?'"\u2018\u2019\u201c\u201d]/g,'').replace(/\s+/g,' ');}
-let poolArr=null, curItem=null, mstreak=0, mMastered=false, lastQ=-1;
-const MGOAL=8;
-function mDots(){ const d=document.getElementById('mdots'); if(!d) return; let s=''; for(let i=0;i<MGOAL;i++) s+=`<span class="dot${i<mstreak?' on':''}">\u25cf</span>`; d.innerHTML=s; }
-function refreshChecks(){ const dc=Object.keys(progress.done).length; const pc=document.getElementById('pcount'); if(pc) pc.textContent=`${dc} / ${flat.length} mastered \u00b7 ${Math.round(dc/flat.length*100)}%`; const pf=document.getElementById('pfill'); if(pf) pf.style.width=(dc/flat.length*100)+'%'; document.querySelectorAll('.skill-btn').forEach(b=>{ const idx=+b.dataset.i; const isDone=!!progress.done[flat[idx].title]; b.classList.toggle('done',isDone); const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb'; }); }
-function initPool(title){ poolArr=POOLS[title]; mstreak=0; lastQ=-1; mMastered=!!progress.done[flat[si].title]; newPoolQ(); mDots(); }
-function newPoolQ(){ if(!poolArr) return; let _i=Math.floor(Math.random()*poolArr.length); if(poolArr.length>1){ let _t=0; while(_i===lastQ && _t<12){ _i=Math.floor(Math.random()*poolArr.length); _t++; } } lastQ=_i; curItem=poolArr[_i]; const it=curItem; const q=document.getElementById('mq'); if(q) q.innerHTML=it.q; const opts=document.getElementById('mopts'); if(opts){ if(it.t==='mc'){ opts.innerHTML=it.o.map((o,i)=>`<button class="mopt" data-opt="${i}">${o}</button>`).join(''); } else if(it.t==='tf'){ opts.innerHTML=`<button class="mopt" data-tf="1">True</button><button class="mopt" data-tf="0">False</button>`; } else if(it.t==='fib'){ opts.innerHTML=`<div class="genrow"><input id="fibin" type="text" autocomplete="off" placeholder="Type your answer"><button class="btn sm" data-act="fibcheck">Check</button></div>`; } } const fb=document.getElementById('mfb'); if(fb){fb.textContent='';fb.className='genfb';} const fibin=document.getElementById('fibin'); if(fibin){ fibin.focus(); fibin.addEventListener('keydown',e=>{ if(e.key==='Enter') checkFIB(); }); } }
-function lockOpts(chosenIdx,correctIdx){ document.querySelectorAll('.mopt').forEach((b,i)=>{ if(i===correctIdx) b.classList.add('right'); if(i===chosenIdx && chosenIdx!==correctIdx) b.classList.add('wrong'); b.disabled=true; }); }
-function grade(ok, correctText){ const fb=document.getElementById('mfb'); if(!fb) return; if(ok){ mstreak++; mDots(); if(mstreak>=MGOAL){ fb.innerHTML='\u2714 <b>Mastered!</b> 8 in a row \u2014 next card unlocked.'; fb.className='genfb ok'; if(!mMastered){ mMastered=true; markSkillDone(si); refreshChecks(); const nb=document.getElementById('next'); if(nb){ nb.textContent='Next'; nb.style.opacity='1'; nb.style.cursor='pointer'; } } } else { fb.textContent='Correct! \u2713'; fb.className='genfb ok'; setTimeout(newPoolQ,650); } } else { mstreak=0; mDots(); fb.innerHTML=`Not quite\u2014 answer: <b>${correctText}</b>. Streak reset.`; fb.className='genfb no'; setTimeout(newPoolQ,1600); } }
-function answerMC(idx){ const btns=document.querySelectorAll('.mopt'); if(btns[0]&&btns[0].disabled) return; lockOpts(idx,curItem.a); grade(idx===curItem.a, curItem.o[curItem.a]); }
-function answerTF(val){ const btns=document.querySelectorAll('.mopt'); if(btns[0]&&btns[0].disabled) return; const correctIdx=curItem.a?0:1; lockOpts(val?0:1,correctIdx); grade((!!val)===curItem.a, curItem.a?'True':'False'); }
-function checkFIB(){ const inp=document.getElementById('fibin'); if(!inp) return; const v=inp.value.trim(); if(!v) return; let ok=norm(v)===norm(curItem.a); if(!ok && curItem.alt) ok=curItem.alt.some(x=>norm(x)===norm(v)); inp.disabled=true; grade(ok, curItem.a); }
-
 let flat = [];
-COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name, cards: s.cards.filter(c=>c.tag!=="Prove it")})));
+COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name})));
 let si = 0, ci = 0;
 const SAVE_KEY = 'voyage_g4ss_progress';
 let progress = { done:{}, lastSkill:0 };
@@ -434,7 +217,7 @@ function buildMenu(){
   m.addEventListener('click',e=>{ const b=e.target.closest('.skill-btn'); if(b) loadSkill(+b.dataset.i); });
 }
 function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
-function go(d){ const cards=flat[si].cards; const cur=cards[ci]; if(d>0 && cur.practice && POOLS[flat[si].title] && !progress.done[flat[si].title]){ const fb=document.getElementById('mfb'); if(fb){ fb.innerHTML='\uD83D\uDD12 Get <b>8 in a row</b> to unlock the next card.'; fb.className='genfb no'; } return; } if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
+function go(d){ const cards=flat[si].cards; if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
 function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
 function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
 function render(){
@@ -444,26 +227,21 @@ function render(){
   if(ci===0) inner+=`<h2>${s.title}</h2>`;
   if(c.body) inner+=c.body;
   if(c.practice){
-    if(POOLS[s.title]){
-      inner+=`<div class="mcwrap"><div class="mq" id="mq"></div><div class="mopts" id="mopts"></div><div class="genfb" id="mfb"></div><div class="genmastery"><span class="genlabel">Get 8 in a row to master:</span> <span class="gendots" id="mdots"></span></div></div>`;
-    } else {
-      inner+=`<div class="qlist">`;
-      c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
-      inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
-    }
+    inner+=`<div class="qlist">`;
+    c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
+    inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
   }
   if(c.reveal){ inner+=`<button class="btn sm" data-act="revealOne">Show the answer</button><div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`; }
   if(ci===s.cards.length-1 && s.proj){ inner+=`<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`; }
   document.getElementById('card').innerHTML=inner;
-  if(c.practice && POOLS[s.title]) initPool(s.title);
   const doneCount=Object.keys(progress.done).length;
   document.getElementById('pcount').textContent=`${doneCount} / ${flat.length} skills complete`;
   document.getElementById('pfill').style.width=(doneCount/flat.length*100)+'%';
   document.getElementById('progress').innerHTML=s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
   document.getElementById('counter').textContent=`${ci+1} / ${s.cards.length}`;
   document.getElementById('back').style.visibility=ci===0?'hidden':'visible';
-  const _nb=document.getElementById('next'); const _gated=c.practice && POOLS[s.title] && !progress.done[s.title]; _nb.textContent=_gated?'Master to unlock \uD83D\uDD12':((ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next'); _nb.style.opacity=_gated?'.45':'1'; _nb.style.cursor=_gated?'not-allowed':'pointer';
-  if(ci===s.cards.length-1 && !POOLS[s.title]){ markSkillDone(si); }
+  document.getElementById('next').textContent=(ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next';
+  if(ci===s.cards.length-1){ markSkillDone(si); }
   document.querySelectorAll('.skill-btn').forEach(b=>{
     const idx=+b.dataset.i, isDone=!!progress.done[flat[idx].title];
     b.classList.toggle('active',idx===si);
@@ -476,9 +254,8 @@ buildMenu();
 document.getElementById('back').addEventListener('click',()=>go(-1));
 document.getElementById('next').addEventListener('click',()=>go(1));
 document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress?')) resetProgress(); });
-document.getElementById('card').addEventListener('click',e=>{ const opt=e.target.closest('[data-opt]'); if(opt){ answerMC(+opt.dataset.opt); return; } const tf=e.target.closest('[data-tf]'); if(tf){ answerTF(tf.dataset.tf==='1'); return; } const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='fibcheck') checkFIB(); if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
+document.getElementById('card').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
 loadSkill(progress.lastSkill||0);
 </script>
-  <script src="tutor-widget.js"></script>
 </body>
 </html>

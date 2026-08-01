@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Equivalent fractions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--choc:#7a4a2b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:33px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .barlab{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px}
+  .barwrap{position:relative;margin-bottom:4px}
+  .bar{display:flex;width:100%;height:54px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:#fff}
+  .cell{flex:1;border-right:1.5px solid var(--ink);transition:background .12s}
+  .cell:last-child{border-right:none}
+  .bar.clickable .cell{cursor:pointer}
+  .bar.clickable .cell:hover{background:rgba(122,74,43,.25)}
+  .cell.on{background:var(--choc)}
+  .marker{position:absolute;top:-9px;bottom:-9px;left:50%;width:0;border-left:2.5px dashed var(--accent);z-index:3;pointer-events:none}
+  .markerlab{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10.5px;color:var(--accent);white-space:nowrap}
+  .ctrl{display:flex;align-items:center;gap:14px;margin:16px 0 4px;flex-wrap:wrap}
+  .ctrl label{font-size:15px;color:var(--muted)}
+  input[type=range]{flex:1;min-width:180px;accent-color:var(--blue)}
+  .readout{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;min-width:46px}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:14px;min-height:44px;display:flex;align-items:center}
+  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
+  .verdict.long{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=number]{font-family:'Space Mono',monospace;font-size:17px;width:88px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.A.1</div>
+    <h1>Equivalent fractions</h1>
+    <p>You and Jamie get the same size chocolate bar. She breaks hers in half and eats one piece. You want to eat exactly as much as her — but your bar is already broken into more pieces than hers.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.A.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Equivalent fractions</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var won={},predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+var pieces=4,shaded=0;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function barHTML(id,n,clickable,marker){
+  var h='<div class="barwrap">';
+  if(marker){h+='<div class="markerlab">Jamie ate up to here</div><div class="marker"></div>';}
+  h+='<div class="bar'+(clickable?' clickable':'')+'" id="'+id+'">';
+  for(var i=0;i<n;i++)h+='<div class="cell"'+(clickable?' onclick="fillTo('+i+')"':'')+'></div>';
+  return h+'</div></div>';
+}
+function shade(id,c){var b=el(id);if(!b)return;for(var i=0;i<b.children.length;i++)b.children[i].className=i<c?'cell on':'cell';}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Eat exactly as much as Jamie</h2>';
+  h+='<p>Jamie\'s bar is on top. She ate the dark part. Yours is underneath. The orange line shows where hers stopped.</p>';
+  h+='<div class="barlab">Jamie\'s bar — 2 pieces, ate 1</div>'+barHTML('barA',2,false,false);
+  h+='<div class="chal" id="c1"><div class="chalnum">Challenge 1</div><div class="chaltxt">Cut your bar into <b>4</b> pieces and eat exactly as much as Jamie.</div><div class="chalstate" id="s1">not yet</div></div>';
+  h+='<div class="chal locked" id="c2"><div class="chalnum">Challenge 2</div><div class="chaltxt">Do it again with a <b>different</b> number of pieces.</div><div class="chalstate" id="s2">locked</div></div>';
+  h+='<div class="chal locked" id="c3"><div class="chalnum">Challenge 3</div><div class="chaltxt">Do it once more. <b>Three different ways</b> to eat the same amount.</div><div class="chalstate" id="s3">locked</div></div>';
+  h+='<div class="barlab" style="margin-top:18px">Your bar — click a piece to eat up to it</div>'+barHTML('barB',pieces,true,true);
+  h+='<div class="ctrl"><label>Cut your bar into</label><input type="range" min="2" max="12" value="'+pieces+'" oninput="setPieces(this.value)"><span class="readout" id="pr">'+pieces+'</span></div>';
+  h+='<div class="verdict" id="v">Click a piece of your bar.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" disabled onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  shade('barA',1);shade('barB',shaded);
+  paintChals();check();
+}
+function paintChals(){
+  var k=Object.keys(won).length;
+  for(var i=1;i<=3;i++){
+    var box=el('c'+i),st=el('s'+i);
+    if(!box)continue;
+    if(k>=i){box.classList.remove('locked');box.classList.add('won');st.textContent='✓ done';}
+    else if(k===i-1){box.classList.remove('locked');st.textContent='not yet';}
+  }
+  if(k>=3&&el('nx'))el('nx').disabled=false;
+}
+function setPieces(v){
+  pieces=parseInt(v,10);shaded=0;el('pr').textContent=pieces;
+  el('barB').parentNode.outerHTML=barHTML('barB',pieces,true,true);
+  check();
+}
+function fillTo(i){shaded=(shaded===i+1)?i:i+1;shade('barB',shaded);check();}
+function check(){
+  var v=el('v');if(!v)return;
+  var val=shaded/pieces,key=shaded+'/'+pieces;
+  if(shaded===0){v.className='verdict';v.textContent='Click a piece of your bar.';return;}
+  if(Math.abs(val-0.5)<1e-9){
+    v.className='verdict exact';
+    var first=Object.keys(won).length===0;
+    var okForC1=(pieces===4);
+    if(!won[key]){
+      if(first&&!okForC1){v.textContent='That is the same amount — but Challenge 1 asks for 4 pieces. Set the slider to 4.';return;}
+      won[key]=true;paintChals();
+    }
+    v.textContent='✓ '+key+' is exactly the same as Jamie\'s half.';
+  }
+  else if(val<0.5){v.className='verdict short';v.textContent='Less than Jamie — '+key+' stops short of the line.';}
+  else{v.className='verdict long';v.textContent='More than Jamie — '+key+' goes past the line.';}
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Three bars. Same amount eaten.</h2>';
+  h+='<div class="barlab">1 of 2 pieces = 1/2</div>'+barHTML('b1',2,false,true);
+  h+='<div class="barlab">2 of 4 pieces = 2/4</div>'+barHTML('b2',4,false,true);
+  h+='<div class="barlab">6 of 12 pieces = 6/12</div>'+barHTML('b3',12,false,true);
+  h+='<p style="margin-top:18px">More pieces each time. But each piece got <b>smaller</b>. The two changes cancel, so the dark part never moves.</p>';
+  h+='<div class="goal"><div class="lab">The word for this</div><p>Fractions that cover the same amount are <b>equivalent</b>. 1/2, 2/4 and 6/12 are equivalent.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  shade('b1',1);shade('b2',2);shade('b3',6);
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>Your bar is cut into <b>10</b> pieces now. Don\'t use the bar — just think.</p>';
+  h+='<div class="ask"><div class="q">How many pieces do you eat to match Jamie?</div>';
+  h+='<div class="row"><input type="number" id="pred" min="0" max="10" placeholder="?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"><div class="barlab">10 pieces</div>'+barHTML('b10',10,false,true)+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone){el('ph').classList.remove('hide');shade('b10',5);}
+}
+function checkPredict(){
+  var v=parseInt(el('pred').value,10);if(isNaN(v))return;
+  var fb=el('pfb');
+  if(v===5){fb.className='fb ok';fb.innerHTML='<b>Yes — 5.</b> 5/10 is half.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> You said '+v+'. It takes <b>5</b> — half of 10 pieces is 5 pieces, same as half of 10 marbles is 5.';}
+  el('ph').classList.remove('hide');shade('b10',5);
+  predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The pattern</div>';
+  h+='<h2>What the numbers did</h2>';
+  h+='<p style="font-family:\'Space Mono\',monospace;font-size:19px;text-align:center;margin:16px 0">1/2 &nbsp;=&nbsp; 2/4 &nbsp;=&nbsp; 5/10 &nbsp;=&nbsp; 6/12</p>';
+  h+='<p>From <b>1/2</b> to <b>6/12</b>: top went 1 → 6, bottom went 2 → 12. Both <b>× 6</b>.</p>';
+  h+='<p>That is not a trick. Multiplying the bottom by 6 means cutting every piece into 6. Multiplying the top by 6 means each piece you ate became 6 pieces. Same cut, both numbers.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>Multiply top and bottom by the <b>same number</b> → equivalent fraction. Divide both by the same number → also equivalent. 6/8 = 3/4, both ÷ 2.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Maya says 1/3 and 2/4 are equivalent</h2>';
+  h+='<p>Her reason: <i>"Add 1 to the top and 1 to the bottom. 1 becomes 2, 3 becomes 4."</i></p>';
+  h+='<p>Don\'t argue. Check the bars.</p>';
+  h+='<div class="barlab">1/3</div>'+barHTML('m1',3,false,false);
+  h+='<div class="barlab">2/4</div>'+barHTML('m2',4,false,false);
+  h+='<div class="row" style="margin-top:14px"><button class="btn sm" onclick="testMaya()">Fill both</button></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMaya();
+}
+function testMaya(){
+  shade('m1',1);shade('m2',2);
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Maya is wrong.</b> 2/4 is clearly longer. Adding 1 to each number doesn\'t cut every piece the same way, so the amount changes. Only <b>multiplying or dividing both</b> keeps it equal.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'A bar is cut into 6 pieces and 3 are eaten. Which fraction is the same amount?',
+   a:['1/2','1/3','2/3','1/6'],correct:0,why:'Half the pieces are gone, so it is one half. 3 and 6 both divide by 3.'},
+  {q:'Ravi multiplies the top and bottom of 2/5 by 4. What does he get?',
+   a:['6/9','8/20','2/20','8/5'],correct:1,why:'2 × 4 = 8, and 5 × 4 = 20. Both numbers, same number.'},
+  {q:'You matched Jamie with 2/4, then again with 6/12. What is true about 6/12 compared to 2/4?',
+   a:['More pieces, and each piece is smaller','More pieces, and each piece is the same size','Fewer pieces, each one bigger','It is more chocolate'],correct:0,
+   why:'12 pieces instead of 4 means the bar was cut finer, so each piece is smaller. Same amount eaten either way.'},
+  {q:'Which one is NOT equivalent to 3/4?',
+   a:['6/8','9/12','12/16','4/5'],correct:3,why:'4/5 came from adding 1 to each number — Maya\'s mistake. The others are × 2, × 3 and × 4.'},
+  {q:'Sam says 4/8 is more than 1/2 because 4 and 8 are bigger numbers. What is wrong?',
+   a:['Nothing, he is right','Bigger numbers mean more pieces, but each piece is smaller','4/8 is less than 1/2','You cannot compare them'],correct:1,
+   why:'Bigger numbers mean the bar was cut finer. More pieces, each smaller. Same amount.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+
+/* write completion back into the course progress so the sidebar ticks */
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();}
+  if(pct>=80)h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Make equivalent fractions by multiplying or dividing top and bottom by the same number — and prove it on a bar.</p></div><p style="margin-top:14px">Next: <b>comparing fractions</b> — which is more, 3/4 or 2/3?</p>';
+  else h+='<p style="margin-top:16px">Go back to the three bars. More pieces, smaller pieces, same amount — that one line is the whole lesson.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;won={};predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;pieces=4;shaded=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

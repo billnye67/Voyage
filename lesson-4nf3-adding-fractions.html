@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Adding fractions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--water:#3a7ca5}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:33px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  /* jug */
+  .jugrow{display:flex;gap:24px;align-items:flex-end;justify-content:center;margin:18px 0 8px}
+  .jug{position:relative;width:130px;height:230px;border:2.5px solid var(--ink);border-radius:8px 8px 14px 14px;background:#fff;overflow:hidden}
+  .jfill{position:absolute;left:0;right:0;bottom:0;background:var(--water);transition:height .4s}
+  .ticks{position:absolute;inset:0;z-index:2}
+  .tick{position:absolute;left:0;right:0;border-top:1px solid rgba(22,35,58,.28)}
+  .target{position:absolute;left:0;right:0;border-top:3px dashed var(--accent);z-index:4}
+  .targetlab{position:absolute;right:4px;font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);z-index:5}
+  .jugside{font-family:'Space Mono',monospace;font-size:14px;line-height:1.9;color:var(--muted)}
+  .jugside b{color:var(--ink);font-size:17px}
+  .pours{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:16px 0 4px}
+  .pour{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;padding:11px 15px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .pour:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:96px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  .strip{display:flex;width:100%;height:48px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:#fff;margin:10px 0}
+  .sc{flex:1;border-right:1.5px solid var(--ink)}
+  .sc:last-child{border-right:none}
+  .sc.a{background:var(--water)}
+  .sc.b{background:#8bb8d0}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:27px}.jug{width:110px;height:190px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.B.3</div>
+    <h1>Adding fractions</h1>
+    <p>You're filling a water jug for a hike. The jug is marked in eighths, and your scoop only pours one eighth at a time. You need it filled to exactly the line — not a drop over.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.B.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Adding fractions</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var DEN=8,filled=0,taskIdx=0,wonCount=0;
+var TASKS=[
+  {target:5,txt:'Fill the jug to exactly <b>5/8</b>.'},
+  {target:7,txt:'Now to exactly <b>7/8</b>.'},
+  {target:4,txt:'Now to exactly <b>4/8</b> — that\'s the half line.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function jugHTML(target){
+  var h='<div class="jug"><div class="jfill" id="jf" style="height:0%"></div><div class="ticks">';
+  for(var i=1;i<DEN;i++)h+='<div class="tick" style="bottom:'+(i/DEN*100)+'%"></div>';
+  h+='</div>';
+  if(target){
+    h+='<div class="target" style="bottom:'+(target/DEN*100)+'%"></div>';
+    h+='<div class="targetlab" style="bottom:calc('+(target/DEN*100)+'% + 3px)">'+target+'/8</div>';
+  }
+  return h+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[taskIdx],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Fill it to the line</h2>';
+  h+='<p>Press a scoop to pour. The orange line is your target. Hit it exactly.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="jugrow">'+jugHTML(T.target)+'<div class="jugside">In the jug:<br><b id="amt">0/8</b><br><br>Poured:<br><b id="hist">nothing yet</b></div></div>';
+  h+='<div class="pours"><button class="pour" onclick="pour(1)">+ 1/8</button><button class="pour" onclick="pour(2)">+ 2/8</button><button class="pour" onclick="pour(3)">+ 3/8</button><button class="pour" onclick="empty()">empty</button></div>';
+  h+='<div class="verdict" id="v">Jug is empty.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  filled=0;poured=[];updateJug();
+}
+var poured=[];
+function pour(n){
+  if(wonCount>=TASKS.length)return;
+  filled+=n;poured.push(n+'/8');
+  updateJug();
+}
+function empty(){filled=0;poured=[];updateJug();}
+function updateJug(){
+  var T=TASKS[taskIdx];
+  var jf=el('jf');if(!jf)return;
+  jf.style.height=Math.min(filled/DEN*100,100)+'%';
+  el('amt').textContent=filled+'/8';
+  el('hist').textContent=poured.length?poured.join(' + ')+' = '+filled+'/8':'nothing yet';
+  var v=el('v');
+  if(filled===0){v.className='verdict';v.textContent='Jug is empty.';return;}
+  if(filled===T.target){
+    v.className='verdict exact';
+    v.innerHTML='✓ Exactly '+T.target+'/8. '+poured.join(' + ')+' = <b>'+filled+'/8</b>';
+    if(wonCount===taskIdx){
+      wonCount++;taskIdx=Math.min(taskIdx+1,TASKS.length-1);
+      setTimeout(function(){if(step===0)beat1();},1500);
+    }
+  }
+  else if(filled<T.target){v.className='verdict short';v.textContent=filled+'/8 — still '+(T.target-filled)+'/8 short.';}
+  else{v.className='verdict over';v.textContent=filled+'/8 — that\'s '+(filled-T.target)+'/8 too much. Press empty and start again.';}
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The bottom number never moved</h2>';
+  h+='<p>Every pour you made was in eighths, so every total was in eighths.</p>';
+  h+='<p style="font-family:\'Space Mono\',monospace;font-size:19px;text-align:center;margin:16px 0">3/8 + 2/8 = <b>5/8</b></p>';
+  h+='<div class="strip" id="s1"></div>';
+  h+='<p>Three eighths, then two more eighths. Five eighths. You counted pieces — you didn\'t change what a piece <i>is</i>.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>Same bottom number? <b>Add the tops, keep the bottom.</b> Subtracting works the same way: 7/8 − 3/8 = 4/8.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  var s=el('s1'),hh='';
+  for(var i=0;i<8;i++)hh+='<div class="sc'+(i<3?' a':(i<5?' b':''))+'"></div>';
+  s.innerHTML=hh;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>Your jug has <b>6/8</b> in it. You pour out <b>2/8</b>.</p>';
+  h+='<div class="ask"><div class="q">How much is left? Type it like 3/8.</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="?/8"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"><div class="strip" id="s2"></div><p>Six eighths, take away two eighths, four eighths left. The bottom stayed 8 the whole time.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)showStrip2();
+}
+function showStrip2(){
+  el('ph').classList.remove('hide');
+  var s=el('s2'),hh='';
+  for(var i=0;i<8;i++)hh+='<div class="sc'+(i<4?' a':'')+'"></div>';
+  s.innerHTML=hh;
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/\s/g,'');
+  var fb=el('pfb');
+  if(raw==='4/8'){fb.className='fb ok';fb.innerHTML='<b>Yes — 4/8.</b> 6 minus 2 is 4, and the bottom stays 8.';}
+  else if(raw==='1/2'){fb.className='fb ok';fb.innerHTML='<b>Also right.</b> 4/8 is the same as 1/2 — nice spot. In eighths it reads 4/8.';}
+  else if(raw==='4/0'||raw==='4'){fb.className='fb no';fb.innerHTML='<b>Close.</b> The tops subtract to 4, but the bottom stays <b>8</b>. It is <b>4/8</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>4/8</b>. Take 2 pieces away from 6 pieces and 4 pieces are left — same size pieces the whole way.';}
+  showStrip2();predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>You are counting, not calculating</h2>';
+  h+='<p>The bottom number tells you <b>what one piece is</b>. The top tells you <b>how many you have</b>.</p>';
+  h+='<p>Adding 3/8 and 2/8 is the same kind of move as adding 3 apples and 2 apples. Nobody adds the word "apples" twice. You count 5, and they\'re still apples.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>Add the tops. Keep the bottom. It only works when the bottoms already match — because you can only count pieces together if they\'re the same size.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Priya says 1/4 + 1/4 = 2/8</h2>';
+  h+='<p>Her reason: <i>"Add the tops and add the bottoms. 1+1 = 2, 4+4 = 8."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testPriya()">Check it on a strip</button></div>';
+  h+='<div id="prh" class="hide"><div style="margin-top:14px"><div style="font-family:\'Space Mono\',monospace;font-size:12px;color:var(--muted);margin-bottom:4px">1/4 + 1/4</div><div class="strip" id="s3"></div><div style="font-family:\'Space Mono\',monospace;font-size:12px;color:var(--muted);margin-bottom:4px">Priya\'s answer, 2/8</div><div class="strip" id="s4"></div></div></div>';
+  h+='<div id="prfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testPriya();
+}
+function testPriya(){
+  el('prh').classList.remove('hide');
+  var a='',b='';
+  for(var i=0;i<4;i++)a+='<div class="sc'+(i<1?' a':(i<2?' b':''))+'"></div>';
+  for(var j=0;j<8;j++)b+='<div class="sc'+(j<2?' a':'')+'"></div>';
+  el('s3').innerHTML=a;el('s4').innerHTML=b;
+  var fb=el('prfb');fb.className='fb no';
+  fb.innerHTML='<b>Priya is wrong.</b> Her answer is <i>smaller</i> than what she started with — 2/8 is a quarter, but she added two quarters. Adding the bottoms changes the piece size mid-problem. The bottoms already matched, so they stay: <b>1/4 + 1/4 = 2/4</b>.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'2/6 + 3/6 = ?',a:['5/12','5/6','6/6','5/36'],correct:1,why:'Add the tops: 2 + 3 = 5. The bottom stays 6.'},
+  {q:'7/10 − 4/10 = ?',a:['3/10','3/0','11/10','3/20'],correct:0,why:'Seven tenths take away four tenths leaves three tenths. Same size pieces throughout.'},
+  {q:'Your jug holds 8/8. You have 3/8 in it. How much more to fill it?',a:['5/8','4/8','5/16','3/8'],correct:0,why:'8 − 3 = 5, so 5/8 more. 3/8 + 5/8 = 8/8, a full jug.'},
+  {q:'Why can you NOT just add the bottoms in 1/3 + 1/3?',a:['You can, it equals 2/6','Because the bottom says the piece size, and the pieces did not change','Because 3 + 3 is too big','Because thirds are odd numbers'],correct:1,
+   why:'The bottom is what one piece is. You added pieces, you did not re-cut them. 1/3 + 1/3 = 2/3.'},
+  {q:'Which addition can you do straight away, without changing anything first?',a:['1/2 + 1/3','2/5 + 1/4','3/7 + 2/7','1/6 + 1/9'],correct:2,
+   why:'Only 3/7 and 2/7 already have the same bottom, so the pieces are the same size and can be counted together.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+
+/* write completion back into the course progress so the sidebar ticks */
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();}
+  if(pct>=80)h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Add and subtract fractions that share a bottom number, and explain why the bottom stays put.</p></div>';
+  else h+='<p style="margin-top:16px">Go back to Priya. Her answer came out smaller than she started with — that is the tell.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;filled=0;poured=[];taskIdx=0;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

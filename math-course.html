@@ -35,6 +35,8 @@
   .skill-btn.done .stitle{color:var(--muted)}
   .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
   .stitle{flex:1}
+  .lessondot{font-size:9px;color:var(--accent);flex-shrink:0}
+  .skill-btn.active .lessondot{color:#fff}
 
   /* ---------- MAIN: lesson player ---------- */
   .main{flex:1;padding:26px 30px 60px;min-width:0}
@@ -377,7 +379,9 @@ let si = 0;   // skill index
 let ci = 0;   // card index
 
 /* ---- progress: remembers finished skills + where you left off ---- */
-const SAVE_KEY = 'voyage_g4math_progress';
+const _acct = JSON.parse(localStorage.getItem('voyage_account')||'null');
+const _kid  = (_acct && _acct.activeKidId) ? _acct.activeKidId : 'solo';
+const SAVE_KEY = 'voyage_g4math_progress_' + _kid;   // per-kid, so siblings don't share progress
 let progress = { done:{}, lastSkill:0 };
 function loadProgress(){
   try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) progress = JSON.parse(raw); }catch(e){}
@@ -388,15 +392,23 @@ function saveProgress(){
 function markSkillDone(i){ progress.done[flat[i].code] = true; saveProgress(); }
 function resetProgress(){ progress = {done:{}, lastSkill:0}; saveProgress(); loadSkill(0); }
 
+/* skills that have a full lesson page instead of the old cards */
+const LESSONS = {
+  '4.NF.1':'lesson-4nf1-equivalent-fractions.html',
+  '4.NF.2':'lesson-4nf2-comparing-fractions.html',
+  '4.NF.3':'lesson-4nf3-adding-fractions.html'
+};
+
 function buildMenu(){
   let html = '';
   COURSE.domains.forEach((d,di)=>{
     html += `<div class="domain">${d.name}</div>`;
     d.skills.forEach(s=>{
       const idx = flat.findIndex(f=>f.code===s.code);
-      html += `<button class="skill-btn" data-i="${idx}">
+      const hasLesson = !!LESSONS[s.code];
+      html += `<button class="skill-btn${hasLesson?' haslesson':''}" data-i="${idx}">
         <span class="check">\u25cb</span>
-        <span class="stitle">${s.title}</span></button>`;
+        <span class="stitle">${s.title}</span>${hasLesson?'<span class="lessondot" title="Full lesson">\u25c6</span>':''}</button>`;
     });
   });
   const m = document.getElementById('menu');
@@ -406,7 +418,12 @@ function buildMenu(){
     if(b) loadSkill(+b.dataset.i);
   });
 }
-function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
+function loadSkill(i){
+  si=i; ci=0; progress.lastSkill=i; saveProgress();
+  const file = LESSONS[flat[i].code];
+  if(file){ location.href = file; return; }   // full lesson page
+  render();
+}
 function go(d){
   const cards = flat[si].cards;
   const cur = cards[ci];
