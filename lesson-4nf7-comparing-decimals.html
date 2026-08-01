@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Comparing decimals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--fill:#1b4f8a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .pair{display:flex;gap:22px;justify-content:center;margin:18px 0 8px;flex-wrap:wrap}
+  .side{flex:1;min-width:150px;max-width:230px;text-align:center}
+  .pick{width:100%;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:16px 10px;cursor:pointer;
+    font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--ink);transition:.15s}
+  .pick:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .pick.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .pick.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .g100{display:grid;grid-template-columns:repeat(10,1fr);width:100%;max-width:150px;margin:10px auto 0;
+    border:2px solid var(--ink);background:var(--ink)}
+  .gc{aspect-ratio:1;background:#fff;border:.5px solid rgba(22,35,58,.3)}
+  .gc.on{background:var(--fill)}
+  .glab{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:5px}
+  .streak{display:flex;gap:5px;margin-top:14px;justify-content:center}
+  .pip{width:22px;height:8px;border-radius:4px;background:var(--blue-line)}
+  .pip.on{background:var(--green)}
+  .score{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.08em;color:var(--muted);margin-top:10px;text-align:center}
+  .score b{color:var(--green);font-size:16px}
+  .pv{display:flex;justify-content:center;align-items:flex-end;gap:2px;margin:14px 0 8px;font-family:'Space Mono',monospace}
+  .pvcol{text-align:center}
+  .pvhead{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;width:56px}
+  .pvbox{width:56px;height:52px;border:2px solid var(--ink);border-radius:7px;background:#fff;display:flex;align-items:center;
+    justify-content:center;font-size:24px;font-weight:700}
+  .pvbox.hi{background:rgba(240,102,63,.14);border-color:var(--accent)}
+  .pvdot{font-size:28px;font-weight:700;padding:0 3px 8px}
+  .pvname{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-bottom:4px}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:14px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.pick{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.C.7</div>
+    <h1>Comparing decimals</h1>
+    <p>Two runners. One covered 0.3 of the track, the other covered 0.25. Most people say the second one went further, because 25 is a bigger number than 3. They're wrong, and this lesson is about why.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.C.7</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Comparing decimals</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var streak=0,best=0,roundIdx=0,roundAnswered=false;
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+/* [labelA, hundredthsA, labelB, hundredthsB] — no ties */
+var ROUNDS=[
+  ['0.3',30,'0.25',25],
+  ['0.45',45,'0.5',50],
+  ['0.08',8,'0.1',10],
+  ['0.7',70,'0.63',63],
+  ['0.19',19,'0.2',20],
+  ['0.6',60,'0.55',55],
+  ['0.89',89,'0.9',90]
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function gridHTML(id){
+  var h='<div class="g100" id="'+id+'">';
+  for(var i=0;i<100;i++)h+='<div class="gc"></div>';
+  return h+'</div>';
+}
+function paintGrid(id,n){
+  var g=el(id);if(!g)return;
+  for(var i=0;i<100;i++)g.children[i].className='gc'+(i<n?' on':'');
+}
+function pvHTML(t,hu,hiT,hiH){
+  return '<div class="pv">'+
+    '<div class="pvcol"><div class="pvhead">ones</div><div class="pvbox">0</div></div>'+
+    '<div class="pvdot">.</div>'+
+    '<div class="pvcol"><div class="pvhead">tenths</div><div class="pvbox'+(hiT?' hi':'')+'">'+t+'</div></div>'+
+    '<div class="pvcol"><div class="pvhead">hundredths</div><div class="pvbox'+(hiH?' hi':'')+'">'+hu+'</div></div></div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var R=ROUNDS[roundIdx],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Which runner went further?</h2>';
+  h+='<p>Both tracks are the same length. Click the bigger decimal. The squares appear after you choose. <b>Get 5 right in a row.</b></p>';
+  h+='<div class="pair">';
+  h+='<div class="side"><button class="pick" id="A" onclick="choose(\'A\')">'+R[0]+'</button><div id="ga" class="hide">'+gridHTML('gA')+'<div class="glab">'+R[1]+' of 100</div></div></div>';
+  h+='<div class="side"><button class="pick" id="B" onclick="choose(\'B\')">'+R[2]+'</button><div id="gb" class="hide">'+gridHTML('gB')+'<div class="glab">'+R[3]+' of 100</div></div></div>';
+  h+='</div>';
+  h+='<div class="streak" id="pips"></div>';
+  h+='<div class="score" id="sc">Streak: <b>'+streak+'</b> of 5 &nbsp;·&nbsp; round '+(roundIdx+1)+'</div>';
+  h+='<div id="rfb"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(best>=5?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  drawPips();roundAnswered=false;
+}
+function drawPips(){
+  var h='';for(var i=0;i<5;i++)h+='<div class="pip'+(i<streak?' on':'')+'"></div>';
+  var p=el('pips');if(p)p.innerHTML=h;
+}
+function choose(id){
+  if(roundAnswered)return;roundAnswered=true;
+  var R=ROUNDS[roundIdx];
+  var correct=R[1]>R[3]?'A':'B';
+  el('ga').classList.remove('hide');el('gb').classList.remove('hide');
+  paintGrid('gA',R[1]);paintGrid('gB',R[3]);
+  el(correct).classList.add('right');
+  if(id!==correct)el(id).classList.add('wrong');
+
+  var win=correct==='A'?R[0]:R[2], lose=correct==='A'?R[2]:R[0];
+  var winH=correct==='A'?R[1]:R[3], loseH=correct==='A'?R[3]:R[1];
+  var msg=win+' fills '+winH+' squares, '+lose+' fills '+loseH+'.';
+
+  var fb=el('rfb');
+  if(id===correct){
+    streak++;if(streak>best)best=streak;
+    fb.className='fb ok';fb.innerHTML='<b>Right.</b> '+msg;
+  }else{
+    streak=0;fb.className='fb no';fb.innerHTML='<b>No — '+win+' is bigger.</b> '+msg+' Streak back to zero.';
+  }
+  drawPips();
+  el('sc').innerHTML='Streak: <b>'+streak+'</b> of 5 &nbsp;·&nbsp; round '+(roundIdx+1);
+  if(best>=5){el('nx').disabled=false;fb.innerHTML+=' <b>Five in a row — move on.</b>';}
+  setTimeout(function(){
+    if(best>=5||step!==0)return;
+    roundIdx=(roundIdx+1)%ROUNDS.length;beat1();
+  },2800);
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>More digits does not mean bigger</h2>';
+  h+='<p>0.25 has more digits than 0.3, and it is still smaller. Whole numbers work the other way round, and that is exactly what trips people up.</p>';
+  h+='<table><tr><th>Pair</th><th>Squares filled</th><th>Bigger</th></tr>';
+  h+='<tr><td>0.3 vs 0.25</td><td>30 vs 25</td><td>0.3</td></tr>';
+  h+='<tr><td>0.45 vs 0.5</td><td>45 vs 50</td><td>0.5</td></tr>';
+  h+='<tr><td>0.08 vs 0.1</td><td>8 vs 10</td><td>0.1</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The trick that always works</div><p>Give both the same number of digits, then compare. <b>0.3 becomes 0.30</b>, and 30 beats 25. Adding that zero does not change the amount — it just fills the empty hundredths box.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>One runner covered <b>0.4</b> of the track. The other covered <b>0.38</b>.</p>';
+  h+='<div class="ask"><div class="q">Who went further?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">0.4</button><button class="btn sm" onclick="checkPredict(\'b\')">0.38</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"><div class="pair">';
+  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.40</div>'+gridHTML('p1')+'<div class="glab">40 of 100</div></div>';
+  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.38</div>'+gridHTML('p2')+'<div class="glab">38 of 100</div></div>';
+  h+='</div></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)showP();
+}
+function showP(){el('ph').classList.remove('hide');paintGrid('p1',40);paintGrid('p2',38);}
+function checkPredict(c){
+  var fb=el('pfb');
+  if(c==='a'){fb.className='fb ok';fb.innerHTML='<b>Right — 0.4.</b> Write it as 0.40 and it is 40 squares against 38.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is 0.4.</b> Write it as <b>0.40</b> and compare: 40 squares against 38. Two squares in it.';}
+  showP();predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Check the tenths box first</h2>';
+  h+='<p>The tenths box is worth ten times the hundredths box, so it decides the whole thing unless the two are equal.</p>';
+  h+='<div class="pvname">0.3</div>'+pvHTML(3,0,true,false);
+  h+='<div class="pvname">0.25</div>'+pvHTML(2,5,true,false);
+  h+='<p>3 beats 2 in the orange box, so 0.3 wins. The 5 sitting in 0.25 never gets a say — it is only worth hundredths, and it cannot make up a whole tenth.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>Compare the tenths box. If it is a tie, move to the hundredths box. Or add a zero so both have two digits and compare the numbers straight across.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Lena says 0.25 beats 0.3 because 25 is bigger than 3</h2>';
+  h+='<p>She is reading the digits as whole numbers and ignoring the boxes.</p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testLena()">Fill both tracks</button></div>';
+  h+='<div id="lh" class="hide"><div class="pair">';
+  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.25</div>'+gridHTML('l1')+'<div class="glab">25 of 100</div></div>';
+  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.3</div>'+gridHTML('l2')+'<div class="glab">30 of 100</div></div>';
+  h+='</div></div>';
+  h+='<div id="lfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testLena();
+}
+function testLena(){
+  el('lh').classList.remove('hide');paintGrid('l1',25);paintGrid('l2',30);
+  var fb=el('lfb');fb.className='fb no';
+  fb.innerHTML='<b>Lena is wrong.</b> Her 25 is 25 hundredths, but the 3 is 3 <i>tenths</i> — 30 hundredths. She compared the digits without checking which box they sat in. Write 0.3 as <b>0.30</b> and the argument disappears.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which is bigger: 0.6 or 0.55?',a:['0.55','0.6','They are equal','Cannot tell'],correct:1,
+   why:'Write 0.6 as 0.60. That is 60 squares against 55.'},
+  {q:'Which is bigger: 0.09 or 0.2?',a:['0.2','0.09','They are equal','Cannot tell'],correct:0,
+   why:'0.2 is 2 in the tenths box; 0.09 has a 0 there. 20 squares against 9.'},
+  {q:'0.7 and 0.70 — what is true?',a:['0.70 is bigger','0.7 is bigger','They fill the same squares','You cannot write 0.70'],correct:2,
+   why:'The extra zero fills the empty hundredths box without changing the amount. Both are 70 squares.'},
+  {q:'Why does 0.4 beat 0.38 even though 38 is a bigger number than 4?',
+   a:['Because 4 is even','Because the 4 is in the tenths box and the 3 is only 3 tenths','Because shorter decimals always win','It does not — 0.38 is bigger'],correct:1,
+   why:'The tenths box decides it: 4 tenths against 3 tenths. The 8 hundredths cannot make up a whole tenth.'},
+  {q:'You compare two decimals and the tenths boxes are the same. What do you do next?',
+   a:['Pick the longer one','Compare the hundredths box','Add them together','They must be equal'],correct:1,
+   why:'A tie in tenths moves the decision down to the hundredths box.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.7']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Compare any two decimals to hundredths, and explain why more digits does not mean a bigger amount.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Lena. She compared the digits without checking which box they sat in.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;streak=0;best=0;roundIdx=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
