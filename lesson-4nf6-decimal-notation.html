@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Decimal notation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--silver:#9aa5ad;--copper:#b5713f}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* coins */
+  .tray{display:flex;gap:26px;justify-content:center;margin:16px 0 6px;flex-wrap:wrap}
+  .slot{flex:1;min-width:150px;max-width:260px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:12px;text-align:center}
+  .slothead{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .coins{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:76px;align-content:flex-start}
+  .coin{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;color:#fff}
+  .coin.d{background:var(--silver)}
+  .coin.p{background:var(--copper)}
+  .slotcount{font-family:'Space Mono',monospace;font-size:13px;margin-top:8px;color:var(--ink)}
+  /* place value board */
+  .pv{display:flex;justify-content:center;align-items:flex-end;gap:2px;margin:16px 0 8px;font-family:'Space Mono',monospace}
+  .pvcol{text-align:center}
+  .pvhead{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;width:58px}
+  .pvbox{width:58px;height:56px;border:2px solid var(--ink);border-radius:7px;background:#fff;display:flex;align-items:center;
+    justify-content:center;font-size:26px;font-weight:700}
+  .pvdot{font-size:30px;font-weight:700;padding:0 3px 8px}
+  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
+    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6;text-align:center}
+  .pinned b{color:var(--blue);font-weight:700}
+  .pours{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
+  .pour{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;padding:10px 14px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .pour:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:104px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.C.6</div>
+    <h1>Decimal notation</h1>
+    <p>You're at the counter with a handful of dimes and pennies. A dime is a tenth of a dollar, a penny is a hundredth. Pay the exact price — and then watch what the price tag does with those same two numbers.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.C.6</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Decimal notation</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var dimes=0,pennies=0,wonCount=0;
+var TASKS=[
+  {d:3,p:0,txt:'Pay exactly <b>3/10 of a dollar</b>. Dimes only.'},
+  {d:4,p:7,txt:'Now pay <b>47/100 of a dollar</b>.'},
+  {d:0,p:5,txt:'Now pay <b>5/100 of a dollar</b>. Careful — this one traps people.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function pvHTML(d,p){
+  return '<div class="pv">'+
+    '<div class="pvcol"><div class="pvhead">dollars</div><div class="pvbox">0</div></div>'+
+    '<div class="pvdot">.</div>'+
+    '<div class="pvcol"><div class="pvhead">tenths</div><div class="pvbox">'+d+'</div></div>'+
+    '<div class="pvcol"><div class="pvhead">hundredths</div><div class="pvbox">'+p+'</div></div></div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Pay the exact amount</h2>';
+  h+='<p>A dime is <b>1/10</b> of a dollar. A penny is <b>1/100</b>. Press the buttons to put coins on the counter.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="pinned">dime = <b>1/10</b> &nbsp;|&nbsp; penny = <b>1/100</b> &nbsp;|&nbsp; 10 pennies = 1 dime</div>';
+  h+='<div class="tray">';
+  h+='<div class="slot"><div class="slothead">Dimes · tenths</div><div class="coins" id="cd"></div><div class="slotcount" id="nd">0</div></div>';
+  h+='<div class="slot"><div class="slothead">Pennies · hundredths</div><div class="coins" id="cp"></div><div class="slotcount" id="np">0</div></div>';
+  h+='</div>';
+  h+='<div class="pours"><button class="pour" onclick="addC(\'d\')">+ dime</button><button class="pour" onclick="addC(\'p\')">+ penny</button><button class="pour" onclick="clrC()">clear</button></div>';
+  h+='<div id="pvHost"></div>';
+  h+='<div class="verdict" id="v">Counter is empty.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  dimes=0;pennies=0;updC();
+}
+function addC(t){
+  if(wonCount>=TASKS.length)return;
+  if(t==='d'&&dimes<9)dimes++;
+  if(t==='p'&&pennies<9)pennies++;
+  updC();
+}
+function clrC(){dimes=0;pennies=0;updC();}
+function updC(){
+  var cd='',cp='',i;
+  for(i=0;i<dimes;i++)cd+='<div class="coin d">10c</div>';
+  for(i=0;i<pennies;i++)cp+='<div class="coin p">1c</div>';
+  el('cd').innerHTML=cd;el('cp').innerHTML=cp;
+  el('nd').textContent=dimes+' dime'+(dimes===1?'':'s');
+  el('np').textContent=pennies+' penn'+(pennies===1?'y':'ies');
+  el('pvHost').innerHTML=pvHTML(dimes,pennies);
+
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  var cents=dimes*10+pennies, want=T.d*10+T.p;
+  var v=el('v');
+  if(cents===0){v.className='verdict';v.textContent='Counter is empty.';return;}
+  var dec='0.'+dimes+pennies;
+  if(cents===want){
+    v.className='verdict exact';
+    v.innerHTML='✓ '+dimes+'/10 + '+pennies+'/100 = <b>'+cents+'/100</b>, written <b>'+dec+'</b>';
+    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},1700);}
+  }
+  else if(cents<want){v.className='verdict short';v.innerHTML='That is '+cents+'/100 — '+(want-cents)+'/100 short.';}
+  else{v.className='verdict over';v.innerHTML='That is '+cents+'/100 — '+(cents-want)+'/100 too much. Press clear.';}
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Each coin got its own column</h2>';
+  h+='<p>The dimes went in one box and the pennies in the next. That is all a decimal point does — it marks where the whole dollars stop and the pieces begin.</p>';
+  h+=pvHTML(4,7);
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:19px;margin:6px 0 16px">4 dimes and 7 pennies = <b>0.47</b></p>';
+  h+='<table><tr><th>Coins</th><th>Fraction</th><th>Decimal</th></tr>';
+  h+='<tr><td>3 dimes</td><td>3/10</td><td>0.3</td></tr>';
+  h+='<tr><td>4 dimes, 7 pennies</td><td>47/100</td><td>0.47</td></tr>';
+  h+='<tr><td>5 pennies</td><td>5/100</td><td>0.05</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>First box after the point counts <b>tenths</b>. Second box counts <b>hundredths</b>. A zero holds an empty box open — that is why 5 pennies is <b>0.05</b> and not 0.5.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>You have <b>7 pennies</b> on the counter. No dimes.</p>';
+  h+='<div class="ask"><div class="q">Write that as a decimal.</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="0.??"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+pvHTML(0,7)+'<p style="text-align:center">No dimes, so the tenths box gets a <b>0</b> to hold it open. Seven pennies go in the hundredths box.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/\s|\$/g,'');
+  var fb=el('pfb');
+  if(raw==='0.07'||raw==='.07'){fb.className='fb ok';fb.innerHTML='<b>Yes — 0.07.</b> The zero holds the empty tenths box.';}
+  else if(raw==='0.7'||raw==='.7'){fb.className='fb no';fb.innerHTML='<b>That is 7 dimes, not 7 pennies.</b> 0.7 puts the 7 in the tenths box. Pennies belong in the second box: <b>0.07</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>0.07</b>. Pennies go in the hundredths box, and the empty tenths box gets a zero.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>The box decides the size, not the digit</h2>';
+  h+='<p>A 5 in the tenths box means 5 dimes. The same 5 in the hundredths box means 5 pennies. Same digit, ten times apart.</p>';
+  h+='<div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:14px 0">';
+  h+='<div><div style="text-align:center;font-family:\'Space Mono\',monospace;font-size:12px;color:var(--muted);margin-bottom:4px">0.5</div>'+pvHTML(5,0)+'</div>';
+  h+='<div><div style="text-align:center;font-family:\'Space Mono\',monospace;font-size:12px;color:var(--muted);margin-bottom:4px">0.05</div>'+pvHTML(0,5)+'</div></div>';
+  h+='<p>That is why you cannot drop the zero. Without it the 5 slides left into the tenths box and the amount jumps from 5 pennies to 5 dimes.</p>';
+  h+='<div class="goal"><div class="lab">Going the other way</div><p>Read the boxes back as a fraction. <b>0.9</b> is 9 in the tenths box, so 9/10. <b>0.62</b> is 62/100.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Theo writes 4/100 as 0.4</h2>';
+  h+='<p>His reason: <i>"There is a 4, so it goes after the point."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testTheo()">Put both on the counter</button></div>';
+  h+='<div id="th" class="hide"><div class="tray">';
+  h+='<div class="slot"><div class="slothead">What 4/100 really is</div><div class="coins"><div class="coin p">1c</div><div class="coin p">1c</div><div class="coin p">1c</div><div class="coin p">1c</div></div><div class="slotcount">4 pennies = 0.04</div></div>';
+  h+='<div class="slot"><div class="slothead">What Theo wrote</div><div class="coins"><div class="coin d">10c</div><div class="coin d">10c</div><div class="coin d">10c</div><div class="coin d">10c</div></div><div class="slotcount">4 dimes = 0.4</div></div>';
+  h+='</div></div>';
+  h+='<div id="tfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testTheo();
+}
+function testTheo(){
+  el('th').classList.remove('hide');
+  var fb=el('tfb');fb.className='fb no';
+  fb.innerHTML='<b>Theo is wrong, and by a lot.</b> He wrote 4 dimes when he meant 4 pennies — ten times too much. The bottom number tells you which box: bottom 100 means the hundredths box, so <b>4/100 is 0.04</b>.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Write 6/10 as a decimal.',a:['0.06','0.6','6.0','0.610'],correct:1,
+   why:'Bottom 10 means the tenths box, so the 6 goes straight after the point.'},
+  {q:'Write 8/100 as a decimal.',a:['0.8','0.08','8.00','0.800'],correct:1,
+   why:'Bottom 100 means the hundredths box. The empty tenths box gets a zero to hold it open.'},
+  {q:'What does 0.35 mean in coins?',a:['3 dimes and 5 pennies','35 dimes','3 pennies and 5 dimes','35 dollars'],correct:0,
+   why:'First box after the point is tenths, so 3 dimes. Second box is hundredths, so 5 pennies.'},
+  {q:'Which is more, 0.4 or 0.04?',a:['0.04','They are the same','0.4','Cannot tell'],correct:2,
+   why:'0.4 is 4 dimes. 0.04 is 4 pennies. The box decides the size, and dimes are ten times a penny.'},
+  {q:'Why does 0.05 need the zero?',a:['To make it look longer','To hold the empty tenths box open','Because 5 is small','It does not need it'],correct:1,
+   why:'Without the zero the 5 slides into the tenths box and becomes 5 dimes instead of 5 pennies.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.6']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Write tenths and hundredths as decimals, read decimals back as fractions, and say why the zero matters.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Theo. He wrote 4 dimes when he meant 4 pennies — ten times off.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;dimes=0;pennies=0;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
