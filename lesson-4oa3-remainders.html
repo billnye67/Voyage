@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Multi-step problems &amp; remainders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--kid:#1b4f8a;--left:#f0663f}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* vans */
+  .vans{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0 8px}
+  .van{border:2.5px solid var(--ink);border-radius:7px 7px 10px 10px;padding:7px;background:#fff;width:82px}
+  .van.part{border-style:dashed;border-color:var(--accent)}
+  .seats{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+  .seat{aspect-ratio:1;border-radius:50%;background:#e4e8ea;border:1px solid rgba(22,35,58,.2)}
+  .seat.on{background:var(--kid)}
+  .vanlab{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);text-align:center;margin-top:5px}
+  .van.part .vanlab{color:var(--accent);font-weight:700}
+  .waiting{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:12px auto;max-width:420px}
+  .kid{width:15px;height:15px;border-radius:50%;background:var(--kid)}
+  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
+    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6;text-align:center}
+  .pinned b{color:var(--blue);font-weight:700}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:88px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.van{width:68px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.OA.A.3</div>
+    <h1>Multi-step problems &amp; remainders</h1>
+    <p>53 kids are going on a trip. Each van seats 8. You'll do that one division once — and then answer three different questions about it that all have different answers.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.OA.A.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Multi-step problems &amp; remainders</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var KIDS=53,SEATS=8;
+var loaded=false,wonCount=0;
+var TASKS=[
+  {a:6,txt:'How many vans end up <b>completely full</b>?',
+   ok:'6 vans are packed with 8 kids each. The last van is not full, so it does not count here.',
+   no:'Count only the solid vans. The dashed one is not full.'},
+  {a:7,txt:'How many vans do you <b>need</b> so that everyone gets a ride?',
+   ok:'7. Those last 5 kids still need a van, even though it will not be full.',
+   no:'Look at the waiting kids. Leave them behind and someone misses the trip.'},
+  {a:5,txt:'How many kids ride in the <b>last van</b>?',
+   ok:'5. That is the leftover after 6 full vans.',
+   no:'The last van is the dashed one. Count the filled seats in it.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function vanHTML(filled,isPart,label){
+  var h='<div class="van'+(isPart?' part':'')+'"><div class="seats">';
+  for(var i=0;i<SEATS;i++)h+='<div class="seat'+(i<filled?' on':'')+'"></div>';
+  return h+'</div><div class="vanlab">'+label+'</div></div>';
+}
+function waitingHTML(n){
+  var h='<div class="waiting">';
+  for(var i=0;i<n;i++)h+='<div class="kid"></div>';
+  return h+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Load the vans</h2>';
+  h+='<div class="pinned"><b>'+KIDS+'</b> kids &nbsp;|&nbsp; each van seats <b>'+SEATS+'</b></div>';
+  if(!loaded){
+    h+='<p>Here is everyone waiting. Fill the vans and see what happens.</p>';
+    h+=waitingHTML(KIDS);
+    h+='<div class="row" style="justify-content:center"><button class="btn" onclick="loadVans()">Load the vans</button></div>';
+  } else {
+    var full=Math.floor(KIDS/SEATS),rem=KIDS%SEATS;
+    h+='<div class="vans">';
+    for(var i=0;i<full;i++)h+=vanHTML(SEATS,false,'van '+(i+1));
+    if(rem)h+=vanHTML(rem,true,'van '+(full+1)+' \u00b7 '+rem+' only');
+    h+='</div>';
+    h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:17px">53 \u00f7 8 = <b>6 remainder 5</b></p>';
+    h+='<p>One division, done. Now three questions about it. They do not all have the same answer.</p>';
+    for(var j=0;j<TASKS.length;j++){
+      var cls=j<wonCount?'chal won':(j===wonCount?'chal':'chal locked');
+      var st=j<wonCount?'\u2713 '+TASKS[j].a:(j===wonCount?'answer below':'locked');
+      h+='<div class="'+cls+'"><div class="chalnum">Question '+(j+1)+'</div><div class="chaltxt">'+TASKS[j].txt+'</div><div class="chalstate">'+st+'</div></div>';
+    }
+    if(wonCount<TASKS.length){
+      h+='<div class="ask"><div class="q">'+TASKS[wonCount].txt+'</div>';
+      h+='<div class="row"><input type="text" id="ans" placeholder="?"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+      h+='<div id="afb"></div></div>';
+    } else {
+      h+='<div class="fb ok"><b>All three.</b> Same division, three different answers, because the questions were different.</div>';
+    }
+  }
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function loadVans(){loaded=true;beat1();}
+function lockIn(){
+  var T=TASKS[wonCount],raw=(el('ans').value||'').replace(/\s/g,'');
+  if(!raw)return;
+  var fb=el('afb');
+  if(parseInt(raw,10)===T.a){
+    fb.className='fb ok';fb.innerHTML='<b>Right \u2014 '+T.a+'.</b> '+T.ok;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},2000);
+  } else {
+    fb.className='fb no';fb.innerHTML='<b>Not '+raw+'.</b> '+T.no;
+  }
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Same remainder, three different jobs</h2>';
+  h+='<p>53 \u00f7 8 gave 6 remainder 5 every time. What changed was what the question wanted you to do with the 5.</p>';
+  h+='<table><tr><th>Question</th><th>What to do with the 5</th><th>Answer</th></tr>';
+  h+='<tr><td>How many vans are full?</td><td>Ignore it</td><td>6</td></tr>';
+  h+='<tr><td>How many vans are needed?</td><td>Add one more van for it</td><td>7</td></tr>';
+  h+='<tr><td>How many in the last van?</td><td>It <b>is</b> the answer</td><td>5</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A remainder is not a spare number you throw away. It is 5 real kids. Whether you drop it, round up, or report it depends entirely on what was asked.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>You have <b>30 cookies</b> to pack. Each box holds <b>4</b>.</p>';
+  h+='<div class="ask"><div class="q">How many boxes do you need so that no cookie is left out?</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)showP();
+}
+function showP(){
+  var h='<div class="vans">';
+  for(var i=0;i<7;i++)h+='<div class="van"><div class="seats" style="grid-template-columns:repeat(2,1fr)"><div class="seat on"></div><div class="seat on"></div><div class="seat on"></div><div class="seat on"></div></div><div class="vanlab">box '+(i+1)+'</div></div>';
+  h+='<div class="van part"><div class="seats" style="grid-template-columns:repeat(2,1fr)"><div class="seat on"></div><div class="seat on"></div><div class="seat"></div><div class="seat"></div></div><div class="vanlab">box 8 \u00b7 2 only</div></div>';
+  h+='</div><p>30 \u00f7 4 = 7 remainder 2. Seven full boxes and 2 cookies over \u2014 those 2 still need a box, so <b>8</b>.</p>';
+  el('ph').innerHTML=h;el('ph').classList.remove('hide');
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/\s/g,'');
+  var fb=el('pfb');
+  if(raw==='8'){fb.className='fb ok';fb.innerHTML='<b>Yes \u2014 8 boxes.</b> The last one is only half full and you still need it.';}
+  else if(raw==='7'){fb.className='fb no';fb.innerHTML='<b>7 leaves 2 cookies on the table.</b> The question said no cookie left out, so round up to <b>8</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>8</b>. 30 \u00f7 4 is 7 remainder 2, and those 2 need a box of their own.';}
+  showP();predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Read the question twice, once before and once after</h2>';
+  h+='<p>Division tells you the full groups and what is left. It does not tell you what the situation wants. Only the question does that.</p>';
+  h+='<div class="goal"><div class="lab">A check that catches most errors</div><p>Put your answer back into the story. <b>Six vans for 53 kids</b> \u2014 does everyone get a ride? No. So 6 was the wrong answer to that question.</p></div>';
+  h+='<p>For a multi-step problem, do the same thing at every step. Work out one piece, ask whether it makes sense, then use it in the next piece.</p>';
+  h+='<p>Estimating helps too. 53 kids at roughly 8 per van is somewhere near 7 vans, so an answer of 40 or 2 would be obviously wrong before you check anything else.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Marcus books 6 vans for the 53 kids</h2>';
+  h+='<p>His working: <i>"53 \u00f7 8 = 6 remainder 5. The answer is 6."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testMarcus()">Load Marcus\'s vans</button></div>';
+  h+='<div id="mh" class="hide"></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMarcus();
+}
+function testMarcus(){
+  var h='<div class="vans">';
+  for(var i=0;i<6;i++)h+=vanHTML(SEATS,false,'van '+(i+1));
+  h+='</div><p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:12px;color:var(--accent)">still standing on the pavement:</p>'+waitingHTML(5);
+  el('mh').innerHTML=h;el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Marcus left 5 kids behind.</b> His division was right and his answer was wrong. He stopped at the number and never put it back into the story. The trip needs <b>7</b> vans.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'26 people need to cross a river. Each boat holds 4. How many boat trips are needed?',
+   a:['7','6','6 remainder 2','5'],correct:0,
+   why:'26 \u00f7 4 is 6 remainder 2. Those 2 people still have to cross, so you need a seventh trip.'},
+  {q:'You have 38 pencils and put 5 in each pot. How many pots are completely full?',
+   a:['8','7 remainder 3','7','3'],correct:2,
+   why:'38 \u00f7 5 is 7 remainder 3. The question asks for full pots only, so the leftover 3 do not count.'},
+  {q:'45 sweets shared equally between 6 kids. How many are left over?',
+   a:['7','6','9','3'],correct:3,
+   why:'45 \u00f7 6 is 7 remainder 3. Each kid gets 7 and 3 sweets are left.'},
+  {q:'What is wrong with answering "6 remainder 5 vans"?',
+   a:['Nothing, it is correct','You cannot have part of a van in real life, so the answer has to be a whole number of vans','The division was wrong','Remainders are never allowed'],correct:1,
+   why:'A remainder is fine as a division result but you cannot book part of a van. The story decides what the answer looks like.'},
+  {q:'Why is it worth estimating before you solve?',
+   a:['It shows roughly where the answer should land, so a badly wrong one stands out','It gives the exact answer faster','It replaces the division','It makes the remainder disappear'],correct:0,
+   why:'53 kids at about 8 per van is near 7 vans. An answer of 40 would be obviously wrong straight away.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.OA.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Decide what a remainder means in a real situation \u2014 drop it, round up, or report it \u2014 and check an answer by putting it back in the story.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Marcus. His division was right and 5 kids were still on the pavement.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;loaded=false;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
