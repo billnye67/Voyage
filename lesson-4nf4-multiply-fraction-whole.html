@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Multiply a fraction by a whole number</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--fill:#c46b3d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* cups */
+  .cuprow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 6px;min-height:96px;align-items:flex-end}
+  .cup{width:62px;height:86px;border:2.5px solid var(--ink);border-radius:5px 5px 12px 12px;background:#fff;position:relative;overflow:hidden}
+  .cup .cf{position:absolute;left:0;right:0;bottom:0;background:var(--fill);transition:height .3s}
+  .cup .ct{position:absolute;left:0;right:0;border-top:1px solid rgba(22,35,58,.25)}
+  .cuplab{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-top:5px}
+  .totalbar{display:flex;width:100%;height:46px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:#fff;margin:12px 0}
+  .tc{flex:1;border-right:1.5px solid var(--ink)}
+  .tc:last-child{border-right:none}
+  .tc.on{background:var(--fill)}
+  .tc.sep{border-right:3px solid var(--ink)}
+  .ctrl{display:flex;align-items:center;gap:14px;margin:14px 0 4px;flex-wrap:wrap}
+  .ctrl label{font-size:15px;color:var(--muted)}
+  input[type=range]{flex:1;min-width:170px;accent-color:var(--blue)}
+  .readout{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;min-width:40px}
+  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
+    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6}
+  .pinned b{color:var(--blue);font-weight:700}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:96px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.cup{width:48px;height:70px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NF.B.4</div>
+    <h1>Multiply a fraction by a whole number</h1>
+    <p>You're making pancakes for the family. Each batch takes 3/4 of a cup of milk, and you need to make several batches. How much milk do you pull out of the fridge?</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.B.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Multiply a fraction by a whole number</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var batches=2,wonCount=0;
+var TASKS=[
+  {n:2,txt:'Make <b>2 batches</b>. Line up the cups and read off the total milk.'},
+  {n:3,txt:'Now <b>3 batches</b>. This total goes past one whole cup.'},
+  {n:5,txt:'Now <b>5 batches</b>.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+var DEN=4,NUM=3;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function cupHTML(num,den){
+  var h='<div><div class="cup"><div class="cf" style="height:'+(num/den*100)+'%"></div>';
+  for(var i=1;i<den;i++)h+='<div class="ct" style="bottom:'+(i/den*100)+'%"></div>';
+  return h+'</div><div class="cuplab">'+num+'/'+den+'</div></div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>How much milk?</h2>';
+  h+='<p>One batch needs <b>3/4 of a cup</b>. Slide to pick how many batches, then read the total off the strip.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ctrl"><label>Batches</label><input type="range" min="1" max="6" value="'+batches+'" oninput="setB(this.value)"><span class="readout" id="br">'+batches+'</span></div>';
+  h+='<div class="pinned">One batch = <b>3/4 cup</b> of milk &nbsp;|&nbsp; each cup below is marked in quarters</div>';
+  h+='<div class="cuprow" id="cups"></div>';
+  h+='<div style="font-family:\'Space Mono\',monospace;font-size:12px;color:var(--muted);margin-top:14px">All the milk poured into one long strip \u2014 the thick lines are whole cups:</div>';
+  h+='<div class="totalbar" id="tb"></div>';
+  h+='<div class="verdict" id="v"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  paint();
+}
+function setB(v){batches=parseInt(v,10);el('br').textContent=batches;paint();}
+function paint(){
+  var cups='';
+  for(var i=0;i<batches;i++)cups+=cupHTML(NUM,DEN);
+  el('cups').innerHTML=cups;
+
+  var totalQ=NUM*batches, wholes=Math.floor(totalQ/DEN), rem=totalQ%DEN;
+  var cells=Math.max(totalQ, wholes*DEN + (rem?DEN:0));
+  var tb='';
+  for(var j=0;j<cells;j++){
+    var sep=((j+1)%DEN===0 && j+1<cells)?' sep':'';
+    tb+='<div class="tc'+(j<totalQ?' on':'')+sep+'"></div>';
+  }
+  el('tb').innerHTML=tb;
+
+  var v=el('v'),T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  var mixed=wholes?(wholes+(rem?' whole cups and '+rem+'/4':' whole cups')):totalQ+'/4';
+  if(batches===T.n && wonCount<TASKS.length){
+    v.className='verdict exact';
+    v.innerHTML='✓ '+batches+' batches = <b>'+totalQ+'/4 cups</b>'+(wholes?' = '+mixed:'');
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1400);
+  } else {
+    v.className='verdict short';
+    v.innerHTML=batches+' batches = <b>'+totalQ+'/4 cups</b>'+(wholes?' = '+mixed:'');
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>You were counting quarters</h2>';
+  h+='<p>Every batch put <b>3 quarter-cups</b> into the strip. Nothing else ever changed.</p>';
+  h+='<table style="width:100%;border-collapse:collapse;font-family:\'Space Mono\',monospace;font-size:15px;margin:14px 0">';
+  h+='<tr><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)">2 batches</td><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)">3 + 3 = 6 quarters</td><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)"><b>6/4</b></td></tr>';
+  h+='<tr><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)">3 batches</td><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)">3 + 3 + 3 = 9 quarters</td><td style="padding:8px 6px;border-bottom:1px solid var(--blue-line)"><b>9/4</b></td></tr>';
+  h+='<tr><td style="padding:8px 6px">5 batches</td><td style="padding:8px 6px">3 five times = 15 quarters</td><td style="padding:8px 6px"><b>15/4</b></td></tr></table>';
+  h+='<p>Adding the same thing over and over <i>is</i> multiplying. So 5 × 3/4 is just 15 quarters.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>Multiply the <b>top</b> by the whole number. The bottom stays put, because the piece size never changed. 5 × 3/4 = <b>15/4</b>.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>A different recipe uses <b>2/3 of a cup</b> of oil per batch. You make <b>4 batches</b>.</p>';
+  h+='<div class="ask"><div class="q">How much oil in total? Type it like 7/3.</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="?/?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"><div class="cuprow">'+cupHTML(2,3)+cupHTML(2,3)+cupHTML(2,3)+cupHTML(2,3)+'</div><p style="margin-top:14px">Four cups, two thirds in each. Eight thirds altogether \u2014 which is 2 whole cups and 2/3 left over.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/\s/g,'');
+  var fb=el('pfb');
+  if(raw==='8/3'){fb.className='fb ok';fb.innerHTML='<b>Yes — 8/3.</b> 4 × 2 = 8 thirds. The bottom stays 3.';}
+  else if(raw==='8/12'){fb.className='fb no';fb.innerHTML='<b>Close but the bottom moved.</b> You multiplied the 3 as well. The pieces are still thirds \u2014 it is <b>8/3</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>8/3</b>. Four batches of 2 thirds each is 8 thirds.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Groups of the same size piece</h2>';
+  h+='<p>3/4 means <b>3 pieces, each one a quarter</b>. Take that 5 times and you have 15 pieces \u2014 still quarters.</p>';
+  h+='<p>The bottom number is the piece size. Making more groups doesn\'t re-cut anything, so the bottom cannot change \u2014 it is never smaller and never bigger.</p>';
+  h+='<p>Pieces get named after the bottom number: bottom 3 is thirds, bottom 5 is fifths, bottom 7 is sevenths, bottom 8 is eighths. Same idea every time.</p>';
+  h+='<div class="goal"><div class="lab">Reading the answer</div><p>15/4 is a real answer, but you can also say it as whole cups. 4 quarters make 1 cup, so 15 quarters is <b>3 cups and 3/4</b>. Both mean the same milk.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Omar says 3 × 2/5 = 6/15</h2>';
+  h+='<p>His reason: <i>"Multiply the top by 3 and the bottom by 3."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testOmar()">Check it with cups</button></div>';
+  h+='<div id="oh" class="hide"><div class="cuprow">'+cupHTML(2,5)+cupHTML(2,5)+cupHTML(2,5)+'</div></div>';
+  h+='<div id="ofb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testOmar();
+}
+function testOmar(){
+  el('oh').classList.remove('hide');
+  var fb=el('ofb');fb.className='fb no';
+  fb.innerHTML='<b>Omar is wrong.</b> Count the shaded pieces: 6 of them, and every one is still a fifth. So it is <b>6/5</b>, which is more than a whole cup. His answer 6/15 is less than half a cup \u2014 smaller than one batch. Multiplying the bottom shrinks the pieces, and nobody re-cut the cups.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'4 × 2/7 = ?',a:['8/28','6/7','8/7','2/28'],correct:2,why:'Four groups of 2 sevenths is 8 sevenths. The bottom stays 7.'},
+  {q:'A batch uses 5/8 of a cup. You make 3 batches. How much?',a:['15/8 cups','15/24 cups','8/8 cups','5/24 cups'],correct:0,
+   why:'3 groups of 5 pieces is 15 pieces, and they are still eighths. The bottom stays 8.'},
+  {q:'Why does the bottom number stay the same when you multiply by a whole number?',
+   a:['Because the bottom is the smaller one','Because making more groups does not re-cut the pieces','Because you only multiply odd batches','Because the top stays put too'],correct:1,
+   why:'The bottom is the piece size. More groups means more pieces, not smaller ones.'},
+  {q:'12/5 is the same as how many whole cups?',a:['2 cups and 2/5','12 cups','2 cups and 1/5','5 cups and 2/5'],correct:0,
+   why:'5 pieces make 1 cup, so 12 pieces is two lots of 5 with 2 left over \u2014 2 cups and 2/5.'},
+  {q:'6 × 1/3 = ?',a:['6/18','2','1/2','6/3 which is less than 1'],correct:1,
+   why:'Six thirds. Every 3 thirds makes one whole cup, so six thirds is 2 whole cups.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NF.4']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Multiply any fraction by a whole number, and say the answer in whole cups when it goes past one.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Omar. His answer came out smaller than one batch \u2014 that is the tell.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;batches=2;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

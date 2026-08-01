@@ -36,6 +36,11 @@
   .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
   .stitle{flex:1}
   .lessondot{font-size:9px;color:var(--accent);flex-shrink:0}
+  .introgoal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:18px 0 0}
+  .introlab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .introgoal p{margin:0;font-size:15.5px}
+  .intrometa{display:flex;gap:20px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 4px}
   .skill-btn.active .lessondot{color:#fff}
 
   /* ---------- MAIN: lesson player ---------- */
@@ -394,9 +399,22 @@ function resetProgress(){ progress = {done:{}, lastSkill:0}; saveProgress(); loa
 
 /* skills that have a full lesson page instead of the old cards */
 const LESSONS = {
-  '4.NF.1':'lesson-4nf1-equivalent-fractions.html',
-  '4.NF.2':'lesson-4nf2-comparing-fractions.html',
-  '4.NF.3':'lesson-4nf3-adding-fractions.html'
+  '4.NF.1':{file:'lesson-4nf1-equivalent-fractions.html',
+    blurb:'You and Jamie get the same size chocolate bar. She breaks hers in half and eats one piece. Your bar is already broken into more pieces than hers \u2014 eat exactly as much as she did.',
+    goal:'Explain why 1/2, 2/4 and 6/12 are the same amount, and make equivalent fractions on purpose.',
+    mins:15},
+  '4.NF.2':{file:'lesson-4nf2-comparing-fractions.html',
+    blurb:'Two juice bottles, same size, both part full. One says 3/4, the other says 2/3. You keep the fuller one \u2014 but you have to call it before you look inside.',
+    goal:'Compare any two fractions using matching bottoms, matching tops, or half as a benchmark.',
+    mins:15},
+  '4.NF.3':{file:'lesson-4nf3-adding-fractions.html',
+    blurb:'You are filling a water jug for a hike. The jug is marked in eighths and your scoop pours one eighth at a time. Fill it to exactly the line, not a drop over.',
+    goal:'Add and subtract fractions that share a bottom number, and explain why the bottom stays put.',
+    mins:15},
+  '4.NF.4':{file:'lesson-4nf4-multiply-fraction-whole.html',
+    blurb:'You are making pancakes. Each batch takes 3/4 of a cup of milk and you need several batches. How much milk comes out of the fridge?',
+    goal:'Multiply a fraction by a whole number, and say the answer in whole cups when it goes past one.',
+    mins:15}
 };
 
 function buildMenu(){
@@ -420,9 +438,36 @@ function buildMenu(){
 }
 function loadSkill(i){
   si=i; ci=0; progress.lastSkill=i; saveProgress();
-  const file = LESSONS[flat[i].code];
-  if(file){ location.href = file; return; }   // full lesson page
+  if(LESSONS[flat[i].code]){ renderLessonIntro(i); return; }
   render();
+}
+
+/* intro card shown inside the course, sidebar still visible */
+function renderLessonIntro(i){
+  const s = flat[i], L = LESSONS[s.code];
+  const done = !!progress.done[s.code];
+  document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.code}  ${s.title}`;
+  const prog = document.querySelector('.progress'); if(prog) prog.style.display='none';
+  document.getElementById('card').innerHTML = `
+    <div class="tag">Lesson \u00b7 ${s.code}</div>
+    <h2>${s.title}</h2>
+    <p>${L.blurb}</p>
+    <div class="introgoal">
+      <div class="introlab">What you'll be able to do</div>
+      <p>${L.goal}</p>
+    </div>
+    <div class="intrometa">
+      <span>\u23f1 About ${L.mins} minutes</span>
+      <span>\u270e 5 questions at the end</span>
+      <span>\u25c6 Standard ${s.code}</span>
+      ${done?'<span style="color:#2e7d5b">\u2714 already mastered</span>':''}
+    </div>
+    <div class="nav"><span></span>
+      <button class="btn" data-act="startlesson">${done?'Do it again \u2192':'Start lesson \u2192'}</button>
+    </div>`;
+  document.querySelectorAll('.skill-btn').forEach(b=>b.classList.toggle('active', +b.dataset.i===i));
+  const btn = document.querySelector('[data-act="startlesson"]');
+  if(btn) btn.onclick = ()=>{ location.href = L.file; };
 }
 function go(d){
   const cards = flat[si].cards;
@@ -442,6 +487,7 @@ function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add(
 function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
 
 function render(){
+  const pb = document.querySelector('.progress'); if(pb) pb.style.display='';
   const s = flat[si];
   const c = s.cards[ci];
   document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.code}  ${s.title}`;
