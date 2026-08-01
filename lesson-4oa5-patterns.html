@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Generate &amp; analyze patterns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--even:#1b4f8a;--odd:#c25a2e}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* machine */
+  .machine{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:16px;margin:14px 0}
+  .mrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
+  .mfield{text-align:center}
+  .mlab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .mval{font-family:'Space Mono',monospace;font-size:24px;font-weight:700}
+  .mbtns{display:flex;gap:5px;justify-content:center;margin-top:4px}
+  .mb{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;width:30px;height:30px;border-radius:6px;
+    border:1.5px solid var(--ink);background:#fff;cursor:pointer}
+  .mb:active{transform:translate(1px,1px)}
+  .seq{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px;min-height:40px}
+  .term{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;padding:7px 11px;border-radius:7px;color:#fff}
+  .term.e{background:var(--even)}
+  .term.o{background:var(--odd)}
+  .legend{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);text-align:center;margin-top:9px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 12px;vertical-align:middle}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:88px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.OA.C.5</div>
+    <h1>Generate &amp; analyze patterns</h1>
+    <p>A rule machine takes a starting number and adds the same amount over and over. Simple. But the sequences it spits out have habits nobody put in the rule — and you can work out those habits before the machine even runs.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.OA.C.5</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Generate &amp; analyze patterns</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var start=1,addv=3,wonCount=0;
+var TASKS=[
+  {txt:'Make <b>every block blue</b> \u2014 every term even.',
+   test:function(t){return t.every(function(x){return x%2===0;});},
+   hint:'Both the start and the amount you add have to be even.'},
+  {txt:'Now make the colours <b>alternate</b> \u2014 blue, orange, blue, orange all the way along.',
+   test:function(t){for(var i=0;i<t.length-1;i++){if(t[i]%2===t[i+1]%2)return false;}return true;},
+   hint:'It does not matter where you start. Change the amount you add instead.'},
+  {txt:'Now make <b>every term end in 0 or 5</b> \u2014 like 5, 10, 15.',
+   test:function(t){return t.every(function(x){return x%5===0;});},
+   hint:'Which amount lands you on the fives every time? Start on one too.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function terms(s,a,n){var t=[],v=s;for(var i=0;i<n;i++){t.push(v);v+=a;}return t;}
+function seqHTML(t){
+  var h='<div class="seq">';
+  t.forEach(function(x){h+='<div class="term '+(x%2===0?'e':'o')+'">'+x+'</div>';});
+  return h+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Set the machine</h2>';
+  h+='<p>The machine takes your starting number and adds the same amount over and over, ten times. Blue blocks are even numbers, orange are odd.</p>';
+  h+='<p>Press the plus and minus buttons and watch the row change. Your job each time is to find settings that make the row do what the challenge asks.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'\u2713 done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="machine">';
+  h+='<div class="mrow">';
+  h+='<div class="mfield"><div class="mlab">start at</div><div class="mval" id="ms">'+start+'</div><div class="mbtns"><button class="mb" onclick="bump(\'s\',-1)">\u2212</button><button class="mb" onclick="bump(\'s\',1)">+</button></div></div>';
+  h+='<div class="mfield"><div class="mlab">then add</div><div class="mval" id="ma">'+addv+'</div><div class="mbtns"><button class="mb" onclick="bump(\'a\',-1)">\u2212</button><button class="mb" onclick="bump(\'a\',1)">+</button></div></div>';
+  h+='</div>';
+  h+='<div id="sq"></div>';
+  h+='<div class="legend"><i style="background:var(--even)"></i>even<i style="background:var(--odd)"></i>odd</div>';
+  h+='</div>';
+  h+='<div class="row" style="justify-content:center"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+  h+='<div class="verdict" id="v"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  upd();
+}
+function bump(w,d){
+  if(w==='s')start=Math.max(0,Math.min(20,start+d));
+  else addv=Math.max(1,Math.min(12,addv+d));
+  upd();
+}
+function upd(){
+  el('ms').textContent=start;el('ma').textContent=addv;
+  el('sq').innerHTML=seqHTML(terms(start,addv,10));
+  var v=el('v');v.className='verdict';
+  v.textContent='Start at '+start+', add '+addv+'. Lock it in when it matches.';
+}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  var t=terms(start,addv,10);
+  if(T.test(t)){
+    v.className='verdict exact';
+    v.innerHTML='\u2713 Start '+start+', add '+addv+' does it.';
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1600);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='\u2717 Not yet. '+T.hint;
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The rule never mentioned odd or even</h2>';
+  h+='<p>You were only ever setting two things: where to start and what to add. The odd and even behaviour showed up on its own.</p>';
+  h+='<table><tr><th>Rule</th><th>First terms</th><th>Habit nobody asked for</th></tr>';
+  h+='<tr><td>start 2, add 4</td><td>2, 6, 10, 14</td><td>all even</td></tr>';
+  h+='<tr><td>start 1, add 3</td><td>1, 4, 7, 10</td><td>odd, even, odd, even</td></tr>';
+  h+='<tr><td>start 5, add 5</td><td>5, 10, 15, 20</td><td>all end in 0 or 5</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A rule tells you how to get the next term. It does not tell you what the whole sequence will look like. Those <b>extra features</b> come out of the rule without being written into it.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before the machine runs</h2>';
+  h+='<p>New rule: <b>start at 2, add 5</b>.</p>';
+  h+='<div class="ask"><div class="q">Will the terms be all even, all odd, or alternating?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'e\')">All even</button><button class="btn sm" onclick="checkPredict(\'o\')">All odd</button><button class="btn sm" onclick="checkPredict(\'a\')">Alternating</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+seqHTML(terms(2,5,10))+'<p style="margin-top:12px">2 is even. Add 5 and it becomes odd. Add 5 again and it flips back. Adding an odd amount flips even and odd every single time.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(c){
+  var fb=el('pfb');
+  if(c==='a'){fb.className='fb ok';fb.innerHTML='<b>Right \u2014 alternating.</b> Adding 5, an odd amount, flips it every step.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It alternates.</b> 5 is odd, and adding an odd amount flips even to odd and back every step.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>The amount you add decides everything</h2>';
+  h+='<p>Add an <b>even</b> amount and nothing flips. Even stays even, odd stays odd, for as long as the machine runs.</p>';
+  h+='<p>Add an <b>odd</b> amount and it flips every single step. That is what makes the stripe pattern.</p>';
+  h+='<table><tr><th>Adding</th><th>Starting even</th><th>Starting odd</th></tr>';
+  h+='<tr><td>even amount</td><td>all even</td><td>all odd</td></tr>';
+  h+='<tr><td>odd amount</td><td>alternates</td><td>alternates</td></tr></table>';
+  h+='<div class="goal"><div class="lab">Reading a pattern backwards</div><p>You can also work out the rule from the terms. 3, 7, 11, 15 climbs by 4 each time, so the rule is start at 3 and add 4 \u2014 and since 4 is even, every term stays odd.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Dev says "add 3" always makes odd numbers</h2>';
+  h+='<p>His reason: <i>"3 is odd, so everything it makes comes out odd."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testDev()">Run it from 1</button></div>';
+  h+='<div id="dh" class="hide">'+seqHTML(terms(1,3,10))+'</div>';
+  h+='<div id="dfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testDev();
+}
+function testDev(){
+  el('dh').classList.remove('hide');
+  var fb=el('dfb');fb.className='fb no';
+  fb.innerHTML='<b>Dev is wrong.</b> Half of them are even. Adding an odd amount does not keep things odd \u2014 it <b>flips</b> them, so they take turns. He confused the amount being odd with the terms being odd.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Rule: start at 4, add 6. What are the first four terms?',a:['4, 6, 8, 10','4, 24, 144','6, 12, 18, 24','4, 10, 16, 22'],correct:3,
+   why:'Add 6 each time: 4, then 10, then 16, then 22.'},
+  {q:'Rule: start at 3, add 2. Will the terms be all odd, all even, or alternating?',
+   a:['Alternating','All even','All odd','Cannot tell'],correct:2,
+   why:'2 is even, so nothing flips. It starts odd and stays odd: 3, 5, 7, 9.'},
+  {q:'A sequence goes 6, 11, 16, 21. What is the rule?',a:['Start at 6, add 5','Start at 6, double it','Start at 6, add 4','Start at 5, add 6'],correct:0,
+   why:'Each term climbs by 5, and the first one is 6.'},
+  {q:'Which rule makes terms that alternate between odd and even?',a:['Start 2, add 4','Start 5, add 7','Start 3, add 10','Start 8, add 2'],correct:1,
+   why:'7 is odd, and adding an odd amount flips the terms every step. The other three all add even amounts.'},
+  {q:'Why does the rule "add 10" never change a term from odd to even?',
+   a:['Because 10 is a big number','Because 10 ends in zero','It does change it','Because 10 is even, and adding an even amount never flips it'],correct:3,
+   why:'Even amounts leave odd and even alone. Only an odd amount flips them.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.OA.5']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Build a sequence from a rule, work out the rule from a sequence, and predict features the rule never mentioned.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Dev. Adding an odd amount flips the terms, it does not keep them odd.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;start=1;addv=3;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
