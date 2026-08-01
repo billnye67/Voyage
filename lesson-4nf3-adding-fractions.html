@@ -149,7 +149,7 @@ function beat1(){
     h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
   }
   h+='<div class="jugrow">'+jugHTML(T.target)+'<div class="jugside">In the jug:<br><b id="amt">0/8</b><br><br>Poured:<br><b id="hist">nothing yet</b></div></div>';
-  h+='<div class="pours"><button class="pour" onclick="pour(1)">+ 1/8</button><button class="pour" onclick="pour(2)">+ 2/8</button><button class="pour" onclick="pour(3)">+ 3/8</button><button class="pour" onclick="empty()">empty</button></div>';
+  h+='<div class="pours"><button class="pour" onclick="pour(1)">+ 1/8</button><button class="pour" onclick="pour(2)">+ 2/8</button><button class="pour" onclick="pour(3)">+ 3/8</button><button class="pour" onclick="empty()">empty</button><button class="pour" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
   h+='<div class="verdict" id="v">Jug is empty.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -162,6 +162,20 @@ function pour(n){
   updateJug();
 }
 function empty(){filled=0;poured=[];updateJug();}
+function lockIn(){
+  var T=TASKS[taskIdx],v=el('v');
+  if(filled===0)return;
+  if(filled===T.target){
+    v.className='verdict exact';
+    v.innerHTML='✓ Exactly '+T.target+'/8. '+poured.join(' + ')+' = <b>'+filled+'/8</b>';
+    if(wonCount===taskIdx){wonCount++;taskIdx=Math.min(taskIdx+1,TASKS.length-1);setTimeout(function(){if(step===0)beat1();},1800);}
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ That is '+filled+'/8, not '+T.target+'/8. Add the tops of your pours and check before you lock. Starting over.';
+    filled=0;poured=[];
+    setTimeout(function(){if(step===0)updateJug();},2400);
+  }
+}
 function updateJug(){
   var T=TASKS[taskIdx];
   var jf=el('jf');if(!jf)return;
@@ -170,16 +184,8 @@ function updateJug(){
   el('hist').textContent=poured.length?poured.join(' + ')+' = '+filled+'/8':'nothing yet';
   var v=el('v');
   if(filled===0){v.className='verdict';v.textContent='Jug is empty.';return;}
-  if(filled===T.target){
-    v.className='verdict exact';
-    v.innerHTML='✓ Exactly '+T.target+'/8. '+poured.join(' + ')+' = <b>'+filled+'/8</b>';
-    if(wonCount===taskIdx){
-      wonCount++;taskIdx=Math.min(taskIdx+1,TASKS.length-1);
-      setTimeout(function(){if(step===0)beat1();},1500);
-    }
-  }
-  else if(filled<T.target){v.className='verdict short';v.textContent=filled+'/8 — still '+(T.target-filled)+'/8 short.';}
-  else{v.className='verdict over';v.textContent=filled+'/8 — that\'s '+(filled-T.target)+'/8 too much. Press empty and start again.';}
+  v.className='verdict';
+  v.innerHTML='Jug holds <b>'+filled+'/8</b>. '+(poured.length?poured.join(' + '):'')+' — lock it in when you are sure.';
 }
 
 /* ---------- BEAT 2 ---------- */

@@ -149,7 +149,7 @@ function beat1(){
   }
   h+='<div class="pinned">Sam has <b id="samn">'+T.sam+'</b> blocks &nbsp;|&nbsp; you have <b id="myn">'+mine+'</b></div>';
   h+='<div class="towers" id="tw"></div>';
-  h+='<div class="pours"><button class="pour" onclick="addB(1)">+ 1 block</button><button class="pour" onclick="addB(-1)">− 1 block</button><button class="pour" onclick="addB(0)">clear</button></div>';
+  h+='<div class="pours"><button class="pour" onclick="addB(1)">+ 1 block</button><button class="pour" onclick="addB(-1)">− 1 block</button><button class="pour" onclick="addB(0)">clear</button><button class="pour" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
   h+='<div class="verdict" id="v">Your tower is empty.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -167,17 +167,27 @@ function upd(){
     '<div class="tw">'+stackHTML(mine,'you',T.mode==='times'?T.sam:0)+'<div class="twlab">You<br><b>'+mine+'</b></div></div>';
   el('myn').textContent=mine;
   var v=el('v');
-  if(mine===0){v.className='verdict';v.textContent='Your tower is empty.';return;}
+  if(mine===0){v.className='verdict';v.textContent='Your tower is empty. Build it, then lock it in.';}
+  else{v.className='verdict';v.textContent='Your tower is '+mine+' blocks. Lock it in when you are sure.';}
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+function lockIn(){
+  if(wonCount>=TASKS.length||mine===0)return;
+  var T=TASKS[wonCount],v=el('v');
   if(mine===T.target){
     v.className='verdict exact';
     v.innerHTML=T.mode==='times'
       ? '✓ '+mine+' blocks — that is <b>'+T.k+' copies of Sam\'s '+T.sam+'</b>. The orange lines show where each copy starts.'
-      : '✓ '+mine+' blocks — that is Sam\'s '+T.sam+' <b>plus '+T.k+' more</b>. Only 3 blocks bigger, not 3 copies.';
-    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0){mine=0;beat1();}},2000);}
+      : '✓ '+mine+' blocks — that is Sam\'s '+T.sam+' <b>plus '+T.k+' more</b>. Only 3 blocks taller, not 3 copies.';
+    wonCount++;setTimeout(function(){if(step===0){mine=0;beat1();}},2200);
+  } else {
+    v.className='verdict over';
+    v.innerHTML=T.mode==='times'
+      ? '✗ Not '+mine+'. Lay Sam\'s whole tower of '+T.sam+' down '+T.k+' separate times and count. Starting over.'
+      : '✗ Not '+mine+'. Taller means loose blocks on top of Sam\'s '+T.sam+', not copies. Starting over.';
+    mine=0;
+    setTimeout(function(){if(step===0)upd();},2400);
   }
-  else if(mine<T.target){v.className='verdict short';v.textContent=mine+' blocks — keep going.';}
-  else{v.className='verdict over';v.textContent=mine+' blocks — too tall now.';}
-  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- BEAT 2 ---------- */

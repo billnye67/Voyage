@@ -158,7 +158,7 @@ function beat1(){
   h+='<div class="slot"><div class="slothead">Dimes · tenths</div><div class="coins" id="cd"></div><div class="slotcount" id="nd">0</div></div>';
   h+='<div class="slot"><div class="slothead">Pennies · hundredths</div><div class="coins" id="cp"></div><div class="slotcount" id="np">0</div></div>';
   h+='</div>';
-  h+='<div class="pours"><button class="pour" onclick="addC(\'d\')">+ dime</button><button class="pour" onclick="addC(\'p\')">+ penny</button><button class="pour" onclick="clrC()">clear</button></div>';
+  h+='<div class="pours"><button class="pour" onclick="addC(\'d\')">+ dime</button><button class="pour" onclick="addC(\'p\')">+ penny</button><button class="pour" onclick="clrC()">clear</button><button class="pour" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
   h+='<div id="pvHost"></div>';
   h+='<div class="verdict" id="v">Counter is empty.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
@@ -172,6 +172,21 @@ function addC(t){
   updC();
 }
 function clrC(){dimes=0;pennies=0;updC();}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  var cents=dimes*10+pennies, want=T.d*10+T.p, dec='0.'+dimes+pennies;
+  if(cents===0)return;
+  if(cents===want){
+    v.className='verdict exact';
+    v.innerHTML='✓ '+dimes+'/10 + '+pennies+'/100 = <b>'+cents+'/100</b>, written <b>'+dec+'</b>';
+    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},2000);}
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ That is '+cents+'/100, not '+want+'/100. Check which coin belongs in which box. Starting over.';
+    dimes=0;pennies=0;
+    setTimeout(function(){if(step===0)updC();},2400);
+  }
+}
 function updC(){
   var cd='',cp='',i;
   for(i=0;i<dimes;i++)cd+='<div class="coin d">10c</div>';
@@ -186,13 +201,8 @@ function updC(){
   var v=el('v');
   if(cents===0){v.className='verdict';v.textContent='Counter is empty.';return;}
   var dec='0.'+dimes+pennies;
-  if(cents===want){
-    v.className='verdict exact';
-    v.innerHTML='✓ '+dimes+'/10 + '+pennies+'/100 = <b>'+cents+'/100</b>, written <b>'+dec+'</b>';
-    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},1700);}
-  }
-  else if(cents<want){v.className='verdict short';v.innerHTML='That is '+cents+'/100 — '+(want-cents)+'/100 short.';}
-  else{v.className='verdict over';v.innerHTML='That is '+cents+'/100 — '+(cents-want)+'/100 too much. Press clear.';}
+  v.className='verdict';
+  v.innerHTML='On the counter: <b>'+dec+'</b> — lock it in when you are sure.';
   if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 

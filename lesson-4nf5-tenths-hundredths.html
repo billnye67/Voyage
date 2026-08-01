@@ -155,7 +155,7 @@ function beat1(){
   h+='<div class="pinned">Row pack = <b>10 stickers = 1/10</b> &nbsp;|&nbsp; single = <b>1 sticker = 1/100</b></div>';
   h+=gridHTML('g');
   h+='<div class="glab" id="gl">0 / 100</div>';
-  h+='<div class="pours"><button class="pour" onclick="add(10)">+ 1 row (1/10)</button><button class="pour" onclick="add(1)">+ 1 sticker (1/100)</button><button class="pour" onclick="clr()">clear</button></div>';
+  h+='<div class="pours"><button class="pour" onclick="add(10)">+ 1 row (1/10)</button><button class="pour" onclick="add(1)">+ 1 sticker (1/100)</button><button class="pour" onclick="clr()">clear</button><button class="pour" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
   h+='<div class="verdict" id="v">Page is empty.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -167,6 +167,21 @@ function add(n){
   count+=n;hist.push(n===10?'1/10':'1/100');upd();
 }
 function clr(){count=0;hist=[];upd();}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  if(count===0)return;
+  var tenths=Math.floor(count/10),left=count%10;
+  var asFrac=count+'/100'+(left===0?' = '+tenths+'/10':'');
+  if(count===T.n){
+    v.className='verdict exact';v.innerHTML='✓ <b>'+asFrac+'</b>';
+    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},1800);}
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ That is '+count+' spaces, not '+T.n+'. Remember a row pack fills ten spaces, not one. Starting over.';
+    count=0;hist=[];
+    setTimeout(function(){if(step===0)upd();},2400);
+  }
+}
 function upd(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)];
   paintGrid('g',count);
@@ -175,13 +190,8 @@ function upd(){
   if(count===0){v.className='verdict';v.textContent='Page is empty.';return;}
   var tenths=Math.floor(count/10),left=count%10;
   var asFrac=count+'/100'+(left===0?' = '+tenths+'/10':'');
-  if(count===T.n){
-    v.className='verdict exact';
-    v.innerHTML='✓ <b>'+asFrac+'</b>';
-    if(wonCount<TASKS.length){wonCount++;setTimeout(function(){if(step===0)beat1();},1500);}
-  }
-  else if(count<T.n){v.className='verdict short';v.innerHTML=asFrac+' — '+(T.n-count)+' spaces short.';}
-  else{v.className='verdict over';v.innerHTML=asFrac+' — '+(count-T.n)+' too many. Press clear.';}
+  v.className='verdict';
+  v.innerHTML='Page has <b>'+asFrac+'</b> — lock it in when you are sure.';
   if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
