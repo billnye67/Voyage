@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Factors, multiples, prime &amp; composite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--tile:#1b4f8a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:31px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* tiles */
+  .rect{display:flex;flex-direction:column;gap:3px;align-items:flex-start;margin:16px auto 6px;width:fit-content;min-height:60px}
+  .rrow{display:flex;gap:3px}
+  .tl{width:26px;height:26px;background:var(--tile);border:1.5px solid var(--ink);border-radius:3px}
+  .tl.odd{background:#fff;border-style:dashed;border-color:var(--accent)}
+  .shape{font-family:'Space Mono',monospace;font-size:15px;text-align:center;color:var(--muted);margin-top:6px}
+  .shape b{color:var(--ink);font-size:17px}
+  .found{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0 4px}
+  .fchip{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:6px 11px;border-radius:7px;
+    background:rgba(46,125,91,.13);color:var(--green);border:1.5px solid var(--green)}
+  .ctrl{display:flex;align-items:center;gap:14px;margin:14px 0 4px;flex-wrap:wrap}
+  .ctrl label{font-size:15px;color:var(--muted)}
+  input[type=range]{flex:1;min-width:170px;accent-color:var(--blue)}
+  .readout{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;min-width:34px}
+  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
+    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6;text-align:center}
+  .pinned b{color:var(--blue);font-weight:700}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.tl{width:20px;height:20px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.OA.B.4</div>
+    <h1>Factors, multiples, prime &amp; composite</h1>
+    <p>Arrange every tile in a pile into a perfect rectangle — no gaps, no stragglers. Some piles work loads of ways. One works only a single way, and that is what prime means.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.OA.B.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Factors, multiples, prime &amp; composite</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var rows=1,wonCount=0,found={};
+var TASKS=[
+  {n:12,need:3,txt:'You have <b>12</b> tiles. Find <b>all 3</b> rectangles you can make.'},
+  {n:7,need:1,txt:'Now <b>7</b> tiles. Find every rectangle. There are fewer than you think.'},
+  {n:16,need:3,txt:'Now <b>16</b> tiles. Find all <b>3</b>.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function rectHTML(n,r){
+  var per=Math.ceil(n/r),left=n,h='<div class="rect">';
+  for(var i=0;i<r;i++){
+    var take=Math.min(per,left);left-=take;
+    h+='<div class="rrow">';
+    for(var j=0;j<per;j++) h+='<div class="tl'+(j<take?'':' odd')+'"></div>';
+    h+='</div>';
+  }
+  return h+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  if(rows>T.n)rows=1;
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Make every rectangle</h2>';
+  h+='<p>Slide to pick the rows, then lock it in. Every row has to be the same length \u2014 no dashed gaps.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'\u2713 done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="pinned">Tiles: <b>'+T.n+'</b> &nbsp;|&nbsp; found so far: <b>'+Object.keys(found).length+'</b> of '+T.need+'</div>';
+  h+='<div id="rh">'+rectHTML(T.n,rows)+'</div>';
+  h+='<div class="shape" id="sh"></div>';
+  h+='<div class="found" id="fl"></div>';
+  h+='<div class="ctrl"><label>Rows</label><input type="range" min="1" max="'+T.n+'" value="'+rows+'" oninput="setRows(this.value)"><span class="readout" id="rr">'+rows+'</span></div>';
+  h+='<div class="row" style="justify-content:center"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+  h+='<div class="verdict" id="v"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  upd();
+}
+function setRows(v){rows=parseInt(v,10);upd();}
+function upd(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  el('rh').innerHTML=rectHTML(T.n,rows);
+  el('rr').textContent=rows;
+  var ok=(T.n%rows===0);
+  el('sh').innerHTML=ok?('<b>'+rows+' \u00d7 '+(T.n/rows)+'</b>'):'not a rectangle yet';
+  var keys=Object.keys(found),fh='';
+  keys.forEach(function(k){fh+='<div class="fchip">'+k+'</div>';});
+  el('fl').innerHTML=fh;
+  var v=el('v');
+  v.className='verdict';
+  v.textContent=ok?('That is a rectangle. Lock it in to keep it.'):('Rows of '+Math.ceil(T.n/rows)+' leave gaps. Try another number of rows.');
+}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  if(T.n%rows!==0){
+    v.className='verdict over';
+    v.textContent='\u2717 '+rows+' rows does not divide '+T.n+' evenly \u2014 look at the dashed gaps.';
+    return;
+  }
+  var cols=T.n/rows, key=Math.min(rows,cols)+' \u00d7 '+Math.max(rows,cols);
+  if(found[key]){
+    v.className='verdict over';
+    v.textContent='You already have '+key+'. Turning it sideways is the same rectangle.';
+    return;
+  }
+  found[key]=true;
+  v.className='verdict exact';
+  v.innerHTML='\u2713 '+key+' works. '+rows+' \u00d7 '+cols+' = '+T.n+'.';
+  if(Object.keys(found).length>=T.need){
+    setTimeout(function(){
+      if(step!==0)return;
+      wonCount++;found={};rows=1;beat1();
+    },1700);
+  } else { upd(); v.className='verdict exact'; v.innerHTML='\u2713 '+key+' works. Keep looking.'; }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>7 could only be done one way</h2>';
+  h+='<p>12 and 16 gave three rectangles each. 7 gave one.</p>';
+  h+='<table><tr><th>Tiles</th><th>Rectangles</th><th>Side lengths that worked</th></tr>';
+  h+='<tr><td>12</td><td>3</td><td>1, 2, 3, 4, 6, 12</td></tr>';
+  h+='<tr><td>16</td><td>3</td><td>1, 2, 4, 8, 16</td></tr>';
+  h+='<tr><td>7</td><td>1</td><td>1, 7</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The words</div><p>The side lengths that work are the <b>factors</b> of that number. A number with only one rectangle \u2014 just 1 and itself \u2014 is <b>prime</b>. A number with more than one rectangle is <b>composite</b>.</p></div>';
+  h+='<h2 style="margin-top:26px">Checking without tiles</h2>';
+  h+='<p>You will not always have tiles. Test the small numbers in order and stop as soon as one fits.</p>';
+  h+='<table><tr><th>Try</th><th>Fits when</th><th>Does it go into 20?</th></tr>';
+  h+='<tr><td>2</td><td>the number is even</td><td>yes \u2014 20 is even, so stop. Composite.</td></tr>';
+  h+='<tr><td>3</td><td>count by 3s and land on it</td><td>3, 6, 9, 12, 15, 18, 21 \u2014 misses 20</td></tr>';
+  h+='<tr><td>5</td><td>it ends in 0 or 5</td><td>yes</td></tr></table>';
+  h+='<p>One yes and it is composite. If <b>2, 3 and 5 all miss</b>, it is very likely prime.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>No tiles. The number is <b>21</b>. Run the check: even? lands when you count by 3s? ends in 0 or 5?</p>';
+  h+='<div class="ask"><div class="q">Prime or composite?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'p\')">Prime</button><button class="btn sm" onclick="checkPredict(\'c\')">Composite</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+rectHTML(21,3)+'<p style="text-align:center;font-family:\'Space Mono\',monospace">3 \u00d7 7 = 21</p><p>21 is odd, but odd has nothing to do with it. 3 rows of 7 make a clean rectangle, so 21 is composite. Its factors are 1, 3, 7 and 21.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(c){
+  var fb=el('pfb');
+  if(c==='c'){fb.className='fb ok';fb.innerHTML='<b>Right \u2014 composite.</b> Counting by 3s lands on 21, so 3 fits.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is composite.</b> 21 is odd, but odd is not the test. Count by 3s: 3, 6, 9, 12, 15, 18, <b>21</b>. It lands, so 3 fits.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Factors come in pairs, and multiples go the other way</h2>';
+  h+='<p>Every rectangle hands you two factors at once. 3 \u00d7 4 = 12 gives you both 3 and 4.</p>';
+  h+='<p>A <b>multiple</b> is that read backwards. 12 is a multiple of 3 because 3 fits into it. Count by 3s and you list them all.</p>';
+  h+='<div class="goal"><div class="lab">Keeping the two straight</div><p><b>Factors</b> of 12 are small \u2014 they fit inside it: 1, 2, 3, 4, 6, 12.<br><b>Multiples</b> of 12 are big \u2014 it fits inside them: 12, 24, 36, 48.</p></div>';
+  h+='<p><b>1 is not prime.</b> Prime means 1 and itself as two different numbers, and for 1 they are the same.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Priya says every odd number is prime</h2>';
+  h+='<p>Her reason: <i>"Even numbers split in half. Odd ones cannot, so they must be prime."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testPriya()">Try 9 and 15</button></div>';
+  h+='<div id="prh" class="hide"><div style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap">';
+  h+='<div><div style="text-align:center;font-family:\'Space Mono\',monospace;font-size:13px;color:var(--muted)">9 tiles</div>'+rectHTML(9,3)+'<div class="shape">3 \u00d7 3</div></div>';
+  h+='<div><div style="text-align:center;font-family:\'Space Mono\',monospace;font-size:13px;color:var(--muted)">15 tiles</div>'+rectHTML(15,3)+'<div class="shape">3 \u00d7 5</div></div>';
+  h+='</div></div>';
+  h+='<div id="prfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testPriya();
+}
+function testPriya(){
+  el('prh').classList.remove('hide');
+  var fb=el('prfb');fb.className='fb no';
+  fb.innerHTML='<b>Priya is wrong.</b> 9 and 15 are both odd and both make a clean rectangle, so both are composite. Splitting in half is only one way to break a number up \u2014 you can also split into 3s, 5s, or anything else that fits.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Run the check on 13: not even, counting by 3s misses it, does not end in 0 or 5. So 13 is...',
+   a:['Composite','Neither','Prime','Impossible to tell'],correct:2,
+   why:'Nothing small fits into it, so its only rectangle is 1 \u00d7 13. That makes it prime.'},
+  {q:'List all the factors of 18.',a:['1, 2, 3, 6, 9, 18','1, 18','2, 3, 6, 9','1, 2, 4, 9, 18'],correct:0,
+   why:'The rectangles are 1 \u00d7 18, 2 \u00d7 9 and 3 \u00d7 6, and every side length counts.'},
+  {q:'Is 24 a multiple of 6?',a:['No, 6 is bigger','Yes, because 6 fits into 24 exactly','Only if 24 is prime','No, multiples must be odd'],correct:1,
+   why:'4 rows of 6 make 24, so 24 is a multiple of 6 and 6 is a factor of 24.'},
+  {q:'A number makes exactly two rectangles. What is it?',a:['Prime','Composite','Neither','It must be 1'],correct:1,
+   why:'Prime means only one rectangle. Two or more means composite.'},
+  {q:'Why is 2 prime even though it is even?',a:['It is not prime','Because 2 tiles only make one rectangle, 1 \u00d7 2','Because even numbers are always prime','Because it is the smallest number'],correct:1,
+   why:'Even just means it splits in half, and for 2 that half is 1 \u2014 which is the same as the 1 \u00d7 2 rectangle. There is no other way to arrange it.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.OA.4']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Find every factor of a number, tell prime from composite, and keep factors and multiples straight.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Priya. 9 and 15 are odd and both make clean rectangles.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;rows=1;wonCount=0;found={};predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
