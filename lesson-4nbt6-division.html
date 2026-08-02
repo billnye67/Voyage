@@ -46,11 +46,11 @@
   .chaltxt{font-size:16px;line-height:1.45}
   .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
   .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* blocks */
   .pool{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px;margin:14px 0}
-  .pool.leftover{border-color:var(--accent)}
   .poolhead{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
   .blocks{display:flex;flex-wrap:wrap;gap:5px;align-items:flex-end;min-height:46px}
-  .slab{width:42px;height:42px;background:#123f6d;border:1.5px solid #16233a;border-radius:3px}
+  .slab{width:42px;height:42px;background:#123f6d;border:1.5px solid var(--ink);border-radius:3px}
   .rod{width:14px;height:42px;background:var(--ten);border:1.5px solid var(--ink);border-radius:3px}
   .cube{width:14px;height:14px;background:var(--one);border:1.5px solid var(--ink);border-radius:2px}
   .groups{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
@@ -58,11 +58,12 @@
   .grp .blocks{justify-content:center;min-height:46px}
   .grplab{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-top:7px}
   .grp.full{border-style:solid;border-color:var(--green)}
-  .moves{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0 4px}
-  .move{font-family:'Space Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 9px;border-radius:9px;
-    border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink);line-height:1.35}
-  .move:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
-  .resetrow{text-align:center;margin-top:10px}
+  .leftover{border-color:var(--accent);border-style:solid}
+  .pours{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
+  .pour{font-family:'Space Mono',monospace;font-size:13.5px;font-weight:700;padding:10px 14px;border-radius:9px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .pour:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .pour[disabled]{cursor:not-allowed;box-shadow:none}
   .stepline{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
     color:var(--accent);text-align:center;margin-top:10px}
   .work{font-family:'Space Mono',monospace;font-size:15.5px;text-align:center;margin:10px 0 4px;line-height:1.7}
@@ -72,8 +73,6 @@
   .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}
   .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-  .answerpair{display:flex;gap:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap}
-  .answerfield{display:flex;flex-direction:column;gap:5px;align-items:center;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   input[type=text]{font-family:'Space Mono',monospace;font-size:19px;width:96px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
   .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
   .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
@@ -90,11 +89,8 @@
   .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
   .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
-  @media(max-width:620px){
-    .shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}
-    .rod{width:11px;height:34px}.cube{width:11px;height:11px}.grp{min-width:60px}
-    .moves{grid-template-columns:1fr}.move{font-size:13px}
-  }
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}
+    .rod{width:11px;height:34px}.cube{width:11px;height:11px}.grp{min-width:60px}}
 </style>
 </head>
 <body>
@@ -105,7 +101,7 @@
   <div class="card">
     <div class="tag">Lesson · 4.NBT.B.6</div>
     <h1>Division with remainders</h1>
-    <p>Share the blocks. Decide when to trade. Name what remains.</p>
+    <p>Sharing 96 between 4 sounds awful. Sharing 9 ten-blocks and 6 singles between 4 is something you could do with your hands.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NBT.B.6</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
@@ -122,11 +118,11 @@
 <script>
 var step=0,TOTAL=11;
 var TASKS=[
-  {n:84,d:4,label:'84 ÷ 4'},
-  {n:96,d:4,label:'96 ÷ 4'},
-  {n:137,d:6,label:'137 ÷ 6',tradeHundred:true}
+  {n:84, d:4},
+  {n:96, d:4},
+  {n:137,d:6}
 ];
-var wonCount=0,poolHund=0,poolTens=0,poolOnes=0,dealt=[],inited=false,decisionMessage='';
+var wonCount=0,phase=0;   /* 0 = share tens, 1 = share ones, 2 = final answer */
 var predictDone=false,mistakeTested=false;
 var qIndex=0,qCorrect=0,answered=false;
 
@@ -136,14 +132,16 @@ function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=s
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
 
+/* the whole division, worked out once so every screen agrees */
 function plan(T){
   var hund=Math.floor(T.n/100);
-  var tens=Math.floor(T.n/10),ones=T.n%10;
-  var tensEach=Math.floor(tens/T.d),tensLeft=tens%T.d;
+  var tens=Math.floor(T.n/10), ones=T.n%10;
+  var tensEach=Math.floor(tens/T.d), tensLeft=tens%T.d;
   var onesNow=tensLeft*10+ones;
-  var onesEach=Math.floor(onesNow/T.d),rem=onesNow%T.d;
-  return {hund:hund,tens:tens,ones:ones,tensEach:tensEach,tensLeft:tensLeft,onesNow:onesNow,
-          onesEach:onesEach,rem:rem,answer:tensEach*10+onesEach};
+  var onesEach=Math.floor(onesNow/T.d), rem=onesNow%T.d;
+  return {hund:hund,tens:tens,ones:ones,tensEach:tensEach,tensLeft:tensLeft,
+          onesNow:onesNow,onesEach:onesEach,rem:rem,
+          answer:tensEach*10+onesEach};
 }
 function slabHTML(n){
   var h='';for(var i=0;i<n;i++)h+='<div class="slab"></div>';
@@ -155,135 +153,108 @@ function blocksHTML(rods,cubes){
   for(var j=0;j<cubes;j++)h+='<div class="cube"></div>';
   return h+'</div>';
 }
+
+/* ---------- BEAT 1 ---------- */
+/* dealt[i] = {tens:n, ones:n} for each group; poolTens/poolOnes = what is left in the pile */
+var dealt=[],poolHund=0,poolTens=0,poolOnes=0,inited=false,broken=false;
+
 function initTask(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],P=plan(T);
-  poolHund=P.hund;poolTens=P.tens-P.hund*10;poolOnes=P.ones;dealt=[];
-  for(var i=0;i<T.d;i++)dealt.push({tens:0,ones:0});
-  decisionMessage='';inited=true;
+  dealt=[];for(var i=0;i<T.d;i++)dealt.push({tens:0,ones:0});
+  poolHund=P.hund;
+  poolTens=P.tens-P.hund*10;     /* hundreds start as hundreds, not tens */
+  poolOnes=P.ones;broken=false;inited=true;
 }
-function expectedMove(T){
-  if(poolHund>0)return 'tradeH';
-  if(poolTens>=T.d)return 'ten';
-  if(poolTens>0)return 'trade';
-  if(poolOnes>=T.d)return 'one';
-  return 'answer';
+function breakHundred(){
+  if(poolHund<=0)return;
+  poolHund--;poolTens+=10;beat1();
 }
-function wrongMoveMessage(chosen,expected,T){
-  if(expected==='tradeH'){
-    return 'There is still a hundred block. One hundred cannot be shared between '+T.d+' groups as it is \u2014 trade it for 10 tens first.';
-  }
-  if(expected==='ten'){
-    if(chosen==='trade')return 'Not yet. There are enough tens for every group. Share one ten to each group first.';
-    return 'Not yet. Share the tens before the ones so each group gets the largest place-value pieces first.';
-  }
-  if(expected==='trade'){
-    if(chosen==='ten')return 'That cannot be shared equally: there are fewer tens than groups. Trade the leftover ten for 10 ones.';
-    return 'The leftover ten is still worth 10. Trade it before sharing the ones.';
-  }
-  if(expected==='one'){
-    if(chosen==='ten')return 'No tens remain. Share the ones now.';
-    return 'There is no ten left to trade. Share one small block to every group.';
-  }
-  return 'The sharing is finished. Enter the quotient and remainder.';
+function dealTen(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  if(poolTens<T.d)return;                 /* only deal a full round */
+  for(var i=0;i<T.d;i++){dealt[i].tens++;poolTens--;}
+  beat1();
 }
-function chooseMove(chosen){
-  var T=TASKS[Math.min(wonCount,TASKS.length-1)],expected=expectedMove(T);
-  if(chosen!==expected){decisionMessage=wrongMoveMessage(chosen,expected,T);beat1();return;}
-  if(chosen==='tradeH'){
-    poolHund--;poolTens+=10;
-    decisionMessage='Correct. One hundred became 10 tens. The total did not change.';
-  }else if(chosen==='ten'){
-    for(var i=0;i<T.d;i++){dealt[i].tens++;poolTens--;}
-    decisionMessage='Correct. Every group received one ten.';
-  }else if(chosen==='trade'){
-    poolTens--;poolOnes+=10;
-    decisionMessage='Correct. One ten became 10 ones. The total did not change.';
-  }else if(chosen==='one'){
-    for(var j=0;j<T.d;j++){dealt[j].ones++;poolOnes--;}
-    decisionMessage='Correct. Every group received one one.';
-  }
+function dealOne(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
+  if(poolOnes<T.d)return;
+  for(var i=0;i<T.d;i++){dealt[i].ones++;poolOnes--;}
+  beat1();
+}
+function breakTen(){
+  if(poolTens<=0)return;
+  poolTens--;poolOnes+=10;broken=true;
   beat1();
 }
 function resetTask(){initTask();beat1();}
 
-/* ---------- BEAT 1 ---------- */
 function beat1(){
-  if(wonCount>=TASKS.length){
-    var doneHTML='<div class="tag">Challenge</div>';
-    doneHTML+='<h2>Three divisions complete</h2>';
-    doneHTML+='<p>You chose each place-value move and wrote every quotient and remainder.</p>';
-    for(var d=0;d<TASKS.length;d++){
-      var dt=TASKS[d],dp=plan(dt);
-      doneHTML+='<div class="chal won"><div class="chalnum">Challenge '+(d+1)+'</div><div class="chaltxt">'+dt.label+'</div><div class="chalstate">✓ '+dp.answer+' r '+dp.rem+'</div></div>';
-    }
-    doneHTML+='<div class="goal"><div class="lab">Next</div><p>Now connect the block moves to a written division record.</p></div>';
-    doneHTML+='<div class="nav"><span></span><button class="btn" id="nx" onclick="next()">Next →</button></div>';
-    el('stage').innerHTML=doneHTML;
-    return;
-  }
   if(!inited)initTask();
-  var T=TASKS[wonCount],P=plan(T),h='';
-  h+='<div class="tag">Challenge</div>';
-  h+='<h2>'+T.label+': choose the next move</h2>';
-  h+='<p><b>Tall = 10.</b> <b>Small = 1.</b> Every move must keep the groups equal.</p>';
-  if(T.tradeHundred){
-    h+='<div class="goal"><div class="lab">Before sharing</div><p>137 is 1 hundred, 3 tens, and 7 ones. Trade the hundred for 10 tens: <b>13 tens and 7 ones</b>.</p></div>';
-  }
-  for(var i=0;i<TASKS.length;i++){
-    var t=TASKS[i],pp=plan(t);
-    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
-    var st=i<wonCount?('✓ '+pp.answer+' r '+pp.rem):(i===wonCount?'now':'locked');
-    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+t.label+'</div><div class="chalstate">'+st+'</div></div>';
-  }
-  h+='<div class="pool'+((poolTens>0&&poolTens<T.d)?' leftover':'')+'">';
-  h+='<div class="poolhead">unshared pile: '+(poolHund?'<b>'+poolHund+'</b> hundreds, ':'')+'<b>'+poolTens+'</b> tens, <b>'+poolOnes+'</b> ones</div>';
-  h+=slabHTML(poolHund)+blocksHTML(poolTens,poolOnes)+'</div>';
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],P=plan(T),h='';
+
+  h+='<div class="tag">Challenge '+(wonCount+1)+' of 3</div>';
+  h+='<h2>Share '+T.n+' between '+T.d+'</h2>';
+
+  h+='<div class="pool'+((poolTens<T.d&&poolTens>0)?' leftover':'')+'">';
+  h+='<div class="poolhead">the pile</div>';
+  h+=slabHTML(poolHund)+blocksHTML(poolTens,poolOnes);
+  h+='</div>';
+
   h+='<div class="groups">';
   for(var k=0;k<T.d;k++){
     var g=dealt[k];
     h+='<div class="grp'+((g.tens||g.ones)?' full':'')+'">'+blocksHTML(g.tens,g.ones)+
-       '<div class="grplab">group '+(k+1)+'</div></div>';
+       '<div class="grplab">'+(g.tens*10+g.ones)+'</div></div>';
   }
   h+='</div>';
-  var finished=expectedMove(T)==='answer';
-  if(!finished){
-    h+='<div class="stepline">Choose one move</div>';
-    h+='<div class="moves">';
-    if(plan(T).hund)h+='<button class="move" onclick="chooseMove(\'tradeH\')">Trade 1 hundred for 10 tens</button>';
-  h+='<button class="move" onclick="chooseMove(\'ten\')">Share 1 ten to every group</button>';
-    h+='<button class="move" onclick="chooseMove(\'trade\')">Trade 1 ten for 10 ones</button>';
-    h+='<button class="move" onclick="chooseMove(\'one\')">Share 1 one to every group</button>';
-    h+='</div>';
-  }else{
-    h+='<div class="stepline">Write the complete division answer</div>';
-    h+='<div class="ask"><div class="q">What are the quotient and remainder?</div>';
-    h+='<div class="answerpair"><label class="answerfield">Quotient<input type="text" id="quot" inputmode="numeric" placeholder="?"></label>';
-    h+='<label class="answerfield">Remainder<input type="text" id="rem" inputmode="numeric" placeholder="?"></label>';
-    h+='<button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockAnswer()">Lock it in</button></div></div>';
+
+  var canTen=poolTens>=T.d, canOne=poolOnes>=T.d, canBreak=poolTens>0&&poolTens<T.d&&poolHund===0;
+  h+='<div class="pours">';
+  if(P.hund)h+='<button class="pour" onclick="breakHundred()"'+(poolHund>0?'':' disabled style="opacity:.35"')+'>break a big block</button>';
+  h+='<button class="pour" onclick="dealTen()"'+(canTen?'':' disabled style="opacity:.35"')+'>deal a tall to each</button>';
+  h+='<button class="pour" onclick="breakTen()"'+(canBreak?'':' disabled style="opacity:.35"')+'>break a tall block</button>';
+  h+='<button class="pour" onclick="dealOne()"'+(canOne?'':' disabled style="opacity:.35"')+'>deal a small to each</button>';
+  h+='<button class="pour" onclick="resetTask()">start over</button>';
+  h+='</div>';
+
+  var msg;
+  if(poolHund>0) msg='A big block is 100. Too big to share between '+T.d+' \u2014 break it.';
+  else if(canTen) msg='Enough tall blocks to give every group one more.';
+  else if(canBreak) msg='Only '+poolTens+' tall left, and '+T.d+' groups. Break it into 10 small.';
+  else if(canOne) msg='Enough small blocks to give every group one more.';
+  else if(poolOnes>0) msg=poolOnes+' left, and '+T.d+' groups. They will not go round.';
+  else msg='Pile empty.';
+  h+='<div class="work">'+msg+'</div>';
+
+  var finished=(poolHund===0)&&(poolTens===0)&&(poolOnes<T.d);
+  if(finished){
+    h+='<div class="ask"><div class="q">What does each group hold'+(poolOnes?', and how many are left?':'?')+'</div>';
+    h+='<div class="row"><input type="text" id="dg" placeholder="'+(poolOnes?'12 r 3':'?')+'"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div></div>';
   }
-  h+='<div class="resetrow"><button class="btn sm" onclick="resetTask()">↺ Start this problem over</button></div>';
-  var vclass=decisionMessage?(decisionMessage.indexOf('Correct.')===0?'verdict exact':'verdict over'):'verdict';
-  var defaultMsg=finished?'Count one group, then count what could not be shared.':'Pick the move that keeps every group equal.';
-  h+='<div class="'+vclass+'" id="v">'+(decisionMessage||defaultMsg)+'</div>';
-  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  h+='<div class="verdict" id="v">'+(finished?'Count one group.':'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next \u2192</button></div>';
   el('stage').innerHTML=h;
 }
-function lockAnswer(){
+
+function lockIn(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],P=plan(T);
-  var qRaw=(el('quot').value||'').replace(/\s/g,''),rRaw=(el('rem').value||'').replace(/\s/g,'');
-  if(qRaw===''||rRaw==='')return;
-  var q=parseInt(qRaw,10),r=parseInt(rRaw,10),v=el('v');
-  if(q===P.answer&&r===P.rem){
+  var raw=(el('dg').value||'').replace(/\s/g,'');
+  if(raw==='')return;
+  var v=el('v');
+  var m=raw.toLowerCase().replace('remainder','r').match(/^(\d+)(?:r(\d+))?$/);
+  var got=m?parseInt(m[1],10):NaN;
+  var gotRem=m&&m[2]!==undefined?parseInt(m[2],10):0;
+  if(got===P.answer&&gotRem===P.rem){
     v.className='verdict exact';
-    v.innerHTML='✓ '+T.n+' ÷ '+T.d+' = <b>'+P.answer+' remainder '+P.rem+'</b>';
-    wonCount++;inited=false;decisionMessage='';
+    v.innerHTML='\u2713 '+T.n+' \u00f7 '+T.d+' = <b>'+P.answer+(P.rem?' remainder '+P.rem:'')+'</b>';
+    wonCount++;inited=false;
     if(wonCount>=3&&el('nx'))el('nx').disabled=false;
-    setTimeout(function(){if(step===0)beat1();},1400);
-  }else{
+    setTimeout(function(){if(step===0)beat1();},2000);
+  } else {
     v.className='verdict over';
-    if(q!==P.answer&&r!==P.rem)v.innerHTML='✗ Check both parts. The quotient is what one group holds; the remainder is what is still unshared.';
-    else if(q!==P.answer)v.innerHTML='✗ The remainder is right, but recount one group for the quotient.';
-    else v.innerHTML='✗ The quotient is right, but recount the blocks left in the pile.';
+    if(!m)v.innerHTML='\u2717 Write it as a number, or like <b>12 r 3</b> if blocks are left over.';
+    else if(got!==P.answer)v.innerHTML='\u2717 Not '+got+'. Count one group: '+dealt[0].tens+' tall blocks is '+(dealt[0].tens*10)+', plus '+dealt[0].ones+' small.';
+    else v.innerHTML='\u2717 The amount in each group is right, but there '+(P.rem===1?'is 1 block':'are '+P.rem+' blocks')+' still left over. Write it as <b>'+P.answer+' r '+P.rem+'</b>.';
   }
 }
 
@@ -291,15 +262,14 @@ function lockAnswer(){
 function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
-  h+='<h2>Record the block moves with numbers</h2>';
-  h+='<p>For <b>96 ÷ 4</b>, the blocks and the written steps say the same thing.</p>';
-  h+='<table class="t"><tr><th>Block move</th><th>Number record</th></tr>';
-  h+='<tr><td>Share 9 tens</td><td>9 tens ÷ 4 = 2 tens each, 1 ten left</td></tr>';
-  h+='<tr><td>Trade the leftover ten</td><td>1 ten = 10 ones; 10 + 6 = 16 ones</td></tr>';
-  h+='<tr><td>Share 16 ones</td><td>16 ones ÷ 4 = 4 ones each</td></tr>';
-  h+='<tr><td>Read one group</td><td>2 tens + 4 ones = <b>24</b></td></tr></table>';
-  h+='<div class="goal"><div class="lab">The written method</div><p>Divide the largest place first. Trade anything left into the next smaller place. Continue until only single ones remain.</p></div>';
-  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  h+='<h2>The stranded ten had to be broken</h2>';
+  h+='<table class="t"><tr><th>96 \u00f7 4</th><th></th></tr>';
+  h+='<tr><td>9 tens shared by 4</td><td>2 each, 1 stranded</td></tr>';
+  h+='<tr><td>break that ten</td><td>10 ones + the 6 there = 16</td></tr>';
+  h+='<tr><td>16 ones shared by 4</td><td>4 each, none left</td></tr>';
+  h+='<tr><td>each group holds</td><td>2 tens + 4 ones = <b>24</b></td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Big blocks first. Whatever will not go round gets <b>broken smaller</b> and joins the next pile.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">\u2190 Back</button><button class="btn" onclick="next()">Next \u2192</button></div>';
   el('stage').innerHTML=h;
 }
 
@@ -307,40 +277,40 @@ function beat2(){
 function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
-  h+='<h2>What happens to the hundred?</h2>';
-  h+='<p><b>158 ÷ 7</b> begins as 1 hundred, 5 tens, and 8 ones.</p>';
-  h+='<div class="ask"><div class="q">The hundred cannot be shared among 7 groups. What should happen next?</div>';
-  h+='<button class="choice" id="pr0" onclick="checkPredict(0)">Call the hundred the remainder</button>';
-  h+='<button class="choice" id="pr1" onclick="checkPredict(1)">Trade the hundred for 10 tens, making 15 tens</button>';
-  h+='<button class="choice" id="pr2" onclick="checkPredict(2)">Throw away the hundred and share 58</button>';
-  h+='<button class="choice" id="pr3" onclick="checkPredict(3)">Give the hundred to the first group</button>';
+  h+='<h2>137 between 6</h2>';
+  h+='<p>13 tall blocks, 7 small.</p>';
+  h+='<div class="ask"><div class="q">Share the 13 tall between 6 groups. How many tall are stranded?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(0)">0</button><button class="btn sm" onclick="checkPredict(1)">1</button><button class="btn sm" onclick="checkPredict(2)">2</button><button class="btn sm" onclick="checkPredict(7)">7</button></div>';
   h+='<div id="pfb"></div></div>';
-  h+='<div id="ph" class="hide"><div class="goal"><div class="lab">Then continue</div><p>15 tens ÷ 7 gives 2 tens each with 1 ten left. Trade that ten, join the 8 ones, and share 18 ones: 2 each with 4 left.</p><p><b>158 ÷ 7 = 22 remainder 4.</b></p></div></div>';
-  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  h+='<div id="ph" class="hide"><div class="work">6 \u00d7 2 = 12 used, <b>1 left</b> \u2192 breaks into 10<br>10 + 7 = 17 small, 6 \u00d7 2 = 12 used, <b>5 left</b></div>'+
+     '<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:17px">137 \u00f7 6 = <b>22 r 5</b></p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">\u2190 Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next \u2192</button></div>';
   el('stage').innerHTML=h;
   if(predictDone)el('ph').classList.remove('hide');
 }
+
 function checkPredict(v){
-  if(predictDone)return;
   var fb=el('pfb');
-  for(var i=0;i<4;i++){var b=el('pr'+i);if(i===1)b.classList.add('right');else if(i===v)b.classList.add('wrong');}
-  if(v===1){fb.className='fb ok';fb.innerHTML='<b>Correct.</b> One hundred is the same amount as 10 tens, so the total becomes 15 tens and 8 ones.';}
-  else{fb.className='fb no';fb.innerHTML='<b>No.</b> A larger place-value block is not a remainder while it can still be traded. One hundred becomes 10 tens.';}
-  predictDone=true;el('ph').classList.remove('hide');el('nx').disabled=false;
+  if(v===1){fb.className='fb ok';fb.innerHTML='<b>Right \u2014 1 left.</b> 6 groups take 2 each, which uses 12 of the 13.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is 1.</b> Each of the 6 groups can take 2 tall blocks, which uses 12. That leaves one stranded.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
 }
 
 /* ---------- BEAT 4 ---------- */
 function beat4(){
   var h='';
   h+='<div class="tag">Why</div>';
-  h+='<h2>Four names describe the answer</h2>';
-  h+='<table class="t"><tr><th>Name</th><th>In 137 ÷ 6 = 22 remainder 5</th></tr>';
-  h+='<tr><td>dividend</td><td>137 — the amount being divided</td></tr>';
-  h+='<tr><td>divisor</td><td>6 — the number of equal groups</td></tr>';
-  h+='<tr><td>quotient</td><td>22 — the amount in each group</td></tr>';
-  h+='<tr><td>remainder</td><td>5 — the amount that cannot make another full round</td></tr></table>';
-  h+='<div class="goal"><div class="lab">Two checks</div><p><b>Multiply back:</b> quotient × divisor + remainder must equal the dividend.</p><p>22 × 6 + 5 = 132 + 5 = 137.</p><p><b>Size check:</b> the remainder must be smaller than the divisor. If 6 or more were left, all 6 groups could take another one.</p></div>';
-  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  h+='<h2>Without the blocks</h2>';
+  h+='<table class="t"><tr><th>What you did</th><th>What you write</th></tr>';
+  h+='<tr><td>13 tens by 6, 2 each</td><td>6 \u00d7 20 = 120, and 137 \u2212 120 = 17</td></tr>';
+  h+='<tr><td>17 ones by 6, 2 each</td><td>6 \u00d7 2 = 12, and 17 \u2212 12 = 5</td></tr>';
+  h+='<tr><td>read the groups</td><td>20 + 2 = <b>22</b>, remainder <b>5</b></td></tr></table>';
+  h+='<p>Take out big chunks first, then smaller, until what is left is too small to share.</p>';
+  h+='<div class="goal"><div class="lab">The words</div>'+
+     '<p><b>137 \u00f7 6 = 22 r 5</b><br>'+
+     '137 is the <b>dividend</b>, 6 is the <b>divisor</b>, 22 is the <b>quotient</b>, 5 is the <b>remainder</b>.</p></div>';
+  h+='<p>Check it: 22 \u00d7 6 = 132, plus 5, is 137.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">\u2190 Back</button><button class="btn" onclick="next()">Next \u2192</button></div>';
   el('stage').innerHTML=h;
 }
 
@@ -348,14 +318,13 @@ function beat4(){
 function beat5(){
   var h='';
   h+='<div class="tag">Catch the mistake</div>';
-  h+='<h2>Ava says 96 ÷ 4 = 21 remainder 2</h2>';
-  h+='<p>Her working: <i>“9 tens gives 2 tens each with 1 ten left. I called that ten a remainder. Then 6 ones gives 1 each with 2 left.”</i></p>';
-  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testAva()">Check Ava’s answer</button></div>';
+  h+='<h2>Ava says 96 \u00f7 4 = 21 remainder 12</h2>';
+  h+='<p><i>"2 tall each, 1 tall left. 1 small each, 2 small left. So 21, and my leftover is 1 tall + 2 small = 12."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testAva()">Check it by building back up</button></div>';
   h+='<div id="ah" class="hide"><table class="t"><tr><th>Check</th><th>Result</th></tr>';
-  h+='<tr><td>Ava’s answer</td><td>21 × 4 + 2 = <b>86</b></td></tr>';
-  h+='<tr><td>Starting amount</td><td><b>96</b></td></tr>';
-  h+='<tr><td>Missing amount</td><td><b>10</b> — exactly the ten she failed to trade</td></tr>';
-  h+='<tr><td>Correct answer</td><td>24, because 24 × 4 = <b>96</b></td></tr></table></div>';
+  h+='<tr><td>Ava says 21 remainder 12</td><td>21 \u00d7 4 + 12 = <b>96</b> \u2014 that part is fine</td></tr>';
+  h+='<tr><td>but her leftover is</td><td><b>12</b>, and there are only <b>4</b> groups</td></tr>';
+  h+='<tr><td>so she could keep going</td><td>12 more shared by 4 is 3 each \u2192 21 + 3 = <b>24</b></td></tr></table></div>';
   h+='<div id="afb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -364,27 +333,26 @@ function beat5(){
 function testAva(){
   el('ah').classList.remove('hide');
   var fb=el('afb');fb.className='fb no';
-  fb.innerHTML='<b>Ava stopped one place too early.</b> A leftover ten is not the final remainder because it can be traded for 10 ones. Her check total is 10 short.';
+  fb.innerHTML='<b>Ava stopped too early.</b> Her total adds back to 96, so the arithmetic is fine. The problem is a leftover of <b>12</b> with only <b>4</b> groups \u2014 that still goes round. Keep sharing and you get <b>24</b>. A remainder is only finished when it is smaller than the number of groups.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
-/* ---------- QUESTIONS ---------- */
+/* ---------- questions ---------- */
 var QUESTIONS=[
-  {q:'In 84 ÷ 4, 8 tens are shared among 4 groups. How many tens go in each group?',
-   a:['1 ten','4 tens','2 tens','8 tens'],correct:2,
-   why:'8 tens ÷ 4 = 2 tens in each group.'},
-  {q:'In 96 ÷ 4, one ten remains after the tens are shared. What must happen?',
-   a:['Write remainder 1','Throw it away','Give it to one group','Trade it for 10 ones'],correct:3,
-   why:'The ten can still be divided after it is traded for 10 ones.'},
-  {q:'Before dividing 137 by 6 with base-ten blocks, how can 137 be written?',
-   a:['13 tens and 7 ones','1 ten and 37 ones','137 tens','6 tens and 77 ones'],correct:0,
-   why:'Trade 1 hundred for 10 tens. With the original 3 tens, that makes 13 tens and 7 ones.'},
-  {q:'137 ÷ 6 = ?',
-   a:['21 remainder 11','23 remainder 1','22 remainder 5','22 remainder 6'],correct:2,
-   why:'Each group gets 2 tens and 2 ones. Five ones remain, so the answer is 22 remainder 5.'},
-  {q:'Which check proves that 22 remainder 5 is correct for 137 ÷ 6?',
-   a:['22 + 6 + 5 = 33','22 × 6 + 5 = 137','22 × 5 + 6 = 116','137 − 22 = 115'],correct:1,
-   why:'Quotient × divisor + remainder must rebuild the dividend: 22 × 6 + 5 = 137.'}
+  {q:'84 \u00f7 4. You share the 8 tall blocks first. How many does each of the 4 groups get?',
+   a:['1','2','4','8'],correct:1,
+   why:'8 tall blocks between 4 groups is 2 each, with none stranded.'},
+  {q:'Sharing 7 tall blocks between 3 groups leaves 1 stranded. What happens to it?',
+   a:['It is the remainder','It is thrown away','It breaks into 10 small blocks and joins the small pile','It goes to the first group'],correct:2,
+   why:'A tall block is worth ten small ones. Break it up and it can go round.'},
+  {q:'96 \u00f7 4 = ?',a:['21 remainder 1','19','22 remainder 2','24'],correct:3,
+   why:'2 tens each with one ten stranded, that ten becomes 10 ones joining the 6 to make 16, then 4 ones each. 2 tens and 4 ones is 24.'},
+  {q:'You get 22 remainder 5 for 137 \u00f7 6. How do you check it?',
+   a:['Divide 22 by 6','Add 22 and 5','Work out 22 \u00d7 6 + 5 and see if it makes 137','Round 137 to 140'],correct:2,
+   why:'22 \u00d7 6 = 132, plus the 5 left over, gives 137. Building it back up should land on what you started with.'},
+  {q:'Why can a remainder never be as big as the number of groups?',
+   a:['Because remainders are always small','Because it must be less than 10','It can be','Because if it were, every group could take one more'],correct:3,
+   why:'If 4 groups had 4 blocks left, each group could take one more. A leftover only survives when there are not enough to go round.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -392,7 +360,7 @@ function beatQ(){
   h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
   for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
   h+='<div id="qfb"></div>';
-  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">\u2190 Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
   el('stage').innerHTML=h;answered=false;
 }
 function pick(i){
@@ -404,6 +372,7 @@ function pick(i){
   else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
   el('nx').disabled=false;
 }
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
 function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
 
 function markCourseDone(){
@@ -412,32 +381,25 @@ function markCourseDone(){
     var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
     var key='voyage_g4math_progress_'+kid;
     var p={done:{},lastSkill:0};
-    var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);
-    if(!p.done)p.done={};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
     p.done['4.NBT.6']=true;
     localStorage.setItem(key,JSON.stringify(p));
   }catch(e){}
 }
 function beatDone(){
   var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
-  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){
-    markCourseDone();
-    h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Divide using place-value trades, write a quotient and remainder, and check the answer by multiplying back.</p></div>';
-  }else{
-    h+='<p style="margin-top:16px">Review the trade: a leftover ten becomes 10 ones before any final remainder is named.</p>';
-  }
-  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Divide by sharing tens first, breaking what will not go round, and saying what the remainder is.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ava. She wrote off a stranded ten instead of breaking it up, and lost 10.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
   el('stage').innerHTML=h;
 }
-function restart(){
-  step=0;wonCount=0;poolHund=0;poolTens=0;poolOnes=0;dealt=[];inited=false;decisionMessage='';
-  predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;answered=false;
-  render();scrollTo(0,0);
-}
+function restart(){step=0;wonCount=0;inited=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
 function render(){
   drawSteps();
   if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
