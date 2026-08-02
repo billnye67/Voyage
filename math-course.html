@@ -326,7 +326,7 @@ const COURSE = {
         {tag:"Learn", body:`<p>A <b>line of symmetry</b> lets you fold a shape so both halves match exactly. Some shapes have none, some one, some many. Test: imagine folding \u2014 do the halves land on each other?</p>`},
         {tag:"Example", body:`<p>A butterfly has a vertical line of symmetry \u2014 fold it, the wings match. A circle has infinite.</p>`},
         {tag:"Your turn", practice:[["Lines of symmetry in a square","4"],["Does the letter T have one?","Yes, one vertical"],["Does the letter R?","No"]]},
-        {tag:"Prove it", body:`<p>A student says a rectangle has 4 lines of symmetry like a square. How many really, and why fewer?</p>`, reveal:`2 (one vertical, one horizontal). The diagonals fail because the sides aren\u2019t all equal.`}
+        {tag:"Prove it", body:`<p>A student says a rectangle that is not a square has 4 lines of symmetry, like a square does. How many does it really have, and why fewer?</p>`, reveal:`2 (one vertical, one horizontal). The diagonals fail because the sides aren\u2019t all equal.`}
       ]}
   ]}
   ]
@@ -350,7 +350,7 @@ const GEN = {
   "Rounding":()=>{const n=rnd(100,9999);const pl=[['ten',10],['hundred',100],['thousand',1000]][rnd(0,2)];return{q:`Round <b>${n.toLocaleString()}</b> to the nearest ${pl[0]}.`,a:Math.round(n/pl[1])*pl[1]};},
   "Add & subtract big numbers":()=>{if(Math.random()<.5){const a=rnd(100,5000),b=rnd(100,5000);return{q:`${a.toLocaleString()} + ${b.toLocaleString()} = ?`,a:a+b};}const a=rnd(1000,9000),b=rnd(100,a);return{q:`${a.toLocaleString()} \u2212 ${b.toLocaleString()} = ?`,a:a-b};},
   "Multi-digit multiplication":()=>{if(Math.random()<.5){const a=rnd(2,9),b=rnd(100,999);return{q:`${a} \u00d7 ${b} = ?`,a:a*b};}const a=rnd(11,49),b=rnd(11,29);return{q:`${a} \u00d7 ${b} = ?`,a:a*b};},
-  "Division with remainders":()=>{const b=rnd(2,9),q=rnd(3,20),r=rnd(0,b-1);return{q:`${b*q+r} \u00f7 ${b} = ?${r>0?' (write like: 7 r 2)':''}`,a:r>0?`${q} r ${r}`:q};},
+  "Division with remainders":()=>{const b=rnd(2,9),q=rnd(3,20),r=rnd(0,b-1);return{q:`${b*q+r} \u00f7 ${b} = ?${r>0?' (write like: 7 r 2, where r means remainder)':''}`,a:r>0?`${q} r ${r}`:q};},
   "Equivalent fractions":()=>{const b=rnd(2,6),k=rnd(2,4);return{q:`Fill in the top number: <b>1/${b} = ?/${b*k}</b>`,a:k};},
   "Comparing fractions":()=>{const d=rnd(3,10);let a=rnd(1,d-1),b=rnd(1,d-1);while(a===b)b=rnd(1,d-1);return{q:`Compare with &gt;, &lt;, or =: <b>${a}/${d} __ ${b}/${d}</b>`,a:a>b?'>':'<'};},
   "Add & subtract fractions":()=>{const d=rnd(4,10),a=rnd(1,d-1),b=rnd(1,d-a);return{q:`${a}/${d} + ${b}/${d} = ? (like 3/${d})`,a:`${a+b}/${d}`};},
@@ -359,12 +359,12 @@ const GEN = {
   "Decimal notation":()=>{if(Math.random()<.5){const a=rnd(1,9);return{q:`Write <b>${a}/10</b> as a decimal`,a:`0.${a}`};}const a=rnd(10,99);return{q:`Write <b>${a}/100</b> as a decimal`,a:`0.${a}`};},
   "Comparing decimals":()=>{const a=(rnd(1,9)/10),b=(rnd(10,99)/100);return{q:`Compare with &gt;, &lt;, or =: <b>${a.toFixed(1)} __ ${b.toFixed(2)}</b>`,a:a>b?'>':a<b?'<':'='};},
   "Unit conversions":()=>{const o=[['feet','inches',12],['meters','centimeters',100],['kilograms','grams',1000],['hours','minutes',60]][rnd(0,3)];const n=rnd(2,9);return{q:`${n} ${o[0]} = ? ${o[1]}`,a:n*o[2]};},
-  "Measurement word problems":()=>{const have=rnd(3,9),spentC=rnd(100,have*100-50);return{q:`You have $${have}.00 and spend $${(spentC/100).toFixed(2)}. How much is left? (like 2.65)`,a:((have*100-spentC)/100).toFixed(2)};},
+  "Measurement word problems":()=>{const d1=rnd(5,9),c1=rnd(5,9),d2=rnd(1,d1-1),c2=rnd(1,c1-1);const haveC=d1*100+c1*10,spendC=d2*100+c2*10;return{q:`You have $${(haveC/100).toFixed(2)} and spend $${(spendC/100).toFixed(2)}. How much is left? (like 2.65)`,a:((haveC-spendC)/100).toFixed(2)};},
   "Area & perimeter":()=>{const l=rnd(3,12),w=rnd(2,9);if(Math.random()<.5)return{q:`A rectangle is ${l} by ${w}. What is its AREA?`,a:l*w};return{q:`A rectangle is ${l} by ${w}. What is its PERIMETER?`,a:2*(l+w)};},
   "Understanding angles":()=>{const o=[['a right angle',90],['a straight line',180],['a full circle',360],['half a right angle',45]][rnd(0,3)];return{q:`How many degrees is <b>${o[0]}</b>?`,a:o[1]};},
   "Adding & subtracting angles":()=>{const whole=[90,180][rnd(0,1)],a=rnd(10,whole-10);return{q:`A ${whole}\u00b0 angle splits into ${a}\u00b0 and one more. What's the other angle?`,a:whole-a};},
   "Lines and angles":()=>{const n=[rnd(20,80),rnd(100,160),90][rnd(0,2)];return{q:`Is a <b>${n}\u00b0</b> angle acute, right, or obtuse?`,a:n<90?'acute':n>90?'obtuse':'right'};},
-  "Line symmetry":()=>{const s=[['square',4],['rectangle',2],['equilateral triangle',3],['circle','infinite']][rnd(0,3)];return{q:`How many lines of symmetry does a <b>${s[0]}</b> have?${s[1]==='infinite'?' (write: infinite)':''}`,a:s[1]};}
+  "Line symmetry":()=>{const s=[['square',4],['non-square rectangle',2],['equilateral triangle',3],['circle','infinite']][rnd(0,3)];return{q:`How many lines of symmetry does a <b>${s[0]}</b> have?${s[1]==='infinite'?' (write: infinite)':''}`,a:s[1]};}
 };
 let curGenFn=null, curAns=null, streak=0, mastered=false;
 const MASTER_GOAL=8;
@@ -440,7 +440,7 @@ const LESSONS = {
     goal:'Decide what a remainder means in a real situation, and check an answer by putting it back in the story.',
     mins:15},
   '4.OA.4':{file:'lesson-4oa4-factors-primes.html',
-    blurb:'Arrange a pile of square tiles into a perfect rectangle with no gaps. Some piles work loads of ways. One works only a single way, and that is what prime means.',
+    blurb:'Arrange a pile of square tiles into a perfect rectangle with no gaps. Some piles work loads of ways. Some work only one, and that turns out to matter.',
     goal:'Find every factor of a number, tell prime from composite, and keep factors and multiples straight.',
     mins:15},
   '4.OA.5':{file:'lesson-4oa5-patterns.html',
@@ -458,6 +458,10 @@ const LESSONS = {
   '4.NBT.3':{file:'lesson-4nbt3-rounding.html',
     blurb:'Round 4,378 and you might get 4,000, or 4,400, or 4,380. All three are correct. Which one depends on a part of the question people skip straight past.',
     goal:'Round any whole number to any place by finding the two ends and picking the nearer one.',
+    mins:15},
+  '4.NBT.4':{file:'lesson-4nbt4-add-subtract.html',
+    blurb:'Add 6 and 7 in the ones column and you get 13, but only one digit fits there. What happens to the other ten is the whole trick behind carrying.',
+    goal:'Add and subtract multi-digit numbers column by column, and explain carrying and borrowing as trading ten for one.',
     mins:15}
 };
 
