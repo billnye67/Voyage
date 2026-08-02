@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Place value to 1,000,000</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* place value chart */
+  .pvwrap{overflow-x:auto;margin:16px 0 6px}
+  .pv{display:flex;gap:3px;justify-content:center;min-width:min-content;font-family:'Space Mono',monospace}
+  .col{text-align:center;flex-shrink:0}
+  .colhead{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;width:52px;line-height:1.25;height:26px}
+  .digit{width:52px;height:52px;border:2px solid var(--ink);border-radius:7px;background:#fff;display:flex;align-items:center;
+    justify-content:center;font-size:26px;font-weight:700}
+  .digit.hi{background:rgba(240,102,63,.16);border-color:var(--accent)}
+  .colval{font-size:10.5px;color:var(--muted);margin-top:5px;height:16px}
+  .col.on .colval{color:var(--ink);font-weight:700}
+  .dbtns{display:flex;gap:3px;justify-content:center;margin-top:4px}
+  .db{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;width:24px;height:24px;border-radius:5px;
+    border:1.5px solid var(--ink);background:#fff;cursor:pointer;line-height:1}
+  .db:active{transform:translate(1px,1px)}
+  .comma{align-self:center;font-size:24px;font-weight:700;padding-top:22px;color:var(--muted)}
+  .whole{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;text-align:center;margin:14px 0 4px}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:104px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}
+    .digit{width:42px;height:44px;font-size:21px}.colhead{width:42px;font-size:8px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Base Ten</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NBT.A.1</div>
+    <h1>Place value to 1,000,000</h1>
+    <p>Write the digit 4 and on its own it means four. Slide it one column left and it means forty. Another column and it's four hundred. The digit never changed — only where it stands.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NBT.A.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Place value to 1,000,000</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var D=[0,0,0,0,0,0,0];  // millions ... ones
+var NAMES=['millions','hundred thousands','ten thousands','thousands','hundreds','tens','ones'];
+var VALS=[1000000,100000,10000,1000,100,10,1];
+var wonCount=0;
+var TASKS=[
+  {digit:4,worth:400,txt:'Put a <b>4</b> in the chart so that it is worth <b>400</b>.'},
+  {digit:4,worth:4000,txt:'Now move it so the same 4 is worth <b>ten times that</b> \u2014 4,000.'},
+  {digit:6,worth:60000,txt:'Now make a <b>6</b> worth <b>60,000</b>.'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function chartHTML(digits,editable,hiIdx){
+  var h='<div class="pvwrap"><div class="pv">';
+  for(var i=0;i<7;i++){
+    if(i===1||i===4)h+='<div class="comma">,</div>';
+    var v=digits[i]*VALS[i];
+    h+='<div class="col'+(digits[i]?' on':'')+'">';
+    h+='<div class="colhead">'+NAMES[i]+'</div>';
+    h+='<div class="digit'+(hiIdx===i?' hi':'')+'" id="d'+i+'">'+digits[i]+'</div>';
+    h+='<div class="colval">'+(digits[i]?fmt(v):'')+'</div>';
+    if(editable)h+='<div class="dbtns"><button class="db" onclick="dig('+i+',-1)">\u2212</button><button class="db" onclick="dig('+i+',1)">+</button></div>';
+    h+='</div>';
+  }
+  return h+'</div></div>';
+}
+function readNumber(digits){
+  var n=0;for(var i=0;i<7;i++)n+=digits[i]*VALS[i];
+  return n;
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Put the digit where it is worth what you want</h2>';
+  h+='<p>Use the plus and minus under each column to set its digit. The small number under each column tells you what that digit is worth right there.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'\u2713 done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div id="ch">'+chartHTML(D,true,-1)+'</div>';
+  h+='<div class="whole" id="wn"></div>';
+  h+='<div class="row" style="justify-content:center"><button class="btn sm" onclick="clearD()">clear</button><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+  h+='<div class="verdict" id="v"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  upd();
+}
+function dig(i,d){D[i]=(D[i]+d+10)%10;upd();}
+function clearD(){D=[0,0,0,0,0,0,0];upd();}
+function upd(){
+  el('ch').innerHTML=chartHTML(D,true,-1);
+  var n=readNumber(D);
+  el('wn').textContent=n?fmt(n):'\u2014';
+  var v=el('v');v.className='verdict';
+  v.textContent='Set the digits, then lock it in.';
+}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  var hit=-1;
+  for(var i=0;i<7;i++){
+    if(D[i]===T.digit && D[i]*VALS[i]===T.worth){hit=i;break;}
+  }
+  if(hit>=0){
+    v.className='verdict exact';
+    v.innerHTML='\u2713 The '+T.digit+' is in the <b>'+NAMES[hit]+'</b> column, so it is worth '+fmt(T.worth)+'.';
+    wonCount++;D=[0,0,0,0,0,0,0];
+    setTimeout(function(){if(step===0)beat1();},2000);
+  } else {
+    var where=-1;
+    for(var j=0;j<7;j++)if(VALS[j]*T.digit===T.worth)where=j;
+    v.className='verdict over';
+    v.innerHTML='\u2717 No '+T.digit+' worth '+fmt(T.worth)+' yet. A '+T.digit+' is worth '+fmt(T.worth)+' only in the <b>'+NAMES[where]+'</b> column.';
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>One step left is ten times more</h2>';
+  h+='<p>The same 4 was worth 400, then 4,000. You did not change the digit. You moved it one column left.</p>';
+  h+='<table><tr><th>Column</th><th>A 4 there is worth</th></tr>';
+  h+='<tr><td>ones</td><td>4</td></tr><tr><td>tens</td><td>40</td></tr><tr><td>hundreds</td><td>400</td></tr>';
+  h+='<tr><td>thousands</td><td>4,000</td></tr><tr><td>ten thousands</td><td>40,000</td></tr></table>';
+  h+='<p>Every row down that list is ten times the one above it.</p>';
+  h+='<div class="goal"><div class="lab">The rule</div><p>A digit is worth <b>ten times</b> as much as the same digit one column to its right. Going the other way, it is worth a <b>tenth</b> as much.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you look</h2>';
+  h+='<p>Here is a number: <b style="font-family:\'Space Mono\',monospace;font-size:20px">438,206</b></p>';
+  h+='<div class="ask"><div class="q">What is the 3 worth? Type just the number.</div>';
+  h+='<div class="row"><input type="text" id="pred" placeholder="?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+chartHTML([0,4,3,8,2,0,6],false,2)+'<p style="margin-top:10px">The 3 sits in the ten thousands column, so it is worth <b>30,000</b>. Not 3, and not 30 \u2014 the column decides.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(){
+  var raw=(el('pred').value||'').replace(/[\s,]/g,'');
+  var fb=el('pfb');
+  if(raw==='30000'){fb.className='fb ok';fb.innerHTML='<b>Yes \u2014 30,000.</b> The 3 is in the ten thousands column.';}
+  else if(raw==='3'){fb.className='fb no';fb.innerHTML='<b>That is just the digit.</b> Its <i>value</i> depends on the column, and this one is ten thousands: <b>30,000</b>.';}
+  else if(raw==='3000'){fb.className='fb no';fb.innerHTML='<b>One column off.</b> 3,000 would be the thousands column. This 3 sits one further left: <b>30,000</b>.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>30,000</b> \u2014 the 3 is in the ten thousands column.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Ten of one column makes one of the next</h2>';
+  h+='<p>Ten ones make a ten. Ten tens make a hundred. Ten hundreds make a thousand. Every column is a bundle of ten from the column to its right.</p>';
+  h+='<p>So a digit sitting one place further left is counting bundles that are ten times bigger. That is where the ten times comes from \u2014 it is not a rule someone invented, it is how the columns are built.</p>';
+  h+='<div class="goal"><div class="lab">Reading big numbers</div><p>The commas group the columns in threes and give you the words. <b>438,206</b> reads as four hundred thirty-eight <b>thousand</b>, two hundred six.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Kai says the 5 in 5,280 is worth 5</h2>';
+  h+='<p>His reason: <i>"It says 5, so it is 5."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testKai()">Put it in the chart</button></div>';
+  h+='<div id="kh" class="hide">'+chartHTML([0,0,0,5,2,8,0],false,3)+'</div>';
+  h+='<div id="kfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testKai();
+}
+function testKai(){
+  el('kh').classList.remove('hide');
+  var fb=el('kfb');fb.className='fb no';
+  fb.innerHTML='<b>Kai is wrong.</b> The 5 sits in the thousands column, so it is worth <b>5,000</b> \u2014 almost the whole number. He read the digit and ignored where it was standing. A digit on its own tells you how many; the column tells you how much.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'In 72,619 what is the 2 worth?',a:['2','200','2,000','20,000'],correct:2,
+   why:'The 2 is in the thousands column, so it is worth 2,000.'},
+  {q:'A digit moves one column to the left. Its value becomes...',a:['Ten times bigger','Ten bigger','Ten times smaller','Unchanged'],correct:0,
+   why:'Each column is a bundle of ten from the one to its right, so one step left multiplies the value by 10.'},
+  {q:'In 4,400 how does the first 4 compare to the second 4?',
+   a:['They are the same','The first is 10 times the second','The first is 100 times the second','The second is bigger'],correct:1,
+   why:'The first 4 is in the thousands column and the second is in the hundreds \u2014 one column apart, so 10 times.'},
+  {q:'Which number has a 7 worth 70,000?',a:['7,412','170,412','47,012','700,412'],correct:1,
+   why:'In 170,412 the 7 sits in the ten thousands column. In 7,412 and 47,012 it is only thousands, and in 700,412 it is hundred thousands.'},
+  {q:'Why does the value change when the digit does not?',
+   a:['Because bigger numbers have more digits','Because each column counts bundles ten times bigger than the column to its right','Because commas add value','Because zeros are worth something'],correct:1,
+   why:'Ten ones make a ten, ten tens make a hundred. The columns are built out of bundles of ten.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NBT.1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Say what any digit in a big number is worth, and explain why one step left multiplies it by ten.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Kai. The digit tells you how many; the column tells you how much.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;D=[0,0,0,0,0,0,0];wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
