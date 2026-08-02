@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Read, write &amp; compare big numbers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:31px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .target{font-family:'Space Mono',monospace;font-size:30px;font-weight:700;text-align:center;margin:14px 0 4px;letter-spacing:.02em}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px}
+  .chip{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;padding:10px 14px;border-radius:9px;
+    border:1.5px solid var(--blue-line);background:#fff;color:var(--muted);cursor:pointer}
+  .chip:hover{border-color:var(--blue);color:var(--ink)}
+  .chip.on{background:var(--blue);border-color:var(--ink);color:#fff}
+  .built{font-family:'Space Mono',monospace;font-size:16px;text-align:center;margin:12px 0 4px;min-height:26px;color:var(--ink)}
+  .built .plus{color:var(--muted);padding:0 3px}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .cmp{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin:16px 0}
+  .cnum{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;padding:12px 16px;border:2.5px solid var(--ink);border-radius:10px;background:#fff}
+  .cnum .hi{color:var(--accent)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  td.m{font-family:'Space Mono',monospace}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.target{font-size:24px}.cnum{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Base Ten</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NBT.A.2</div>
+    <h1>Read, write &amp; compare big numbers</h1>
+    <p>405,600 has two zeros in it, and neither of them is decoration. Pull a number apart into the pieces it's actually made of and the zeros turn out to be doing the most important job in there.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NBT.A.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Read, write &amp; compare big numbers</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var sel={},wonCount=0;
+var TASKS=[
+  {n:3204, parts:[3000,200,4], pool:[3000,300,200,20,4,40]},
+  {n:62050,parts:[60000,2000,50], pool:[60000,6000,2000,200,50,5]},
+  {n:405600,parts:[400000,5000,600],pool:[400000,40000,5000,500,600,60]}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Break the number into its pieces</h2>';
+  h+='<p>Tap the chips that add up to the number on top. Use only the ones you actually need.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'\u2713 done':(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">Build <b>'+fmt(TASKS[i].n)+'</b> out of chips.</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="target">'+fmt(T.n)+'</div>';
+  h+='<div class="chips">';
+  T.pool.forEach(function(v){
+    h+='<button class="chip'+(sel[v]?' on':'')+'" onclick="tog('+v+')">'+fmt(v)+'</button>';
+  });
+  h+='</div>';
+  h+='<div class="built" id="bt"></div>';
+  h+='<div class="row"><button class="btn sm" onclick="clearSel()">clear</button><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
+  h+='<div class="verdict" id="v"></div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  upd();
+}
+function tog(v){sel[v]=!sel[v];if(!sel[v])delete sel[v];beat1();}
+function clearSel(){sel={};beat1();}
+function upd(){
+  var keys=Object.keys(sel).map(Number).sort(function(a,b){return b-a;});
+  var sum=keys.reduce(function(a,b){return a+b;},0);
+  el('bt').innerHTML=keys.length?keys.map(fmt).join('<span class="plus">+</span>')+' &nbsp;=&nbsp; <b>'+fmt(sum)+'</b>':'nothing picked yet';
+  var v=el('v');v.className='verdict';
+  v.textContent='Pick your chips, then lock it in.';
+}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],v=el('v');
+  var keys=Object.keys(sel).map(Number).sort(function(a,b){return b-a;});
+  var sum=keys.reduce(function(a,b){return a+b;},0);
+  if(!keys.length)return;
+  var exact=(keys.length===T.parts.length)&&T.parts.every(function(p){return sel[p];});
+  if(exact){
+    v.className='verdict exact';
+    v.innerHTML='\u2713 '+T.parts.map(fmt).join(' + ')+' = <b>'+fmt(T.n)+'</b>';
+    wonCount++;sel={};
+    setTimeout(function(){if(step===0)beat1();},2000);
+  } else if(sum===T.n){
+    v.className='verdict over';
+    v.innerHTML='That adds to '+fmt(T.n)+', but use one chip per column \u2014 the biggest chip that fits each place.';
+  } else {
+    v.className='verdict over';
+    v.innerHTML='\u2717 That makes '+fmt(sum)+', not '+fmt(T.n)+'. Check each column in turn.';
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The zeros were holding empty columns</h2>';
+  h+='<p>405,600 broke into three chips. There was no chip for ten thousands, none for tens, none for ones \u2014 because those columns are empty. The zeros are what keep the other digits in the right place.</p>';
+  h+='<table><tr><th>Written out</th><th>Broken into pieces</th></tr>';
+  h+='<tr><td class="m">3,204</td><td class="m">3,000 + 200 + 4</td></tr>';
+  h+='<tr><td class="m">62,050</td><td class="m">60,000 + 2,000 + 50</td></tr>';
+  h+='<tr><td class="m">405,600</td><td class="m">400,000 + 5,000 + 600</td></tr></table>';
+  h+='<div class="goal"><div class="lab">Three ways to write one number</div><p><b>Digits:</b> 405,600<br><b>Pieces:</b> 400,000 + 5,000 + 600<br><b>Words:</b> four hundred five thousand, six hundred</p></div>';
+  h+='<p>Take the zero out of 405,600 and you get 45,600 \u2014 a completely different number, about nine times smaller.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Which is bigger?</h2>';
+  h+='<div class="cmp"><div class="cnum">45,892</div><div class="cnum">46,001</div></div>';
+  h+='<p>Both have five digits. Both start with a 4. The first one has bigger digits at the end.</p>';
+  h+='<div class="ask"><div class="q">Pick the bigger number.</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">45,892</button><button class="btn sm" onclick="checkPredict(\'b\')">46,001</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide"><div class="cmp"><div class="cnum">4<span class="hi">5</span>,892</div><div class="cnum">4<span class="hi">6</span>,001</div></div>';
+  h+='<p style="text-align:center">Same in the ten thousands. The <b>thousands</b> column is the first place they differ, and 6 beats 5. Nothing after that matters.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(c){
+  var fb=el('pfb');
+  if(c==='b'){fb.className='fb ok';fb.innerHTML='<b>Right \u2014 46,001.</b> The thousands column settles it.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is 46,001.</b> The 892 at the end looks big, but it is only worth hundreds. The thousands column decides first, and 6 beats 5.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Compare from the left and stop at the first difference</h2>';
+  h+='<p>The leftmost columns are worth the most, so they decide first. Work left to right and stop the moment two digits differ \u2014 everything after that is too small to catch up.</p>';
+  h+='<p>In 45,892 the leftover 892 is worth less than one thousand. The gap in the thousands column is already bigger than anything the rest could make up.</p>';
+  h+='<div class="goal"><div class="lab">The signs</div><p><b>&gt;</b> means the left one is bigger. <b>&lt;</b> means the right one is. The wide end always faces the bigger number: <b>46,001 &gt; 45,892</b>.</p></div>';
+  h+='<p>If the numbers have different lengths, the longer one wins outright \u2014 a six-digit number has a hundred thousands column that a five-digit number does not have at all.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Nadia writes "four hundred five thousand, six hundred" as 45,600</h2>';
+  h+='<p>Her reason: <i>"Four hundred five is 405, then thousand, then six hundred \u2014 I just wrote what I heard."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNadia()">Compare the two</button></div>';
+  h+='<div id="nh" class="hide"><div class="cmp"><div class="cnum">45,600</div><div class="cnum">405,600</div></div>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:13px;color:var(--muted)">what Nadia wrote &nbsp;\u00b7&nbsp; what it should be</p></div>';
+  h+='<div id="nfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNadia();
+}
+function testNadia(){
+  el('nh').classList.remove('hide');
+  var fb=el('nfb');fb.className='fb no';
+  fb.innerHTML='<b>Nadia dropped a zero.</b> "Four hundred five thousand" needs three columns before the comma: 4 hundred thousands, <b>0</b> ten thousands, 5 thousands. Miss that zero and the 4 and 5 slide right, giving a number about nine times too small.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which shows 70,308 broken into its pieces?',
+   a:['7,000 + 300 + 8','70,000 + 3,000 + 8','70,000 + 300 + 8','7 + 3 + 8'],correct:2,
+   why:'7 ten thousands, 3 hundreds, 8 ones. The two zeros mark the empty thousands and tens columns.'},
+  {q:'Which sign goes here?   58,714 __ 58,741',a:['&gt;','&lt;','=','Cannot tell'],correct:1,
+   why:'They match until the tens column, where 1 is less than 4. So the left one is smaller.'},
+  {q:'Write "three hundred sixty thousand, twenty" in digits.',
+   a:['36,020','360,200','3,600,020','360,020'],correct:3,
+   why:'360 thousands, then no hundreds, 2 tens, 0 ones \u2014 360,020.'},
+  {q:'Why does comparing start from the left?',
+   a:['Because the leftmost columns are worth the most, so they decide first','Because that is how we read','Because the last digits are always zero','It does not matter which end you start'],correct:0,
+   why:'A difference in the thousands column is bigger than anything the hundreds, tens and ones can make up.'},
+  {q:'What job is the 0 doing in 40,600?',
+   a:['Nothing, it could be removed','Holding the thousands column empty so the 4 and 6 stay in place','Making the number even','Marking where the comma goes'],correct:1,
+   why:'Take it out and you get 4,600 \u2014 the digits slide right and every one of them loses value.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NBT.2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Write a big number in digits, pieces or words, and compare two of them by working left to right.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Nadia. One missing zero moved every digit and shrank the number nine times over.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;sel={};wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
