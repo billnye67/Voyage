@@ -265,7 +265,7 @@ const COURSE = {
       ]},
     { code:"4.MD.2", title:"Measurement word problems", proj:"How much rubber-band \u201cfuel\u201d is left after two flights?",
       cards:[
-        {tag:"Learn", body:`<p>Mix conversions with the four operations \u2014 time, money, amounts. Convert so units match <b>first</b>, then do the operation. You can\u2019t subtract minutes from hours until they match.</p>`},
+        {tag:"Learn", body:`<p>Mix conversions with the four operations \u2014 time, money, amounts. Convert so units match <b>first</b>, then do the operation. You can\u2019t subtract minutes from hours until they match.</p><p><b>Money:</b> $5.50 means 5 whole dollars and 50 cents. Line the amounts up and work the two parts separately \u2014 cents from cents, dollars from dollars. $5.50 \u2212 $1.10 = <b>$4.40</b>.</p>`},
         {tag:"Example", body:`<p>Movie starts 2:15, lasts 1 hr 40 min. 2:15 + 1:00 = 3:15, + 40 = <b>3:55</b>.</p>`},
         {tag:"Your turn", practice:[["$5.00 \u2212 $2.35","$2.65"],["2 L jug, pour out 750 mL. Left?","1,250 mL"],["Three 45 cm ribbons, total?","135 cm"]]},
         {tag:"Prove it", body:`<p>\u201cA 2 m rope, cut off 60 cm.\u201d A student does 2 \u2212 60 = negative. Forgot what?</p>`, reveal:`Convert: 2 m = 200 cm, so 200 \u2212 60 = 140 cm.`}
@@ -309,7 +309,7 @@ const COURSE = {
   { name:"Geometry", skills:[
     { code:"4.G.1", title:"Lines and angles", proj:"Drawing your plane\u2019s frame \u2014 parallel wings, right-angle tail.",
       cards:[
-        {tag:"Learn", body:`<p>Vocabulary to know cold: a <b>point</b> (spot), <b>line</b> (forever both ways), <b>segment</b> (two ends), <b>ray</b> (one end, forever the other way). Angles: <b>right</b> (90\u00b0), <b>acute</b> (&lt;90\u00b0), <b>obtuse</b> (&gt;90\u00b0). Lines: <b>parallel</b> (never meet) or <b>perpendicular</b> (cross at 90\u00b0).</p>`},
+        {tag:"Learn", body:`<p>Vocabulary to know cold: a <b>point</b> (spot), <b>line</b> (forever both ways), <b>segment</b> (two ends), <b>ray</b> (one end, forever the other way). Angles: <b>right</b> (90\u00b0), <b>acute</b> (&lt;90\u00b0), <b>obtuse</b> (&gt;90\u00b0 but &lt;180\u00b0), <b>straight</b> (exactly 180\u00b0). Lines: <b>parallel</b> (never meet) or <b>perpendicular</b> (cross at 90\u00b0).</p>`},
         {tag:"Example", body:`<p>An <b>L</b> is a right angle. Rectangle\u2019s long sides are parallel. A pizza-slice tip is acute.</p>`},
         {tag:"Your turn", practice:[["What type of angle is 120\u00b0?","Obtuse"],["Lines that never meet?","Parallel"],["A segment has how many endpoints?","Two"]]},
         {tag:"Prove it", body:`<p>A student calls a 90\u00b0 angle \u201cacute.\u201d Correct name, and what does acute mean?</p>`, reveal:`90\u00b0 is a right angle. Acute means less than 90\u00b0.`}
@@ -462,6 +462,10 @@ const LESSONS = {
   '4.NBT.4':{file:'lesson-4nbt4-add-subtract.html',
     blurb:'Add 6 and 7 in the ones column and you get 13, but only one digit fits there. What happens to the other ten is the whole trick behind carrying.',
     goal:'Add and subtract multi-digit numbers column by column, and explain carrying and borrowing as trading ten for one.',
+    mins:15},
+  '4.NBT.5':{file:'lesson-4nbt5-multiplication.html',
+    blurb:'Nobody knows 23 \u00d7 47 off the top of their head, but everybody can do 20 \u00d7 40. Chop the big multiplication into small ones you already know.',
+    goal:'Multiply a big number by splitting both sides into place value pieces and adding the boxes.',
     mins:15}
 };
 

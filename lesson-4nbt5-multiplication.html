@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Multi-digit multiplication</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:31px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  /* area model */
+  .amwrap{overflow-x:auto;margin:16px 0 6px}
+  .am{border-collapse:collapse;margin:0 auto;font-family:'Space Mono',monospace}
+  .am td,.am th{border:2px solid var(--ink);padding:0}
+  .am .corner{border:none}
+  .am .side{border:none;font-size:19px;font-weight:700;padding:0 12px;text-align:right;color:var(--blue);white-space:nowrap}
+  .am .top{border:none;font-size:19px;font-weight:700;padding:0 0 7px;text-align:center;color:var(--blue)}
+  .cellbox{width:104px;height:66px;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;
+    background:#fff;color:var(--muted)}
+  .cellbox.cur{background:rgba(240,102,63,.15);color:var(--accent)}
+  .cellbox.done{background:rgba(46,125,91,.10);color:var(--green)}
+  .amnote{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+  .partials{font-family:'Space Mono',monospace;font-size:15px;text-align:center;margin:12px 0 4px;line-height:1.8}
+  .partials .plus{color:var(--muted);padding:0 4px}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .colprog{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);text-align:center;margin-top:10px}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  input[type=text]{font-family:'Space Mono',monospace;font-size:19px;width:110px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table.t{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  table.t th,table.t td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  table.t th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}
+    .cellbox{width:74px;height:56px;font-size:15px}.am .side,.am .top{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Base Ten</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.NBT.B.5</div>
+    <h1>Multi-digit multiplication</h1>
+    <p>Nobody knows 23 × 47 off the top of their head. But everybody can do 20 × 40. Chop the big multiplication into a few small ones you already know, then add them back up.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NBT.B.5</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Multi-digit multiplication</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var TASKS=[
+  {rows:[3],   cols:[100,20,4]},   /* 3 x 124  */
+  {rows:[6],   cols:[200,30,5]},   /* 6 x 235  */
+  {rows:[20,3],cols:[40,7]}        /* 23 x 47  */
+];
+var wonCount=0,cellIdx=0,filled=[],phase='cells';
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function sum(a){return a.reduce(function(x,y){return x+y;},0);}
+function tot(T){return sum(T.rows)*sum(T.cols);}
+function cells(T){var out=[];T.rows.forEach(function(r){T.cols.forEach(function(c){out.push({r:r,c:c,v:r*c});});});return out;}
+
+function amHTML(T,curIdx,vals){
+  var cs=cells(T),h='<div class="amwrap"><table class="am">';
+  h+='<tr><td class="corner"></td>';
+  T.cols.forEach(function(c){h+='<td class="top">'+fmt(c)+'</td>';});
+  h+='</tr>';
+  var k=0;
+  T.rows.forEach(function(r){
+    h+='<tr><td class="side">'+fmt(r)+'</td>';
+    T.cols.forEach(function(c){
+      var cls='cellbox'+(k===curIdx?' cur':(vals[k]!==undefined?' done':''));
+      h+='<td><div class="'+cls+'">'+(vals[k]!==undefined?fmt(vals[k]):(k===curIdx?'?':''))+'</div></td>';
+      k++;
+    });
+    h+='</tr>';
+  });
+  h+='</table></div>';
+  h+='<div class="amnote">'+fmt(sum(T.rows))+' broken into '+T.rows.map(fmt).join(' + ')+
+     ' &nbsp;\u00b7&nbsp; '+fmt(sum(T.cols))+' broken into '+T.cols.map(fmt).join(' + ')+'</div>';
+  return h;
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],cs=cells(T),h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Fill the boxes, then add them up</h2>';
+  h+='<p>Each side of the rectangle is split by place value. Every box is one small multiplication.</p>';
+  h+='<div class="goal"><div class="lab">Worked example \u2014 the whole thing, small</div>'+
+     '<p>Say you had <b>2 \u00d7 13</b>.<br>'+
+     '\u2022 Split the 13 by place value: <b>10 + 3</b><br>'+
+     '\u2022 That makes two boxes: <b>2 \u00d7 10 = 20</b> and <b>2 \u00d7 3 = 6</b><br>'+
+     '\u2022 Add them: 20 + 6 = <b>26</b><br>'+
+     'The 2 stays whole, so there is one row. The 13 split in two, so there are two columns.</p>'+
+     '<p style="margin-top:9px;font-size:15px"><b>Multiplying by tens and hundreds:</b> 3 \u00d7 100 is 3 \u00d7 1 with the two zeros put back, so 300. 6 \u00d7 30 is 6 \u00d7 3 with one zero back, so 180.</p></div>';
+  for(var i=0;i<TASKS.length;i++){
+    var t=TASKS[i];
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'\u2713 '+fmt(tot(t)):(i===wonCount?(phase==='total'?'boxes done \u2014 now the total':cellIdx+' of '+cells(t).length+' boxes'):'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+fmt(sum(t.rows))+' \u00d7 '+fmt(sum(t.cols))+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=amHTML(T,phase==='cells'?cellIdx:-1,filled);
+  if(phase==='cells'){
+    var cur=cs[cellIdx];
+    h+='<div class="colprog">Box '+(cellIdx+1)+' of '+cs.length+'</div>';
+    h+='<div class="ask"><div class="q">'+fmt(cur.r)+' \u00d7 '+fmt(cur.c)+' = ?</div>';
+    h+='<div class="row"><input type="text" id="dg" placeholder="?"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div></div>';
+  } else {
+    h+='<div class="partials">'+filled.map(fmt).join('<span class="plus">+</span>')+'</div>';
+    h+='<div class="ask"><div class="q">Now add all the boxes. What is '+fmt(sum(T.rows))+' \u00d7 '+fmt(sum(T.cols))+'?</div>';
+    h+='<div class="row"><input type="text" id="dg" placeholder="?"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div></div>';
+  }
+  h+='<div class="verdict" id="v">Work out this box, then lock it in.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(phase==='total')el('v').textContent='Add the boxes above, then lock it in.';
+}
+function lockIn(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],cs=cells(T);
+  var raw=(el('dg').value||'').replace(/[\s,]/g,'');
+  if(raw==='')return;
+  var got=parseInt(raw,10),v=el('v');
+  if(phase==='cells'){
+    var want=cs[cellIdx].v;
+    if(got===want){
+      filled[cellIdx]=want;cellIdx++;
+      if(cellIdx>=cs.length)phase='total';
+      v.className='verdict exact';v.innerHTML='\u2713 '+fmt(want);
+      setTimeout(function(){if(step===0)beat1();},1200);
+    } else {
+      v.className='verdict over';
+      v.innerHTML='\u2717 Not '+fmt(got)+'. Try the digits first, then put the zeros back.';
+    }
+  } else {
+    var want2=tot(T);
+    if(got===want2){
+      v.className='verdict exact';
+      v.innerHTML='\u2713 '+filled.map(fmt).join(' + ')+' = <b>'+fmt(want2)+'</b>';
+      wonCount++;cellIdx=0;filled=[];phase='cells';
+      setTimeout(function(){if(step===0)beat1();},2200);
+      if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+    } else {
+      v.className='verdict over';
+      v.innerHTML='\u2717 Not '+fmt(got)+'. Add the box values shown above.';
+    }
+  }
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>One hard multiplication became four easy ones</h2>';
+  h+='<p>23 \u00d7 47 is hard. The four small multiplications inside it are not. Only the last step, putting the boxes together, is adding.</p>';
+  h+='<table class="t"><tr><th>Box</th><th>Working</th><th>Value</th></tr>';
+  h+='<tr><td>20 \u00d7 40</td><td>2 \u00d7 4 = 8, add two zeros</td><td>800</td></tr>';
+  h+='<tr><td>20 \u00d7 7</td><td>2 \u00d7 7 = 14, add one zero</td><td>140</td></tr>';
+  h+='<tr><td>3 \u00d7 40</td><td>3 \u00d7 4 = 12, add one zero</td><td>120</td></tr>';
+  h+='<tr><td>3 \u00d7 7</td><td>straight from the tables</td><td>21</td></tr></table>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:17px">800 + 140 + 120 + 21 = <b>1,081</b></p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Splitting each number by place value turns one multiplication you cannot do into a handful you can, then you add the results. Nothing is lost \u2014 the boxes together are exactly the whole rectangle.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Before you work it out</h2>';
+  h+='<p>You are doing <b>5 \u00d7 328</b>. The 328 splits into 300, 20 and 8.</p>';
+  h+='<div class="ask"><div class="q">How many boxes will this rectangle have?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(2)">2</button><button class="btn sm" onclick="checkPredict(3)">3</button><button class="btn sm" onclick="checkPredict(4)">4</button><button class="btn sm" onclick="checkPredict(6)">6</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+amHTML({rows:[5],cols:[300,20,8]},-1,[1500,100,40])+
+     '<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:17px">1,500 + 100 + 40 = <b>1,640</b></p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v===3){fb.className='fb ok';fb.innerHTML='<b>Right \u2014 3 boxes.</b> One row, three columns.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is 3.</b> The 5 is a single piece, so one row. The 328 splits into three pieces, so three columns. One row times three columns is 3 boxes.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Every piece has to meet every other piece</h2>';
+  h+='<p>Picture 23 rows of 47 dots. Cut the rows into 20 and 3, and cut the columns into 40 and 7. That makes four blocks, and every dot lands in exactly one of them.</p>';
+  h+='<p>Miss a block and you have thrown away real dots. That is why 23 \u00d7 47 needs <b>four</b> boxes, not two \u2014 both numbers split into two pieces, so 2 rows \u00d7 2 columns.</p>';
+  h+='<div class="goal"><div class="lab">The zero shortcut</div><p>20 \u00d7 40 is 2 \u00d7 4 with two zeros put back, because 20 is 2 tens and 40 is 4 tens. Ten times ten is a hundred, so the answer is 8 hundreds.</p></div>';
+  h+='<p>Estimate to check: 23 \u00d7 47 is roughly 20 \u00d7 50, about 1,000. An answer of 1,081 fits. An answer of 821 or 10,810 would not.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Owen says 23 \u00d7 47 = 821</h2>';
+  h+='<p>His working: <i>"20 \u00d7 40 is 800, and 3 \u00d7 7 is 21. So 821."</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testOwen()">Show what he missed</button></div>';
+  h+='<div id="oh" class="hide"></div>';
+  h+='<div id="ofb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testOwen();
+}
+function testOwen(){
+  el('oh').innerHTML=amHTML({rows:[20,3],cols:[40,7]},-1,[800,undefined,undefined,21])+
+    '<p class="amnote">Owen filled the two shaded corners and left the other two empty.</p>';
+  el('oh').classList.remove('hide');
+  var fb=el('ofb');fb.className='fb no';
+  fb.innerHTML='<b>Owen skipped two whole boxes.</b> He never did 20 \u00d7 7 or 3 \u00d7 40, which are worth 140 and 120 together \u2014 260 missing. The real answer is <b>1,081</b>. His estimate should have warned him: 23 \u00d7 47 is near 1,000, and 821 is well short.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What is 6 \u00d7 40?',a:['24','240','2,400','46'],correct:1,
+   why:'6 \u00d7 4 = 24, then put the zero back, giving 240.'},
+  {q:'4 \u00d7 213 splits into which three boxes?',
+   a:['4\u00d7200, 4\u00d710, 4\u00d73','4\u00d72, 4\u00d71, 4\u00d73','2\u00d7213, 1\u00d7213, 3\u00d7213','4\u00d7213 only'],correct:0,
+   why:'213 splits by place value into 200, 10 and 3, and the 4 multiplies each piece.'},
+  {q:'23 splits into 20 + 3, and 47 splits into 40 + 7. How many boxes does the rectangle have?',
+   a:['2','3','4','8'],correct:2,
+   why:'Two pieces down the side and two along the top, so 2 rows \u00d7 2 columns = 4 boxes.'},
+  {q:'Which is a sensible estimate for 38 \u00d7 52?',a:['About 200','About 2,000','About 20,000','About 90'],correct:1,
+   why:'Roughly 40 \u00d7 50, which is 2,000. The exact answer is 1,976.'},
+  {q:'Why is 23 \u00d7 47 not just 800 + 21?',
+   a:['Because 800 is wrong','Because two of the four boxes were never counted','Because you should multiply the answers','Because 23 and 47 are odd'],correct:1,
+   why:'20 \u00d7 7 and 3 \u00d7 40 are real parts of the rectangle. Leaving them out drops 260.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.NBT.5']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Multiply a big number by splitting both sides into place value pieces and adding the boxes.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Owen. He filled two boxes and left 260 on the table.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;cellIdx=0;filled=[];phase='cells';predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
