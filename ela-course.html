@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5}
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -19,43 +19,40 @@
   .side .sub{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   #pcount{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px}
   #pbar{height:5px;border-radius:3px;background:var(--blue-line);margin-bottom:6px;overflow:hidden}
-  #pfill{height:100%;width:0;background:#2e7d5b;transition:width .3s}
+  #pfill{height:100%;width:0;background:var(--green);transition:width .3s}
   .domain{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--blue-line)}
   .skill-btn{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:none;border:none;cursor:pointer;
     padding:9px 10px;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);line-height:1.25;margin-bottom:1px}
   .skill-btn:hover{background:rgba(27,79,138,.07)}
   .skill-btn.active{background:var(--blue);color:#fff;box-shadow:2px 2px 0 rgba(27,79,138,.25)}
   .skill-btn .check{flex-shrink:0;font-size:13px;color:var(--blue-line);width:16px;text-align:center}
-  .skill-btn.done .check{color:#2e7d5b}
+  .skill-btn.done .check{color:var(--green)}
   .skill-btn.active .check{color:#fff}
   .skill-btn.done .stitle{color:var(--muted)}
   .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
   .stitle{flex:1}
+  .lmark{flex-shrink:0;font-size:11px;color:var(--accent)}
+  .skill-btn.active .lmark{color:#fff}
   .main{flex:1;padding:26px 30px 60px;min-width:0}
   .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-  .progress{display:flex;gap:6px;margin-bottom:22px}
-  .progress .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line);transition:background .25s}
-  .progress .seg.on{background:var(--blue)}
   .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:28px 26px;min-height:340px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
   .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
   .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;line-height:1.15;margin-bottom:14px}
   .card p{font-size:16px;line-height:1.6;margin-bottom:12px}
   .card p b{font-weight:600}
-  .card .ex{background:var(--paper);border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.6;margin:4px 0 8px}
-  .payoff{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:15.5px;margin-top:4px}
-  .qlist{margin:8px 0}
-  .qlist .q{font-size:16px;line-height:1.5;padding:8px 0;border-bottom:1px dashed var(--blue-line)}
-  .qlist .q:last-child{border-bottom:none}
-  .ans{color:#2e7d5b;font-weight:600;margin-left:6px;display:none}
-  .ans.show{display:inline}
+  .goalbox{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:13px 16px;margin:16px 0}
+  .goalbox .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goalbox p{margin:0;font-size:15.5px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:18px 0 20px}
+  .donebadge{display:inline-block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--green);border:1.5px solid var(--green);border-radius:8px;padding:5px 10px;margin-bottom:14px}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;padding:10px 18px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
   .btn.ghost{border-color:var(--blue-line);box-shadow:none;color:var(--muted)}
   .btn.sm{font-size:13px;padding:7px 13px;box-shadow:2px 2px 0 var(--ink)}
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
-  .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
-  .proj-note b{color:var(--accent);font-style:normal}
-  #revBox.show{display:block!important}
   @media(max-width:760px){.app{flex-direction:column}.side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}.main{padding:22px 18px 50px}}
 </style>
 </head>
@@ -71,12 +68,11 @@
   </nav>
   <main class="main">
     <div class="crumb" id="crumb"></div>
-    <div class="progress" id="progress"></div>
     <div class="card" id="card"></div>
     <div class="nav">
-      <button class="btn ghost" id="back">Back</button>
+      <button class="btn ghost" id="back">← Previous skill</button>
       <span class="crumb" id="counter" style="margin:0"></span>
-      <button class="btn" id="next">Next</button>
+      <button class="btn" id="next">Next skill →</button>
     </div>
   </main>
 </div>
@@ -85,208 +81,102 @@
 const COURSE = {
   subject:"Grade 4 · Reading & Writing",
   domains:[
-  { name:"Reading", skills:[
-    { title:"Main idea & key details", proj:"Reading the instructions for your project the right way \u2014 this is it.",
-      cards:[
-        {tag:"Learn", body:`<p>The <b>main idea</b> is what a whole text is mostly about \u2014 the big point. <b>Key details</b> are the facts that back it up. Ask: \u201cWhat is this really telling me, and which details prove it?\u201d</p>`},
-        {tag:"Example", body:`<div class="ex">A paragraph lists how dolphins click, whistle, and use body bumps. Main idea: <b>dolphins communicate in many ways.</b> Key details: clicking, whistling, bumping.</div>`},
-        {tag:"Your turn", practice:[["A text says a dog wags its tail, barks, and licks to show it\u2019s happy. What\u2019s the main idea?","Dogs show happiness in different ways"],["Name one key detail from that text","wagging / barking / licking"]]},
-        {tag:"Prove it", body:`<p>A student says the main idea of a text about \u201cwhy bees matter\u201d is \u201cbees are yellow.\u201d Why is that wrong?</p>`, reveal:`\u201cBees are yellow\u201d is a tiny detail, not the big point. The main idea is why bees matter \u2014 like pollinating plants.`}
-      ]},
-    { title:"Using text evidence", proj:"Backing up your project claims with proof, not guesses.",
-      cards:[
-        {tag:"Learn", body:`<p>When you answer a question about a text, point to the <b>exact words</b> that prove it \u2014 don\u2019t guess. \u201cHow do you know?\u201d should always be answerable with \u201cbecause the text says\u2026\u201d</p>`},
-        {tag:"Example", body:`<div class="ex">Q: Was the character scared? Instead of \u201cI think so,\u201d point to the line: \u201cher hands were shaking.\u201d That\u2019s evidence.</div>`},
-        {tag:"Your turn", practice:[["Why is quoting the text better than guessing?","It proves your answer is true"],["Finish it: \u201cI know she was tired because the text says ___\u201d","(any quoted line showing tiredness)"]]},
-        {tag:"Prove it", body:`<p>A student answers \u201cthe dog was brave\u201d with \u201cbecause dogs are brave.\u201d What\u2019s missing?</p>`, reveal:`Evidence from THIS text \u2014 a line showing the dog being brave, not a general opinion about dogs.`}
-      ]},
-    { title:"Summarizing", proj:"Explaining what your project is about in a few clear sentences.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>summary</b> retells a text in a few sentences \u2014 just the important parts, in your own words. Leave out tiny details. For a story: who, what happened, how it ended.</p>`},
-        {tag:"Example", body:`<div class="ex">A 3-page story about a lost puppy that a girl finds and returns \u2192 summary: \u201cA girl finds a lost puppy and returns it to its worried owner.\u201d One sentence, the whole point.</div>`},
-        {tag:"Your turn", practice:[["Should a summary include every detail?","No \u2014 just the important parts"],["A summary should be in whose words?","Your own"]]},
-        {tag:"Prove it", body:`<p>A student\u2019s \u201csummary\u201d is longer than the original story. What did they do wrong?</p>`, reveal:`They retold everything instead of shrinking it to the key points. A summary is shorter.`}
-      ]},
-    { title:"Characters, setting & events", proj:"Understanding a story world before you build your own.",
-      cards:[
-        {tag:"Learn", body:`<p>In a story, describe a <b>character</b> (what they think, say, do), the <b>setting</b> (where/when), and the <b>events</b> (what happens) \u2014 using details from the text, not guesses.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cShe clenched her fists and stormed out\u201d tells you the character is angry \u2014 the text showed it through actions.</div>`},
-        {tag:"Your turn", practice:[["\u201cHe hid under the bed, heart pounding.\u201d What does this show?","He\u2019s scared"],["What is the \u2018setting\u2019 of a story?","Where and when it happens"]]},
-        {tag:"Prove it", body:`<p>A student says a character is \u201cnice\u201d but can\u2019t point to anything in the text. What should they do?</p>`, reveal:`Find an action or line showing niceness \u2014 like sharing lunch. Describe characters from text details.`}
-      ]},
-    { title:"How nonfiction explains ideas", proj:"Following a how-to guide for a real build.",
-      cards:[
-        {tag:"Learn", body:`<p>Nonfiction explains <b>real</b> events, ideas, or steps \u2014 often showing <b>what happened and why</b>, or <b>how</b> to do something. Look for cause-and-effect and sequence.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cThe ice melted because the temperature rose.\u201d The text explains an idea by showing cause (heat) and effect (melting).</div>`},
-        {tag:"Your turn", practice:[["\u201cPlants grow because they get sunlight.\u201d What\u2019s the cause?","Sunlight"],["What\u2019s the effect?","Plants grow"]]},
-        {tag:"Prove it", body:`<p>Why is understanding \u201cwhy\u201d important when reading nonfiction, not just \u201cwhat\u201d?</p>`, reveal:`The \u201cwhy\u201d shows how ideas connect \u2014 you understand the real reason, not just a list of facts.`}
-      ]},
-    { title:"Text structure", proj:"Organizing your project write-up so it makes sense.",
-      cards:[
-        {tag:"Learn", body:`<p>Texts are <b>organized</b> in patterns: time order (sequence), cause & effect, compare & contrast, or problem & solution. Spotting the structure helps you follow it.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cFirst\u2026 then\u2026 finally\u2026\u201d = sequence. \u201cUnlike cats, dogs\u2026\u201d = compare & contrast.</div>`},
-        {tag:"Your turn", practice:[["\u201cThe problem was flooding. The solution was a dam.\u201d What structure?","Problem & solution"],["\u201cFirst mix, then bake, finally cool.\u201d What structure?","Sequence / time order"]]},
-        {tag:"Prove it", body:`<p>Why does knowing the text\u2019s structure make it easier to read?</p>`, reveal:`You know what\u2019s coming next and how the ideas fit together instead of reading blind.`}
-      ]},
-    { title:"Poems, drama & prose", proj:"Knowing which format fits what you want to make.",
-      cards:[
-        {tag:"Learn", body:`<p>Three big types: <b>prose</b> (normal paragraphs, like stories), <b>poetry</b> (lines and verses, often with rhythm), and <b>drama</b> (a play \u2014 characters, dialogue, stage directions).</p>`},
-        {tag:"Example", body:`<div class="ex">A play has \u201cScene 1\u201d and character names before lines. A poem has short lines and stanzas. A story has regular paragraphs.</div>`},
-        {tag:"Your turn", practice:[["A play with characters\u2019 names and stage directions is called?","Drama"],["Writing in lines and verses is?","Poetry"]]},
-        {tag:"Prove it", body:`<p>Name one thing a drama has that a normal story usually doesn\u2019t.</p>`, reveal:`Stage directions, a cast of characters, or dialogue labeled by speaker.`}
-      ]},
-    { title:"Point of view", proj:"Choosing whose eyes your story is told through.",
-      cards:[
-        {tag:"Learn", body:`<p><b>First person</b>: the narrator is IN the story (\u201cI ran home\u201d). <b>Third person</b>: the narrator is outside it (\u201cShe ran home\u201d). The point of view changes what you know.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cI was terrified\u201d = first person. \u201cHe was terrified\u201d = third person.</div>`},
-        {tag:"Your turn", practice:[["\u201cWe found the treasure.\u201d First or third person?","First"],["\u201cThey found the treasure.\u201d First or third?","Third"]]},
-        {tag:"Prove it", body:`<p>How can you tell first-person from third-person fast?</p>`, reveal:`First person uses I/we; third person uses he/she/they. Look at the pronouns.`}
-      ]},
-    { title:"Text features & visuals", proj:"Using diagrams and labels in your build guide.",
-      cards:[
-        {tag:"Learn", body:`<p>Nonfiction has <b>text features</b>: headings, captions, diagrams, charts, bold words. They\u2019re not decoration \u2014 they help you find and understand information faster.</p>`},
-        {tag:"Example", body:`<div class="ex">A diagram of a plane with labeled parts teaches you faster than a paragraph describing each part.</div>`},
-        {tag:"Your turn", practice:[["What does a caption do?","Explains a picture"],["Why are headings helpful?","They tell you what a section is about"]]},
-        {tag:"Prove it", body:`<p>You need to find one fact fast in a long article. Which text feature helps most?</p>`, reveal:`Headings (or bold key words) let you jump to the right section instead of reading it all.`}
-      ]},
-    { title:"Comparing two texts", proj:"Comparing two ways to build the same thing.",
-      cards:[
-        {tag:"Learn", body:`<p>Sometimes you read two texts on the same topic and find how they\u2019re <b>alike and different</b> \u2014 different facts, different points of view, or a similar theme told two ways.</p>`},
-        {tag:"Example", body:`<div class="ex">Two folktales might both teach \u201cbe kind,\u201d but one uses a lion and one uses a mouse. Same theme, different story.</div>`},
-        {tag:"Your turn", practice:[["Two stories both teach \u2018don\u2019t give up.\u2019 That\u2019s a shared what?","Theme"],["Comparing texts means finding what?","Alike AND different"]]},
-        {tag:"Prove it", body:`<p>Why read two texts on one topic instead of just one?</p>`, reveal:`You get more than one view, catch what one left out, and understand the topic better.`}
-      ]}
+  { name:"Reading Literature", skills:[
+    { code:"RL.4.1", title:"Details & inferences", file:"lesson-rl41-details-inferences.html",
+      blurb:"A story tells you some things straight out — and whispers the rest through clues.",
+      goal:"Tell right-there answers from inferences, and back every claim with the text’s exact words." },
+    { code:"RL.4.2", title:"Theme & summarizing", file:"lesson-rl42-theme-summarize.html",
+      blurb:"Shrink a story to its bones, then find the lesson it secretly argues.",
+      goal:"Summarize with the five-ingredient recipe and find themes by what the story rewards." },
+    { code:"RL.4.3", title:"Characters, settings & events", file:"lesson-rl43-character-setting-events.html",
+      blurb:"Who, where, and what happens — three gears that turn each other.",
+      goal:"Read traits from patterns of actions and trace why events happen through the gears." },
+    { code:"RL.4.4", title:"Word meanings & myth words", file:"lesson-rl44-word-meaning-allusions.html",
+      blurb:"Crack strange words from their neighbors — and words that carry whole Greek myths inside.",
+      goal:"Use context clues, and decode allusions like Herculean, Pandora’s box, and the Midas touch." },
+    { code:"RL.4.5", title:"Poems, drama & prose", file:"lesson-rl45-poems-drama-prose.html",
+      blurb:"The same rainy afternoon written three completely different ways.",
+      goal:"Tell the three formats apart by their parts: paragraphs, stanzas, and stage directions." },
+    { code:"RL.4.6", title:"Point of view", file:"lesson-rl46-point-of-view.html",
+      blurb:"Whose eyes you look through changes everything — even what counts as funny.",
+      goal:"Spot first vs third person, test what a narrator can know, and never confuse narrator with author." },
+    { code:"RL.4.7", title:"Text vs pictures", file:"lesson-rl47-text-vs-visual.html",
+      blurb:"The artist read the same story you did — then added a moon and lost a boat.",
+      goal:"Compare a story’s words with its illustration: matches, additions, and changes." },
+    { code:"RL.4.9", title:"Themes across cultures", file:"lesson-rl49-compare-themes.html",
+      blurb:"A Greek lion and a Japanese crane, arguing the exact same lesson.",
+      goal:"Strip the cultural costume and compare what tales from different places reward." }
+  ]},
+  { name:"Reading Informational", skills:[
+    { code:"RI.4.1", title:"Facts & inferences", file:"lesson-ri41-details-inferences.html",
+      blurb:"The article never says how the octopus escapes — but its facts snap together and tell you.",
+      goal:"Point at stated facts and build conclusions you can defend, fact by fact." },
+    { code:"RI.4.2", title:"Main idea & key details", file:"lesson-ri42-main-idea.html",
+      blurb:"Every paragraph is an umbrella: one big idea keeping its details dry.",
+      goal:"Run the umbrella test, tell topic from main idea from detail, and summarize nonfiction." },
+    { code:"RI.4.3", title:"What happened & why", file:"lesson-ri43-explain-events.html",
+      blurb:"Geysers, railroads, history — nonfiction runs on cause-and-effect chains.",
+      goal:"Explain events link by link, keeping every “because” attached and text-based." },
+    { code:"RI.4.4", title:"Science words & signals", file:"lesson-ri44-academic-words.html",
+      blurb:"Good writers plant definitions right next to their big words — marked with little signals.",
+      goal:"Harvest meanings from dashes, colons, and comma phrases; switch meanings by subject." },
+    { code:"RI.4.5", title:"Text structure", file:"lesson-ri45-text-structure.html",
+      blurb:"Writers pick a shape before they pour the facts — and the shape leaves fingerprints.",
+      goal:"Name a text’s structure from its signal words and borrow its shape for notes." },
+    { code:"RI.4.6", title:"Firsthand & secondhand", file:"lesson-ri46-firsthand-secondhand.html",
+      blurb:"One writer stood on the flooded porch; the other gathered the records two years later.",
+      goal:"Tell eyewitnesses from gatherers, and match each account to the questions it can answer." },
+    { code:"RI.4.7", title:"Charts & diagrams", file:"lesson-ri47-charts-diagrams.html",
+      blurb:"Half the article isn’t in the sentences — the chart and the diagram know things the words don’t.",
+      goal:"Read values off charts, decode diagrams, and cite visuals as evidence." },
+    { code:"RI.4.8", title:"Reasons & evidence", file:"lesson-ri48-reasons-evidence.html",
+      blurb:"Authors build towers: a claim on top, reasons below, evidence at the base.",
+      goal:"Map point → reasons → evidence, and spot arguments standing on air." },
+    { code:"RI.4.9", title:"Combining two texts", file:"lesson-ri49-integrate-texts.html",
+      blurb:"One article knows the penguin dads; a different one knows the moms. Real research merges them.",
+      goal:"Merge two texts on one topic: agreements, additions, and honest disagreements." }
+  ]},
+  { name:"Language", skills:[
+    { code:"L.4.1", title:"Sentence hospital", file:"lesson-l41-grammar.html",
+      blurb:"Fragments missing half a body, run-ons fused in a crash — you’re the doctor.",
+      goal:"Diagnose and fix fragments and run-ons, and keep verbs in the right tense." },
+    { code:"L.4.2", title:"Caps, commas & spelling", file:"lesson-l42-caps-commas-spelling.html",
+      blurb:"Three proofreading sweeps — and the homophone traps no spell-checker can catch.",
+      goal:"Fix capitals, commas, and dialogue punctuation, and swap-test the apostrophe twins." },
+    { code:"L.4.3", title:"Precise words", file:"lesson-l43-precise-words.html",
+      blurb:"“The dog went across the yard” tells you nothing. One exact word carries a movie frame.",
+      goal:"Upgrade placeholder words to match the exact picture — without thesaurus-bombing." },
+    { code:"L.4.4", title:"Word parts & context clues", file:"lesson-l44-context-clues-roots.html",
+      blurb:"Big words are LEGO: prefix + root + suffix. A handful of pieces unlocks hundreds of words.",
+      goal:"Snap words apart, build meanings, and test every guess against the sentence." },
+    { code:"L.4.5", title:"Figurative language", file:"lesson-l45-figurative-language.html",
+      blurb:"It’s raining cats and dogs, the room is a zoo, and Grandma says hold your horses.",
+      goal:"Sort and decode similes, metaphors, idioms, and the advice inside old proverbs." },
+    { code:"L.4.6", title:"School direction words", file:"lesson-l46-academic-vocabulary.html",
+      blurb:"COMPARE, EXPLAIN, SUMMARIZE — one bossy word decides what job the question wants.",
+      goal:"Translate direction words into their exact orders, in every subject." }
   ]},
   { name:"Writing", skills:[
-    { title:"Opinion writing", proj:"Convincing a parent your project idea is worth it.",
-      cards:[
-        {tag:"Learn", body:`<p>An <b>opinion piece</b> states what you think, then backs it with <b>reasons</b>. Structure: state your opinion \u2192 give reasons \u2192 wrap it up. \u201cI think\u2026 because\u2026\u201d</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cRecess should be longer. First, kids focus better after a break. Second, exercise is healthy. So a longer recess helps everyone.\u201d</div>`},
-        {tag:"Your turn", practice:[["What must every opinion have to be convincing?","Reasons"],["Write an opinion starter about pizza","(e.g. \u201cPizza is the best lunch because\u2026\u201d)"]]},
-        {tag:"Prove it", body:`<p>A student writes \u201cDogs are best\u201d and stops. What\u2019s missing?</p>`, reveal:`Reasons. An opinion with no reasons doesn\u2019t convince anyone.`}
-      ]},
-    { title:"Informative writing", proj:"Writing clear instructions someone else can follow.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Informative writing</b> teaches or explains a topic with facts \u2014 no opinions. Introduce the topic, give facts in a clear order, use precise words, then conclude.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cVolcanoes form when magma pushes up through the ground. When it erupts, lava flows out and cools into rock.\u201d Facts, clear order.</div>`},
-        {tag:"Your turn", practice:[["Informative writing uses facts or opinions?","Facts"],["Name one thing a good info paragraph starts with","Introducing the topic"]]},
-        {tag:"Prove it", body:`<p>A student\u2019s \u201cinformative\u201d paragraph says \u201csharks are the coolest animal ever.\u201d What\u2019s wrong?</p>`, reveal:`\u201cCoolest ever\u201d is an opinion. Informative writing sticks to facts.`}
-      ]},
-    { title:"Narrative writing", proj:"Writing the story behind your game or project.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>narrative</b> tells a story. Set the scene and characters, unfold events in order, use <b>dialogue and details</b> to bring it alive, and end with a satisfying wrap-up.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201c\u2018Run!\u2019 Maya shouted. They sprinted down the hall as the lights flickered\u2026\u201d \u2014 dialogue + action pulls you in.</div>`},
-        {tag:"Your turn", practice:[["What brings characters to life in a story?","Dialogue and details"],["A narrative\u2019s events should be in what order?","An order that unfolds naturally"]]},
-        {tag:"Prove it", body:`<p>A story is just \u201cWe went. It was fun. We left.\u201d How would you make it a real narrative?</p>`, reveal:`Add details, dialogue, and specific events \u2014 show what happened, don\u2019t just list it.`}
-      ]},
-    { title:"Organizing your writing", proj:"Structuring your project write-up start to finish.",
-      cards:[
-        {tag:"Learn", body:`<p>Good writing has a <b>shape</b>: a beginning that hooks, a middle that develops the idea in order, and an ending that wraps up. Use <b>transition words</b> (first, next, because, finally) to connect parts.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cFirst\u2026 In addition\u2026 Finally\u2026\u201d guides the reader smoothly from one idea to the next.</div>`},
-        {tag:"Your turn", practice:[["Name two transition words","(first, next, also, because, finally\u2026)"],["What are the three big parts of organized writing?","Beginning, middle, end"]]},
-        {tag:"Prove it", body:`<p>Why do transition words matter?</p>`, reveal:`They connect ideas so the writing flows instead of feeling like random jumps.`}
-      ]},
-    { title:"Revising & editing", proj:"Making your final build write-up clean and clear.",
-      cards:[
-        {tag:"Learn", body:`<p>First drafts are never done. <b>Revise</b> = improve the ideas (add detail, reorder, cut fluff). <b>Edit</b> = fix mistakes (spelling, grammar, punctuation). Both make writing stronger.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cIt was good\u201d \u2192 revised: \u201cThe soup was warm and tasted like home.\u201d More specific, more alive.</div>`},
-        {tag:"Your turn", practice:[["Revising fixes ideas or spelling?","Ideas"],["Editing fixes ideas or mistakes?","Mistakes"]]},
-        {tag:"Prove it", body:`<p>Why isn\u2019t your first draft your final draft?</p>`, reveal:`First drafts have rough ideas and errors. Revising and editing make them clear and correct.`}
-      ]},
-    { title:"Short research project", proj:"Researching how to build something before you start.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>research project</b> means investigating a topic: gather facts from a few sources, take notes, sort the information, and list where you found it. Don\u2019t copy \u2014 put it in your own words.</p>`},
-        {tag:"Example", body:`<div class="ex">Researching sharks: read 2 articles, note key facts, group them (diet, habitat, size), write it up in your words, list your sources.</div>`},
-        {tag:"Your turn", practice:[["Should you copy sources word-for-word?","No \u2014 use your own words"],["Why list your sources?","To show where the facts came from"]]},
-        {tag:"Prove it", body:`<p>A student copied a whole paragraph from a website into their report. What did they do wrong?</p>`, reveal:`That\u2019s copying, not research. Put facts in your own words and credit the source.`}
-      ]}
-  ]},
-  { name:"Grammar & Language", skills:[
-    { title:"Parts of speech", proj:"Writing clear labels and instructions for your build.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Noun</b> = person/place/thing. <b>Verb</b> = action. <b>Adjective</b> = describes a noun. <b>Adverb</b> = describes a verb (often ends in -ly). Every sentence is built from these.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cThe <b>fast</b> (adj) <b>dog</b> (noun) <b>ran</b> (verb) <b>quickly</b> (adverb).\u201d</div>`},
-        {tag:"Your turn", practice:[["In \u2018the bright sun,\u2019 which word is the adjective?","bright"],["In \u2018she sang loudly,\u2019 which word is the adverb?","loudly"],["Name the verb: \u2018Birds fly south.\u2019","fly"]]},
-        {tag:"Prove it", body:`<p>A student says \u201crun\u201d is a noun. When could it be a verb instead?</p>`, reveal:`\u201cI run\u201d \u2014 there it\u2019s an action (verb). \u201cA home run\u201d \u2014 there it\u2019s a thing (noun). The job depends on how it\u2019s used.`}
-      ]},
-    { title:"Complete sentences", proj:"Writing directions that aren\u2019t confusing fragments.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>complete sentence</b> has a subject (who/what) and a verb (action), and it\u2019s a full thought. A <b>fragment</b> is missing a piece. A <b>run-on</b> jams two sentences together with no break.</p>`},
-        {tag:"Example", body:`<div class="ex">Fragment: \u201cRunning fast.\u201d (who?) Fixed: \u201cThe dog was running fast.\u201d Run-on: \u201cI ran I fell.\u201d Fixed: \u201cI ran, and I fell.\u201d</div>`},
-        {tag:"Your turn", practice:[["Fix the fragment: \u2018Jumped over the fence.\u2019","(e.g. \u2018The horse jumped over the fence.\u2019)"],["Is \u2018She smiled.\u2019 a complete sentence?","Yes"]]},
-        {tag:"Prove it", body:`<p>Why is \u201cBecause it was raining\u201d not a complete sentence?</p>`, reveal:`It\u2019s not a full thought \u2014 it leaves you hanging. \u201cWe stayed inside because it was raining\u201d completes it.`}
-      ]},
-    { title:"Capitalization & commas", proj:"Writing a clean, correct project label or letter.",
-      cards:[
-        {tag:"Learn", body:`<p>Capitalize the <b>first word</b> of a sentence, names, and \u201cI.\u201d Use <b>commas</b> to separate items in a list, and after intro words. Small marks, big difference.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cOn Monday, Sam bought apples, bread, and milk.\u201d Comma after the intro, commas in the list.</div>`},
-        {tag:"Your turn", practice:[["Fix: \u2018i saw maria on friday\u2019","I saw Maria on Friday"],["Add commas: \u2018We need pens paper and tape\u2019","pens, paper, and tape"]]},
-        {tag:"Prove it", body:`<p>Why does \u201clet\u2019s eat, Grandma\u201d mean something very different from \u201clet\u2019s eat Grandma\u201d?</p>`, reveal:`The comma changes who\u2019s eating! One invites Grandma to eat; the other\u2026 doesn\u2019t. Commas matter.`}
-      ]},
-    { title:"Quotation marks & dialogue", proj:"Writing what characters say in your story.",
-      cards:[
-        {tag:"Learn", body:`<p>Put <b>quotation marks</b> around the exact words someone speaks. Punctuation goes <b>inside</b> the quotes, and a comma usually separates the speaker. New speaker = new line.</p>`},
-        {tag:"Example", body:`<div class="ex">Maya said, \u201cLet\u2019s go!\u201d Then Tom asked, \u201cAre you sure?\u201d</div>`},
-        {tag:"Your turn", practice:[["Add quotes: I\u2019m hungry said Ben","Ben said, \u201cI\u2019m hungry.\u201d"],["Where does the period go \u2014 inside or outside the quotes?","Inside"]]},
-        {tag:"Prove it", body:`<p>Why does dialogue start a new line each time a different person speaks?</p>`, reveal:`So the reader can tell who\u2019s talking. New speaker, new line keeps it clear.`}
-      ]},
-    { title:"Verb tenses", proj:"Keeping your build story in a consistent time.",
-      cards:[
-        {tag:"Learn", body:`<p>Verbs show <b>time</b>: past (walked), present (walk), future (will walk). Keep the tense <b>consistent</b> \u2014 don\u2019t jump from past to present by accident.</p>`},
-        {tag:"Example", body:`<div class="ex">Wrong: \u201cShe runs to the store and bought milk.\u201d Fixed: \u201cShe ran to the store and bought milk.\u201d (both past)</div>`},
-        {tag:"Your turn", practice:[["Past tense of \u2018jump\u2019?","jumped"],["Fix: \u2018He eats dinner and went to bed.\u2019","He ate dinner and went to bed"]]},
-        {tag:"Prove it", body:`<p>Why is it confusing to switch from past to present in the middle of a story?</p>`, reveal:`The reader loses track of when things happen. Pick a tense and stay in it.`}
-      ]},
-    { title:"Spelling patterns", proj:"Spelling your project write-up correctly.",
-      cards:[
-        {tag:"Learn", body:`<p>English has <b>patterns</b>: \u201ci before e except after c,\u201d dropping the silent e before -ing (make \u2192 making), doubling letters (run \u2192 running). Learn the pattern, spell whole groups of words.</p>`},
-        {tag:"Example", body:`<div class="ex">hope \u2192 hoping (drop the e). sit \u2192 sitting (double the t). Same rule, many words.</div>`},
-        {tag:"Your turn", practice:[["Add -ing to \u2018write\u2019","writing"],["Add -ing to \u2018swim\u2019","swimming"],["Add -ing to \u2018jump\u2019","jumping"]]},
-        {tag:"Prove it", body:`<p>Why does \u201crun\u201d double the n in \u201crunning\u201d but \u201cjump\u201d doesn\u2019t double the p?</p>`, reveal:`Short vowel + single consonant doubles (run\u2192running). \u201cJump\u201d ends in two consonants, so no doubling.`}
-      ]}
-  ]},
-  { name:"Word Power", skills:[
-    { title:"Prefixes, suffixes & roots", proj:"Cracking hard words in a build manual.",
-      cards:[
-        {tag:"Learn", body:`<p>Big words are built from parts. A <b>root</b> is the core meaning, a <b>prefix</b> goes in front (un- = not), a <b>suffix</b> goes on the end (-ful = full of). Break a word apart to guess its meaning.</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cunhelpful\u201d = un (not) + help + ful (full of) = \u201cnot full of help.\u201d You cracked it without a dictionary.</div>`},
-        {tag:"Your turn", practice:[["What does \u2018un-\u2019 mean in \u2018unhappy\u2019?","not"],["What does \u2018-less\u2019 mean in \u2018fearless\u2019?","without"]]},
-        {tag:"Prove it", body:`<p>Use the parts to figure out \u201crebuild.\u201d</p>`, reveal:`re- (again) + build = \u201cto build again.\u201d Prefixes give you the meaning.`}
-      ]},
-    { title:"Context clues", proj:"Figuring out a new term without stopping your build.",
-      cards:[
-        {tag:"Learn", body:`<p>When you hit a word you don\u2019t know, the <b>other words around it</b> often give hints. Read the whole sentence and ask: what would make sense here?</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cThe arid desert had no water for miles.\u201d Even if you don\u2019t know \u201carid,\u201d \u201cno water\u201d tells you it means dry.</div>`},
-        {tag:"Your turn", practice:[["\u2018The gigantic dog was bigger than a pony.\u2019 What does gigantic mean?","huge / very big"],["What should you read to find clues?","The words around it"]]},
-        {tag:"Prove it", body:`<p>Why try context clues before grabbing a dictionary?</p>`, reveal:`It\u2019s faster and keeps you reading \u2014 the sentence usually gives you enough to keep going.`}
-      ]},
-    { title:"Synonyms, antonyms & precise words", proj:"Picking exact words for clear instructions.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Synonyms</b> mean the same (big/large). <b>Antonyms</b> mean the opposite (big/small). Strong writing uses <b>precise</b> words \u2014 \u201csprinted\u201d beats \u201cwent fast.\u201d</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cHappy\u201d \u2192 joyful, thrilled, glad. Picking the exact one makes your writing sharper.</div>`},
-        {tag:"Your turn", practice:[["A synonym for \u2018happy\u2019?","(glad, joyful, cheerful\u2026)"],["An antonym for \u2018hot\u2019?","cold"],["A more precise word for \u2018walked slowly\u2019?","(strolled, shuffled, crept\u2026)"]]},
-        {tag:"Prove it", body:`<p>Why is \u201cwhispered\u201d better than \u201csaid quietly\u201d in a story?</p>`, reveal:`One exact word paints the picture faster and stronger than two vague ones.`}
-      ]},
-    { title:"Figurative language", proj:"Making your project story vivid and fun to read.",
-      cards:[
-        {tag:"Learn", body:`<p>Writers paint pictures with <b>figurative language</b>. A <b>simile</b> compares with like/as (\u201cbrave as a lion\u201d). A <b>metaphor</b> says one thing IS another (\u201cthe classroom was a zoo\u201d). An <b>idiom</b> means something other than its literal words (\u201craining cats and dogs\u201d).</p>`},
-        {tag:"Example", body:`<div class="ex">\u201cHer smile was sunshine\u201d (metaphor). \u201cHe ran like the wind\u201d (simile).</div>`},
-        {tag:"Your turn", practice:[["\u2018As busy as a bee\u2019 \u2014 simile or metaphor?","Simile (uses \u2018as\u2019)"],["Does \u2018break a leg\u2019 literally mean break your leg?","No \u2014 it\u2019s an idiom for good luck"]]},
-        {tag:"Prove it", body:`<p>What\u2019s the difference between a simile and a metaphor?</p>`, reveal:`A simile uses \u201clike\u201d or \u201cas\u201d; a metaphor says one thing IS the other, with no \u201clike/as.\u201d`}
-      ]}
+    { code:"W.4.1", title:"Opinion writing", file:"lesson-w41-opinion-writing.html",
+      blurb:"Turn “because I want to” into a letter that actually gets answered.",
+      goal:"Open with a claim, back it with because-and-example reasons, and land the ending." },
+    { code:"W.4.2", title:"Informative writing", file:"lesson-w42-informative-writing.html",
+      blurb:"Teach the reader something real — with every fact sorted into the right drawer.",
+      goal:"Group facts into one-job paragraphs and keep the teaching voice free of “shoulds.”" },
+    { code:"W.4.3", title:"Narrative writing", file:"lesson-w43-narrative-writing.html",
+      blurb:"A story is a person, a problem, and what they do about it — not a list of events.",
+      goal:"Open with a problem, show feelings instead of naming them, and land an echo ending." }
   ]}
   ]
 };
 
-/* ---- engine (same as math course) ---- */
 let flat = [];
 COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name})));
-let si = 0, ci = 0;
+let si = 0;
 const SAVE_KEY = 'voyage_g4ela_progress';
 let progress = { done:{}, lastSkill:0 };
-function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) progress=JSON.parse(raw); }catch(e){} }
+function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) progress=JSON.parse(raw); if(!progress.done) progress.done={}; }catch(e){} }
 function saveProgress(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); }catch(e){} }
-function markSkillDone(i){ progress.done[flat[i].title]=true; saveProgress(); }
 function resetProgress(){ progress={done:{},lastSkill:0}; saveProgress(); loadSkill(0); }
 
 function buildMenu(){
@@ -294,68 +184,48 @@ function buildMenu(){
   COURSE.domains.forEach(d=>{
     html += `<div class="domain">${d.name}</div>`;
     d.skills.forEach(s=>{
-      const idx = flat.findIndex(f=>f.title===s.title);
-      html += `<button class="skill-btn" data-i="${idx}"><span class="check">\u25cb</span><span class="stitle">${s.title}</span></button>`;
+      const idx = flat.findIndex(f=>f.code===s.code);
+      html += `<button class="skill-btn" data-i="${idx}"><span class="check">○</span><span class="stitle">${s.title}</span><span class="lmark">◆</span></button>`;
     });
   });
   const m=document.getElementById('menu'); m.innerHTML=html;
   m.addEventListener('click',e=>{ const b=e.target.closest('.skill-btn'); if(b) loadSkill(+b.dataset.i); });
 }
-function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
-function go(d){
-  const cards=flat[si].cards;
-  if(ci+d<0) return;
-  if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; }
-  ci+=d; render();
-}
-function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
-function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
+function loadSkill(i){ si=i; progress.lastSkill=i; saveProgress(); render(); scrollTo(0,0); }
 
 function render(){
-  const s=flat[si], c=s.cards[ci];
-  document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.title}`;
-  let inner=`<div class="tag">${c.tag}</div>`;
-  if(ci===0) inner+=`<h2>${s.title}</h2>`;
-  if(c.body) inner+=c.body;
-  if(c.practice){
-    inner+=`<div class="qlist">`;
-    c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
-    inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
-  }
-  if(c.reveal){
-    inner+=`<button class="btn sm" data-act="revealOne">Show the answer</button>
-      <div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`;
-  }
-  if(ci===s.cards.length-1 && s.proj){ inner+=`<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`; }
+  const s=flat[si];
+  const isDone = !!progress.done[s.code];
+  document.getElementById('crumb').textContent = `${COURSE.subject}  ›  ${s.domain}`;
+  let inner = `<div class="tag">Lesson · ${s.code}</div>`;
+  inner += `<h2>${s.title}</h2>`;
+  if(isDone) inner += `<div class="donebadge">✔ lesson complete — replay any time</div>`;
+  inner += `<p>${s.blurb}</p>`;
+  inner += `<div class="goalbox"><div class="lab">You’ll learn to</div><p>${s.goal}</p></div>`;
+  inner += `<div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ ${s.code}</span></div>`;
+  inner += `<button class="btn go" onclick="location.href='${s.file}'">${isDone?'Replay lesson ↻':'Start lesson →'}</button>`;
   document.getElementById('card').innerHTML=inner;
 
-  const doneCount=Object.keys(progress.done).length;
+  const doneCount = flat.filter(f=>progress.done[f.code]).length;
   document.getElementById('pcount').textContent=`${doneCount} / ${flat.length} skills complete`;
   document.getElementById('pfill').style.width=(doneCount/flat.length*100)+'%';
-  document.getElementById('progress').innerHTML=s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
-  document.getElementById('counter').textContent=`${ci+1} / ${s.cards.length}`;
-  document.getElementById('back').style.visibility=ci===0?'hidden':'visible';
-  document.getElementById('next').textContent=(ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next';
-  if(ci===s.cards.length-1){ markSkillDone(si); }
+  document.getElementById('counter').textContent=`skill ${si+1} / ${flat.length}`;
+  document.getElementById('back').style.visibility = si===0?'hidden':'visible';
+  document.getElementById('next').style.visibility = si===flat.length-1?'hidden':'visible';
   document.querySelectorAll('.skill-btn').forEach(b=>{
-    const idx=+b.dataset.i, isDone=!!progress.done[flat[idx].title];
+    const idx=+b.dataset.i, d=!!progress.done[flat[idx].code];
     b.classList.toggle('active',idx===si);
-    b.classList.toggle('done',isDone);
-    const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb';
+    b.classList.toggle('done',d);
+    const chk=b.querySelector('.check'); if(chk) chk.textContent=d?'✔':'○';
   });
 }
 
 loadProgress();
 buildMenu();
-document.getElementById('back').addEventListener('click',()=>go(-1));
-document.getElementById('next').addEventListener('click',()=>go(1));
+document.getElementById('back').addEventListener('click',()=>{ if(si>0) loadSkill(si-1); });
+document.getElementById('next').addEventListener('click',()=>{ if(si<flat.length-1) loadSkill(si+1); });
 document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress?')) resetProgress(); });
-document.getElementById('card').addEventListener('click',e=>{
-  const b=e.target.closest('[data-act]'); if(!b) return;
-  if(b.dataset.act==='reveal') reveal();
-  if(b.dataset.act==='revealOne') revealOne();
-});
-loadSkill(progress.lastSkill||0);
+loadSkill(Math.min(progress.lastSkill||0, flat.length-1));
 </script>
 </body>
 </html>

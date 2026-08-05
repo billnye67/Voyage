@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Poems, drama & prose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .spk{font-family:'Space Mono',monospace;font-weight:700;font-size:14px;letter-spacing:.06em}
+  .dir{font-style:italic;color:var(--muted)}
+  .pline{text-align:center;line-height:1.7}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .fmt{display:flex;gap:8px;margin:14px 0 4px}
+  .fbtn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    padding:9px 14px;border-radius:9px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .fbtn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .fbtn.on{background:var(--accent);color:#fff;border-color:var(--ink)}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.5</div>
+    <h1>Poems, drama &amp; prose</h1>
+    <p>The same rainy afternoon, the same lost dog — written three completely different ways. One version comes in paragraphs, one in short stacked lines, one looks like a script with names in capital letters. Each shape has a name, its own parts, and its own superpower. Learn to tell them apart at a glance.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.5</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Poems, drama &amp; prose</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredFmt=false;
+var TASKS=[
+  {fig:0, ans:1, txt:'What format is <b>version A</b>?', won:'poem — lines and stanzas'},
+  {fig:1, ans:2, txt:'What format is <b>version B</b>?', won:'drama — a script'},
+  {fig:2, ans:0, txt:'What format is <b>version C</b>?', won:'prose — paragraphs'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- the three versions ---------- */
+function verPoem(lab){
+  return '<div class="passage"><div class="src">'+(lab||'Version A')+'</div><div class="pline">Rain taps its small grey drum.<br>A shape by the fence — wet fur, bright eyes.<br><br>I open my coat like a door.<br>The lost dog walks in.</div></div>';
+}
+function verDrama(lab){
+  return '<div class="passage"><div class="src">'+(lab||'Version B')+'</div>'+
+  '<span class="dir">[Rain hammers the sidewalk. MAYA stops at the fence.]</span><br>'+
+  '<span class="spk">MAYA:</span> Hey there. You’re soaked.<br>'+
+  '<span class="spk">DAD</span> <span class="dir">(from the porch)</span><span class="spk">:</span> Careful — it might be scared!<br>'+
+  '<span class="dir">[The dog creeps closer and presses against her boots.]</span></div>';
+}
+function verProse(lab){
+  return '<div class="passage"><div class="src">'+(lab||'Version C')+'</div>Maya spotted the dog huddled by the fence, its fur dripping. She knew she should hurry home, but something in its eyes stopped her. She knelt, opened her coat, and the shivering dog crept inside without a sound.</div>';
+}
+function figFor(i){return i===0?verPoem():i===1?verDrama():verProse();}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Three shapes for one moment</h2>';
+  h+='<p>Writing comes in three big shapes. <b>Prose</b> is everyday story-writing: full sentences gathered into <b>paragraphs</b>. A <b>poem</b> is built from short <b>lines</b> stacked into groups called <b>stanzas</b> — it breaks lines on purpose, wherever it wants. <b>Drama</b> is a script meant to be acted: <b>speaker names</b> in capitals, spoken words after them, and <b>stage directions in brackets</b> telling actors what to do. Name each version’s shape.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickFmt(0)">Prose — full sentences in paragraphs</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickFmt(1)">Poem — short lines stacked into stanzas</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickFmt(2)">Drama — speaker names, lines to say, stage directions</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Look at the SHAPE on the page before you read a single word.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredFmt=false;
+}
+function pickFmt(i){
+  if(answeredFmt||wonCount>=TASKS.length)return;answeredFmt=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Short lines, broken on purpose, stacked in two stanzas with a gap between. That shape is a poem.'
+           :wonCount===1?'✓ MAYA and DAD in capitals, words for them to say, and bracketed stage directions — a script. That’s drama.'
+                        :'✓ Full sentences flowing into a paragraph — the everyday shape of stories. That’s prose.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Squint at the shape. Paragraph block = prose. Skinny stacked lines = poem. NAMES: with brackets = drama. Try again.';
+    setTimeout(function(){if(step===0){answeredFmt=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Each shape’s parts have names</h2>';
+  h+='<p>When you talk about these formats, use their real part-names:</p>';
+  h+='<table><tr><th>Format</th><th>Built from</th><th>Special parts</th></tr>';
+  h+='<tr><td>prose</td><td>sentences → paragraphs</td><td>chapters in long books</td></tr>';
+  h+='<tr><td>poem</td><td>lines → stanzas</td><td>rhythm, sometimes rhyme</td></tr>';
+  h+='<tr><td>drama</td><td>spoken lines in scenes</td><td>cast of characters, stage directions</td></tr></table>';
+  h+='<div class="work"><div class="lab">Spot-check on our three versions</div>';
+  h+='poem: &nbsp;2 stanzas · 4 lines · line breaks chosen on purpose<br>';
+  h+='drama: 2 speakers · 2 stage directions in [brackets]<br>';
+  h+='prose: 1 paragraph · 3 full sentences</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Format is the first thing you can identify about a text — before reading a word. Prose flows in paragraphs, poems stack lines into stanzas, drama scripts speech with stage directions.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Does a poem have to rhyme?</h2>';
+  h+='<p>Look back at version A — “drum … eyes … door … in.” Nothing rhymes. Yet here it is, short lines, two stanzas:</p>';
+  h+=verPoem('Version A again');
+  h+='<div class="ask"><div class="q">Is version A really a poem?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Yes — poems are built from lines, rhyme is optional</button><button class="btn sm" onclick="checkPredict(\'b\')">No — if nothing rhymes, it’s not a poem</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">What actually makes a poem</div>';
+  h+='required: &nbsp;lines broken on purpose, stacked into stanzas<br>';
+  h+='optional: &nbsp;rhyme, rhythm, repeated sounds — spices, not the recipe<br>';
+  h+='version A: lines ✓ &nbsp;stanzas ✓ &nbsp;rhyme ✗ &nbsp;→ still 100% a poem</div>';
+  h+='<p>Plenty of famous poems never rhyme. The unmistakable fingerprint is the <b>line break</b> — prose fills the page edge to edge; a poem stops each line exactly where it chooses.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Yes.</b> Lines and stanzas make the poem; rhyme is a choice, like sprinkles.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It is a poem.</b> Rhyme is optional — the fingerprint is the on-purpose line break, and version A is full of them.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+var FMT=0;
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Each shape has a superpower</h2>';
+  h+='<p>Formats aren’t just looks — each one can do something the others can’t. Flip the same moment through all three and watch what changes:</p>';
+  h+='<div class="fmt">';
+  h+='<button class="fbtn'+(FMT===0?' on':'')+'" onclick="showFmt(0)">Prose</button>';
+  h+='<button class="fbtn'+(FMT===1?' on':'')+'" onclick="showFmt(1)">Poem</button>';
+  h+='<button class="fbtn'+(FMT===2?' on':'')+'" onclick="showFmt(2)">Drama</button>';
+  h+='</div>';
+  h+='<div id="fview">'+(FMT===0?verProse('Prose'):FMT===1?verPoem('Poem'):verDrama('Drama'))+'</div>';
+  h+='<table><tr><th>Format</th><th>Its superpower</th></tr>';
+  h+='<tr><td>prose</td><td>a narrator voice that can state SILENT thoughts — “she knew she should hurry home”</td></tr>';
+  h+='<tr><td>poem</td><td>compresses feeling — a coat becomes “a door”</td></tr>';
+  h+='<tr><td>drama</td><td>built to be performed — the audience gets what’s said and done out loud</td></tr></table>';
+  h+='<p>Careful with a tempting shortcut: it’s not that ONLY prose can share thoughts. A poem’s speaker can say them, and a play can too — in speech the audience hears. The difference is the <b>door</b>: prose’s narrator can simply hand you a silent thought; the poem and the play have to give it a voice.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>All three formats can reach the same places — through different doors. In our versions: the prose narrator told you Maya’s silent thought, the poem turned a coat into a door, and the drama is ready to be performed tonight.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function showFmt(k){FMT=k;beat4();}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Omar says short lines mean drama</h2>';
+  h+='<p>Omar saw this and announced: <i>“Short lines — that’s how scripts look. It’s a drama.”</i></p>';
+  h+=verPoem('The text Omar saw');
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testOmar()">Check for drama’s fingerprints</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Drama’s fingerprints</div>';
+  h+='speaker names in capitals? &nbsp;<b>none</b><br>';
+  h+='stage directions in [brackets]? &nbsp;<b>none</b><br>';
+  h+='so what ARE the short lines? &nbsp;line breaks chosen on purpose — stanzas<br>';
+  h+='<b>verdict: poem</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testOmar();
+}
+function testOmar(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Omar matched the wrong fingerprint.</b> Scripts do have shortish lines — but their real fingerprints are <b>speaker names</b> and <b>bracketed stage directions</b>, and this text has neither. Short stacked lines with no speakers is the poem’s signature. Check for a format’s special parts, not just its silhouette.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which format is built from lines gathered into stanzas?',
+   a:['Prose','Drama','A chapter','A poem'],correct:3,
+   why:'Lines and stanzas are the poem’s building blocks — like sentences and paragraphs are prose’s.'},
+  {q:'You see MAYA: in capitals and [Rain hammers the sidewalk] in brackets. What are you reading?',
+   a:['A poem','Drama — a script with speakers and stage directions','Prose','A caption'],correct:1,
+   why:'Speaker names plus bracketed stage directions are drama’s unmistakable fingerprints.'},
+  {q:'A text has short stacked lines and stanzas, but nothing rhymes. What is it?',
+   a:['Not a poem — poems must rhyme','A broken paragraph','A poem — rhyme is optional; lines and stanzas are what count','A script missing its names'],correct:2,
+   why:'Rhyme is a spice, not the recipe. On-purpose line breaks stacked into stanzas make it a poem.'},
+  {q:'In our three versions, how did the reader learn Maya’s SILENT thought — “she knew she should hurry home”?',
+   a:['The prose narrator stated the silent thought directly','The stage directions listed her thoughts','It rhymed in the poem','Readers can never know a character’s thoughts'],correct:0,
+   why:'That’s the prose narrator’s door: it can hand you a silent thought directly. A poem’s speaker could say it, and an actor could speak it aloud — different doors into the same head.'},
+  {q:'Omar called a poem a drama because its lines were short. What should he have checked?',
+   a:['Whether it rhymed','The title','Drama’s special parts — speaker names and stage directions — which weren’t there','How long it was'],correct:2,
+   why:'That was Omar’s trap. Formats are identified by their special parts, not their silhouette — no speakers, no brackets, no drama.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.5']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Name a text’s format at a glance, use the real part-names — paragraph, line, stanza, cast, stage direction — know that rhyme is optional, and say what each format can do that the others can’t.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Omar. Check a format’s special parts, not its silhouette.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredFmt=false;predictDone=false;mistakeTested=false;FMT=0;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

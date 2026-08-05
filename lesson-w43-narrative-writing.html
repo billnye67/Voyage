@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Narrative writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Writing</div>
+  <div class="card">
+    <div class="tag">Lesson · W.4.3</div>
+    <h1>Narrative writing</h1>
+    <p>A story is not a list of things that happened. A story is a person, a problem, and what they do about it — told so the reader feels the wind, hears the voices, and needs to know how it ends. Today you build one: a girl, a contest, and a kite snapped in half.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ W.4.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Narrative writing</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredNar=false;
+var TASKS=[
+  {ans:2, txt:'Pick the strongest <b>OPENING</b> for Jo’s story:',
+   opts:['Kites are fun. This story is about kites.','One day stuff happened to a girl.','The morning of the kite contest, Jo found her dragon kite snapped clean in half.'], won:'character + problem, instantly'},
+  {ans:0, txt:'Pick the <b>MIDDLE event</b> that connects and moves the story:',
+   opts:['An hour later, armed with tape and garden stakes, Jo rebuilt the broken spine — stronger than before.','Meanwhile, in space, an asteroid drifted.','Jo had a sandwich. It was ham.'], won:'transition + action + detail'},
+  {ans:1, txt:'Pick the <b>ENDING</b> that lands:',
+   opts:['And then more things happened, probably.','The patched dragon wobbled, caught the wind — and flew higher than it ever had whole.','The end. Bye.'], won:'resolves + echoes the start'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Build Jo’s story, beat by beat</h2>';
+  h+='<p>A narrative runs on a three-part engine. The <b>opening</b> drops us into a character WITH a problem — fast. The <b>middle</b> moves through events in order, linked by transitions like <i>an hour later</i> and <i>suddenly</i>, each one pushing on the problem. The <b>ending</b> resolves it — and lands hardest when it echoes the opening. Choose the strongest piece for each slot.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickNar('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Opening = person + problem. Middle = linked events. Ending = the problem answered.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredNar=false;
+}
+function pickNar(i){
+  if(answeredNar||wonCount>=TASKS.length)return;answeredNar=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ One sentence and we have Jo, the contest, and a snapped kite — a person with a problem and a clock ticking. THAT’S an opening.'
+           :wonCount===1?'✓ “An hour later” links it to the opening, and taping the spine attacks the problem. Every middle event should push on the problem.'
+                        :'✓ The kite that broke in sentence one flies in the last — problem resolved, opening echoed. Endings that circle back land hardest.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Test each piece: does it give a person + problem (opening), push ON the problem with a transition (middle), or answer the problem (ending)? Try again.';
+    setTimeout(function(){if(step===0){answeredNar=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Jo’s story, assembled — with the tools showing</h2>';
+  h+=('<div class="passage"><div class="src">The Patched Dragon</div>The morning of the kite contest, Jo found her dragon kite snapped clean in half. “No, no, no,” she whispered, running her thumb along the splintered spine. An hour later, armed with tape and garden stakes, she rebuilt the broken spine — stronger than before. At the field, the wind smelled like cut grass and rain. The patched dragon wobbled, caught the wind — and flew higher than it ever had whole.</div>');
+  h+='<div class="work"><div class="lab">The tools at work</div>';
+  h+='DIALOGUE: &nbsp;“No, no, no,” she whispered &nbsp;— we HEAR Jo’s panic<br>';
+  h+='SENSORY DETAIL: wind that smelled like cut grass and rain<br>';
+  h+='TRANSITIONS: the morning of · an hour later · at the field<br>';
+  h+='ECHO ENDING: snapped in half → flew higher than ever whole</div>';
+  h+='<table><tr><th>Tool</th><th>Its job</th></tr>';
+  h+='<tr><td>dialogue</td><td>lets readers hear the character</td></tr>';
+  h+='<tr><td>sensory details</td><td>puts readers inside the scene</td></tr>';
+  h+='<tr><td>transitions</td><td>carry readers through time</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Engine first — person, problem, push, resolve. Then the tools: a spoken line, a smell or sound, transitions between events. Five sentences with all of it beats five pages without.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Show it, or say it?</h2>';
+  h+='<p>Two ways to write Jo at the starting line:</p>';
+  h+='<div class="passage"><div class="src">Version A</div>Jo was very nervous.</div>';
+  h+='<div class="passage"><div class="src">Version B</div>Jo’s hands shook as she pressed the last strip of tape flat, counting the minutes under her breath.</div>';
+  h+='<div class="ask"><div class="q">Which version pulls the reader in harder?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">B — it SHOWS the nerves in her hands and voice</button><button class="btn sm" onclick="checkPredict(\'b\')">A — it says exactly what she felt, no guessing</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Show vs tell</div>';
+  h+='TELL: names the feeling &nbsp;→&nbsp; the reader is informed<br>';
+  h+='SHOW: shaking hands, counted minutes &nbsp;→&nbsp; the reader FEELS it<br>';
+  h+='the recipe: what would a camera see? what would a microphone hear?<br>';
+  h+='write THAT — and let the reader diagnose the feeling themselves</div>';
+  h+='<p>Telling isn’t illegal — sometimes “Jo was nervous” is fine glue. But at the big moments, showing is what makes a reader’s own hands sweat.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>B.</b> Shaking hands and counted minutes let the reader FEEL the nerves — a camera-and-microphone sentence.';}
+  else{fb.className='fb no';fb.innerHTML='<b>A informs; B transports.</b> Naming a feeling tells the reader about it — showing the shaking hands makes them feel it too.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Pacing: skip the boring, slow the big</h2>';
+  h+='<p>Real time and story time are different clocks. Good narrators <b>fast-forward</b> the dull stretches and <b>slow down</b> the moments that matter:</p>';
+  h+='<div class="work"><div class="lab">The two speeds</div>';
+  h+='FAST-FORWARD (one phrase): &nbsp;“An hour later…” — a whole hour of taping, skipped<br>';
+  h+='SLOW-MOTION (many sentences): the launch — the wobble, the gust,<br>the string going tight, the crowd’s gasp<br>';
+  h+='rule of thumb: spend sentences where the reader’s heart should pound</div>';
+  h+='<p>This is why the sandwich sentence failed back in the challenge — it spent story time on a moment with nothing at stake. Every sentence you write is a vote for “this matters.” Vote carefully.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Transitions are your fast-forward button; detail and dialogue are your slow-motion. Skip what’s boring, stretch what’s big, and the story breathes.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Nia’s story has no story</h2>';
+  h+='<p>Nia’s complete narrative: <i>“I woke up. I ate breakfast. I brushed my teeth. I went to school. I came home. The end.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNia()">Find the missing part</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Story x-ray</div>';
+  h+='events in order? &nbsp;✓ plenty<br>';
+  h+='a PROBLEM? &nbsp;✗ nothing is ever at stake<br>';
+  h+='does anything CHANGE? &nbsp;✗ the day just… occurs<br>';
+  h+='one repair: &nbsp;“I woke up — and my dog was gone from his bed.”<br>';
+  h+='now every event after it has a job: the search is ON</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNia();
+}
+function testNia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Nia wrote a schedule, not a story.</b> Events in a row aren’t narrative until something is at stake. Add one problem — a missing dog, a snapped kite — and every ordinary event catches fire: breakfast becomes “too worried to eat,” the walk to school becomes a search. Person + problem is the pilot light. No problem, no story.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What must a story OPENING deliver?',
+   a:['A person with a problem, fast','A list of characters and their ages','The moral of the story','The weather report'],correct:0,
+   why:'Jo + snapped kite + contest morning: one sentence, and the engine is running.'},
+  {q:'What’s the job of transitions like “an hour later” and “suddenly”?',
+   a:['To make sentences longer','To carry the reader through time — fast-forwarding what’s dull','To replace dialogue','To rhyme'],correct:1,
+   why:'Transitions are the fast-forward button: a whole hour of taping, skipped in three words.'},
+  {q:'Which sentence SHOWS fear instead of telling it?',
+   a:['“Sam was scared.”','“Sam felt fear.”','“Sam’s flashlight beam jittered across the wall as he backed toward the door.”','“Sam was extremely scared.”'],correct:2,
+   why:'The camera sees a jittering beam and backing feet — the reader diagnoses the fear themselves. That’s showing.'},
+  {q:'Where should a writer SLOW DOWN and spend many sentences?',
+   a:['On breakfast, always','On every moment equally','On the biggest moment — where the reader’s heart should pound','Never — short is always better'],correct:2,
+   why:'Story time bends: skip the dull at high speed, stretch the launch, the leap, the reveal.'},
+  {q:'Nia’s “I woke up, I ate, I went to school” isn’t a story. What’s missing?',
+   a:['More events','Longer sentences','Better spelling','A problem at stake — nothing is ever risked or changed'],correct:3,
+   why:'That was Nia’s trap. Events become a story the moment a problem gives them a job.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['W.4.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Open with a person and a problem, push through linked events, show feelings the camera-and-microphone way, bend story time — fast through the dull, slow through the big — and land an ending that echoes your opening.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Nia. Person + problem is the pilot light — no problem, no story.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredNar=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

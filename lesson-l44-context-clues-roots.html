@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Word parts & context clues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Language</div>
+  <div class="card">
+    <div class="tag">Lesson · L.4.4</div>
+    <h1>Word parts &amp; context clues</h1>
+    <p>Big words aren’t built from scratch — they’re snapped together from parts, like LEGO. “Unbreakable” is three pieces you already own: un + break + able. Learn a handful of pieces and hundreds of locked words spring open. (Plus what to do when the pieces trick you.)</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ L.4.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Word parts &amp; context clues</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredPt=false;
+var TASKS=[
+  {ans:2, txt:'Snap apart <b>“unbreakable”</b> — as in “this unbreakable phone case.” What does it mean?',
+   opts:['Breaks easily','Already broken','Cannot be broken — un (not) + break + able (can be)'], won:'un + break + able'},
+  {ans:0, txt:'Snap apart <b>“rewrite”</b> — “My story was messy, so I had to rewrite it.”',
+   opts:['Write it again — re means again','Erase it forever','Read it aloud'], won:'re + write'},
+  {ans:1, txt:'Snap apart <b>“careless”</b> — “The careless painter dripped paint everywhere.”',
+   opts:['Full of care','Without care — less means without','Caring for less people'], won:'care + less'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Snap the word apart</h2>';
+  h+='<p>Words have three slots. A <b>prefix</b> snaps on the front and changes the meaning: <b>un-</b> means not, <b>re-</b> means again. The <b>root</b> is the core word you already know. A <b>suffix</b> snaps on the end: <b>-able</b> means can be, <b>-less</b> means without. To crack a big word: snap it apart, read the pieces, snap the meanings together. Try these three.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickPt('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Find the prefix, the root, the suffix — then snap their meanings together.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredPt=false;
+}
+function pickPt(i){
+  if(answeredPt||wonCount>=TASKS.length)return;answeredPt=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ un (not) + break + able (can be) = cannot be broken. Three pieces you already owned.'
+           :wonCount===1?'✓ re (again) + write = write again. The messy story confirms it — context and parts agree.'
+                        :'✓ care + less (without) = without care. And sure enough, the paint went everywhere.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Snap it apart first: what’s the prefix saying (not? again?), what’s the root, what’s the suffix adding (can be? without?)? Try again.';
+    setTimeout(function(){if(step===0){answeredPt=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Your starter set of pieces</h2>';
+  h+='<p>A small set of parts unlocks a huge number of words:</p>';
+  h+='<table><tr><th>Prefix</th><th>Means</th><th>Suffix</th><th>Means</th></tr>';
+  h+='<tr><td>un- / dis-</td><td>not · opposite</td><td>-able</td><td>can be</td></tr>';
+  h+='<tr><td>re-</td><td>again</td><td>-less</td><td>without</td></tr>';
+  h+='<tr><td>pre-</td><td>before</td><td>-ful</td><td>full of</td></tr>';
+  h+='<tr><td>mis-</td><td>wrongly</td><td>-er</td><td>a person who</td></tr></table>';
+  h+='<div class="work"><div class="lab">The assembly line, running</div>';
+  h+='hopeful &nbsp;→&nbsp; hope + ful &nbsp;→&nbsp; full of hope<br>';
+  h+='misplace &nbsp;→&nbsp; mis + place &nbsp;→&nbsp; put in the wrong place<br>';
+  h+='builder &nbsp;→&nbsp; build + er &nbsp;→&nbsp; a person who builds<br>';
+  h+='disagree &nbsp;→&nbsp; dis + agree &nbsp;→&nbsp; the opposite of agree</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Snap apart → read the pieces → snap the meanings together → then <b>check it against the sentence</b>. If the built meaning fits the context, you’ve cracked it.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>A brand-new word — crack it cold</h2>';
+  h+='<p>The recipe says: <i>“<b>Preheat</b> the oven to 350 degrees before putting in the cookies.”</i></p>';
+  h+='<div class="ask"><div class="q">Using the parts table, what does “preheat” mean?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Heat it BEFORE — pre means before</button><button class="btn sm" onclick="checkPredict(\'b\')">Heat it AGAIN — pre means again</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Cracked, step by step</div>';
+  h+='snap: &nbsp;pre + heat<br>';
+  h+='pieces: before + make hot<br>';
+  h+='built meaning: heat it ahead of time<br>';
+  h+='context check: “…BEFORE putting in the cookies” ✓ — the sentence agrees</div>';
+  h+='<p>That’s the full workflow on a word you may never have studied: parts build the meaning, context confirms it. Two keys turning the same lock.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Before.</b> pre + heat = heat ahead of time — and the recipe’s “before” backs you up.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Check the table.</b> RE means again; PRE means before. Preheat = heat it ahead of time, and the sentence confirms it.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>When the pieces trick you</h2>';
+  h+='<p>Fair warning: word parts are powerful, not perfect. Some words LOOK snappable and aren’t — a <b>butterfly</b> is not butter that flies, and a <b>carpet</b> is not a car’s pet. So the workflow has three tools, in order:</p>';
+  h+='<div class="work"><div class="lab">The three-tool workflow</div>';
+  h+='tool 1 — PARTS: &nbsp;&nbsp;&nbsp;snap it apart, build a guess<br>';
+  h+='tool 2 — CONTEXT: &nbsp;does the guess fit the sentence? if not, drop it<br>';
+  h+='tool 3 — DICTIONARY: still stuck or need to be sure? the referee settles it</div>';
+  h+='<p>Example: “The <b>restless</b> puppy paced all night.” Parts: rest + less = without rest. Context: pacing all night ✓. No dictionary needed — but when parts and context ever disagree, the dictionary gets the final word.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Parts build the guess, context tests it, the dictionary referees. Use them in that order and no word stays locked for long.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Ola says invisible means “inside something visible”</h2>';
+  h+='<p>The sentence: <i>“The message was written in <b>invisible</b> ink.”</i> Ola snapped it apart: <i>“in + visible — so it means INSIDE something you can see!”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testOla()">Run the context check</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check Ola skipped</div>';
+  h+='the prefix in- has TWO jobs: sometimes “in”… and sometimes “NOT”<br>';
+  h+='try Ola’s meaning: “ink written inside something visible”? &nbsp;the sentence turns to mush<br>';
+  h+='try in- as NOT: “ink that can NOT be seen” &nbsp;→&nbsp; secret message ink ✓<br>';
+  h+='<b>context picks between a prefix’s twin meanings</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testOla();
+}
+function testOla(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Ola stopped at tool one.</b> Snapping was right — but in- is a twin prefix, and she grabbed the wrong twin without testing it. The context check would have caught it instantly: secret-message ink is ink you <b>can’t see</b>. Parts build the guess; the sentence gets a vote before you believe it.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Snap apart “refillable.” What does it mean?',
+   a:['Can never be filled','Can be filled again — re (again) + fill + able (can be)','Already full','A kind of bottle cap'],correct:1,
+   why:'Three pieces: re (again) + fill + able (can be) = can be filled again.'},
+  {q:'“The fearless firefighter walked straight in.” What does “fearless” mean?',
+   a:['Full of fear','Afraid of less things','Without fear — the -less suffix means without','Fearing lessons'],correct:2,
+   why:'fear + less = without fear — and walking straight in confirms it.'},
+  {q:'What’s the right ORDER of tools for cracking a new word?',
+   a:['Dictionary first, always','Guess wildly, then ask a friend','Parts build a guess → context tests it → dictionary referees','Skip the word entirely'],correct:2,
+   why:'Parts, then context, then dictionary. Fast tools first, the referee last.'},
+  {q:'Why can’t you ALWAYS trust word parts alone?',
+   a:['Parts are usually wrong','Some words only look snappable — a butterfly isn’t butter that flies — so context must test every guess','Only teachers may snap words','Prefixes are secret'],correct:1,
+   why:'Parts are powerful, not perfect. False snaps and twin prefixes are why the context check exists.'},
+  {q:'Ola read “invisible ink” as “inside something visible.” What went wrong?',
+   a:['She snapped the word apart, which is never allowed','in- only ever means inside','Nothing — she was right','She grabbed the wrong twin meaning of in- and skipped the context check, which shouts “can NOT be seen”'],correct:3,
+   why:'That was Ola’s trap. Twin prefixes need the sentence’s vote — and secret-message ink settles it.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['L.4.4']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Snap words into prefix, root, and suffix, build meanings from the starter set, test every guess against the sentence, and call the dictionary as referee when parts play tricks.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ola. Parts build the guess — the sentence gets a vote before you believe it.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredPt=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

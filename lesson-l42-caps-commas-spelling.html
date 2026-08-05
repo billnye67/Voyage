@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Caps, commas & spelling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Language</div>
+  <div class="card">
+    <div class="tag">Lesson · L.4.2</div>
+    <h1>Caps, commas &amp; spelling</h1>
+    <p>Every piece of writing goes out wearing three uniforms: capital letters in the right spots, commas doing their little traffic-cop jobs, and words spelled so readers don’t trip. Proofreaders check all three — and today you earn the badge.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ L.4.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Caps, commas &amp; spelling</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredPr=false;
+var TASKS=[
+  {ans:0, txt:'What’s broken here? <b>“my cousin lives in denver.”</b>',
+   opts:['Capitals — the sentence start and the city’s name need them','Commas — one is missing','Spelling — a word is misspelled'], won:'My cousin lives in Denver.'},
+  {ans:1, txt:'And here? <b>“Yes I packed apples grapes and pears.”</b>',
+   opts:['Capitals','Commas — after “Yes” and between the list items','Spelling'], won:'Yes, I packed apples, grapes, and pears.'},
+  {ans:2, txt:'And this one? <b>“The libary is my favorite plaice.”</b>',
+   opts:['Capitals','Commas','Spelling — two words came out scrambled'], won:'library · place'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Name what’s broken</h2>';
+  h+='<p>Proofreaders scan for three kinds of trouble. <b>Capitals</b>: sentence starts, names of people and places, and the word I. <b>Commas</b>: between items in a list, and after openers like Yes or No. <b>Spelling</b>: words that came out scrambled. Each patient below has exactly ONE kind of trouble — name it.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Patient '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickPr('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Scan for caps trouble, comma trouble, or scrambled words.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredPr=false;
+}
+function pickPr(i){
+  if(answeredPr||wonCount>=TASKS.length)return;answeredPr=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Two capitals missing: the sentence opener (My) and the city’s name (Denver). Names of places always get capitals.'
+           :wonCount===1?'✓ Three commas missing: after the opener “Yes,” and between the list items — apples, grapes, and pears.'
+                        :'✓ “Libary” lost its R (li-BRAR-y) and “plaice” grew an extra I. Library and place.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ One kind of trouble per patient. Missing capitals? Missing commas in a list or after Yes/No? Or a scrambled word? Try again.';
+    setTimeout(function(){if(step===0){answeredPr=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The proofreader’s checklist</h2>';
+  h+='<div class="work"><div class="lab">All three patients, healed</div>';
+  h+='my cousin lives in denver &nbsp;→&nbsp; <b>M</b>y cousin lives in <b>D</b>enver.<br>';
+  h+='Yes I packed apples grapes and pears &nbsp;→&nbsp; Yes<b>,</b> I packed apples<b>,</b> grapes<b>,</b> and pears.<br>';
+  h+='The libary is my favorite plaice &nbsp;→&nbsp; The <b>library</b> is my favorite <b>place</b>.</div>';
+  h+='<table><tr><th>Capitals go on</th><th>Commas go</th></tr>';
+  h+='<tr><td>every sentence start</td><td>between list items</td></tr>';
+  h+='<tr><td>names: people, places, days, months</td><td>after openers: Yes, No, Well</td></tr>';
+  h+='<tr><td>the word I, always</td><td>before a quotation (next beat!)</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Proofread in three sweeps — caps sweep, comma sweep, spelling sweep — instead of hunting everything at once. One kind of trouble per sweep is how the pros stay sharp.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Punctuating what people say</h2>';
+  h+='<p>When writing shows someone <b>talking</b>, the spoken words wear <b>quotation marks</b> — and a comma introduces them. A student wrote: <b>Mom said were leaving at noon.</b></p>';
+  h+='<div class="ask"><div class="q">Which fixed version is right?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Mom said, “We’re leaving at noon.”</button><button class="btn sm" onclick="checkPredict(\'b\')">“Mom said, were leaving” at noon.</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Dialogue’s dress code</div>';
+  h+='who spoke + said + comma: &nbsp;Mom said<b>,</b><br>';
+  h+='quotes hug ONLY the spoken words: &nbsp;“We’re leaving at noon.”<br>';
+  h+='capital starts the quote · end mark stays INSIDE the closing quote<br>';
+  h+='(and “were” needed its apostrophe: <b>we’re</b> = we are)</div>';
+  h+='<p>The marks answer one question for the reader: <b>exactly which words came out of the mouth?</b> Hug those words — no more, no less.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>That’s the dress code.</b> Comma after “said,” quotes hugging exactly the spoken words, capital to start them, period inside.';}
+  else{fb.className='fb no';fb.innerHTML='<b>The quotes grabbed the wrong words.</b> “Mom said” wasn’t spoken — it’s the tag. Quotes hug only what came out of the mouth: “We’re leaving at noon.”';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>The spelling traps that LOOK correct</h2>';
+  h+='<p>The sneakiest spelling errors are real words in the wrong job — sound-alike twins called <b>homophones</b>. No red squiggle will ever catch them:</p>';
+  h+='<table><tr><th>Twins</th><th>Memory hook</th></tr>';
+  h+='<tr><td>their / there / they’re</td><td>theIR = ownership · tHERE = a place · they’re = they are</td></tr>';
+  h+='<tr><td>your / you’re</td><td>you’re = you are — if “you are” fits, use the apostrophe</td></tr>';
+  h+='<tr><td>right / write</td><td>you WRite with a Wrist</td></tr>';
+  h+='<tr><td>to / too / two</td><td>tOO = extra O for “extra” · tWO = the number</td></tr></table>';
+  h+='<div class="work"><div class="lab">The swap test</div>';
+  h+='“___ going to love this” &nbsp;→&nbsp; try “you are”: fits! &nbsp;→&nbsp; <b>You’re</b><br>';
+  h+='“is that ___ backpack?” &nbsp;→&nbsp; “you are backpack”? nonsense &nbsp;→&nbsp; <b>your</b></div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>For apostrophe twins, run the swap test: expand the contraction (“they are”, “you are”) and see if the sentence still works. Machines can’t do this — readers can.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Tia says spell-check caught everything</h2>';
+  h+='<p>Tia ran spell-check, got zero red squiggles, and turned in: <b>“I want to right a book over their.”</b> <i>“No squiggles — it’s perfect,”</i> she said.</p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testTia()">Proofread it like a human</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">What the machine missed</div>';
+  h+='“right” — a real word… but she means WRITE (wrist!)<br>';
+  h+='“their” — a real word… but she means THERE (a place)<br>';
+  h+='spell-check only asks “is this a word?” — never “is it the RIGHT word?”<br>';
+  h+='fixed: &nbsp;I want to <b>write</b> a book over <b>there</b>.</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testTia();
+}
+function testTia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Zero squiggles, two errors.</b> Spell-check is a word-list, not a reader — every word Tia typed exists, so the machine shrugged. Homophone twins slide right past it. The human move: read the sentence for MEANING, run the memory hooks, and swap-test the apostrophe twins. Machines check letters; proofreaders check sense.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which words need capital letters in: “on saturday, maya and i visited chicago”?',
+   a:['Only the first word','On, Saturday, Maya, I, and Chicago — sentence start, day, names, I, and the city','Just Chicago','None — it’s fine'],correct:1,
+   why:'Caps go on the sentence start, days, people’s names, the word I, and place names. That’s five fixes.'},
+  {q:'Where do commas belong in: “No I need glue scissors and tape”?',
+   a:['No commas needed','After “glue” only','After “No,” and between list items: glue, scissors, and tape','One comma at the very end'],correct:2,
+   why:'A comma after the opener “No,” plus commas separating the list. Three traffic cops on duty.'},
+  {q:'Which sentence punctuates the dialogue correctly?',
+   a:['Dad said, “Dinner is ready.”','“Dad said, Dinner is ready.”','Dad said Dinner is ready.','Dad, said “Dinner is ready’’ .'],correct:0,
+   why:'Comma after the tag, quotes hugging exactly the spoken words, capital to start them, period inside the quotes.'},
+  {q:'“___ bringing ___ dog to the park.” Which pair is right?',
+   a:['Your / you’re','You’re / your — “you are bringing” fits the first blank, ownership fits the second','Your / your','You’re / you’re'],correct:1,
+   why:'Swap test: “You are bringing” ✓ so it’s you’re. “You are dog” ✗ so the second is your.'},
+  {q:'Tia’s spell-check passed “I want to right a book over their.” Why did it fail her?',
+   a:['The machine was broken','Spell-check only asks if each word EXISTS — it can’t tell she needed write and there','Right and their aren’t words','Spell-check never works'],correct:1,
+   why:'That was Tia’s trap. Homophones are real words in the wrong jobs — only a human reading for meaning catches them.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['L.4.2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Sweep for capitals, commas, and scrambled words one pass at a time, dress dialogue in its comma-and-quotes uniform, swap-test the apostrophe twins — and out-proofread any spell-checker.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Tia. Machines check letters; proofreaders check sense.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredPr=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Opinion writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Writing</div>
+  <div class="card">
+    <div class="tag">Lesson · W.4.1</div>
+    <h1>Opinion writing</h1>
+    <p>You already have opinions — big ones. Opinion WRITING is how you make grown-ups actually consider them: a clear claim, reasons that stand up, and an ending that lands. There’s a skeleton that turns “because I want to” into a letter that gets read twice.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ W.4.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Opinion writing</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredOp=false;
+var TASKS=[
+  {ans:1, txt:'You’re writing a piece arguing for a class pet. Which sentence is the <b>OPINION OPENER</b>?',
+   opts:['Hamsters sleep during the day.','Our class should get a class pet.','My cousin has a dog.'], won:'the claim, stated clearly'},
+  {ans:2, txt:'Which is a <b>REASON with support</b> — the middle of the skeleton?',
+   opts:['A pet would just be nice.','Also, pets are pets.','A pet would teach responsibility, because feeding it becomes a real daily job — for example, a class hamster needs food and fresh water every morning.'], won:'reason + because + example'},
+  {ans:0, txt:'Which is the <b>CONCLUSION</b> — the ending that lands?',
+   opts:['For these reasons, a class pet would make our room a better place to learn — and we’re ready for the job.','Anyway, that’s all I have to say, bye.','Hamsters. Just think about it.'], won:'restates and lands'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Pick the skeleton’s bones</h2>';
+  h+='<p>Opinion writing has a three-part skeleton. The <b>opinion opener</b> states your claim in one clear sentence. The <b>middle</b> gives reasons — each one linked with words like <b>because</b> and backed with <b>for example</b>. The <b>conclusion</b> restates the claim and lands it. Pick the right bone for each slot.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickOp('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Opener = the claim. Middle = reasons with because + examples. Ending = restate and land.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredOp=false;
+}
+function pickOp(i){
+  if(answeredOp||wonCount>=TASKS.length)return;answeredOp=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ “Our class should get a class pet” — the claim, whole and clear. The hamster fact and the cousin’s dog are floaters with no claim.'
+           :wonCount===1?'✓ Reason (responsibility) + BECAUSE (daily job) + FOR EXAMPLE (food and water every morning). That’s a load-bearing middle sentence.'
+                        :'✓ It circles back to the claim and lands with confidence. “Bye” and “just think about it” trail off instead of landing.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Match the bone to the slot: a clear claim opens, a because-plus-example carries the middle, a restate-and-land closes. Try again.';
+    setTimeout(function(){if(step===0){answeredOp=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The skeleton, assembled</h2>';
+  h+='<p>Snap your three bones together and you already have a working opinion piece:</p>';
+  h+='<div class="work"><div class="lab">The class-pet piece</div>';
+  h+='OPENER: &nbsp;&nbsp;&nbsp;Our class should get a class pet.<br>';
+  h+='REASON 1: &nbsp;It would teach responsibility, because feeding it is a real<br>daily job — for example, food and fresh water every morning.<br>';
+  h+='REASON 2: &nbsp;It would also calm our room, because caring for an animal<br>settles people down.<br>';
+  h+='CLOSER: &nbsp;&nbsp;&nbsp;For these reasons, a class pet would make our room a<br>better place to learn — and we’re ready for the job.</div>';
+  h+='<table><tr><th>Slot</th><th>Its job</th><th>Linking words</th></tr>';
+  h+='<tr><td>opener</td><td>state the claim, one sentence</td><td>I believe · should</td></tr>';
+  h+='<tr><td>middle</td><td>reasons, each backed up</td><td>because · for example · also</td></tr>';
+  h+='<tr><td>closer</td><td>restate and land</td><td>for these reasons · therefore</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Claim → backed reasons → landing. The linking words aren’t decoration — they’re the joints that hold the skeleton together and walk your reader from start to finish.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Three sentences, zero reasons</h2>';
+  h+='<p>A student’s whole “opinion piece”: <i>“Pizza Fridays would be amazing. Pizza Fridays would be so great. I really, really want Pizza Fridays.”</i></p>';
+  h+='<div class="ask"><div class="q">Is that a strong opinion piece?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">No — it’s one claim said three times, with zero reasons</button><button class="btn sm" onclick="checkPredict(\'b\')">Yes — three sentences of pure enthusiasm</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Skeleton X-ray</div>';
+  h+='opener? &nbsp;✓ sort of — a claim exists<br>';
+  h+='reasons with because? &nbsp;✗ none<br>';
+  h+='examples? &nbsp;✗ &nbsp;&nbsp;conclusion? &nbsp;✗ — just the claim again, louder<br>';
+  h+='rebuilt: &nbsp;“…because Fridays are our longest day, and a shared lunch<br>would give everyone something to look forward to.”</div>';
+  h+='<p>Repeating a claim is cheering, not arguing. Readers — especially principals and parents — only move when a <b>because</b> shows up with something checkable behind it.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Zero reasons.</b> One claim in three costumes. No because, no example, nothing for a reader to weigh.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Enthusiasm isn’t evidence.</b> Strip the repeats and one bare claim remains. Arguments move readers with because + example, not volume.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Write for the reader you want to convince</h2>';
+  h+='<p>An opinion piece has a target: a real reader who currently disagrees or hasn’t decided. Two moves make that reader take you seriously:</p>';
+  h+='<div class="work"><div class="lab">Move 1 — reasons THEY care about</div>';
+  h+='to a friend: &nbsp;“a pet would be fun” might work<br>';
+  h+='to the teacher: “a pet would teach responsibility and calm the room”<br>';
+  h+='same opinion — the reason is aimed at what YOUR READER values</div>';
+  h+='<div class="work"><div class="lab">Move 2 — respect over demands</div>';
+  h+='weak: &nbsp;&nbsp;“Give us a pet. Everyone wants one. Do it.”<br>';
+  h+='strong: “We understand a pet is extra work, so we’ve made a feeding<br>schedule that covers every school day.”</div>';
+  h+='<p>That second move — naming the other side’s worry and answering it — is the most grown-up sentence a young writer can produce. It tells the reader: I thought about you, not just me.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Aim your reasons at your reader’s values, and answer their biggest worry before they raise it. Opinion writing is a conversation you start politely — and win.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Devon’s letter is one long shout</h2>';
+  h+='<p>Devon’s letter to the principal, in full: <i>“WE NEED LONGER RECESS!!! LONGER RECESS NOW!!! EVERYONE AGREES!!!”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testDevon()">Rebuild it on the skeleton</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">From shout to letter</div>';
+  h+='OPENER: &nbsp;&nbsp;&nbsp;I believe our school should extend recess by ten minutes.<br>';
+  h+='REASON: &nbsp;&nbsp;&nbsp;because kids focus better after real exercise — for example,<br>our class settles fastest on gym days.<br>';
+  h+='ANSWER A WORRY: we know the schedule is tight, so ten minutes —<br>not thirty — feels fair.<br>';
+  h+='CLOSER: &nbsp;&nbsp;&nbsp;For these reasons, a slightly longer recess would help the<br>whole school learn. Thank you for considering it.</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testDevon();
+}
+function testDevon(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Devon had an opinion and a keyboard — but no skeleton.</b> Shouting states the claim nine times and supports it zero. The rebuild keeps his exact opinion, adds one checkable reason, answers the principal’s obvious worry, and lands politely. Same kid, same wish — but only one of these letters gets an answer.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What belongs in the OPENER of an opinion piece?',
+   a:['Your clearest statement of the claim','All of your reasons at once','A funny joke, always','The word “bye”'],correct:0,
+   why:'One clear claim opens the skeleton: “Our class should get a class pet.” Everything else hangs from it.'},
+  {q:'Which sentence is a REASON with real support?',
+   a:['“Field trips are great and also great.”','“Field trips help us learn, because we remember what we touch and see — for example, everyone still talks about the science museum.”','“Field trips. Trips in a field.”','“I like buses.”'],correct:1,
+   why:'Reason + because + a checkable example. The linking words carry the weight.'},
+  {q:'Why is “Pizza is amazing, pizza is great, I love pizza” a weak argument?',
+   a:['Pizza is actually bad','It’s too short to be wrong','It repeats one claim three times with zero reasons — cheering, not arguing','It needed capital letters'],correct:2,
+   why:'Repetition adds volume, not support. Readers move on because + example.'},
+  {q:'You’re asking the PRINCIPAL for longer recess. Which reason is aimed at that reader?',
+   a:['“Recess is super fun for me.”','“My friends all want it.”','“Kids focus better in class after exercise — our room settles fastest on gym days.”','“Because I said so.”'],correct:2,
+   why:'Aim at what the reader values: a principal cares about focus and learning, not just fun.'},
+  {q:'Devon’s all-caps letter failed. What did the rebuild add that shouting never can?',
+   a:['More exclamation points','Bigger letters','A backed reason, an answer to the reader’s worry, and a polite landing','A longer list of demands'],correct:2,
+   why:'That was Devon’s trap. The skeleton — reason, answered worry, landing — is what turns a wish into a letter that gets answered.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['W.4.1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Open with a clear claim, carry the middle with because-and-example reasons aimed at your reader, answer their worry before they raise it, and land a conclusion that gets your letter answered.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Devon. Shouting states a claim nine times and supports it zero.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredOp=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Firsthand & secondhand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Informational</div>
+  <div class="card">
+    <div class="tag">Lesson · RI.4.6</div>
+    <h1>Firsthand &amp; secondhand</h1>
+    <p>Two people write about the same flood. One was standing on the porch when the water came. The other wrote it up later from reports and interviews. Same event — completely different accounts, each knowing things the other can’t. Learn to tell them apart, and to pick the right one for your question.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RI.4.6</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Firsthand &amp; secondhand</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredAcct=false;
+var TASKS=[
+  {ans:0, txt:'Which account is <b>firsthand</b> — written by someone who was THERE?',
+   opts:['Account A — the writer lived it: I, we, my burning arms','Account B — the writer assembled it afterward','Neither one'], won:'A is the eyewitness'},
+  {ans:1, txt:'Which is <b>secondhand</b> — put together afterward from other sources?',
+   opts:['Account A','Account B — dates, totals, official quotes, no “I”','Both are secondhand'], won:'B gathered the records'},
+  {ans:1, txt:'You want to know what the flood <b>felt like</b>. Which account do you reach for?',
+   opts:['Account B — it has the exact numbers','Account A — the eyewitness carries the feeling','Feelings aren’t in accounts'], won:'feelings live in firsthand'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function passA(hl){
+  var t=hl?'<span class="hl">The water reached our porch by breakfast.</span> Dad and <span class="hl">I</span> stacked sandbags until <span class="hl">my arms burned</span>, and still it kept rising. <span class="hl">I will never forget the sound</span> — the whole creek humming like a machine.'
+        :'The water reached our porch by breakfast. Dad and I stacked sandbags until my arms burned, and still it kept rising. I will never forget the sound — the whole creek humming like a machine.';
+  return '<div class="passage"><div class="src">Account A — from Jess Rivera’s diary, written that night</div>'+t+'</div>';
+}
+function passB(hl){
+  var t=hl?'On May 3, Miller’s Creek rose <span class="hl">two meters in six hours</span>, flooding <span class="hl">forty homes</span>. Volunteers placed roughly <span class="hl">five thousand sandbags</span>. <span class="hl">Officials called it</span> the worst flood in thirty years.'
+        :'On May 3, Miller’s Creek rose two meters in six hours, flooding forty homes. Volunteers placed roughly five thousand sandbags. Officials called it the worst flood in thirty years.';
+  return '<div class="passage"><div class="src">Account B — from a county history book, written two years later</div>'+t+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Who was there?</h2>';
+  h+='<p>A <b>firsthand account</b> is written by someone who <b>experienced the event</b> — an eyewitness. Fingerprints: <b>I, we, my</b>, feelings, small close-up details. A <b>secondhand account</b> is written by someone who <b>gathered the story afterward</b> — from records, interviews, other accounts. Fingerprints: dates, totals, official quotes, and no “I” at the scene. Read both accounts of the Miller’s Creek flood, then answer.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passA(false)+passB(false);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickAcct('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Check the fingerprints: “I” at the scene, or totals gathered later?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredAcct=false;
+}
+function pickAcct(i){
+  if(answeredAcct||wonCount>=TASKS.length)return;answeredAcct=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ “Dad and I… my arms burned… I’ll never forget” — Jess was on that porch. Firsthand.'
+           :wonCount===1?'✓ Exact totals, official quotes, written two years later — a writer assembling the event from sources. Secondhand.'
+                        :'✓ Only the person who lived it can tell you the creek “hummed like a machine.” Feelings and textures live in firsthand accounts.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Ask one question: was this writer THERE? “I” and feelings say yes — firsthand. Totals, dates, and quotes from others say assembled later — secondhand. Try again.';
+    setTimeout(function(){if(step===0){answeredAcct=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Two accounts, two toolkits</h2>';
+  h+='<p>Here are both accounts with their fingerprints highlighted:</p>';
+  h+=passA(true)+passB(true);
+  h+='<table><tr><th></th><th>Firsthand (Jess)</th><th>Secondhand (history book)</th></tr>';
+  h+='<tr><td>writer</td><td>was there</td><td>gathered it later</td></tr>';
+  h+='<tr><td>fingerprints</td><td>I · we · feelings</td><td>dates · totals · quotes</td></tr>';
+  h+='<tr><td>view</td><td>one porch, up close</td><td>the whole county, from above</td></tr>';
+  h+='<tr><td>knows</td><td>how it felt and sounded</td><td>how big it really was</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Firsthand = experienced it; secondhand = assembled it. Neither is “better” — they’re different instruments. One records the feel; the other measures the size.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Who would know the number?</h2>';
+  h+='<div class="ask"><div class="q">A teacher asks: “Exactly how many homes flooded?” Which account is more likely to know — and why?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The secondhand one — it gathered records from the whole town</button><button class="btn sm" onclick="checkPredict(\'b\')">The firsthand one — Jess was actually there</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Why being there isn’t enough</div>';
+  h+='Jess’s view: ONE porch, one street, one soaked morning<br>';
+  h+='forty homes flooded — could she see them all? &nbsp;no<br>';
+  h+='the history book: collected reports from EVERY street, plus official counts<br>';
+  h+='<b>for totals and big-picture facts, secondhand wins</b></div>';
+  h+='<p>That’s the surprise of this skill: the eyewitness is the best source for what it was like — and often the <b>worst</b> source for how big it was. Nobody can eyewitness forty houses at once.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Secondhand.</b> Totals come from gathering — records, interviews, official counts. One porch can’t see forty homes.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Being there isn’t enough for totals.</b> Jess saw one street. The history book collected every street. For counts, gathered beats witnessed.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Match the account to the question</h2>';
+  h+='<p>Historians read BOTH kinds on purpose. The skill is knowing which to trust for which question:</p>';
+  h+='<table><tr><th>Your question</th><th>Reach for</th></tr>';
+  h+='<tr><td>what did it feel / sound / look like up close?</td><td>firsthand</td></tr>';
+  h+='<tr><td>how many? how big? when exactly?</td><td>secondhand</td></tr>';
+  h+='<tr><td>what did one person go through?</td><td>firsthand</td></tr>';
+  h+='<tr><td>what happened across the whole town?</td><td>secondhand</td></tr></table>';
+  h+='<div class="work"><div class="lab">Both at once — the full picture</div>';
+  h+='the history book: 40 homes, 5,000 sandbags, worst in 30 years<br>';
+  h+='the diary: what one pair of burning arms and one humming creek were like<br>';
+  h+='read together: you know how big it was AND what it cost one family</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>First name the kind of account — then ask if it can actually answer your question. Feel-questions go to eyewitnesses; size-questions go to gatherers; the full story needs both.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Gus says the diary is wrong</h2>';
+  h+='<p>Gus compared the accounts and declared: <i>“The diary never mentions the forty flooded homes or the five thousand sandbags. Jess must have gotten the flood wrong.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testGus()">Check what a diary CAN see</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Wrong vs narrow</div>';
+  h+='could Jess see forty homes from her porch? &nbsp;no — one street, one morning<br>';
+  h+='did she claim a total and get it wrong? &nbsp;no — she never claimed one<br>';
+  h+='is anything in her account false? &nbsp;nothing — it’s true AND narrow<br>';
+  h+='<b>a narrow view isn’t a wrong view — it’s a close-up</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testGus();
+}
+function testGus(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Gus graded a close-up for not being a map.</b> A firsthand account only promises what one person lived — and Jess delivered exactly that, truthfully. Missing the county totals isn’t an error; it’s the nature of a porch. Judge each account by its own job: the diary for the lived morning, the history book for the numbers.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What makes an account FIRSTHAND?',
+   a:['It uses big numbers','The writer experienced the event themselves','It was written recently','It’s always more accurate'],correct:1,
+   why:'Firsthand = the writer was there and lived it. The fingerprints are I, we, and felt details.'},
+  {q:'A county history book written two years after the flood, using records and interviews, is…',
+   a:['firsthand — it’s about a real event','secondhand — assembled afterward from sources','neither','a diary'],correct:1,
+   why:'The writer gathered the story instead of living it — dates, totals, and quotes are the giveaway.'},
+  {q:'Which question should you take to the FIRSTHAND account?',
+   a:['Exactly how many sandbags were used?','What did that morning feel and sound like?','How many homes flooded county-wide?','What did officials announce?'],correct:1,
+   why:'Feel, sound, and lived experience are the eyewitness’s specialty. Totals belong to the gatherers.'},
+  {q:'Why is a secondhand account usually BETTER for totals like “forty homes flooded”?',
+   a:['Its writer has a better memory','Secondhand writers gather records from everywhere — no eyewitness can see the whole event','Numbers are always secondhand by law','It isn’t — eyewitnesses know best'],correct:1,
+   why:'One porch sees one street. Gathered records see the whole county. For size, gathering beats witnessing.'},
+  {q:'Gus called the diary “wrong” for skipping the county totals. What did he miss?',
+   a:['Diaries always contain totals','The diary was lying','A narrow view isn’t a wrong view — each account should be judged by its own job','The history book was firsthand'],correct:2,
+   why:'That was Gus’s trap. The diary truthfully delivered one lived morning — totals were never its job.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RI.4.6']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Tell an eyewitness from a gatherer by their fingerprints, send feel-questions to firsthand and size-questions to secondhand, and never mistake a narrow view for a wrong one.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Gus. A close-up isn’t wrong for not being a map.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredAcct=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

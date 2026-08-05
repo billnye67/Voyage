@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Point of view</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.6</div>
+    <h1>Point of view</h1>
+    <p>Every story is told through somebody’s eyes — and whose eyes changes everything. A race feels different from inside a runner’s pounding chest than from the stands. A prank is hilarious to the prankster and awful to the victim. Learn to spot who’s telling the story, and what their eyes can and can’t see.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.6</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Point of view</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredPov=false;
+var TASKS=[
+  {fig:0, ans:0, txt:'Who is telling <b>version A</b> of race day?', won:'first person — a runner'},
+  {fig:1, ans:1, txt:'Who is telling <b>version B</b>?', won:'third person — outside'},
+  {fig:2, ans:2, txt:'And <b>version C</b> — look at what the narrator KNOWS.', won:'third person, all-knowing'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- versions of race day ---------- */
+function verA(hl){
+  var t=hl?'<span class="hl">My</span> hands wouldn’t stop shaking as <span class="hl">I</span> laced up. <span class="hl">I</span> could hear <span class="hl">my</span> own heartbeat over the crowd.'
+         :'My hands wouldn’t stop shaking as I laced up. I could hear my own heartbeat over the crowd.';
+  return '<div class="passage"><div class="src">Version A</div>'+t+'</div>';
+}
+function verB(hl){
+  var t=hl?'Kim’s hands shook as <span class="hl">she</span> laced up. <span class="hl">She</span> bounced on <span class="hl">her</span> toes, eyes locked on the track.'
+         :'Kim’s hands shook as she laced up. She bounced on her toes, eyes locked on the track.';
+  return '<div class="passage"><div class="src">Version B</div>'+t+'</div>';
+}
+function verC(hl){
+  var t=hl?'Kim <span class="hl">hoped her laces would hold</span>. Across the track, Dee was already <span class="hl">imagining the gold medal around her neck</span>.'
+         :'Kim hoped her laces would hold. Across the track, Dee was already imagining the gold medal around her neck.';
+  return '<div class="passage"><div class="src">Version C</div>'+t+'</div>';
+}
+function figFor(i){return i===0?verA():i===1?verB():verC();}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Whose eyes am I looking through?</h2>';
+  h+='<p>The teller of a story is the <b>narrator</b>, and there are two big setups. <b>First person</b>: a character inside the story tells it — fingerprints are <b>I, me, my</b>. <b>Third person</b>: an outside voice tells it — fingerprints are <b>he, she, they</b> and names. And third-person narrators differ in what they <b>know</b>: some follow one character; some see inside <b>everyone’s</b> head. Identify each version’s narrator.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickPov(0)">First person — a character tells it: I, me, my</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickPov(1)">Third person — an outside voice follows one character</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickPov(2)">Third person, all-knowing — the voice sees inside everyone’s head</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Check the pronoun fingerprints first, then check what the narrator knows.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredPov=false;
+}
+function pickPov(i){
+  if(answeredPov||wonCount>=TASKS.length)return;answeredPov=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ My, I, I, my — the runner herself is talking. We’re inside her chest, hearing her heartbeat.'
+           :wonCount===1?'✓ “Kim… she… her” — an outside voice watching Kim. We see her shake, but only from outside.'
+                        :'✓ This voice knows Kim’s hopes AND Dee’s daydream — two heads at once. No character could know both; that’s the all-knowing narrator.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Fingerprints first: I/me/my means a character is talking. He/she/names means an outside voice — then ask how many heads it can see into. Try again.';
+    setTimeout(function(){if(step===0){answeredPov=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The narrator’s fingerprints</h2>';
+  h+='<p>Here are the three versions with their fingerprints highlighted:</p>';
+  h+=verA(true)+verB(true)+verC(true);
+  h+='<table><tr><th>Setup</th><th>Fingerprints</th><th>What it can know</th></tr>';
+  h+='<tr><td>first person</td><td>I · me · my</td><td>one head — its own</td></tr>';
+  h+='<tr><td>third person</td><td>he · she · they · names</td><td>often follows one character</td></tr>';
+  h+='<tr><td>third, all-knowing</td><td>same pronouns…</td><td>…but inside EVERY head</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Find the narrator in two steps: <b>pronouns</b> tell you first or third person; <b>what the voice knows</b> tells you how far it can see. Version C’s giveaway wasn’t a pronoun — it was knowing two heads at once.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Same event, different eyes</h2>';
+  h+='<p>At lunch, Theo balanced a rubber spider on Ada’s milk carton. Here’s Theo telling it:</p>';
+  h+='<div class="passage"><div class="src">Theo’s version</div>It was the funniest thing I’ve ever done. Ada’s jump was legendary — the whole table was crying laughing. Best lunch of the year.</div>';
+  h+='<div class="ask"><div class="q">Now Ada tells the same event. How will her version feel?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Different — embarrassing, maybe mean</button><button class="btn sm" onclick="checkPredict(\'b\')">The same — facts are facts</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="passage"><div class="src">Ada’s version</div>Everyone was laughing and my face went hot. I laughed too, so no one would see how much I wanted to disappear.</div>';
+  h+='<div class="work"><div class="lab">Same event, two truths</div>';
+  h+='the FACTS match: spider, jump, laughter<br>';
+  h+='the FEELING flips: “legendary” for Theo — “wanted to disappear” for Ada<br>';
+  h+='and Ada knows something Theo can’t see: her laugh was fake</div>';
+  h+='<p>That’s why point of view matters: a first-person narrator gives you their <b>inside truth</b> — and hides everyone else’s. Neither version lies. Neither version is the whole story.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Different.</b> Same spider, same jump — but from inside Ada, “funny” turns into “wanted to disappear.”';}
+  else{fb.className='fb no';fb.innerHTML='<b>The facts match — the feeling flips.</b> Theo can’t see inside Ada, and her version shows what his missed: the laugh was fake.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>What each narrator can’t do</h2>';
+  h+='<p>Choosing a narrator is choosing a trade. First person is close and warm — you live in one head — but it’s <b>limited</b>: it can’t know other people’s thoughts, and it can even be <b>wrong</b> (Theo truly believed everyone loved the prank). Third person trades closeness for reach.</p>';
+  h+='<div class="work"><div class="lab">The trade, on the prank story</div>';
+  h+='first person (Theo): &nbsp;his glee up close — Ada’s hurt invisible<br>';
+  h+='first person (Ada): &nbsp;&nbsp;her secret — Theo’s reasons invisible<br>';
+  h+='third, all-knowing: &nbsp;&nbsp;both heads — but nobody’s voice up close</div>';
+  h+='<p>So when you read, always ask two questions: <b>whose eyes am I getting?</b> and <b>what can’t these eyes see?</b> The second question is where sharp readers live — it tells you what the story might be hiding.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every narrator has blind spots. Naming the point of view also names what’s missing — and stories love to hide their surprises in exactly those spots.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Lily says the author is in the story</h2>';
+  h+='<p>Lily read a book that begins: <i>“I never meant to steal the moon. My name is Max, and this is my confession.”</i> She announced: <i>“The author’s name must be Max, and this really happened to him.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testLily()">Untangle it</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Author vs narrator</div>';
+  h+='the AUTHOR: &nbsp;a real person who wrote the book<br>';
+  h+='the NARRATOR: a voice the author invented to tell it — here, “Max”<br>';
+  h+='did a real person steal the moon? &nbsp;…no<br>';
+  h+='<b>“I” in a story is a costume the author wears — not a confession</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testLily();
+}
+function testLily(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Lily mixed up the writer and the voice.</b> First person means a CHARACTER says “I” — and that character is as invented as the stolen moon. The author built Max the way they built every other character. When a story says “I,” ask “which made-up person is this?” — not “which real person?”';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'“I grabbed my backpack and ran.” What point of view is this?',
+   a:['First person — the character telling their own story','Third person','All-knowing','No point of view'],correct:0,
+   why:'I and my are first person’s fingerprints — a character inside the story is talking.'},
+  {q:'“Jonah grabbed his backpack. He didn’t notice the note fall out.” What’s the narrator here?',
+   a:['First person — Jonah is talking','Third person — an outside voice watching Jonah','Jonah’s backpack','The author confessing'],correct:1,
+   why:'Jonah… he… his — an outside voice. (And it knows something Jonah doesn’t — narrators can see more than their characters.)'},
+  {q:'A narrator tells you what THREE different characters are secretly thinking. What kind is it?',
+   a:['First person','A confused narrator','Third person, all-knowing — it sees inside every head','Three narrators taking turns'],correct:2,
+   why:'No single character could know three heads. A voice with keys to every mind is the all-knowing third person.'},
+  {q:'Theo called the prank “legendary”; Ada “wanted to disappear.” What does this show about point of view?',
+   a:['One of them is lying','The same event feels different through different eyes — and each narrator has blind spots','Pranks are always funny','Third person is better'],correct:1,
+   why:'Same facts, flipped feeling — and Theo’s eyes literally could not see Ada’s hidden hurt. POV decides what you get and what you miss.'},
+  {q:'A book starts “My name is Max, and this is my confession.” Lily says the author is Max. What’s the truth?',
+   a:['She’s right — “I” always means the author','Max is the narrator — an invented character the author built to tell the story','Books can’t say “I”','Max wrote the book himself'],correct:1,
+   why:'That was Lily’s trap. The “I” voice is a costume: a made-up narrator, no more real than the stolen moon.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.6']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Spot first vs third person by pronoun fingerprints, test how far a narrator can see, expect the same event to feel different through different eyes, and never confuse a narrator with the author.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Lily. The “I” in a story is a costume, not a confession.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredPov=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

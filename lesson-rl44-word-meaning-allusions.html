@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Word meanings & myth words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .myth{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .mcard{background:#fff;border:2px solid var(--blue-line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.15s}
+  .mcard:hover{border-color:var(--blue)}
+  .mcard.open{border-color:var(--green);background:rgba(46,125,91,.06);cursor:default}
+  .mname{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+  .mcard.open .mname{color:var(--green)}
+  .mstory{font-size:14.5px;line-height:1.5;margin-top:8px;color:var(--ink)}
+  .mhint{font-size:13px;color:var(--muted);margin-top:8px;font-family:'Space Mono',monospace}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.myth{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.4</div>
+    <h1>Word meanings &amp; myth words</h1>
+    <p>Stories are full of words nobody taught you — and you can crack most of them without a dictionary. The words around them leak clues. And some words are secret doorways to ancient myths: call a chore “Herculean” and a three-thousand-year-old strongman walks into your sentence. This lesson hands you both keys.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Word meanings &amp; myth words</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredWord=false;
+var TASKS=[
+  {ans:2, txt:'What does <b>“hoard”</b> mean here?',
+   opts:['A kind of dragon','A loud roar','A giant pile of collected treasure'], won:'hoard = treasure pile'},
+  {ans:0, txt:'What does <b>“dread”</b> mean here?',
+   opts:['Heavy fear of what’s coming','Excitement','Hunger'], won:'dread = heavy fear'},
+  {ans:1, txt:'The story calls stealing the cup a <b>“Herculean task.”</b> What does that mean?',
+   opts:['A task done with a sword','A task needing almost impossible strength and effort','A task done in Greece'], won:'Herculean = near-impossible'}
+];
+var predictDone=false,mistakeTested=false;
+var mythOpen=0;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- passages ---------- */
+function passDragon(hl){
+  var s='<div class="passage"><div class="src">The dragon’s cave</div>';
+  if(hl){
+    s+='The dragon slept on its <b>hoard</b> — <span class="hl">mountains of gold coins, crowns, and jeweled cups it had collected for a hundred years</span>. Finn crept closer, <b>dread</b> making his legs heavy and <span class="hl">his heart hammer against his ribs</span>. Stealing the silver cup would be a <b>Herculean</b> task: <span class="hl">one wrong step and the whole mountain of coins would slide</span>.';
+  } else {
+    s+='The dragon slept on its <b>hoard</b> — mountains of gold coins, crowns, and jeweled cups it had collected for a hundred years. Finn crept closer, <b>dread</b> making his legs heavy and his heart hammer against his ribs. Stealing the silver cup would be a <b>Herculean</b> task: one wrong step and the whole mountain of coins would slide.';
+  }
+  return s+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Crack the word from its neighbors</h2>';
+  h+='<p>When a word is strange, don’t stop — <b>read the words around it</b>. They leak the meaning: what it’s made of, what it does, how it feels. One more key before you start: <b>Hercules</b> was a hero from Greek myths, famous for superhuman strength, who was given twelve nearly impossible jobs — so when a story borrows his name, it drags his whole legend along. Crack all three bold words.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passDragon(false);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickWord('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Read the sentence around the bold word — it’s leaking the answer.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredWord=false;
+}
+function pickWord(i){
+  if(answeredWord||wonCount>=TASKS.length)return;answeredWord=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The dash gives it away: “— mountains of gold coins, crowns, and jeweled cups it had collected.” The sentence defines hoard right after using it.'
+           :wonCount===1?'✓ Heavy legs and a hammering heart — the body language of fear. The clues around “dread” act it out.'
+                        :'✓ Hercules = the impossible-jobs strongman. Borrow his name and the task becomes huge and nearly impossible — which fits: one wrong step and the coins slide.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ The neighbors know. Look for a definition after a dash, body-language clues, or a borrowed hero’s story. Try again.';
+    setTimeout(function(){if(step===0){answeredWord=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Two keys for locked words</h2>';
+  h+='<p>Here’s the passage with its leaks highlighted — every bold word had its meaning sitting right beside it:</p>';
+  h+=passDragon(true);
+  h+='<div class="work"><div class="lab">Key 1 — context clues</div>';
+  h+='hoard — defined right after the dash: coins, crowns, cups, collected<br>';
+  h+='dread — acted out by the body: heavy legs, hammering heart</div>';
+  h+='<div class="work"><div class="lab">Key 2 — the myth key</div>';
+  h+='Herculean — borrowed from Hercules, the hero of impossible jobs<br>';
+  h+='name from a myth = the word carries that myth’s whole story</div>';
+  h+='<table><tr><th>Clue type</th><th>What to look for</th></tr>';
+  h+='<tr><td>definition clue</td><td>a dash or comma, then an explanation</td></tr>';
+  h+='<tr><td>acting-out clue</td><td>what the word makes people do or feel</td></tr>';
+  h+='<tr><td>myth clue</td><td>a name from an old story, carrying its legend</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Locked word? Try the context key first — the neighbors usually leak it. If the word is somebody’s <b>name</b>, try the myth key: ask whose story it borrows.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Pandora’s box</h2>';
+  h+='<p>Another myth, quickly: <b>Pandora</b> was given a sealed jar and told never to open it. Curiosity won. When she lifted the lid, every trouble in the world — sickness, worry, quarrels — flew out, and no one could ever stuff them back in.</p>';
+  h+='<div class="passage"><div class="src">In a story today</div>“Don’t ask Grandpa about the old feud,” Mom warned. “You’ll be opening <b>Pandora’s box</b>.”</div>';
+  h+='<div class="ask"><div class="q">What is Mom really saying?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Asking will unleash a mess of troubles nobody can put back</button><button class="btn sm" onclick="checkPredict(\'b\')">Grandpa keeps a nice gift in a box</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">The myth key, turned</div>';
+  h+='whose story? &nbsp;Pandora — opened the jar, troubles escaped forever<br>';
+  h+='carry it over: &nbsp;one question &nbsp;→&nbsp; a flood of old troubles, impossible to re-seal<br>';
+  h+='<b>meaning: starting something that unleashes problems you can’t undo</b></div>';
+  h+='<p>Notice there’s no actual box anywhere. Myth words are never about the literal thing — they’re about the <b>shape of the old story</b> happening again.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>That’s it.</b> One question lifts the lid, and old troubles fly out — Pandora’s story, replayed at the dinner table.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Remember the myth.</b> Pandora’s jar held troubles, not gifts — and once out, they never went back. Mom means: don’t unleash the mess.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+var MYTHS=[
+  ['MIDAS TOUCH','King Midas wished that everything he touched would turn to gold — and it did, even his food. Today it means: <b>everything this person tries turns out golden — they succeed at whatever they touch.</b>'],
+  ['ACHILLES HEEL','The warrior Achilles was invincible — except for one heel, the only place he could be hurt. Today it means: <b>a person’s single weak spot.</b>'],
+  ['TROJAN HORSE','Soldiers hid inside a giant wooden horse “gift” to sneak into the city of Troy. Today it means: <b>a trick hidden inside something that looks like a gift.</b>']
+];
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>A starter pack of myth words</h2>';
+  h+='<p>These three show up everywhere — books, news, playground arguments. Click each card to open its myth:</p>';
+  h+='<div class="myth">';
+  for(var i=0;i<MYTHS.length;i++){
+    h+='<div class="mcard'+(i<mythOpen?' open':'')+'" id="m'+i+'" onclick="openMyth('+i+')"><div class="mname">'+MYTHS[i][0]+'</div>';
+    h+=(i<mythOpen)?'<div class="mstory">'+MYTHS[i][1]+'</div>':'<div class="mhint">click to open the myth</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  h+='<div id="mywork" class="'+(mythOpen>=3?'':'hide')+'"><div class="work"><div class="lab">Each one in the wild</div>';
+  h+='“Rima has the Midas touch — every team she joins wins.”<br>';
+  h+='“Spelling is my Achilles heel.” (one weak spot in a strong speller… er, reader)<br>';
+  h+='“That free game is a Trojan horse — it fills your tablet with ads.”</div></div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A myth word is a whole story folded into a name. To read one: remember the story, find its shape — golden success, one weakness, a trick in a gift — and lay that shape over the sentence.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mythOpen>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function openMyth(i){
+  if(i!==mythOpen)return;
+  mythOpen++;
+  beat4();
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Jade says “Midas touch” means greedy</h2>';
+  h+='<p>Jade heard: <i>“Coach says Rima has the Midas touch.”</i> and decided: <i>“Midas loved gold, so that means Rima is greedy.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testJade()">Lay the story over the sentence</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Testing Jade’s meaning</div>';
+  h+='try “greedy”: &nbsp;“Coach says Rima is greedy — every team she joins wins”? &nbsp;doesn’t fit<br>';
+  h+='the story’s SHAPE: whatever Midas touched turned to gold<br>';
+  h+='lay it over Rima: whatever team she touches turns golden — wins<br>';
+  h+='<b>real meaning: she succeeds at everything she tries</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testJade();
+}
+function testJade(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Jade grabbed one fact from the myth instead of its shape.</b> Yes, Midas liked gold — but the phrase borrows what HAPPENED: everything he touched turned golden. Laid over the sentence, that means Rima’s teams all win. Always check your meaning against the sentence it lives in — “greedy” made Coach’s compliment into an insult, and the sentence refused to fit.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'You hit a word you’ve never seen. What’s the FIRST key to try?',
+   a:['Skip the whole page','Read the words around it — they usually leak the meaning','Ask what the title means','Sound it out louder'],correct:1,
+   why:'Context first: definitions after dashes, acting-out clues, neighbor words. The sentence usually hands you the meaning.'},
+  {q:'In the dragon story, how did we crack “hoard”?',
+   a:['We already knew it','The dash right after it listed what it was: coins, crowns, cups, collected','The dragon explained it','We looked at the picture'],correct:1,
+   why:'A definition clue: the sentence used the word, then defined it after the dash.'},
+  {q:'“Cleaning the whole park by sunset is a Herculean task.” That means the task is…',
+   a:['fun and quick','done with ancient tools','huge — needing almost impossible strength and effort','only for adults'],correct:2,
+   why:'Hercules = the hero of twelve nearly impossible jobs. His name drags that legend into the sentence.'},
+  {q:'“Telling one small lie opened Pandora’s box.” What happened?',
+   a:['The lie unleashed a mess of troubles that can’t be undone','Someone got a present','A real box was opened','The lie was never noticed'],correct:0,
+   why:'Pandora’s jar released troubles no one could put back — the phrase means starting an un-undoable mess.'},
+  {q:'Jade said “Midas touch” means greedy. What’s the right way to read a myth word?',
+   a:['Pick any fact about the character','Use the SHAPE of the story — what happened — and check it fits the sentence','Myth words mean whatever sounds bad','Ask Midas'],correct:1,
+   why:'That was Jade’s trap. Borrow the story’s shape (everything touched turns golden = success everywhere), then test it in the sentence.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.4']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Crack unknown words from definition and acting-out clues, spot a myth word by its borrowed name, unfold its story, and lay the story’s shape over the sentence to read it right.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Jade. A myth word borrows the story’s shape — not one random fact about its hero.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredWord=false;predictDone=false;mistakeTested=false;mythOpen=0;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

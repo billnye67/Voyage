@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Reasons & evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Informational</div>
+  <div class="card">
+    <div class="tag">Lesson · RI.4.8</div>
+    <h1>Reasons &amp; evidence</h1>
+    <p>When an author wants you to believe something, they build a tower: the big claim on top, reasons holding it up, and evidence — numbers, studies, facts — holding up the reasons. Learn to see the tower, and you can tell a solid argument from one that’s standing on air.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RI.4.8</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reasons &amp; evidence</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredArg=false;
+var TASKS=[
+  {ans:2, txt:'What is the author’s <b>POINT</b> — the big claim the whole article pushes?',
+   opts:['Shaded pavement is 10 degrees cooler','Drivers slow down on green streets','Cities should plant more street trees'], won:'the claim on top'},
+  {ans:0, txt:'Which of these is a <b>REASON</b> — a why that holds up the point?',
+   opts:['Trees cool their whole block','Cities should plant more trees','A study found something'], won:'a why under the claim'},
+  {ans:1, txt:'And which is <b>EVIDENCE</b> — proof holding up the cooling reason?',
+   opts:['Trees are nice to look at','Shaded pavement can be 10 degrees cooler on hot days','Cities should plant trees'], won:'the 10-degree proof'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function passTrees(hl){
+  var s='<div class="passage"><div class="src">An opinion article — “Green Streets”</div>';
+  if(hl){
+    s+='<span class="hl">Cities should plant more street trees.</span> Trees cool their whole block — shaded pavement can be <b>10 degrees cooler</b> on hot days. Trees also scrub the air, <b>trapping dust on their leaves</b> before it reaches your lungs. And tree-lined streets are safer: <b>one study found drivers slow down</b> where streets turn green.';
+  } else {
+    s+='Cities should plant more street trees. Trees cool their whole block — shaded pavement can be 10 degrees cooler on hot days. Trees also scrub the air, trapping dust on their leaves before it reaches your lungs. And tree-lined streets are safer: one study found drivers slow down where streets turn green.';
+  }
+  return s+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Find the tower’s three floors</h2>';
+  h+='<p>Arguments have three floors. The <b>point</b> is the big claim — what the author wants you to believe. <b>Reasons</b> are the whys that hold the point up. <b>Evidence</b> is the proof under each reason: numbers, facts, studies. Read the article and find one of each.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passTrees(false);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickArg('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Point = the should-sentence. Reason = a why. Evidence = the proof with teeth.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredArg=false;
+}
+function pickArg(i){
+  if(answeredArg||wonCount>=TASKS.length)return;answeredArg=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ “Cities SHOULD plant more street trees” — the should-sentence is the claim everything else exists to hold up.'
+           :wonCount===1?'✓ “Trees cool their block” answers WHY cities should plant them. That’s a reason — one pillar under the point.'
+                        :'✓ “10 degrees cooler” is proof with teeth — a measurable fact propping up the cooling reason.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Sort by floor: the claim says SHOULD. A reason answers WHY. Evidence is checkable proof — a number, a fact, a study. Try again.';
+    setTimeout(function(){if(step===0){answeredArg=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The whole tower, mapped</h2>';
+  h+=passTrees(true);
+  h+='<div class="work"><div class="lab">Point → reasons → evidence</div>';
+  h+='POINT: &nbsp;cities should plant more street trees<br>';
+  h+='&nbsp;&nbsp;reason 1: trees cool the block &nbsp;→&nbsp; proof: 10° cooler pavement<br>';
+  h+='&nbsp;&nbsp;reason 2: trees clean the air &nbsp;→&nbsp; proof: leaves trap dust<br>';
+  h+='&nbsp;&nbsp;reason 3: green streets are safer &nbsp;→&nbsp; proof: a study on driver speed</div>';
+  h+='<table><tr><th>Floor</th><th>Sounds like</th><th>Its job</th></tr>';
+  h+='<tr><td>point</td><td>“should…” / “is the best…”</td><td>what to believe</td></tr>';
+  h+='<tr><td>reason</td><td>“because it…”</td><td>why to believe it</td></tr>';
+  h+='<tr><td>evidence</td><td>numbers · facts · studies</td><td>proof you could check</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Explaining HOW an author supports a point means drawing this map: the claim, each reason under it, and the evidence under each reason. If a floor is empty, you’ll see it instantly.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>A reason with nothing under it</h2>';
+  h+='<p>Suppose the author had added a fourth reason: <i>“Also, trees are simply wonderful.”</i> — and stopped there. No number, no fact, no study.</p>';
+  h+='<div class="ask"><div class="q">Does that reason make the argument stronger?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Barely — with no evidence under it, it’s just an opinion on stilts</button><button class="btn sm" onclick="checkPredict(\'b\')">Yes — four reasons beat three</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Weigh the reasons</div>';
+  h+='“trees cool the block” + 10° proof &nbsp;→&nbsp; load-bearing<br>';
+  h+='“trees are wonderful” + nothing &nbsp;→&nbsp; decoration<br>';
+  h+='counting reasons tells you little — <b>checking under them tells you everything</b></div>';
+  h+='<p>Careful readers press on each reason like testing a ladder rung: is there evidence under this, or does it swing loose? An argument is only as strong as its supported rungs.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Barely.</b> A reason with no proof under it is just another opinion — it adds words, not strength.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Count the proof, not the reasons.</b> “Trees are wonderful” has nothing under it — an opinion on stilts. It adds length, not strength.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>The kinds of proof authors reach for</h2>';
+  h+='<p>Once you’re checking under reasons, it helps to know what evidence looks like in the wild:</p>';
+  h+='<table><tr><th>Kind of evidence</th><th>Example from Green Streets</th></tr>';
+  h+='<tr><td>a measurement</td><td>shaded pavement: 10 degrees cooler</td></tr>';
+  h+='<tr><td>an observable fact</td><td>leaves trap dust</td></tr>';
+  h+='<tr><td>a study</td><td>drivers slow down on green streets</td></tr>';
+  h+='<tr><td>an expert or example</td><td>(none here — the author could add one)</td></tr></table>';
+  h+='<div class="work"><div class="lab">The explaining frame</div>';
+  h+='“The author supports the point that ___<br>';
+  h+='&nbsp;with the reason that ___,<br>';
+  h+='&nbsp;backed by the evidence that ___.”<br>';
+  h+='filled: supports MORE TREES with the reason they COOL BLOCKS,<br>backed by the 10-DEGREE measurement</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>When a question asks “how does the author support this?”, answer with the frame: point, reason, evidence — naming the actual proof, not just saying “with facts.”</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Leo says repeating counts as proving</h2>';
+  h+='<p>Leo summarized a different article: <i>“The author proved skateparks are great, because she said skateparks are great in the first paragraph, the middle, AND the ending. Three times!”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testLeo()">Check under the claim</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Repetition vs support</div>';
+  h+='saying it three times = the SAME floor, restated<br>';
+  h+='did any reason appear? &nbsp;any number, fact, or study? &nbsp;<b>none</b><br>';
+  h+='the tower: a claim… floating on nothing, three times<br>';
+  h+='<b>repeating a point louder never makes it stronger</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testLeo();
+}
+function testLeo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Leo mistook volume for support.</b> Saying a claim three times builds three copies of the same top floor — with nothing underneath any of them. Support means REASONS with EVIDENCE: whys with proof. When you check an argument, don’t count how often the point appears; check what’s holding it up.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'In “Green Streets,” what is the author’s POINT?',
+   a:['Pavement can be 10 degrees cooler','Cities should plant more street trees','Drivers slow down sometimes','Leaves are green'],correct:1,
+   why:'The should-sentence is the claim — everything else in the article exists to hold it up.'},
+  {q:'What’s the difference between a REASON and EVIDENCE?',
+   a:['They’re the same','A reason is a why; evidence is the checkable proof under that why','Evidence comes first in the paragraph','Reasons use numbers'],correct:1,
+   why:'Reason: “trees cool the block.” Evidence under it: “10 degrees cooler.” The why, then the proof.'},
+  {q:'Which of these is EVIDENCE, not a reason or a claim?',
+   a:['Cities need more trees','Trees make streets better','One study found drivers slow down on tree-lined streets','Trees are wonderful'],correct:2,
+   why:'A study result is checkable proof — the bottom floor of the tower. The others are claims and unsupported opinions.'},
+  {q:'An author gives five reasons but zero evidence. How strong is the argument?',
+   a:['Very strong — five is a lot','Weak — reasons without proof are opinions on stilts','Perfect — evidence isn’t needed','Impossible to say'],correct:1,
+   why:'Count the proof, not the reasons. Five unsupported whys are five opinions standing on air.'},
+  {q:'Leo said the author “proved it” by repeating the claim three times. What did he miss?',
+   a:['Three isn’t enough — five repeats would prove it','Repetition restates the claim but never supports it — support means reasons with evidence','Claims can’t be repeated','The ending doesn’t count'],correct:1,
+   why:'That was Leo’s trap. A claim repeated is just louder, not stronger — check what’s underneath.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RI.4.8']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Map any argument’s tower — point, reasons, evidence — press on each rung to see if proof holds it, name the kinds of evidence authors use, and never mistake repetition for support.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Leo. Louder isn’t stronger — check what’s underneath.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredArg=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

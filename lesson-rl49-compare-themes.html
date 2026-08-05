@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Themes across cultures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.9</div>
+    <h1>Themes across cultures</h1>
+    <p>A lion in ancient Greece. A crane in old Japan. Different animals, different countries, stories told thousands of miles apart — and somehow they’re arguing the exact same lesson. Themes are travelers: they cross oceans and centuries wearing whatever clothes each culture gives them. Learn to spot one under any costume.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.9</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Themes across cultures</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredThm=false;
+var TASKS=[
+  {ans:0, txt:'What is the theme of <b>the Greek tale</b>?',
+   opts:['Kindness comes back — even the smallest friend can save you','Lions are dangerous and should be avoided','Mice can chew through anything'], won:'kindness repaid — Greece'},
+  {ans:1, txt:'What is the theme of <b>the Japanese tale</b>?',
+   opts:['Cranes make beautiful cloth','Kindness comes back in surprising ways','Never let strangers stay the night'], won:'kindness repaid — Japan'},
+  {ans:1, txt:'Now compare the two tales. What’s true?',
+   opts:['They teach completely different lessons','Same theme in both — wearing different animals, places, and customs','Only one of them can be the “real” story'], won:'one theme, two costumes'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- the two tales ---------- */
+function passLion(){
+  return '<div class="passage"><div class="src">The Lion and the Mouse — a fable from ancient Greece</div>A lion caught a tiny mouse under his paw. “Spare me,” squeaked the mouse, “and one day I’ll repay you.” The lion laughed at the idea — but let her go. Weeks later, hunters trapped the lion in a rope net. The mouse heard his roar, gnawed through the ropes, and set the great lion free.</div>';
+}
+function passCrane(){
+  return '<div class="passage"><div class="src">The Grateful Crane — a folktale from Japan</div>On a snowy road, a poor farmer freed a crane tangled in a snare. That winter, a mysterious young woman came to his door and wove him cloth so beautiful it sold for a fortune — weaving in secret, night after night. She was the crane he had saved, repaying his kindness thread by thread.</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Two tales, one heartbeat?</h2>';
+  h+='<p>A <b>theme</b> is the lesson about life a story argues through its events — what the story rewards is what it believes. Read both tales below: one told in ancient Greece, one in old Japan, by people who never met. Find each tale’s theme, then compare them.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passLion()+passCrane();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickThm('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Ask each tale: what did the events reward?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredThm=false;
+}
+function pickThm(i){
+  if(answeredThm||wonCount>=TASKS.length)return;answeredThm=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The lion’s one mercy comes back and saves his life — the story rewards kindness, delivered by the smallest character in it.'
+           :wonCount===1?'✓ One act of kindness on a snowy road returns as a fortune, woven in secret. Same reward: kindness, repaid with wonder.'
+                        :'✓ Strip the costumes — lion or crane, net or snare, Greece or Japan — and both tales beat with the same heart: kindness comes back.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Hunt the lesson, not the scenery. What choice does each tale reward in the end? Try again.';
+    setTimeout(function(){if(step===0){answeredThm=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Costume vs heartbeat</h2>';
+  h+='<p>Line the two tales up and you can see exactly what travels and what doesn’t:</p>';
+  h+='<table><tr><th></th><th>Greece</th><th>Japan</th></tr>';
+  h+='<tr><td>helper saved</td><td>a mouse, from a paw</td><td>a crane, from a snare</td></tr>';
+  h+='<tr><td>kindness shown</td><td>the lion lets her go</td><td>the farmer frees it</td></tr>';
+  h+='<tr><td>repayment</td><td>gnawed ropes — his life</td><td>woven cloth — a fortune</td></tr>';
+  h+='<tr><td><b>theme</b></td><td colspan="2"><b>kindness comes back — same in both</b></td></tr></table>';
+  h+='<div class="work"><div class="lab">The compare recipe</div>';
+  h+='1. find each tale’s theme on its own (what the events reward)<br>';
+  h+='2. list the costumes: creatures, places, customs — the DIFFERENT<br>';
+  h+='3. hold the themes side by side — the SAME (or not!)</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Culture dresses a story — animals, food, weather, customs. Theme is the heartbeat underneath. Comparing tales across cultures means listing the costume differences AND naming the shared heartbeat.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The pattern predicts the ending</h2>';
+  h+='<p>Here’s the OPENING of a third tale, from another tradition entirely:</p>';
+  h+='<div class="passage"><div class="src">A tale begins…</div>Deep in winter, a woodcutter found a fox caught in a hunter’s iron trap. Though his hands shook with cold, he pried the jaws open, and the fox vanished into the pines without a sound.</div>';
+  h+='<div class="ask"><div class="q">You know the pattern now. What happens later in this story?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The fox returns the woodcutter’s kindness somehow</button><button class="btn sm" onclick="checkPredict(\'b\')">The fox comes back and steals his axe</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Why you could predict it</div>';
+  h+='the opening matches the pattern: a creature saved by a kindness<br>';
+  h+='in this pattern, the saved one always finds a way to repay<br>';
+  h+='(and it does: in the old tale, the fox leads him to firewood all winter)</div>';
+  h+='<p>This is the real payoff of comparing stories across cultures: patterns repeat, so a reader who knows them can see endings coming — in tales from anywhere on Earth.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>The pattern holds.</b> A saved creature repays its rescuer — you called the shape of a story you’d never read.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Check the pattern.</b> In kindness-repaid tales, the saved creature gives back — it doesn’t rob. The fox repays him.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Why the same themes keep appearing</h2>';
+  h+='<p>People everywhere — every century, every continent — face the same big questions: how to treat strangers, whether small folks matter, what greed costs. So their stories keep arriving at the same answers, dressed in local clothes.</p>';
+  h+='<table><tr><th>Traveling theme</th><th>You’ll meet it as…</th></tr>';
+  h+='<tr><td>kindness comes back</td><td>lions, cranes, foxes, fishermen</td></tr>';
+  h+='<tr><td>greed loses everything</td><td>golden geese, magic fish, kings</td></tr>';
+  h+='<tr><td>clever beats strong</td><td>trickster rabbits, spiders, foxes</td></tr>';
+  h+='<tr><td>steady effort wins</td><td>tortoises, tiny seeds, slow rivers</td></tr></table>';
+  h+='<div class="work"><div class="lab">Compare like a pro</div>';
+  h+='same: &nbsp;&nbsp;&nbsp;&nbsp;name the shared theme in one sentence<br>';
+  h+='different: list 2–3 costume details from each culture<br>';
+  h+='bonus: &nbsp;&nbsp;&nbsp;say what each costume adds (snow and silk feel different from dust and rope!)</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Themes repeat because people everywhere are people. The differences aren’t noise — each culture’s costume gives the old lesson a new flavor worth naming.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Nora says the tales can’t match</h2>';
+  h+='<p>Nora compared our two tales and concluded: <i>“One has a lion and a net. The other has a crane and weaving. Totally different stories — so they can’t have the same theme.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNora()">Strip the costumes</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Nora’s list vs the heartbeat</div>';
+  h+='everything Nora listed — lion, net, crane, weaving — is COSTUME<br>';
+  h+='now strip it: someone shows kindness → the saved one repays it<br>';
+  h+='Greece: mercy → freedom &nbsp;·&nbsp; Japan: rescue → fortune<br>';
+  h+='<b>different costumes, identical heartbeat</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNora();
+}
+function testNora(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Nora compared costumes and stopped there.</b> Details are supposed to differ across cultures — that’s what makes each telling its own. The comparison that matters is one level down: what does each story <b>reward</b>? Both reward kindness with kindness returned. Different everything on the surface; same theme at the heart.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What theme do the lion tale and the crane tale share?',
+   a:['Kindness comes back to you','Animals are dangerous','Never travel in winter','Weaving is valuable'],correct:0,
+   why:'Both stories reward an act of kindness with a repayment — that shared lesson is the theme.'},
+  {q:'When the same theme appears in two cultures’ tales, what usually changes?',
+   a:['Nothing at all','The lesson itself','The costume — creatures, places, and customs','The language only, never the events'],correct:2,
+   why:'Culture dresses the story: a mouse becomes a crane, a net becomes a snare. The heartbeat underneath stays.'},
+  {q:'A new tale opens with a girl freeing a trapped sparrow. Knowing the kindness-repaid pattern, what do you predict?',
+   a:['The sparrow will repay her kindness somehow','The sparrow will peck her','Nothing — patterns don’t predict','The story will have no ending'],correct:0,
+   why:'Patterns predict: in kindness-repaid tales, the saved creature finds a way to give back.'},
+  {q:'Why do faraway cultures keep telling stories with the same themes?',
+   a:['They copied each other’s books','People everywhere face the same big questions, so their stories reach similar lessons','It’s a coincidence with no reason','Only one culture invents stories'],correct:1,
+   why:'How to treat strangers, whether small folks matter — every culture wrestles the same questions, and its tales answer them.'},
+  {q:'Nora said two tales can’t share a theme because their details differ. What’s the right way to compare?',
+   a:['Count the animals in each','Strip the costumes and compare what each story REWARDS','Pick the older tale as correct','Only compare tales from the same country'],correct:1,
+   why:'That was Nora’s trap. Details are meant to differ — the real comparison is the heartbeat: what each tale’s events reward.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.9']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Find a tale’s theme by what it rewards, compare tales from different cultures by stripping the costume, name what’s shared and what’s local — and use the old patterns to predict brand-new stories.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Nora. Costumes are supposed to differ — compare what the stories reward.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredThm=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Informative writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Writing</div>
+  <div class="card">
+    <div class="tag">Lesson · W.4.2</div>
+    <h1>Informative writing</h1>
+    <p>Informative writing has one mission: <b>teach the reader something real</b>. No convincing, no “best ever” — just facts, sorted into tidy paragraph-drawers so the reader never gets lost. Your topic today is the world’s strangest salamander. Let’s build its report right.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ W.4.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Informative writing</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredInf=false;
+var TASKS=[
+  {ans:0, txt:'Place this sentence: <b>“The axolotl may be the strangest animal on Earth — and it never has to grow up.”</b>',
+   opts:['The INTRO — it hooks the reader and names the topic','The LOOKS paragraph','The SURVIVAL-POWERS paragraph'], won:'intro — hook + topic'},
+  {ans:1, txt:'Place this fact: <b>“An axolotl has feathery pink gills and a wide, permanent smile.”</b>',
+   opts:['The intro','The LOOKS paragraph — it describes appearance','The SURVIVAL-POWERS paragraph'], won:'looks drawer'},
+  {ans:2, txt:'Place this fact: <b>“It can regrow a lost leg — bones and all — in just a few weeks.”</b>',
+   opts:['The intro','The LOOKS paragraph','The SURVIVAL-POWERS paragraph — it’s an ability, not a look'], won:'survival drawer'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Every fact has a drawer</h2>';
+  h+='<p>An informative piece is built like a dresser. The <b>intro</b> drawer hooks the reader and names the topic. Then each <b>body paragraph</b> is a drawer with ONE job — ours are “what it looks like” and “its survival powers.” Facts go in the drawer that matches their job. Sort these three sentences from a report about the <b>axolotl</b> (a Mexican salamander).</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickInf('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Ask the sentence: are you a hook, a look, or a power?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredInf=false;
+}
+function pickInf(i){
+  if(answeredInf||wonCount>=TASKS.length)return;answeredInf=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ It grabs attention AND names the topic — that double job is exactly what an intro does.'
+           :wonCount===1?'✓ Gills and a smile are appearance — straight into the looks drawer.'
+                        :'✓ Regrowing a leg is something it can DO — a power, not a look. Survival drawer.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Match the fact’s JOB to the drawer’s job: hooks open, looks describe, powers perform. Try again.';
+    setTimeout(function(){if(step===0){answeredInf=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The report, assembled</h2>';
+  h+='<p>Sorted drawers snap into a whole report — with <b>linking words</b> (also, another, for example) gluing the facts inside each drawer:</p>';
+  h+='<div class="work"><div class="lab">The axolotl report</div>';
+  h+='INTRO: &nbsp;&nbsp;&nbsp;&nbsp;The axolotl may be the strangest animal on Earth — and it<br>never has to grow up.<br>';
+  h+='LOOKS: &nbsp;&nbsp;&nbsp;&nbsp;An axolotl is a salamander with feathery pink gills and a<br>wide, permanent smile. It also keeps its tadpole-like fins for life.<br>';
+  h+='POWERS: &nbsp;&nbsp;Its survival tricks are stranger still. It can regrow a lost<br>leg in weeks — for example, bones, muscles, and all.<br>';
+  h+='CLOSER: &nbsp;&nbsp;&nbsp;From its smile to its self-repairing body, the axolotl earns<br>its title: the strangest salamander alive.</div>';
+  h+='<table><tr><th>Part</th><th>Its job</th><th>Linking words</th></tr>';
+  h+='<tr><td>intro</td><td>hook + name the topic</td><td>—</td></tr>';
+  h+='<tr><td>body drawers</td><td>one job each, facts inside</td><td>also · another · for example</td></tr>';
+  h+='<tr><td>closer</td><td>wrap the topic up</td><td>from ___ to ___</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Group before you write: decide your drawers, sort your facts into them, then glue with linking words. A report with tidy drawers teaches; a fact-pile confuses.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>A fact in the wrong drawer</h2>';
+  h+='<p>Imagine the looks paragraph read: <i>“An axolotl has feathery pink gills, a wide smile, <b>and it can regrow its own heart tissue</b>, and tadpole-like fins.”</i></p>';
+  h+='<div class="ask"><div class="q">Does it matter that the heart fact sits in the looks paragraph?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Yes — it yanks the reader out of “looks” mid-sentence; it belongs in powers</button><button class="btn sm" onclick="checkPredict(\'b\')">No — a fact is a fact, anywhere</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Reader whiplash</div>';
+  h+='the drawer promised: what it LOOKS like<br>';
+  h+='mid-list, the reader is suddenly inside its HEART — whiplash<br>';
+  h+='moved to powers: the fact lands with the other abilities, twice as strong</div>';
+  h+='<p>Every paragraph makes a quiet promise in its first line: “this drawer holds looks.” Break the promise and readers stumble — keep it and even wild facts feel organized.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Whiplash.</b> The drawer promised looks; the heart fact breaks the promise. In powers, it shines.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Placement is half the teaching.</b> A great fact in the wrong drawer trips the reader — moved to powers, the same fact lands twice as hard.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Teaching voice, not convincing voice</h2>';
+  h+='<p>Informative writing wears a different voice than opinion writing. The teaching voice states facts a reader could check; it defines its terms; it never argues:</p>';
+  h+='<table><tr><th>Convincing voice (opinion)</th><th>Teaching voice (informative)</th></tr>';
+  h+='<tr><td>Axolotls are the BEST animal!</td><td>Axolotls are salamanders from lakes near Mexico City.</td></tr>';
+  h+='<tr><td>You should totally get one!</td><td>In the wild, they are critically endangered.</td></tr>';
+  h+='<tr><td>Trust me, they’re amazing.</td><td>Scientists study them to learn how regrowth works.</td></tr></table>';
+  h+='<div class="work"><div class="lab">The definition move</div>';
+  h+='first use of a strange word — define it on the spot:<br>';
+  h+='“An axolotl is a SALAMANDER — an amphibian with a tail — that<br>lives its whole life underwater.”<br>';
+  h+='your reader never has to leave your report to understand it</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Facts a reader could check, terms defined on arrival, zero “shoulds.” If a sentence tries to convince instead of teach, it wandered in from an opinion piece — walk it out.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Ravi’s report starts cheering</h2>';
+  h+='<p>Ravi’s science report ends: <i>“Axolotls are the COOLEST creatures ever and everyone should love them as much as I do!!!”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testRavi()">Switch it to the teaching voice</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Voice check</div>';
+  h+='“COOLEST ever” — checkable fact? &nbsp;no, it’s a feeling<br>';
+  h+='“everyone should” — teaching or convincing? &nbsp;convincing<br>';
+  h+='the fix keeps the wonder, swaps in facts:<br>';
+  h+='<b>“With a body that repairs itself and a face that never stops smiling,<br>the axolotl remains one of science’s favorite mysteries.”</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testRavi();
+}
+function testRavi(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Ravi’s opinion crashed his report.</b> “Coolest ever” and “everyone should” are convincing-voice moves — great in a persuasive letter, out of place in a report. The fix isn’t to make it boring: keep the amazement, but build it from checkable facts. A self-repairing body IS amazing — stated as fact, it teaches and impresses at once.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What two jobs does an informative INTRO do?',
+   a:['Hooks the reader and names the topic','Lists every fact coming later','Gives your opinion of the topic','Apologizes for the length'],correct:0,
+   why:'Hook + topic: grab attention and tell the reader exactly what they’re about to learn.'},
+  {q:'Why do facts get GROUPED into paragraphs with one job each?',
+   a:['To make the report longer','Paragraphs are decorative','So the reader always knows what drawer they’re in — mixed drawers cause whiplash','Teachers require indenting'],correct:2,
+   why:'Each paragraph promises one job. Grouped facts teach; a fact-pile confuses.'},
+  {q:'Which sentence belongs in a report’s SURVIVAL-POWERS paragraph about axolotls?',
+   a:['They have pink feathery gills','They can regrow lost legs, bones and all','They are the cutest animals alive','Axolotls! Wow!'],correct:1,
+   why:'Regrowing legs is an ability — the powers drawer. Gills are looks; “cutest” is opinion.'},
+  {q:'Which is the TEACHING voice?',
+   a:['“You should love axolotls!”','“Axolotls are obviously the best.”','“Trust me on this one.”','“Axolotls are salamanders that live their whole lives underwater.”'],correct:3,
+   why:'A checkable fact, calmly stated. The other three are convincing-voice moves in disguise.'},
+  {q:'Ravi wrote “COOLEST creatures ever, everyone should love them” in his report. What’s the fix?',
+   a:['Add more exclamation points','Delete all the excitement forever','Keep the wonder but rebuild it from checkable facts — a self-repairing body speaks for itself','Move it to the intro'],correct:2,
+   why:'That was Ravi’s trap. Reports can amaze — with facts. “Should” and “coolest” belong in opinion pieces.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['W.4.2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Open with a hook that names the topic, sort every fact into a one-job paragraph drawer, glue facts with linking words, define strange terms on arrival, and keep the teaching voice free of “shoulds.”</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ravi. Reports can amaze — with checkable facts, not cheering.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredInf=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

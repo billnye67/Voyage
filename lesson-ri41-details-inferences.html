@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Facts and inferences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Informational</div>
+  <div class="card">
+    <div class="tag">Lesson · RI.4.1</div>
+    <h1>Facts and inferences</h1>
+    <p>Aquarium workers kept finding their octopus missing at night — and hiding in a teapot by morning. The article never explains HOW it escapes. But if you snap two of its facts together, you can figure it out yourself. That’s reading nonfiction like a scientist: facts you can point to, plus conclusions you can prove.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RI.4.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Facts and inferences</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredFact=false;
+var TASKS=[
+  {ans:0, txt:'<b>How small a gap can a giant Pacific octopus squeeze through?</b>', won:'stated: a coin-sized gap'},
+  {ans:1, txt:'<b>HOW do the octopuses escape their tanks?</b> (The article never says directly.)', won:'figured out from two facts'},
+  {ans:2, txt:'<b>What do octopuses eat?</b>', won:'not in this article'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function passOcto(hl){
+  var s='<div class="passage"><div class="src">From an aquarium magazine</div>';
+  if(hl){
+    s+='An octopus has <span class="hl">no bones at all</span>. A full-grown giant Pacific octopus can <span class="hl">squeeze through a gap the size of a coin</span>. In aquariums, workers sometimes find an octopus <span class="hl">missing from its tank at night</span> — and discover it by morning, curled up in a teapot, a jar, or a drainpipe.';
+  } else {
+    s+='An octopus has no bones at all. A full-grown giant Pacific octopus can squeeze through a gap the size of a coin. In aquariums, workers sometimes find an octopus missing from its tank at night — and discover it by morning, curled up in a teapot, a jar, or a drainpipe.';
+  }
+  return s+'</div>';
+}
+function passBees(hl){
+  var s='<div class="passage"><div class="src">From a nature article</div>';
+  if(hl){
+    s+='When a honeybee finds flowers, it flies home and performs a <span class="hl">waggle dance</span>. <span class="hl">The longer the waggle, the farther away the flowers are.</span> Other bees <span class="hl">crowd close to watch</span> — then fly out of the hive, <span class="hl">straight to the flowers</span>.';
+  } else {
+    s+='When a honeybee finds flowers, it flies home and performs a waggle dance. The longer the waggle, the farther away the flowers are. Other bees crowd close to watch — then fly out of the hive, straight to the flowers.';
+  }
+  return s+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Stated, figured out, or missing?</h2>';
+  h+='<p>Nonfiction answers come in kinds too. Some are <b>stated</b> — a fact printed on the page, in words you can point to. Some you <b>figure out</b>: snap two or more facts together and they click into a conclusion the article never spells out. And some just <b>aren’t there</b> — no facts about it at all, so an honest reader says “this text doesn’t tell us.” Sort each question.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passOcto(false);
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickFact(0)">Stated — the article says it in words I can point to</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickFact(1)">Figured out — I snapped facts together to conclude it</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickFact(2)">Not here — this article gives no facts about it</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Hunt the article for facts that answer it — then decide which kind of answer you have.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredFact=false;
+}
+function pickFact(i){
+  if(answeredFact||wonCount>=TASKS.length)return;answeredFact=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Printed right there: “a gap the size of a coin.” Point at it.'
+           :wonCount===1?'✓ Snap the facts: no bones + fits through coin-sized gaps + tanks have small openings. Click — they squeeze out. The article never says it; the facts prove it.'
+                        :'✓ Read every sentence — not one fact about food. The honest answer is “this article doesn’t say.” Guessing isn’t reading.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Can you point at printed words that answer it? Stated. Can facts snap together to prove it? Figured out. Neither? It’s not here. Try again.';
+    setTimeout(function(){if(step===0){answeredFact=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Snapping facts together</h2>';
+  h+='<p>Here’s the article with its load-bearing facts highlighted — watch how two of them build the escape conclusion:</p>';
+  h+=passOcto(true);
+  h+='<div class="work"><div class="lab">The inference, assembled</div>';
+  h+='fact 1: no bones — an octopus can reshape its whole body<br>';
+  h+='fact 2: fits through a coin-sized gap<br>';
+  h+='fact 3: found OUTSIDE the tank by morning<br>';
+  h+='snap them together: <b>it squeezes through some small opening to escape</b></div>';
+  h+='<table><tr><th>Kind of answer</th><th>Test</th></tr>';
+  h+='<tr><td>stated fact</td><td>point at the printed words</td></tr>';
+  h+='<tr><td>inference</td><td>show the facts that snap together to prove it</td></tr>';
+  h+='<tr><td>not in the text</td><td>no facts about it — say so, don’t guess</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Nonfiction inference = <b>facts from the text, snapped together</b>. The conclusion is yours, but every piece of it must come off the page — and you should be able to list the pieces.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>What is the dance for?</h2>';
+  h+='<p>A new article. Read it fact by fact:</p>';
+  h+=passBees(false);
+  h+='<div class="ask"><div class="q">The article never says what the waggle dance is FOR. Snap the facts — what do you conclude?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The dance gives directions to the flowers</button><button class="btn sm" onclick="checkPredict(\'b\')">The dance is the bee’s exercise routine</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+passBees(true);
+  h+='<div class="work"><div class="lab">The facts, snapped</div>';
+  h+='the dance carries information — longer waggle = farther flowers<br>';
+  h+='the other bees WATCH it closely<br>';
+  h+='then they fly STRAIGHT to flowers they’ve never seen<br>';
+  h+='<b>conclusion: the dance tells the other bees where the flowers are</b></div>';
+  h+='<p>Test the other idea against the facts: if the dance were exercise, why would distance change it, and why would the watchers fly straight to the flowers? The facts refuse to support it. That’s how you know your inference is the right one — the facts fit it and fight the alternatives.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Directions.</b> The waggle carries distance, the watchers learn it, and they fly straight there — the facts snap into a map.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Test it against the facts.</b> Exercise wouldn’t change with distance, and watchers wouldn’t fly straight to flowers. The facts point at directions.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>“Prove it” — the nonfiction way</h2>';
+  h+='<p>Every claim you make about a text will meet the question <b>“where does it say that?”</b> The winning answer has the same shape every time:</p>';
+  h+='<div class="goal"><div class="lab">The evidence frame</div><p>“The text states <b>___</b>” — or — “I concluded <b>___</b> because the text states <b>___</b> and <b>___</b>.”</p></div>';
+  h+='<div class="work"><div class="lab">The frame, filled in</div>';
+  h+='The text states octopuses can squeeze through coin-sized gaps.<br>';
+  h+='I concluded the dance gives directions BECAUSE the text states the waggle changes with distance AND the watchers fly straight there.</div>';
+  h+='<p>One warning for nonfiction: your own outside knowledge is welcome as <b>glue</b> for snapping facts together — but it can’t replace the facts. “Octopuses escape because they’re magic” uses zero facts. “They escape because texts say they’re boneless and fit through coins” is airtight.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A claim about a text is only as strong as the printed facts behind it. State the fact — or list the facts your conclusion snaps together. Every time.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Finn says the article calls octopuses “escape artists who hate tanks”</h2>';
+  h+='<p>Finn’s claim: <i>“The text says octopuses hate their tanks and can escape from anywhere.”</i></p>';
+  h+=passOcto(false);
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testFinn()">Audit his claim</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Claim audit</div>';
+  h+='“hate their tanks” — any feelings printed? &nbsp;<b>no</b> — Finn invented that<br>';
+  h+='“escape from ANYWHERE” — what do the facts support? &nbsp;only coin-sized-or-bigger gaps<br>';
+  h+='what CAN he claim? &nbsp;“they escape through small openings” — fact-backed</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testFinn();
+}
+function testFinn(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Finn stretched past his facts twice.</b> “The text says” must mean printed words — no sentence mentions hating anything; that’s Finn’s own idea wearing the text’s name tag. And “escape from anywhere” claims more than the facts prove; the article only supports squeezing through small gaps. An inference can go exactly as far as its facts — one step further and it turns back into a guess.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which question about the octopus article is answered by a STATED fact?',
+   a:['How small a gap it can squeeze through — “the size of a coin”','Whether octopuses get bored','What octopuses eat','Whether octopuses like teapots'],correct:0,
+   why:'“A gap the size of a coin” is printed on the page — point at it. The others have no facts behind them.'},
+  {q:'What makes a nonfiction inference trustworthy?',
+   a:['It sounds scientific','It’s built by snapping together facts from the text — and you can list them','A friend agrees with it','It’s about animals'],correct:1,
+   why:'Facts from the page, snapped together — and you can name each one. That’s the whole test.'},
+  {q:'How did we conclude the octopuses escape by squeezing through openings?',
+   a:['The article said so directly','We guessed','No bones + fits through coin-sized gaps + found outside the tank — the facts snap together','Octopuses confessed'],correct:2,
+   why:'Three printed facts click into one conclusion the article never states. That’s inference.'},
+  {q:'Someone asks “How do you know the waggle dance gives directions?” Which answer wins?',
+   a:['“Because bees are smart.”','“Because dancing is fun.”','“Because I saw it in a movie.”','“Because the text states the waggle changes with distance, and the watching bees fly straight to the flowers.”'],correct:3,
+   why:'The evidence frame: conclusion + the printed facts that snap together to prove it.'},
+  {q:'Finn claimed “the text says octopuses hate their tanks.” What was wrong?',
+   a:['Nothing — it’s probably true','Octopuses can’t hate things','No printed words mention feelings — Finn’s own idea was wearing the text’s name tag','The text is about bees'],correct:2,
+   why:'That was Finn’s trap. “The text says” is reserved for printed words — and an inference can only go as far as its facts.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RI.4.1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Point at stated facts, snap facts together into conclusions you can defend, refuse to answer where the text is silent, and audit any claim — yours or Finn’s — against the printed words.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Finn. “The text says” is reserved for printed words.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredFact=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

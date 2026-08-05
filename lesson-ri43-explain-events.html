@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Explaining what happened & why</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0;font-family:'Space Mono',monospace;font-size:13px}
+  .link{background:#fff;border:2px solid var(--blue-line);border-radius:9px;padding:8px 12px;font-weight:700}
+  .link.hot{border-color:var(--accent);color:var(--accent)}
+  .arr{color:var(--muted);font-weight:700}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Informational</div>
+  <div class="card">
+    <div class="tag">Lesson · RI.4.3</div>
+    <h1>Explaining what happened &amp; why</h1>
+    <p>Every hour or so, a fountain of boiling water blasts fifty meters into the Yellowstone sky. A good reader can do more than say “a geyser erupted” — they can explain the whole chain: what happened, and why each step forced the next one. Nonfiction is full of these chains. Learn to walk them.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RI.4.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Explaining what happened &amp; why</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredWhy=false;
+var TASKS=[
+  {ans:1, txt:'<b>WHY does the underground water get so hot?</b>',
+   opts:['Because geysers only erupt in summer','Because hot rock, heated by magma below, warms it past boiling','Because the water moves fast'], won:'magma-heated rock'},
+  {ans:0, txt:'<b>WHY does the pressure build up?</b>',
+   opts:['Because narrow rock tubes trap the superheated water','Because animals block the opening','Because rain falls harder'], won:'narrow tubes trap it'},
+  {ans:2, txt:'<b>What happens AFTER an eruption?</b>',
+   opts:['The geyser is finished forever','The magma cools down','The empty tubes refill with water and the cycle restarts'], won:'refill — the clock restarts'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function passGeyser(hl){
+  var s='<div class="passage"><div class="src">From a science magazine — “Why Geysers Blow”</div>';
+  if(hl){
+    s+='Rain and snow seep deep underground at Yellowstone. There, <span class="hl">rock heated by magma below</span> warms the water far past boiling. <span class="hl">Trapped inside narrow rock tubes</span>, the superheated water builds enormous pressure — until it blasts skyward as an eruption. Afterward, <span class="hl">the empty tubes slowly refill</span>, and the countdown to the next blast begins.';
+  } else {
+    s+='Rain and snow seep deep underground at Yellowstone. There, rock heated by magma below warms the water far past boiling. Trapped inside narrow rock tubes, the superheated water builds enormous pressure — until it blasts skyward as an eruption. Afterward, the empty tubes slowly refill, and the countdown to the next blast begins.';
+  }
+  return s+'</div>';
+}
+function figChain(){
+  return '<div class="chain"><span class="link">water seeps down</span><span class="arr">→</span><span class="link hot">magma-hot rock boils it</span><span class="arr">→</span><span class="link">narrow tubes trap it</span><span class="arr">→</span><span class="link hot">pressure builds</span><span class="arr">→</span><span class="link">BLAST</span><span class="arr">→</span><span class="link">tubes refill…</span></div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Walk the chain</h2>';
+  h+='<p>Nonfiction events come in <b>chains</b>: each step happens <b>because</b> of the one before it and <b>causes</b> the one after. To explain an event, you name its links — using the text’s own facts, not your imagination. Read the article, then answer each why-question by finding its link.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passGeyser(false);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickWhy('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">The answer to every why lives in the sentence before or after the event.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredWhy=false;
+}
+function pickWhy(i){
+  if(answeredWhy||wonCount>=TASKS.length)return;answeredWhy=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The text hands you the link: “rock heated by magma below warms the water far past boiling.”'
+           :wonCount===1?'✓ “Trapped inside narrow rock tubes” — the trap is what turns hot water into pressurized water.'
+                        :'✓ “The empty tubes slowly refill, and the countdown begins” — the chain loops back to its start.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Stick to the text’s own links — no summer, no animals, no guessing. Find the sentence that touches your event and read its because. Try again.';
+    setTimeout(function(){if(step===0){answeredWhy=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The chain, laid out</h2>';
+  h+='<p>Here’s the whole article compressed into its chain — every arrow is a “because”:</p>';
+  h+=figChain();
+  h+=passGeyser(true);
+  h+='<div class="work"><div class="lab">Explaining = walking the chain</div>';
+  h+='listing (weak): &nbsp;“water, heat, tubes, boom”<br>';
+  h+='explaining (strong): “water seeps down, magma-heated rock boils it,<br>narrow tubes trap it so pressure builds — until it blasts out”<br>';
+  h+='the difference: every step CONNECTED to the next with its why</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>To explain an event from a text: find its chain, then retell it link by link, keeping every “because” — all of it drawn from the text’s own sentences.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Break a link, predict the result</h2>';
+  h+='<p>If you really understand a chain, you can predict what happens when a link breaks. Thought experiment:</p>';
+  h+='<div class="ask"><div class="q">Suppose the rock tubes were WIDE instead of narrow. What would happen, according to the chain?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">No eruption — without the trap, pressure never builds</button><button class="btn sm" onclick="checkPredict(\'b\')">Bigger eruptions — more room, more blast</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Follow the broken chain</div>';
+  h+='the text’s link: narrow tubes TRAP the water → pressure builds → blast<br>';
+  h+='wide tubes = no trap → hot water just rises and steams away<br>';
+  h+='no trapped pressure = <b>no eruption — a hot spring instead of a geyser</b></div>';
+  h+='<p>(That’s real, by the way — Yellowstone’s calm hot springs are exactly this: geyser plumbing without the narrow squeeze.) Being able to run the chain forward with a changed link is the proof that you truly understand the explanation.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>No eruption.</b> The blast depends on trapped pressure, and the trap depends on narrow tubes. Break that link, and the chain stops there.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Walk the chain again.</b> The blast COMES FROM the pressure, and the pressure comes from the trap. Wide tubes mean no trap — the water just steams away calmly.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Chains run through history too</h2>';
+  h+='<p>Cause-and-effect chains aren’t just for science. History texts are built from them:</p>';
+  h+='<div class="passage"><div class="src">From a history book</div>In 1869, workers hammered in the final spike of the transcontinental railroad, linking America’s east and west coasts by rail. A journey that had taken months by wagon now took about a week — so people, mail, and goods began streaming west in numbers never seen before.</div>';
+  h+='<div class="work"><div class="lab">The history chain</div>';
+  h+='railroad links the coasts &nbsp;→&nbsp; the trip shrinks from months to a week<br>';
+  h+='the trip shrinks &nbsp;→&nbsp; people, mail, and goods stream west<br>';
+  h+='every arrow is printed in the text: “now took about a week… so people began streaming”</div>';
+  h+='<p>The explaining frame works everywhere: <b>“___ happened because ___, and that caused ___.”</b> Science, history, how-to manuals — if a text tells you what happened, it almost always hands you the whys. Your job is to keep them attached.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Whether it’s magma or railroads, explaining means keeping causes chained to effects — with each link pulled straight from the text.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Kai says geysers are angry volcanoes</h2>';
+  h+='<p>Asked to explain the article, Kai said: <i>“Geysers erupt because they’re volcanoes that get angry and explode.”</i></p>';
+  h+=passGeyser(false);
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testKai()">Check his links against the text</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Link check</div>';
+  h+='“they’re volcanoes” — does the text say that? &nbsp;<b>no</b> — it’s water and rock tubes<br>';
+  h+='“they get angry” — in the text? &nbsp;<b>no</b> — rocks don’t have moods<br>';
+  h+='the text’s actual links: seep → magma-hot rock → trap → pressure → blast<br>';
+  h+='<b>Kai’s chain came from his head, not the page</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testKai();
+}
+function testKai(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Kai invented a chain instead of reading one.</b> An explanation of a text has to use the TEXT’S links — and this article’s links are water, magma-heated rock, narrow tubes, and pressure. “Angry volcano” sounds exciting, but not one of its links appears on the page. When you explain, walk the printed chain — the real one is usually cooler anyway.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'According to the article, why does the underground water at Yellowstone get hotter than boiling?',
+   a:['The sun heats it','Rock heated by magma below warms it','Geysers add heat during eruptions','The text never explains it'],correct:1,
+   why:'The link is printed: “rock heated by magma below warms the water far past boiling.”'},
+  {q:'What turns the superheated water into an eruption?',
+   a:['Narrow tubes trap it, so pressure builds until it blasts out','Wind pulls it upward','Animals disturb the pool','It happens randomly'],correct:0,
+   why:'Two links in a row: the trap causes the pressure, and the pressure causes the blast.'},
+  {q:'What’s the difference between LISTING events and EXPLAINING them?',
+   a:['Explaining uses bigger words','Listing is for history, explaining for science','An explanation keeps every “because” — each event chained to its cause','There is no difference'],correct:2,
+   why:'“Water, heat, boom” is a list. Explaining keeps the links: heat because of magma, pressure because of the trap.'},
+  {q:'The railroad text says the coast-to-coast trip shrank from months to a week. What effect did the TEXT say that caused?',
+   a:['Wagons became popular again','People, mail, and goods streamed west in record numbers','The railroad closed','Nothing changed'],correct:1,
+   why:'The chain is printed: the shorter trip caused the westward stream — “so people, mail, and goods began streaming west.”'},
+  {q:'Kai explained geysers as “angry volcanoes.” What was wrong with his explanation?',
+   a:['Volcanoes are actually calm','It was too short','None of his links came from the text — an explanation must walk the printed chain','Geysers can’t be explained'],correct:2,
+   why:'That was Kai’s trap. The text’s chain is water, hot rock, narrow tubes, pressure — his anger-volcano chain came from his imagination.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RI.4.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Find the cause-and-effect chain in any nonfiction text, explain events link by link with every “because” attached, predict what a broken link would change, and reject explanation-shaped guesses that never touch the page.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Kai. Explanations walk the printed chain — not the one in your head.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredWhy=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

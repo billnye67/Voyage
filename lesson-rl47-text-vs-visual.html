@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Text vs pictures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.7</div>
+    <h1>Text vs pictures</h1>
+    <p>An artist reads the same story you do — then paints what THEY saw. Sometimes the picture matches the words exactly. Sometimes the artist adds a moon nobody wrote, or loses a boat the author counted. Comparing the two versions, detail by detail, is a real reading skill — and it starts with trusting your own eyes.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.7</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Text vs pictures</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredCmp=false;
+var TASKS=[
+  {ans:0, txt:'Check the detail: <b>the red-and-white striped lighthouse.</b>', won:'in both versions'},
+  {ans:1, txt:'Check the detail: <b>the moon over the water.</b>', won:'picture only — added'},
+  {ans:2, txt:'Check the detail: <b>THREE fishing boats.</b> Count them in the picture.', won:'text says 3, picture shows 2'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+var INK='#16233a',MUT='#5d6b7e',ACC='#f0663f',WATER='rgba(27,79,138,.25)',PALE='rgba(240,102,63,.15)';
+function passStory(hl){
+  var s='<div class="passage"><div class="src">From “The Lighthouse Cat”</div>';
+  if(hl){
+    s+='The <span class="hl">red-and-white striped lighthouse</span> stood alone on the cliff. Ora climbed the spiral stairs, her <span class="hl">grey cat</span> two steps ahead. Far below, <span class="hl">three fishing boats</span> rocked on the dark water.';
+  } else {
+    s+='The red-and-white striped lighthouse stood alone on the cliff. Ora climbed the spiral stairs, her grey cat two steps ahead. Far below, three fishing boats rocked on the dark water.';
+  }
+  return s+'</div>';
+}
+function boat(x,y){
+  return '<path d="M '+x+' '+y+' L '+(x+56)+' '+y+' L '+(x+46)+' '+(y+14)+' L '+(x+10)+' '+(y+14)+' Z" fill="#fff" stroke="'+INK+'" stroke-width="2"/>'+
+  '<line x1="'+(x+28)+'" y1="'+y+'" x2="'+(x+28)+'" y2="'+(y-30)+'" stroke="'+INK+'" stroke-width="2"/>'+
+  '<path d="M '+(x+28)+' '+(y-30)+' L '+(x+48)+' '+(y-6)+' L '+(x+28)+' '+(y-6)+' Z" fill="'+WATER+'" stroke="'+INK+'" stroke-width="1.5"/>';
+}
+function figScene(){
+  var s='';
+  s+='<rect x="10" y="168" width="600" height="62" fill="'+WATER+'"/>';
+  s+='<path d="M 60 168 L 230 168 L 214 108 L 78 116 Z" fill="#fff" stroke="'+INK+'" stroke-width="2.5"/>';
+  for(var i=0;i<5;i++){
+    s+='<rect x="118" y="'+(38+i*14)+'" width="52" height="14" fill="'+(i%2?'#fff':ACC)+'" stroke="'+INK+'" stroke-width="1.5"/>';
+  }
+  s+='<rect x="124" y="16" width="40" height="22" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<path d="M 124 16 Q 144 2 164 16 Z" fill="'+INK+'"/>';
+  s+='<circle cx="512" cy="52" r="24" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+=boat(320,192)+boat(432,204);
+  s+='<text x="310" y="252" text-anchor="middle" font-family="Space Mono" font-size="11" fill="'+MUT+'">the artist’s picture for the same page</text>';
+  return '<div class="linebox"><svg viewBox="0 0 620 262" xmlns="http://www.w3.org/2000/svg">'+s+'</svg></div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Words vs picture: play detective</h2>';
+  h+='<p>Below is a paragraph from a story — and the <b>illustration an artist made for that same page</b>. An illustration is one artist’s version of the words, and versions never match perfectly. For each detail, decide: is it in <b>both</b>, did the artist <b>add</b> it, or did the picture <b>miss or change</b> what the text says?</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passStory(false)+figScene();
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickCmp(0)">In both — the picture shows exactly what the words say</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickCmp(1)">Picture only — the artist added it</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickCmp(2)">Text only — the picture misses or changes it</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Read the words, then search the picture with your own eyes.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredCmp=false;
+}
+function pickCmp(i){
+  if(answeredCmp||wonCount>=TASKS.length)return;answeredCmp=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Striped tower in the words, striped tower in the paint. A match — text and picture agree.'
+           :wonCount===1?'✓ Read the paragraph again: no moon anywhere. The artist imagined a night sky and added one. Versions do that.'
+                        :'✓ The text counts three boats — the picture only painted two. The picture missed one. Your eyes beat the artist’s.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Two steps every time: find the detail in the WORDS, then hunt for it in the PICTURE. Both places? Only one? Changed? Try again.';
+    setTimeout(function(){if(step===0){answeredCmp=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The comparison ledger</h2>';
+  h+='<p>Here’s the text with its checkable details marked — and the tally your detective work produced:</p>';
+  h+=passStory(true);
+  h+='<div class="work"><div class="lab">Text vs picture, detail by detail</div>';
+  h+='striped lighthouse &nbsp;→&nbsp; in BOTH ✓<br>';
+  h+='the moon &nbsp;→&nbsp; PICTURE only (artist’s addition)<br>';
+  h+='three boats &nbsp;→&nbsp; TEXT says 3, picture shows 2 (changed)<br>';
+  h+='grey cat + spiral stairs &nbsp;→&nbsp; TEXT only (picture skips the inside)</div>';
+  h+='<table><tr><th>When versions…</th><th>It means</th></tr>';
+  h+='<tr><td>match</td><td>the artist followed the words</td></tr>';
+  h+='<tr><td>add something</td><td>the artist imagined beyond the words</td></tr>';
+  h+='<tr><td>miss or change</td><td>the words hold detail the picture dropped</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A picture of a story is a <b>version</b>, made by another reader. Compare detail by detail: match, addition, or change. Every difference tells you something about what the artist noticed — or didn’t.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>When the versions disagree</h2>';
+  h+='<p>Suppose the artist had painted Ora’s cat <b>orange</b>. The text says <b>grey</b>.</p>';
+  h+='<div class="ask"><div class="q">For the story’s facts, which version do you trust?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The text — the words are the original</button><button class="btn sm" onclick="checkPredict(\'b\')">The picture — seeing is believing</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Who’s the boss of the facts?</div>';
+  h+='the author WROTE the story &nbsp;→&nbsp; the text is the original<br>';
+  h+='the artist READ the story &nbsp;→&nbsp; the picture is an interpretation<br>';
+  h+='disagreement? &nbsp;→&nbsp; the text wins on facts — the cat is grey</div>';
+  h+='<p>That doesn’t make the picture bad — an orange cat might be a beautiful choice. But when a question asks what the STORY says, your evidence must come from the words, never from an artist’s version of them.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>The text.</b> The author wrote grey; the artist painted a version. Originals outrank interpretations on facts.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Careful — the picture is second-hand.</b> The artist is just another reader. For story facts, the words are the boss: the cat is grey.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>What each version does best</h2>';
+  h+='<p>If pictures can add and miss things, why have them at all? Because each version has powers the other doesn’t:</p>';
+  h+='<table><tr><th>The picture wins at</th><th>The text wins at</th></tr>';
+  h+='<tr><td>instant mood — one glance says “lonely night”</td><td>thoughts — “Ora worried the storm would return”</td></tr>';
+  h+='<tr><td>whole scene at once — cliff, sea, sky together</td><td>sounds, smells, time passing</td></tr>';
+  h+='<tr><td>faces and colors you don’t have to imagine</td><td>exact facts — three boats, a grey cat</td></tr></table>';
+  h+='<div class="work"><div class="lab">Using both at once</div>';
+  h+='the picture hands you: &nbsp;the dark, lonely FEEL of the cliff<br>';
+  h+='the text hands you: &nbsp;&nbsp;&nbsp;why Ora climbs — and what the cat does next<br>';
+  h+='reading both = the fullest version of the story that exists</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Compare versions not to crown a winner but to collect from both: mood and scene from the picture, facts and thoughts from the words.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Rio says the book got it wrong</h2>';
+  h+='<p>Rio watched the animated film of his favorite book. In the film, the hero’s dog is a floppy-eared beagle. The book says “a scruffy little terrier.” Rio: <i>“The movie shows a beagle, so the book made a mistake.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testRio()">Sort out who changed what</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Original vs version</div>';
+  h+='which came first? &nbsp;the book — the film was made FROM it<br>';
+  h+='so who changed the dog? &nbsp;the filmmakers — on purpose or by accident<br>';
+  h+='can an original “get itself wrong”? &nbsp;no — it IS the story<br>';
+  h+='<b>the book’s terrier stands; the film made a change</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testRio();
+}
+function testRio(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Rio put the versions in the wrong order.</b> The film is a version OF the book — filmmakers are readers with cameras, and they change things, same as our artist added a moon and lost a boat. Changes aren’t crimes, but they run one way: the original can’t contradict itself. When versions disagree about the story’s facts, the words win.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'The text says “striped lighthouse” and the picture shows a striped lighthouse. What kind of detail is that?',
+   a:['A match — it’s in both versions','An addition','A change','A mistake'],correct:0,
+   why:'Words and picture agree — the artist followed the text on this one.'},
+  {q:'The text counts three boats; the picture shows two. What happened?',
+   a:['The text is wrong','The picture missed or changed a detail the words state','Boats don’t count as details','You misread the picture'],correct:1,
+   why:'The words are the original — three boats is the story’s fact. The picture dropped one.'},
+  {q:'The picture shows a moon the story never mentions. What is that?',
+   a:['Proof the story happens at night','A detail the text hid','The artist’s addition — imagined beyond the words','An illustration error that ruins the book'],correct:2,
+   why:'Artists imagine past the words all the time. Additions aren’t crimes — but they’re the artist’s, not the author’s.'},
+  {q:'A question asks: “What color is Ora’s cat IN THE STORY?” Where must your answer come from?',
+   a:['The picture — it’s easier to check','Either one','The text — the words are the original source for story facts','Your favorite color'],correct:2,
+   why:'For story facts, the words rule. Pictures are versions made by other readers.'},
+  {q:'Rio said the book “got the dog wrong” because the movie shows a beagle. What did he miss?',
+   a:['Movies are always right','Books can’t describe dogs','The movie is a version OF the book — the filmmakers changed the dog, not the author','Beagles and terriers are the same'],correct:2,
+   why:'That was Rio’s trap. Versions flow FROM the original — when they disagree, the change belongs to the version-maker.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.7']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Compare a story’s words with its picture detail by detail, sort matches from additions from changes, trust the text for story facts, and collect what each version does best.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Rio. Versions flow FROM the original — the words can’t contradict themselves.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredCmp=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

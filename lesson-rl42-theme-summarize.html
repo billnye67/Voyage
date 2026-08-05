@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Theme and summarizing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .recipe{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .rbtn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+    padding:10px 14px;border-radius:9px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .rbtn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .rbtn.used{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green);box-shadow:none;cursor:default}
+  .rline{font-size:16px;line-height:1.6;padding:8px 14px;border-left:3px solid var(--green);background:rgba(46,125,91,.06);
+    border-radius:0 8px 8px 0;margin:8px 0}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Literature</div>
+  <div class="card">
+    <div class="tag">Lesson · RL.4.2</div>
+    <h1>Theme and summarizing</h1>
+    <p>Ask five kids what a story was about and you’ll get one kid retelling every single detail, three mumbling “a bird, I think,” and maybe one who can do the two real jobs: shrink the story down to its bones, and say what lesson it’s secretly arguing. Those two jobs have names — summary and theme — and each has a recipe.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RL.4.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Theme and summarizing</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredSum=false;
+var TASKS=[
+  {ans:1, txt:'Which of these is a <b>summary</b> of the fable — the whole story, shrunk to its bones?',
+   opts:['The leaf the dove dropped was green and shiny.','An ant was saved from drowning by a dove, and later stung a hunter to save the dove back.','A dove sat in a tree by a stream on a warm morning while an ant walked to the edge of the water to drink, and the water was moving fast, and…'],
+   won:'the shrunk-to-its-bones one'},
+  {ans:2, txt:'Which of these is the fable’s <b>theme</b> — the lesson about life it argues?',
+   opts:['Ants can sting people.','Doves are birds that live near streams.','One kindness has a way of coming back to you.'],
+   won:'the lesson, not a fact'},
+  {ans:0, txt:'Which detail does <b>NOT</b> belong in a summary?',
+   opts:['The leaf was green and shiny.','The dove saved the ant.','The ant stung the hunter.'],
+   won:'tiny details stay out'}
+];
+var predictDone=false,mistakeTested=false;
+var recipeCount=0;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- passages ---------- */
+function passFable(){
+  return '<div class="passage"><div class="src">The Ant and the Dove — a fable</div>'+
+  'An ant crept to the stream to drink, slipped, and was swept away by the current. A dove watching from a branch snapped off a leaf and dropped it into the water. The ant climbed aboard and floated safely to shore. Weeks later, a hunter crept toward the dove’s tree, net raised. The ant saw him, scurried over, and stung his ankle hard. The hunter yelped — and the dove flew free.</div>';
+}
+function passFox(){
+  return '<div class="passage"><div class="src">A second fable</div>'+
+  'A fox bragged all morning about being the fastest animal in the wood. A quiet tortoise challenged him to race. The fox sprinted ahead, then stopped to nap under a shady tree — there was plenty of time. He woke to cheering: the tortoise, never once stopping, was crossing the finish line.</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Two jobs: shrink it, and find its lesson</h2>';
+  h+='<p>Read the fable below. Then do two very different jobs with it. A <b>summary</b> retells just the <b>important events, in order</b> — short enough to say in one breath, with the tiny details left out. A <b>theme</b> is different: it’s the <b>lesson about life</b> the story argues — never stated, and bigger than the story itself (it should be true even for people who’ve never met an ant). Sort the choices in each challenge.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passFable();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickSum('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Summary = the important events, shrunk. Theme = the life lesson underneath.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredSum=false;
+}
+function pickSum(i){
+  if(answeredSum||wonCount>=TASKS.length)return;answeredSum=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Both rescues, in order, one breath. The first choice is a crumb; the third is the whole loaf all over again.'
+           :wonCount===1?'✓ “Kindness comes back” is a lesson about LIFE — true far beyond this stream. The others are just facts from the story.'
+                        :'✓ The leaf’s color changes nothing. If you can delete a detail and the story still makes sense, it stays out of the summary.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Ask two tests: could you say it in one breath AND does it cover the important events? That’s a summary. Is it a lesson that’s true beyond this story? That’s a theme. Try again.';
+    setTimeout(function(){if(step===0){answeredSum=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+var RECIPE=[
+  ['SOMEBODY','an ant (and a dove)'],
+  ['WANTED','the ant wanted a drink — then just to survive'],
+  ['BUT','the current swept it away'],
+  ['SO','the dove dropped a leaf and saved it'],
+  ['THEN','the ant repaid the rescue — a sting that set the dove free']
+];
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The summary recipe</h2>';
+  h+='<p>A summary isn’t a talent — it’s a recipe with five ingredients. Click each ingredient to build the fable’s summary:</p>';
+  h+='<div class="recipe">';
+  for(var i=0;i<RECIPE.length;i++)h+='<button class="rbtn'+(i<recipeCount?' used':'')+'" id="r'+i+'" onclick="addRecipe('+i+')">'+RECIPE[i][0]+'</button>';
+  h+='</div>';
+  h+='<div id="rout">';
+  for(i=0;i<recipeCount;i++)h+='<div class="rline"><b>'+RECIPE[i][0].toLowerCase()+':</b> '+RECIPE[i][1]+'</div>';
+  h+='</div>';
+  h+='<div id="rdone" class="'+(recipeCount>=5?'':'hide')+'"><div class="goal"><div class="lab">Stitched together</div><p>An ant was swept away at the stream, a dove saved it with a leaf, and later the ant stung a hunter to save the dove right back.</p></div></div>';
+  h+='<table><tr><th>Job</th><th>Recipe</th><th>Size</th></tr>';
+  h+='<tr><td>summary</td><td>somebody · wanted · but · so · then</td><td>one breath</td></tr>';
+  h+='<tr><td>theme</td><td>what do the events argue about life?</td><td>one sentence</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Summarize with the five ingredients, in story order, no tiny details. Then ask what all those events <b>add up to</b> — that’s where the theme hides.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(recipeCount>=5?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function addRecipe(i){
+  if(i!==recipeCount)return; /* build in order */
+  recipeCount++;
+  beat2();
+  if(recipeCount>=5&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>A new fable, same two jobs</h2>';
+  h+=passFox();
+  h+='<div class="ask"><div class="q">What is this fable’s <b>theme</b> — the lesson its events argue?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Slow and steady wins — bragging naps lose</button><button class="btn sm" onclick="checkPredict(\'b\')">Foxes are faster than tortoises</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">How the events argue it</div>';
+  h+='the fox brags + naps &nbsp;→&nbsp; and LOSES<br>';
+  h+='the tortoise plods, never stops &nbsp;→&nbsp; and WINS<br>';
+  h+='the story rewards steady effort and punishes showing off<br>';
+  h+='<b>theme: steady effort beats talent that slacks off</b></div>';
+  h+='<p>Notice the theme never mentions foxes. A theme is portable — it packs up and travels to your life. “Foxes are fast” stays stuck in the story; that makes it a detail, not a theme.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>That’s the lesson.</b> The events reward the steady tortoise and punish the bragging napper — that’s the story taking a side.';}
+  else{fb.className='fb no';fb.innerHTML='<b>That’s just a fact.</b> The fox IS faster — and still loses. The lesson is what the events argue: steady beats slacking.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Theme is earned, not announced</h2>';
+  h+='<p>Almost no story prints its theme. You earn it in two moves: watch <b>what the characters do</b>, then watch <b>what it costs or wins them</b>. The story pays out like a judge — whatever it rewards is what it believes in.</p>';
+  h+='<div class="work"><div class="lab">The two-move theme finder</div>';
+  h+='move 1 — what did they do? &nbsp;the dove helped a stranger; the ant remembered<br>';
+  h+='move 2 — what did it win them? &nbsp;the dove’s own life, saved by that same stranger<br>';
+  h+='the story REWARDS kindness &nbsp;→&nbsp; <b>theme: kindness comes back around</b></div>';
+  h+='<p>Careful with two impostors. A <b>topic</b> is one word — “friendship,” “bravery” — that’s a subject, not a lesson. And a detail with big words — “never swim in fast water” — is advice for ants, not a lesson about life. A theme is a full sentence that could hang on anyone’s wall.</p>';
+  h+='<table><tr><th>Candidate</th><th>Verdict</th></tr>';
+  h+='<tr><td>“kindness”</td><td>topic — just a subject</td></tr>';
+  h+='<tr><td>“stay away from streams”</td><td>detail-advice — stuck in the story</td></tr>';
+  h+='<tr><td>“one kindness comes back to you”</td><td>theme — a portable lesson</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Find the theme by asking what the story rewards and punishes. Say it as a full sentence about life — one that still works with the ants and doves removed.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Theo says the theme is “stay near rivers”</h2>';
+  h+='<p>Theo read the ant fable and announced: <i>“The theme is: always stay near rivers, because that’s where the story happens.”</i></p>';
+  h+=passFable();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testTheo()">Run the two-move finder</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Testing Theo’s “theme”</div>';
+  h+='is it what the story rewards? &nbsp;no — the river nearly DROWNED the ant<br>';
+  h+='is it portable to your life? &nbsp;no — it’s a fact about the setting<br>';
+  h+='what do the events actually reward? &nbsp;the dove’s kindness, repaid by the ant<br>';
+  h+='<b>real theme: one kindness comes back to you</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testTheo();
+}
+function testTheo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Theo grabbed the setting and called it a lesson.</b> Where a story happens is scenery, not argument. The theme lives in what the characters DO and what it wins them — here, kindness paid forward and paid back. If your “theme” mentions the scenery instead of the choices, run the two-move finder again.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What belongs in a summary?',
+   a:['Every detail, so nothing is lost','The important events, in story order, told short','Only the ending','Your favorite part'],correct:1,
+   why:'A summary shrinks the story to its bones: the important events, in order, one breath. Tiny details get deleted.'},
+  {q:'Which of these is a THEME, not a topic or a detail?',
+   a:['“Bravery”','“The dove sat in a tree”','“Real courage means acting even when you’re afraid”','“Chapter Three”'],correct:2,
+   why:'A theme is a full sentence about life that travels beyond its story. “Bravery” is a one-word topic; the tree is a detail.'},
+  {q:'How do you FIND a story’s theme?',
+   a:['Look for the sentence where the story states it','Ask what the story rewards and punishes through its events','Count how many characters it has','Pick the longest word in the title'],correct:1,
+   why:'Themes are earned, not announced: watch what characters do and what it wins or costs them — the story pays out like a judge.'},
+  {q:'Using the recipe — somebody, wanted, but, so, then — which is the best summary of the tortoise fable?',
+   a:['A fox is a kind of animal with a tail.','The tortoise walked and walked and walked and walked…','A bragging fox raced a tortoise, napped mid-race, and lost to the tortoise’s steady plodding.','Naps are bad.'],correct:2,
+   why:'Somebody (fox and tortoise), wanted (to win), but (the fox napped), so/then (the steady tortoise won) — all in one breath.'},
+  {q:'Theo said the ant fable’s theme was “stay near rivers.” What was wrong with that?',
+   a:['Nothing — settings make fine themes','Rivers weren’t in the story','He grabbed scenery instead of what the events reward — the real theme is that kindness comes back','The theme was printed in the last line and he missed it'],correct:2,
+   why:'That was Theo’s trap. The river is setting; the argument lives in the choices — kindness repaid. And no, fables don’t print their themes; you earn them.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RL.4.2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Shrink any story with the five-ingredient recipe, keep tiny details out, tell a theme from a topic or a stuck-in-the-story detail, and find the theme by watching what the events reward.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Theo. Scenery is never the lesson — watch what the story rewards.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredSum=false;predictDone=false;mistakeTested=false;recipeCount=0;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

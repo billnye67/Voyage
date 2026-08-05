@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Combining two texts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Reading Informational</div>
+  <div class="card">
+    <div class="tag">Lesson · RI.4.9</div>
+    <h1>Combining two texts</h1>
+    <p>One article tells you what penguin fathers do all winter. A different article tells you where the mothers went. Read either one alone and you know half a story. Real research is a merge: two texts on one topic, folded together into knowledge neither had by itself.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ RI.4.9</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Combining two texts</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredTwo=false;
+var TASKS=[
+  {ans:0, txt:'Which article explains <b>how the egg stays warm all winter</b>?',
+   opts:['Article 1 — the dads balance it on their feet under a skin fold','Article 2','Neither article'], won:'Article 1 has the egg'},
+  {ans:1, txt:'Which article explains <b>where the mothers go and why</b>?',
+   opts:['Article 1','Article 2 — the 80-kilometer trek to the sea for food','Both say it'], won:'Article 2 has the trek'},
+  {ans:2, txt:'To explain <b>how a chick survives its first weeks</b>, what do you need?',
+   opts:['Article 1 is enough','Article 2 is enough','Both merged — dad’s warmth AND mom’s returning food'], won:'the merge tells it all'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+function passOne(hl){
+  var t=hl?'All through the Antarctic winter, emperor penguin fathers stand together in tight huddles against <span class="hl">minus-sixty-degree winds</span>. Each dad balances <span class="hl">a single egg on his feet</span>, tucked under a warm fold of skin, <span class="hl">eating nothing for about two months</span> while he waits.'
+        :'All through the Antarctic winter, emperor penguin fathers stand together in tight huddles against minus-sixty-degree winds. Each dad balances a single egg on his feet, tucked under a warm fold of skin, eating nothing for about two months while he waits.';
+  return '<div class="passage"><div class="src">Article 1 — “The Longest Babysit” (a wildlife magazine)</div>'+t+'</div>';
+}
+function passTwo(hl){
+  var t=hl?'After laying her egg, the emperor penguin mother sets off on <span class="hl">a trek of up to eighty kilometers</span> to reach the open sea. There she hunts fish and squid for weeks, then returns — through the same <span class="hl">minus-sixty-degree cold</span> — with <span class="hl">a belly full of food for the newly hatched chick</span>.'
+        :'After laying her egg, the emperor penguin mother sets off on a trek of up to eighty kilometers to reach the open sea. There she hunts fish and squid for weeks, then returns — through the same minus-sixty-degree cold — with a belly full of food for the newly hatched chick.';
+  return '<div class="passage"><div class="src">Article 2 — “March to the Sea” (a science website)</div>'+t+'</div>';
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Two halves of one story</h2>';
+  h+='<p>Two authors wrote about the same topic — emperor penguins raising chicks — but each covered <b>different ground</b>. Read both. Then, for each question, figure out which article holds the answer… or whether it takes <b>both</b>.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=passOne(false)+passTwo(false);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickTwo('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Check each article — who actually holds this fact?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredTwo=false;
+}
+function pickTwo(i){
+  if(answeredTwo||wonCount>=TASKS.length)return;answeredTwo=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Only Article 1 watches the egg: balanced on dad’s feet, under the skin fold, for two hungry months.'
+           :wonCount===1?'✓ Only Article 2 follows the mothers: eighty kilometers to the sea, weeks of hunting, and the long walk back.'
+                        :'✓ Neither article alone can raise a chick. Dad’s warmth comes from Article 1, the arriving food from Article 2 — survival is the merge.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Scan each article for the actual fact. If one has it, name that one. If the full answer needs pieces from each, the answer is both. Try again.';
+    setTimeout(function(){if(step===0){answeredTwo=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Merge the notes</h2>';
+  h+='<p>Here are both articles with their key facts marked — and the merged note-sheet a researcher would build:</p>';
+  h+=passOne(true)+passTwo(true);
+  h+='<div class="work"><div class="lab">The merge sheet</div>';
+  h+='only Article 1: &nbsp;dads hold the egg on their feet · two months without food<br>';
+  h+='only Article 2: &nbsp;moms trek up to 80 km · return with food for the chick<br>';
+  h+='BOTH agree: &nbsp;&nbsp;&nbsp;the minus-sixty-degree cold — double-confirmed!</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>To combine texts: list what only A knows, what only B knows, and what both agree on. Agreements are extra-trustworthy — two authors checked the same fact. The merged sheet knows more than either article.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The report test</h2>';
+  h+='<p>Your class report question is: <b>“What does EACH penguin parent do to keep the chick alive?”</b></p>';
+  h+='<div class="ask"><div class="q">Could you write that report from just ONE of the two articles?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">No — each article only knows one parent; the report needs both</button><button class="btn sm" onclick="checkPredict(\'b\')">Yes — Article 1 alone covers it</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Test each source against the question</div>';
+  h+='the question asks about BOTH parents<br>';
+  h+='Article 1 alone: &nbsp;dad ✓ &nbsp;mom — barely a mention<br>';
+  h+='Article 2 alone: &nbsp;mom ✓ &nbsp;dad — missing<br>';
+  h+='<b>only the merged sheet answers the whole question</b></div>';
+  h+='<p>This is the move real researchers make before writing anything: hold the question up against each source and see what’s missing. Gaps in your sources become gaps in your report — unless you merge.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Both.</b> The question covers two parents, and each article only follows one of them.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Hold the question against it.</b> Article 1 barely mentions the mother — half your report would be blank. The question needs the merge.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>When two texts disagree</h2>';
+  h+='<p>Merging has one more wrinkle: sometimes your sources <b>don’t match</b>. Suppose a third article said the mothers trek “about fifty kilometers” — but Article 2 said “up to eighty.”</p>';
+  h+='<div class="work"><div class="lab">Handling a disagreement honestly</div>';
+  h+='bad: &nbsp;&nbsp;pick your favorite number and hide the other<br>';
+  h+='good: &nbsp;“sources report treks of about 50 to 80 kilometers”<br>';
+  h+='best: &nbsp;notice WHY they might differ — different colonies, different years — and say so</div>';
+  h+='<p>Disagreements aren’t disasters — they’re information. Where sources agree, you stand firm. Where they differ, you report the range and stay honest. That’s what separates research from copying.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Merging two texts means recording agreements as solid ground, additions as new knowledge, and disagreements as honest ranges — never silently choosing one and burying the other.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Mia says the mothers do nothing</h2>';
+  h+='<p>Mia read <b>only Article 1</b> and wrote in her report: <i>“The father penguins do all the work. The mothers do nothing at all.”</i></p>';
+  h+=passOne(false);
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testMia()">Check the other article</button></div>';
+  h+='<div id="mh" class="hide">'+passTwo(false);
+  h+='<div class="work"><div class="lab">The missing half</div>';
+  h+='Article 1 is ABOUT the dads — of course it stars the dads<br>';
+  h+='Article 2: the moms trek 80 km, hunt for weeks, haul food home<br>';
+  h+='“my article didn’t mention it” ≠ “it didn’t happen”</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMia();
+}
+function testMia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Mia turned one source’s silence into a fact.</b> Article 1 follows the fathers, so the mothers barely appear — but absence from ONE text isn’t absence from the world. One more article and her claim collapses: the mothers were marching eighty kilometers and hunting for weeks. Before writing “X does nothing,” check a second source — silence is not evidence.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Two articles cover the same topic differently. What’s the FIRST move for combining them?',
+   a:['Pick the longer one and ignore the other','List what only A knows, what only B knows, and what both agree on','Read only the titles','Average their word counts'],correct:1,
+   why:'The merge sheet: only-A, only-B, and agreements. That’s how two texts become one body of knowledge.'},
+  {q:'Both penguin articles mention the minus-sixty-degree cold. What does that agreement mean?',
+   a:['One author copied the other','The fact is extra-trustworthy — two sources confirmed it','The cold is the main idea of both','Nothing special'],correct:1,
+   why:'When independent sources agree, the fact stands on two legs. Agreements are the solid ground of research.'},
+  {q:'Your question needs facts about BOTH penguin parents. Article 1 only follows the dads. What do you do?',
+   a:['Write about dads twice','Guess about the mothers','Bring in the second article and merge — one source can’t answer a two-part question','Change the question'],correct:2,
+   why:'Hold the question against each source: if a source leaves a gap, another source fills it. That’s integrating.'},
+  {q:'Two sources give different trek distances: “about 50 km” and “up to 80 km.” The honest report says…',
+   a:['“sources report treks of about 50 to 80 kilometers”','Whichever number sounds cooler','Nothing — skip the fact','That penguins can’t be measured'],correct:0,
+   why:'Disagreements get reported as ranges, not buried. Silently picking one number is copying, not research.'},
+  {q:'Mia read one article and wrote “the mothers do nothing.” What was her mistake?',
+   a:['She read too many sources','She treated one source’s SILENCE as a fact — a second text held the missing half','Mothers actually do nothing','She should have written about fish'],correct:1,
+   why:'That was Mia’s trap. An article about dads stars dads. Absence from one text is never proof — check a second source.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['RI.4.9']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Build a merge sheet from two texts, treat agreements as double-checked ground, report disagreements as honest ranges, hold your question against each source — and never mistake one text’s silence for a fact.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Mia. Silence in one source is not evidence — check a second.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredTwo=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

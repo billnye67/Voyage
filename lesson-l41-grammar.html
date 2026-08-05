@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Sentence hospital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .passage{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:16.5px;line-height:1.8}
+  .passage .src{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hl{background:rgba(240,102,63,.20);border-radius:3px;padding:0 3px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Language</div>
+  <div class="card">
+    <div class="tag">Lesson · L.4.1</div>
+    <h1>Sentence hospital</h1>
+    <p>Three patients arrive: one sentence is missing half its body, one is actually two sentences fused in a crash, and one is perfectly healthy. Today you’re the doctor — learn to diagnose broken sentences, fix them properly, and keep your verbs running in the right tense.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ L.4.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 ELA &nbsp;›&nbsp; Sentence hospital</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredDx=false;
+var TASKS=[
+  {ans:0, txt:'Patient 1: <b>“Because the dog barked all night.”</b>',
+   opts:['Fragment — a piece is missing; it never tells what happened','Run-on — two sentences crashed together','Healthy — a complete thought'], won:'fragment — half a body'},
+  {ans:1, txt:'Patient 2: <b>“We went to the park we stayed until dark.”</b>',
+   opts:['Fragment','Run-on — two whole sentences fused with no glue','Healthy'], won:'run-on — a two-sentence crash'},
+  {ans:2, txt:'Patient 3: <b>“The tired dog finally slept.”</b>',
+   opts:['Fragment','Run-on','Healthy — a who and a what-happened, complete'], won:'healthy — discharge!'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Diagnose the patients</h2>';
+  h+='<p>A healthy sentence has two vital signs: a <b>who or what</b> (the subject) and a <b>what happened</b> (the verb) — and it feels finished. A <b>fragment</b> is missing a vital sign: it leaves you hanging (“Because the dog barked…” — and THEN what?). A <b>run-on</b> is two complete sentences <b>fused with no glue</b> — no period, no joining word. Diagnose each patient.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Patient '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickDx('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Check the vital signs: a who, a what-happened, and a finished feeling.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredDx=false;
+}
+function pickDx(i){
+  if(answeredDx||wonCount>=TASKS.length)return;answeredDx=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ It has a dog and barking — but “because” promises a result that never comes. You’re left hanging. Fragment.'
+           :wonCount===1?'✓ “We went to the park” is complete. “We stayed until dark” is complete. Fused with nothing between them — a crash. Run-on.'
+                        :'✓ Who? The tired dog. What happened? It slept. Finished feeling? Yes. Discharge this one — it’s healthy.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Run the checkup: is a piece missing (fragment)? Are TWO complete sentences fused (run-on)? Or is it one finished thought (healthy)? Try again.';
+    setTimeout(function(){if(step===0){answeredDx=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The treatments</h2>';
+  h+='<p>Diagnosis is half the job — here’s how each patient gets fixed:</p>';
+  h+='<div class="work"><div class="lab">Fixing the fragment</div>';
+  h+='sick: &nbsp;&nbsp;Because the dog barked all night.<br>';
+  h+='fix A: &nbsp;finish the thought → Because the dog barked all night, <b>nobody slept</b>.<br>';
+  h+='fix B: &nbsp;cut the hanging word → <b>The dog barked all night.</b></div>';
+  h+='<div class="work"><div class="lab">Fixing the run-on</div>';
+  h+='sick: &nbsp;&nbsp;We went to the park we stayed until dark.<br>';
+  h+='fix A: &nbsp;split it → We went to the park<b>.</b> We stayed until dark.<br>';
+  h+='fix B: &nbsp;glue it → We went to the park<b>, and</b> we stayed until dark.</div>';
+  h+='<table><tr><th>Sickness</th><th>Symptom</th><th>Treatment</th></tr>';
+  h+='<tr><td>fragment</td><td>leaves you hanging</td><td>finish it, or cut the hanging word</td></tr>';
+  h+='<tr><td>run-on</td><td>two sentences, no glue</td><td>a period, or comma + and/but/so</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Fragments need MORE (a finished thought). Run-ons need a BREAK (a period) or real glue (comma + and, but, so). Both fixes start with hearing where a thought truly ends.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Is a comma strong enough?</h2>';
+  h+='<p>Another run-on rolls in: <b>“The rain stopped we ran outside.”</b> A student suggests: “Easy — just drop in a comma: <i>The rain stopped, we ran outside.</i>”</p>';
+  h+='<div class="ask"><div class="q">Does a comma alone fix a run-on?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">No — a comma alone is too weak to hold two sentences</button><button class="btn sm" onclick="checkPredict(\'b\')">Yes — commas separate things</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">The comma test</div>';
+  h+='a comma is a paperclip — fine for lists, too weak for two whole sentences<br>';
+  h+='still broken: &nbsp;The rain stopped, we ran outside.<br>';
+  h+='real fixes: &nbsp;&nbsp;The rain stopped<b>.</b> We ran outside.<br>';
+  h+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The rain stopped<b>, so</b> we ran outside.</div>';
+  h+='<p>Comma + joining word (<b>and, but, so</b>) is welded steel. Comma alone is a paperclip holding two train cars. Writers call that crash a <b>comma splice</b> — now you can spot it AND name it.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Too weak.</b> A comma alone between two sentences is a comma splice — the crash with a paperclip on it. Needs a period or comma + and/but/so.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Commas separate list items — not sentences.</b> Alone between two sentences it’s a comma splice. Use a period, or comma + and/but/so.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Keep your verbs in the right gear</h2>';
+  h+='<p>Healthy sentences also need verbs running in the right <b>tense</b> — the verb’s time setting. For actions that stretch out over time, English uses the <b>-ing gear</b> with a helper verb:</p>';
+  h+='<table><tr><th>Time</th><th>The -ing gear</th><th>Example</th></tr>';
+  h+='<tr><td>past</td><td>was / were + -ing</td><td>I <b>was reading</b> when you called</td></tr>';
+  h+='<tr><td>now</td><td>am / is / are + -ing</td><td>she <b>is reading</b> right now</td></tr>';
+  h+='<tr><td>future</td><td>will be + -ing</td><td>we <b>will be reading</b> all summer</td></tr></table>';
+  h+='<div class="work"><div class="lab">Hearing a tense mistake</div>';
+  h+='broken: &nbsp;Yesterday, she <b>is walking</b> to school. &nbsp;(yesterday + now-gear ✗)<br>';
+  h+='fixed: &nbsp;&nbsp;&nbsp;Yesterday, she <b>was walking</b> to school.<br>';
+  h+='the time word and the verb gear must AGREE</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Match the helper to the time: was/were for past, am/is/are for now, will be for future. If the sentence names a time — yesterday, right now, tomorrow — the verb must shift into that gear.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Remy says punctuation makes it a sentence</h2>';
+  h+='<p>Remy wrote <b>“Running down the hall.”</b> and defended it: <i>“It starts with a capital and ends with a period. That makes it a sentence.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testRemy()">Run the vital signs</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Checkup on “Running down the hall.”</div>';
+  h+='who or what is running? &nbsp;<b>missing</b> — no subject anywhere<br>';
+  h+='finished feeling? &nbsp;no — running down the hall… and? WHO?<br>';
+  h+='capital + period = a costume, not a body<br>';
+  h+='fixed: &nbsp;<b>Milo was</b> running down the hall.</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testRemy();
+}
+function testRemy(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Remy dressed a fragment in a sentence’s clothes.</b> Capitals and periods are the uniform — the vital signs are a WHO and a WHAT-HAPPENED. “Running down the hall” has an action with nobody doing it. Give it a subject and a helper — “Milo was running down the hall” — and NOW it’s alive.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'“After the longest soccer practice ever.” What is this?',
+   a:['A healthy sentence','A run-on','A fragment — it leaves you hanging with no what-happened','A question'],correct:2,
+   why:'“After the longest practice ever”… WHAT happened? No verb, no finish — a fragment in need of more.'},
+  {q:'“The bell rang everyone raced outside.” What’s the diagnosis?',
+   a:['Healthy','A run-on — two complete sentences fused with no glue','A fragment','A poem'],correct:1,
+   why:'“The bell rang” is complete. “Everyone raced outside” is complete. No period or glue between them — a crash.'},
+  {q:'Which is a REAL fix for “The bell rang everyone raced outside”?',
+   a:['The bell rang, everyone raced outside.','The bell rang everyone, raced outside.','The bell rang. Everyone raced outside.','Leave it — it sounds fine fast'],correct:2,
+   why:'A period splits the crash cleanly. (Choice one is the comma splice — a paperclip holding train cars.)'},
+  {q:'“Right now, the twins ___ in the pool.” Which verb fits the time?',
+   a:['are splashing — the now-gear matches “right now”','was splashing','will be splashed','splashed yesterday'],correct:0,
+   why:'“Right now” demands the now-gear: am/is/are + -ing. The helper must agree with the time word.'},
+  {q:'Remy claims “Running down the hall.” is a sentence because it has a capital and a period. What’s the truth?',
+   a:['He’s right — punctuation is what counts','It’s a run-on','Punctuation is a costume — with no WHO doing the running, it’s still a fragment','It’s two sentences'],correct:2,
+   why:'That was Remy’s trap. Vital signs first: a subject and a verb with a finished feeling. Uniforms don’t make soldiers.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4ela_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['L.4.1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Diagnose fragments and run-ons by their vital signs, prescribe real fixes — finish it, split it, or glue it with comma + and/but/so — spot a comma splice, and shift verbs into the gear their time words demand.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Remy. Punctuation is the uniform — the vital signs are a who and a what-happened.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'ela-course.html\'">Back to ELA →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredDx=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
