@@ -306,7 +306,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Write a big number in digits, pieces or words, and compare two of them by working left to right.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Nadia. One missing zero moved every digit and shrank the number nine times over.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  h+='';
   el('stage').innerHTML=h;
 }
 function restart(){step=0;sel={};wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

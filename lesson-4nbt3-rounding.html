@@ -308,7 +308,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Round any whole number to any place by finding the two ends and picking the nearer one.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Theo. He rounded twice, and 4,000 was never even one of the two options.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  h+='';
   el('stage').innerHTML=h;
 }
 function restart(){step=0;wonCount=0;answeredRound=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

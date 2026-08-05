@@ -1,61 +1,420 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voyage · Line symmetry</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
-:root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;min-height:100vh}.shell{max-width:760px;margin:0 auto;padding:26px 22px 80px}.crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}h1{font-family:'Fraunces',serif;font-size:31px;line-height:1.12;margin-bottom:12px}h2{font-family:'Fraunces',serif;font-size:23px;line-height:1.22;margin-bottom:14px}p{font-size:16.5px;line-height:1.6;margin-bottom:12px}b{font-weight:600}.tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}.goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}.goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}.goal p{margin:0 0 8px}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}.btn:active{transform:translate(3px,3px);box-shadow:none}.btn.go{background:var(--accent);color:#fff}.btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}.btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}.steps{display:flex;gap:6px;margin-bottom:20px}.steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}.steps .seg.on{background:var(--blue)}.hide{display:none}.challenge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0 15px}.challenge-chip{border:1.5px solid var(--blue-line);border-radius:9px;padding:8px;font-family:'Space Mono',monospace;font-size:11px;text-align:center;background:#fff}.challenge-chip.now{border-color:var(--accent);color:var(--accent);font-weight:700}.challenge-chip.done{border-color:var(--green);color:var(--green)}.diagram{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:8px;margin:12px 0}.diagram svg{width:100%;max-height:260px;display:block}.svglabel{font-family:'Space Grotesk',sans-serif;font-size:15px;fill:var(--ink);font-weight:600}.svgtiny{font-family:'Space Mono',monospace;font-size:10px;fill:var(--muted)}.ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}.ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}.choice,.stepchoice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}.choice:hover,.stepchoice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}.choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}.choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}.inputrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}.inputrow input{font-family:'Space Mono',monospace;font-size:18px;min-width:145px;max-width:260px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;text-align:center}.checkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px}.checkopt{display:flex;gap:9px;align-items:center;background:#fff;border:1.5px solid var(--blue-line);border-radius:9px;padding:11px;font-size:15px}.feedback{font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px;min-height:44px;margin-top:12px}.feedback.ok{background:rgba(46,125,91,.12);color:var(--green)}.feedback.no{background:rgba(240,102,63,.12);color:var(--accent)}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}.qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.done-icon{font-size:44px;text-align:center;margin-bottom:8px}.attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}.lineplot{display:flex;align-items:flex-end;height:165px;padding:10px 12px 0;position:relative}.lineplot:after{content:'';position:absolute;left:12px;right:12px;bottom:38px;border-top:3px solid var(--ink)}.tick{flex:1;text-align:center;position:relative;z-index:1}.xstack{height:104px;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:center}.xmark{font-family:'Space Mono',monospace;font-size:23px;line-height:18px;color:var(--blue)}.tickline{height:15px;border-left:2px solid var(--ink);margin:0 auto;width:1px}.ticklab{font-family:'Space Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap}.formula{font-family:'Space Mono',monospace;text-align:center;font-size:19px;padding:12px}.termgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.term{background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px}.term b{display:block;color:var(--blue);margin-bottom:3px}
-.worked{width:100%;border-collapse:collapse;margin:12px 0;font-family:'Space Mono',monospace;font-size:14.5px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;overflow:hidden}
-.worked th{text-align:left;padding:9px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1.5px solid var(--blue-line)}
-.worked td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--blue-line)}
-.worked tr:last-child td{border-bottom:none}
-@media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.nav{align-items:flex-end}.lineplot{padding-left:0;padding-right:0}.ticklab{font-size:9px}}
-</style></head><body><div class="shell">
-<div id="intro"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Geometry</div><div class="card"><div class="tag">Lesson · 4.G.3</div><h1>Line symmetry</h1><p>Choose every fold line that makes both halves match exactly.</p><div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.G.3</span></div><button class="btn go" onclick="startLesson()">Start lesson →</button></div></div>
-<div id="lesson" class="hide"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Line symmetry</div><div class="steps" id="steps"></div><div class="card" id="stage"></div></div></div>
-<script>var CODE="4.G.3",CHALLENGE_TITLE="Test each candidate fold",DONE_TEXT="Identify and draw lines of symmetry by using the fold test.";var TASKS=[{"context": "Candidate lines A\u2013D cross a non-square rectangle. Select every line of symmetry.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 235\"><rect x=\"85\" y=\"55\" width=\"250\" height=\"120\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"4\"/>\n      <line x1=\"210\" y1=\"15\" x2=\"210\" y2=\"220\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"218\" y=\"28\" class=\"svglabel\">A</text>\n      <line x1=\"35\" y1=\"115\" x2=\"385\" y2=\"115\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"370\" y=\"107\" class=\"svglabel\">B</text>\n      <line x1=\"70\" y1=\"210\" x2=\"350\" y2=\"20\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"32\" class=\"svglabel\">C</text>\n      <line x1=\"70\" y1=\"20\" x2=\"350\" y2=\"210\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"205\" class=\"svglabel\">D</text>\n    </svg></div>", "steps": [{"type": "multi", "prompt": "Which folds make matching halves?", "options": ["A: vertical", "B: horizontal", "C: one diagonal", "D: the other diagonal"], "correct": [0, 1], "why": "Vertical and horizontal folds match; the diagonals swap unequal side lengths.", "wrong": "Imagine folding the actual rectangle, not a square."}]}, {"context": "Candidate lines A\u2013D cross a square. Select every line of symmetry.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 235\"><rect x=\"125\" y=\"30\" width=\"170\" height=\"170\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"4\"/>\n      <line x1=\"210\" y1=\"15\" x2=\"210\" y2=\"220\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"218\" y=\"28\" class=\"svglabel\">A</text>\n      <line x1=\"35\" y1=\"115\" x2=\"385\" y2=\"115\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"370\" y=\"107\" class=\"svglabel\">B</text>\n      <line x1=\"70\" y1=\"210\" x2=\"350\" y2=\"20\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"32\" class=\"svglabel\">C</text>\n      <line x1=\"70\" y1=\"20\" x2=\"350\" y2=\"210\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"205\" class=\"svglabel\">D</text>\n    </svg></div>", "steps": [{"type": "multi", "prompt": "Which folds make matching halves?", "options": ["A: vertical", "B: horizontal", "C: one diagonal", "D: the other diagonal"], "correct": [0, 1, 2, 3], "why": "A square matches across its vertical, horizontal, and both diagonal folds.", "wrong": "All four candidate folds pair equal sides and equal angles in a square."}]}, {"context": "Candidate lines A\u2013D cross an isosceles triangle.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 235\"><polygon points=\"210,30 80,195 340,195\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"4\"/>\n      <line x1=\"210\" y1=\"15\" x2=\"210\" y2=\"220\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"218\" y=\"28\" class=\"svglabel\">A</text>\n      <line x1=\"35\" y1=\"115\" x2=\"385\" y2=\"115\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"370\" y=\"107\" class=\"svglabel\">B</text>\n      <line x1=\"70\" y1=\"210\" x2=\"350\" y2=\"20\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"32\" class=\"svglabel\">C</text>\n      <line x1=\"70\" y1=\"20\" x2=\"350\" y2=\"210\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"205\" class=\"svglabel\">D</text>\n    </svg></div>", "steps": [{"type": "multi", "prompt": "Which line is a symmetry line?", "options": ["A: vertical", "B: horizontal", "C: one diagonal", "D: the other diagonal"], "correct": [0], "why": "Only the vertical fold sends the two equal sloping sides onto each other.", "wrong": "The fold must pass through the top vertex and the midpoint of the base."}]}, {"context": "This scalene triangle has three unequal sides.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 235\"><polygon points=\"145,25 55,195 355,175\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"4\"/>\n      <line x1=\"210\" y1=\"15\" x2=\"210\" y2=\"220\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"218\" y=\"28\" class=\"svglabel\">A</text>\n      <line x1=\"35\" y1=\"115\" x2=\"385\" y2=\"115\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"370\" y=\"107\" class=\"svglabel\">B</text>\n      <line x1=\"70\" y1=\"210\" x2=\"350\" y2=\"20\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"32\" class=\"svglabel\">C</text>\n      <line x1=\"70\" y1=\"20\" x2=\"350\" y2=\"210\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/><text x=\"342\" y=\"205\" class=\"svglabel\">D</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "How many of the candidate lines are symmetry lines?", "options": ["0", "1", "2", "3"], "correct": 0, "why": "No fold can match all three unequal sides and angles.", "wrong": "Test the full outline: none of the candidate folds makes matching halves."}]}];var WHAT={"heading": "A symmetry line is a perfect fold", "body": "<p>Fold along the candidate line. Every point on one half must land on a matching point on the other half.</p><div class=\"termgrid\"><div class=\"term\"><b>Non-square rectangle</b>2 lines</div><div class=\"term\"><b>Square</b>4 lines</div><div class=\"term\"><b>Isosceles triangle</b>1 line</div><div class=\"term\"><b>Scalene triangle</b>0 lines</div></div>"};var PREDICT={"heading": "Some shapes have more than \u201cmany\u201d", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 260 220\"><circle cx=\"130\" cy=\"110\" r=\"82\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"4\"/><line x1=\"130\" y1=\"15\" x2=\"130\" y2=\"205\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-dasharray=\"8 6\"/></svg></div>", "prompt": "How many lines of symmetry does a circle have?", "options": ["0", "1", "4", "Infinitely many"], "correct": 3, "why": "Every diameter divides a circle into matching halves, and there are infinitely many diameters.", "reveal": "<div class=\"goal\"><div class=\"lab\">Any direction through the center</div><p>Rotate the shown diameter to create another valid symmetry line.</p></div>"};var WHY={"heading": "Symmetry depends on the whole boundary", "body": "<p>A line may pass through the center and still fail. The two resulting outlines must match point for point.</p><p>This is why a non-square rectangle\u2019s diagonals fail: a long side would fold onto a short side.</p>"};var MISTAKE={"heading": "Noah gives every rectangle four symmetry lines", "body": "<p>He copied the square\u2019s diagonals onto a longer rectangle.</p>", "button": "Run the fold test", "reveal": "<div class=\"feedback no\"><b>A non-square rectangle has only two.</b> Its diagonal folds do not make the unequal side lengths coincide.</div>"};var QUESTIONS=[{"q": "How many symmetry lines does a non-square rectangle have?", "a": ["1", "2", "4", "0"], "correct": 1, "why": "Its vertical and horizontal center lines work."}, {"q": "How many symmetry lines does a square have?", "a": ["2", "3", "4", "Infinite"], "correct": 2, "why": "Vertical, horizontal, and both diagonals work."}, {"q": "A fold line is valid when...", "a": ["both halves match exactly", "it is vertical", "it passes through a corner", "it is the longest possible line"], "correct": 0, "why": "Exact matching after folding is the definition."}, {"q": "A scalene triangle has how many symmetry lines?", "a": ["3", "2", "1", "0"], "correct": 3, "why": "No fold pairs all three unequal sides and angles."}, {"q": "Why do a non-square rectangle\u2019s diagonals fail?", "a": ["They are too long", "They cross", "Long sides would not match short sides", "Diagonals can never be symmetry lines"], "correct": 2, "why": "The folded halves do not coincide because adjacent side lengths differ."}];
-var step=0,TOTAL=11,taskIndex=0,taskStep=0,challengeDone=false,feedback='',qIndex=0,qCorrect=0,answered=false;
-function el(i){return document.getElementById(i)}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0)}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h}
-function next(){if(step<TOTAL-1){step++;render();scrollTo(0,0)}}
-function back(){if(step>0){step--;render();scrollTo(0,0)}}
-function norm(v){return String(v).toLowerCase().replace(/[,\s$°]/g,'').replace(/hours?/g,'h').replace(/minutes?/g,'m').replace(/meters?/g,'m').replace(/kilometers?/g,'km').replace(/dollars?/g,'')}
-function renderChallenge(){
- var h='<div class="tag">Challenge</div><h2>'+CHALLENGE_TITLE+'</h2>';
- h+='<div class="goal"><div class="lab">Worked example \u2014 read this first</div>'+
-    '<p>Test a parallelogram — a pushed-over rectangle, opposite sides equal and parallel.</p>'+
-    '<table class="worked">'+
-    '<tr><td>Fold left to right</td><td>the slanted sides lean opposite ways</td><td><b>not a symmetry line</b></td></tr>'+
-    '<tr><td>Fold top to bottom</td><td>the top edge does not sit over the bottom</td><td><b>not a symmetry line</b></td></tr>'+
-    '<tr><td>Fold along a diagonal</td><td>the halves point different ways</td><td><b>not a symmetry line</b></td></tr>'+
-    '</table>'+
-    '<p>A parallelogram has <b>no</b> lines of symmetry at all. Every one of those lines passes through the middle and cuts it into two equal-sized pieces, and not one of them is a fold that matches. Equal halves is not the test. Landing exactly on top is.</p></div>';
- h+='<div class="challenge-list">';for(var i=0;i<TASKS.length;i++)h+='<div class="challenge-chip '+(i<taskIndex?'done':i===taskIndex&&!challengeDone?'now':'')+'">'+(i<taskIndex?'✓ ':'')+'Round '+(i+1)+'</div>';h+='</div>';
- if(challengeDone){h+='<div class="goal"><div class="lab">Challenge complete</div><p>You made every decision yourself. Now unpack why the moves worked.</p></div>'}
- else{var T=TASKS[taskIndex],S=T.steps[taskStep];h+='<p>'+T.context+'</p>'+(T.visual||'');h+='<div class="ask"><div class="q">'+S.prompt+'</div>';
-   if(S.type==='choice'){for(var j=0;j<S.options.length;j++)h+='<button class="stepchoice" onclick="chooseStep('+j+')">'+S.options[j]+'</button>'}
-   else if(S.type==='input'){h+='<div class="inputrow"><input id="stepin" type="text" inputmode="decimal" placeholder="'+(S.placeholder||'?')+'"><button class="btn sm go" onclick="submitInput()">Lock it in</button></div>'}
-   else if(S.type==='multi'){h+='<div class="checkgrid">';for(var k=0;k<S.options.length;k++)h+='<label class="checkopt"><input type="checkbox" name="multi" value="'+k+'"> '+S.options[k]+'</label>';h+='</div><div class="inputrow"><button class="btn sm go" onclick="submitMulti()">Check choices</button></div>'}
-   h+='</div>'}
- h+='<div class="feedback '+(feedback?(feedback.indexOf('✓')===0?'ok':'no'):'')+'">'+(feedback||'Choose carefully. A wrong move stays wrong until you fix it.')+'</div>';
- h+='<div class="nav"><span></span><button class="btn" '+(challengeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h;
- if(!challengeDone){var inp=el('stepin');if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput()})}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Line symmetry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Geometry</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.G.A.3</div>
+    <h1>Line symmetry</h1>
+    <p>Fold a paper valentine down its crease and the two halves land perfectly on top of each other — every edge kissing its twin. That crease has a name. But some fold lines that look perfect secretly fail, and some shapes that look perfectly balanced have no good fold at all. One simple test settles every case.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.G.A.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Line symmetry</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredFold=false;
+var TASKS=[
+  {fig:'tri', ans:0, txt:'A triangle, with the dashed line straight down its middle. Imagine the fold.', won:'the fold matches'},
+  {fig:'diag',ans:1, txt:'A rectangle, with the dashed line corner to corner. The line cuts two triangles of exactly the <b>same size</b> — but imagine the fold.', won:'equal pieces, failed fold'},
+  {fig:'off', ans:2, txt:'The same rectangle, with the dashed line off to one side.', won:'unequal pieces'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function advanceStep(message){feedback='✓ '+message;var T=TASKS[taskIndex];setTimeout(function(){taskStep++;feedback='';if(taskStep>=T.steps.length){taskIndex++;taskStep=0;if(taskIndex>=TASKS.length)challengeDone=true}renderChallenge()},650)}
-function chooseStep(i){var S=TASKS[taskIndex].steps[taskStep];if(i===S.correct)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'That does not match the quantities shown. Try another decision.');renderChallenge()}}
-function submitInput(){var S=TASKS[taskIndex].steps[taskStep],v=(el('stepin').value||'').trim();if(!v)return;var ans=S.answers||[S.answer],ok=ans.some(function(a){return norm(v)===norm(a)});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Recheck the operation, units, and arithmetic.');renderChallenge()}}
-function submitMulti(){var S=TASKS[taskIndex].steps[taskStep],got=Array.from(document.querySelectorAll('input[name=multi]:checked')).map(function(x){return +x.value}).sort(),want=S.correct.slice().sort();var ok=got.length===want.length&&got.every(function(v,i){return v===want[i]});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Use the properties you can prove from the figure, then try again.');renderChallenge()}}
-function renderInfo(obj,tag){var h='<div class="tag">'+tag+'</div><h2>'+obj.heading+'</h2>'+obj.body+'<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-var predictDone=false;
-function renderPredict(){var P=PREDICT,h='<div class="tag">Predict first</div><h2>'+P.heading+'</h2>'+P.visual+'<div class="ask"><div class="q">'+P.prompt+'</div>';for(var i=0;i<P.options.length;i++)h+='<button class="stepchoice" onclick="pickPredict('+i+')">'+P.options[i]+'</button>';h+='<div id="pfb"></div></div>';if(predictDone)h+=P.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function pickPredict(i){predictDone=true;renderPredict();var f=el('pfb');f.className='feedback '+(i===PREDICT.correct?'ok':'no');f.innerHTML=(i===PREDICT.correct?'✓ ':'✗ ')+PREDICT.why}
-var mistakeDone=false;
-function renderMistake(){var M=MISTAKE,h='<div class="tag">Catch the mistake</div><h2>'+M.heading+'</h2>'+M.body+'<div class="inputrow"><button class="btn sm" onclick="showMistake()">'+M.button+'</button></div>';if(mistakeDone)h+=M.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(mistakeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function showMistake(){mistakeDone=true;renderMistake()}
-function renderQuestion(){var Q=QUESTIONS[qIndex],h='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div><h2 style="margin-top:10px">'+Q.q+'</h2>';for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pickQ('+i+')">'+Q.a[i]+'</button>';h+='<div id="qfb"></div><div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review teaching</button><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="qnext" disabled onclick="nextQ()">Next →</button></div>';el('stage').innerHTML=h;answered=false}
-function pickQ(i){if(answered)return;answered=true;var Q=QUESTIONS[qIndex];for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong')}var f=el('qfb');f.className='feedback '+(i===Q.correct?'ok':'no');f.innerHTML=(i===Q.correct?'✓ Correct. ':'✗ Not quite. ')+Q.why;if(i===Q.correct)qCorrect++;el('qnext').disabled=false}
-function nextQ(){qIndex++;step=qIndex>=QUESTIONS.length?TOTAL-1:5+qIndex;render();scrollTo(0,0)}
-function reviewLesson(){step=0;render();scrollTo(0,0)}
-function markCourseDone(){try{var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';var key='voyage_g4math_progress_'+kid;var p={done:{},lastSkill:0};var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);if(!p.done)p.done={};p.done[CODE]=true;localStorage.setItem(key,JSON.stringify(p))}catch(e){}}
-function renderDone(){var pct=Math.round(qCorrect/QUESTIONS.length*100),pass=pct>=80,h='<div class="done-icon">'+(pass?'✓':'↻')+'</div><h2 style="text-align:center">'+(pass?'Lesson complete':'Worth one more pass')+'</h2><p style="text-align:center" class="qcount">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';if(pass){markCourseDone();h+='<div class="goal"><div class="lab">You can now</div><p>'+DONE_TEXT+'</p></div>'}else h+='<p>Review the teaching, then try the questions again.</p>';h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="goCourse()">Back to Math →</button></div><div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';el('stage').innerHTML=h}
-function goCourse(){location.href='math-course.html'}
-function restart(){step=0;taskIndex=0;taskStep=0;challengeDone=false;feedback='';predictDone=false;mistakeDone=false;qIndex=0;qCorrect=0;answered=false;render();scrollTo(0,0)}
-function render(){drawSteps();if(step===0)renderChallenge();else if(step===1)renderInfo(WHAT,'What just happened');else if(step===2)renderPredict();else if(step===3)renderInfo(WHY,'Why');else if(step===4)renderMistake();else if(step>=5&&step<TOTAL-1)renderQuestion();else renderDone()}
-</script></body></html>
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function poly(v,c,w,dash){
+  var d='M '+v.map(function(p){return p[0]+' '+p[1];}).join(' L ')+' Z';
+  return '<path d="'+d+'" fill="none" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function edgeInfo(v,i){
+  var n=v.length,a=v[i],b=v[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.sqrt(dx*dx+dy*dy);
+  return {mx:(a[0]+b[0])/2,my:(a[1]+b[1])/2,ux:dx/L,uy:dy/L};
+}
+function tickM(v,i,cnt){
+  cnt=cnt||1;
+  var e=edgeInfo(v,i),nx=-e.uy,ny=e.ux,s='';
+  for(var k=0;k<cnt;k++){
+    var off=(k-(cnt-1)/2)*8,cx=e.mx+off*e.ux,cy=e.my+off*e.uy;
+    s+=ln((cx+6*nx).toFixed(1),(cy+6*ny).toFixed(1),(cx-6*nx).toFixed(1),(cy-6*ny).toFixed(1),INK,2);
+  }
+  return s;
+}
+
+/* the shapes */
+var TRI=[[310,28],[420,142],[200,142]];
+var RECC=[[190,35],[430,35],[430,135],[190,135]];
+function figTri(){
+  var s=poly(TRI);
+  s+=ln(310,14,310,156,ACC,2.5,true);
+  return boxSVG(s,170);
+}
+function figDiag(){
+  var s=poly(RECC);
+  s+=ln(178,140,442,30,ACC,2.5,true);
+  return boxSVG(s,170);
+}
+function figOff(){
+  var s=poly(RECC);
+  s+=ln(260,20,260,150,ACC,2.5,true);
+  return boxSVG(s,170);
+}
+function figFor(n){return n==='tri'?figTri():n==='diag'?figDiag():figOff();}
+
+function trioFolds(){
+  var s='';
+  var T=[[110,36],[158,108],[62,108]];
+  s+=poly(T)+ln(110,24,110,120,ACC,2,true);
+  var R2=[[245,48],[375,48],[375,112],[245,112]];
+  s+=poly(R2)+ln(238,115,382,45,ACC,2,true);
+  var R3=[[445,48],[575,48],[575,112],[445,112]];
+  s+=poly(R3)+ln(485,36,485,124,ACC,2,true);
+  s+=tx(110,138,'halves match',13.5)+tx(110,154,'line of symmetry ✓',10.5,GRN,400);
+  s+=tx(310,138,'equal, no match',13.5)+tx(310,154,'not a line of symmetry ✗',10.5,MUT,400);
+  s+=tx(510,138,'unequal pieces',13.5)+tx(510,154,'not a line of symmetry ✗',10.5,MUT,400);
+  return boxSVG(s,164);
+}
+function figRectLines(){
+  var R=[[190,40],[430,40],[430,140],[190,140]],s=poly(R);
+  s+=ln(310,24,310,156,ACC,2.5,true)+tx(310,16,'✓',14,GRN);
+  s+=ln(174,90,446,90,ACC,2.5,true)+tx(460,95,'✓',14,GRN,700,'start');
+  s+=ln(190,140,430,40,GREY,2,true)+tx(376,74,'✗',14,GREY);
+  s+=tx(310,174,'two folds work — the corner-to-corner fold fails',11.5,MUT,400);
+  return boxSVG(s,182);
+}
+function figSquareLines(){
+  var S=[[240,25],[380,25],[380,165],[240,165]],s=poly(S);
+  s+=ln(310,12,310,178,ACC,2.5,true);
+  s+=ln(226,95,394,95,ACC,2.5,true);
+  s+=ln(228,13,392,177,ACC,2.5,true);
+  s+=ln(392,13,228,177,ACC,2.5,true);
+  s+=tx(450,84,'4 lines of symmetry',13.5,INK,700,'start');
+  s+=tx(450,104,'two through the sides,',10.5,MUT,400,'start');
+  s+=tx(450,120,'two through the corners',10.5,MUT,400,'start');
+  return boxSVG(s,190);
+}
+function figTriGallery(){
+  var s='';
+  var E=[[110,36],[154,112],[66,112]];
+  s+=poly(E);for(var i=0;i<3;i++)s+=tickM(E,i,1);
+  s+=ln(110,28,110,120,ACC,2,true);
+  s+=ln(59,116,139,70,ACC,2,true);
+  s+=ln(161,116,81,70,ACC,2,true);
+  var I=[[310,36],[348,112],[272,112]];
+  s+=poly(I)+tickM(I,0,1)+tickM(I,2,1);
+  s+=ln(310,28,310,120,ACC,2,true);
+  var C=[[496,44],[586,112],[470,112]];
+  s+=poly(C);
+  s+=tx(110,140,'all sides equal',13.5)+tx(110,156,'3 lines',10.5,MUT,400);
+  s+=tx(310,140,'two sides equal',13.5)+tx(310,156,'1 line',10.5,MUT,400);
+  s+=tx(524,140,'no equal sides',13.5)+tx(524,156,'0 lines — no fold works',10.5,MUT,400);
+  return boxSVG(s,172);
+}
+var PARA=[[230,35],[440,35],[390,135],[180,135]];
+function figParaLine(){
+  var s=poly(PARA);
+  s+=ln(164,85,456,85,ACC,2.5,true);
+  return boxSVG(s,170);
+}
+function figParaFold(){
+  var s='';
+  s+=poly([[230,35],[440,35],[415,85],[205,85]],GREY,2,true);
+  s+=tx(310,28,'the top half, before the fold',10.5,GREY,400);
+  s+=poly([[205,85],[415,85],[390,135],[180,135]],INK,2.5);
+  s+=poly([[205,85],[415,85],[440,135],[230,135]],ACC,2.5);
+  s+=tx(150,158,'bottom half (dark)',10.5,MUT,400);
+  s+=tx(470,158,'folded top (orange)',10.5,ACC,700);
+  s+=tx(310,180,'the folded top leans the wrong way — the slanted ends stick out',11.5,MUT,400);
+  return boxSVG(s,192);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>The fold test</h2>';
+  h+='<p>Imagine folding each drawing along its dashed line, like folding a piece of paper. If the two halves land <b>exactly on top of each other</b> — every edge and every corner matching its twin — the dashed line is a <b>line of symmetry</b>. Careful: cutting the shape into two <b>equal-size pieces</b> is NOT enough. The fold has to land the halves right on each other. Say what each fold does.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickFold(0)">Fold there and the two halves land exactly on each other</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickFold(1)">The two pieces are the same size, but the fold doesn’t land them on each other</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickFold(2)">The two pieces aren’t even the same size — no match possible</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Imagine folding on the dashed line, then click what happens.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredFold=false;
+}
+function pickFold(i){
+  if(answeredFold||wonCount>=TASKS.length)return;answeredFold=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=T.ans===0?'✓ Fold on that line and the left half lands exactly on the right half — every corner on its twin. A line of symmetry.'
+           :T.ans===1?'✓ Same size is not the same as matching. Fold on the diagonal and the corners stick out past the edges — the halves never land on each other. Not a line of symmetry.'
+                     :'✓ One piece is bigger than the other — the small piece can’t even cover the big one. Not a line of symmetry.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Think about the fold, not the cut. Fold the drawing on the dashed line: do the two halves land exactly on top of each other — every edge, every corner? Try it again.';
+    setTimeout(function(){if(step===0){answeredFold=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The fold is the only judge</h2>';
+  h+='<p>All three dashed lines cut their shape into two pieces. Only one of them is a <b>line of symmetry</b> — the one where the fold lands the two halves exactly on each other.</p>';
+  h+=trioFolds();
+  h+='<table><tr><th>The line</th><th>What the fold does</th><th>Verdict</th></tr>';
+  h+='<tr><td>down the triangle’s middle</td><td>every corner lands on its twin</td><td>line of symmetry</td></tr>';
+  h+='<tr><td>corner to corner</td><td>equal pieces that stick out past each other</td><td>not one</td></tr>';
+  h+='<tr><td>off to one side</td><td>a big piece and a small piece</td><td>not one</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A <b>line of symmetry</b> is a fold line: fold the shape on it and the two halves match <b>exactly</b> — each half is a mirror copy of the other. Equal-size pieces prove nothing on their own. Only the fold decides.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>One shape can have several fold lines</h2>';
+  h+='<p>The rectangle has <b>two</b> lines of symmetry: fold it side-to-side or top-to-bottom and the halves match. Its corner-to-corner fold? You caught that one in Challenge 2 — equal pieces, failed fold.</p>';
+  h+=figRectLines();
+  h+='<div class="ask"><div class="q">Now the square. It passes both of the rectangle’s folds. Do its corner-to-corner folds work too?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'y\')">Yes — 4 lines in all</button><button class="btn sm" onclick="checkPredict(\'n\')">No — 2, same as the rectangle</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figSquareLines();
+  h+='<p>What broke the rectangle’s corner-to-corner fold was a <b>long side landing on a short side</b> — they could never match. A square has no long or short: all four sides are the same length, so the corner-to-corner folds land each side on a matching side, perfectly. The square has <b>4 lines of symmetry</b>: two through the middles of the sides, two through the corners.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='y'){fb.className='fb ok';fb.innerHTML='<b>Yes — 4 lines.</b> All four sides of a square are the same length, so the corner-to-corner folds match too.';}
+  else{fb.className='fb no';fb.innerHTML='<b>They do work — 4 lines.</b> The rectangle’s corner-to-corner fold failed because a long side landed on a short one. A square’s sides are all the same length, so nothing sticks out.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>How to hunt for fold lines</h2>';
+  h+='<p>To <b>draw</b> the lines of symmetry on a shape, you hunt: sketch a line you suspect — through the middles of sides, or through a corner — then run the fold test on it. Keep the line only if the fold matches. Triangles show how the hunt goes. (A <b>tick mark</b> on a side means that side is the same length as the other ticked sides.)</p>';
+  h+=figTriGallery();
+  h+='<p>Equal sides are where matching halves come from. <b>All three sides equal</b>: a fold through each corner works — 3 lines. <b>Exactly two sides equal</b>: one fold works, straight through the corner where the two equal sides meet — 1 line. <b>No equal sides</b>: no two halves can ever mirror each other, so no fold works at all. <b>Zero is a real answer.</b></p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Drawing lines of symmetry is a hunt with the fold test as judge: try each suspect line, keep only the ones where the halves land exactly. A shape can have several lines, one line — or none.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Noah says this shape has two lines of symmetry</h2>';
+  h+='<p>His reason: <i>“It’s just a leaning rectangle. Fold it across the middle and the halves will match, same as the rectangle. Two lines.”</i></p>';
+  h+=figParaLine();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNoah()">Fold it</button></div>';
+  h+='<div id="mh" class="hide">'+figParaFold()+'</div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNoah();
+}
+function testNoah(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The fold fails.</b> The top half leans one way — fold it down and it leans the <b>other</b> way, so the slanted ends stick out past the bottom half on both sides. The up-and-down fold fails the same way, and so do the corner-to-corner folds. This shape looks perfectly balanced, but looks aren’t the test — the fold is, and every fold fails. <b>Zero</b> lines of symmetry.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What makes a line a line of symmetry?',
+   a:['It cuts the shape into two pieces of the same size','It goes through the middle of the shape','Folding on it lands the two halves exactly on each other','It goes corner to corner'],correct:2,
+   why:'The fold is the only judge. Equal pieces, middles, and corners prove nothing on their own — the halves have to land exactly on each other.'},
+  {q:'The corner-to-corner line of a rectangle cuts it into two triangles of exactly the same size. Is that line a line of symmetry?',
+   a:['Yes — equal pieces means symmetry','No — fold on it and the halves stick out past each other','Yes — every corner-to-corner line is one','No — rectangles have no lines of symmetry'],correct:1,
+   why:'Same size isn’t the test. Fold on that line and a long side lands on a short side — the corners stick out. The rectangle’s two real fold lines run through the middles of its sides.'},
+  {q:'How many lines of symmetry does a square have?',
+   a:['2, same as the rectangle','1','4 — two through the sides, two through the corners','None'],correct:2,
+   why:'All four sides of a square are the same length, so the corner-to-corner folds work along with the rectangle-style folds. Four in all.'},
+  {q:'A triangle wears tick marks on exactly two sides — two equal sides. How many lines of symmetry does it have?',
+   a:['0','1','2','3'],correct:1,
+   why:'One fold works — straight through the corner where the two equal sides meet. Three equal sides would give 3 lines; no equal sides gives 0.'},
+  {q:'A shape looks perfectly balanced, like a leaning rectangle. Can you call the line across its middle a line of symmetry without checking?',
+   a:['Yes — balanced-looking shapes always have symmetry','Yes — any line across the middle counts','No — run the fold test; Noah’s “leaning rectangle” failed every fold and has zero lines','No — only triangles have lines of symmetry'],correct:2,
+   why:'That was Noah’s mistake. His shape looked balanced, but the folded top leaned the wrong way and stuck out. Looks aren’t the test — the fold is, and a shape can have zero lines.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.G.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Test any line with a fold, tell a real line of symmetry from a line that merely cuts equal pieces, count all the fold lines a shape has — even when the answer is zero — and draw them where the fold test passes.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Noah. His “leaning rectangle” cut into equal halves — and every single fold still failed.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredFold=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

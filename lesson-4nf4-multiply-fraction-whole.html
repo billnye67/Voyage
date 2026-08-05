@@ -309,7 +309,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Multiply any fraction by a whole number, and say the answer in whole cups when it goes past one.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Omar. His answer came out smaller than one batch \u2014 that is the tell.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;batches=2;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

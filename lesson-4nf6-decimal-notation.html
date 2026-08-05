@@ -338,7 +338,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Write tenths and hundredths as decimals, read decimals back as fractions, and say why the zero matters.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Theo. He wrote 4 dimes when he meant 4 pennies — ten times off.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;dimes=0;pennies=0;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

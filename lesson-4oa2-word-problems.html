@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voyage · Multiply &amp; divide word problems</title>
+<title>Voyage · Comparison word problems</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
-    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--bar1:#8a9aa8;--bar2:#1b4f8a}
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -27,6 +27,9 @@
   .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
   .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
   .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
     border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
@@ -37,41 +40,34 @@
   .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
   .steps .seg.on{background:var(--blue)}
   .hide{display:none}
-  /* sort cards */
-  .sortcard{background:#fff;border:2px solid var(--blue-line);border-radius:11px;padding:14px 16px;margin-bottom:11px;transition:.15s}
-  .sortcard.right{border-color:var(--green);background:rgba(46,125,91,.07)}
-  .sortcard.wrong{border-color:var(--accent);background:rgba(240,102,63,.08)}
-  .sctext{font-size:16px;line-height:1.5;margin-bottom:11px}
-  .ops{display:flex;gap:8px;flex-wrap:wrap}
-  .op{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;padding:8px 14px;border-radius:8px;
-    border:1.5px solid var(--blue-line);background:#fff;color:var(--muted);cursor:pointer}
-  .op:hover{border-color:var(--blue);color:var(--ink)}
-  .op.sel{background:var(--blue);border-color:var(--ink);color:#fff}
-  .sortcard.right .op.sel{background:var(--green);border-color:var(--green)}
-  .sortcard.wrong .op.sel{background:var(--accent);border-color:var(--accent)}
-  .scwhy{font-size:14.5px;line-height:1.5;margin-top:10px;color:var(--muted);border-top:1px dashed var(--blue-line);padding-top:9px}
-  .scwhy b{color:var(--ink)}
-  .tally{font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);text-align:center;margin:14px 0 4px}
-  .tally b{color:var(--green);font-size:16px}
-  /* tape diagram */
-  .tape{margin:14px 0}
-  .taperow{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-  .tapename{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);width:56px;text-align:right;flex-shrink:0}
-  .boxes{display:flex;gap:3px}
-  .bx{width:46px;height:34px;border:2px solid var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;
-    font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#fff}
-  .bx.a{background:var(--bar1)}
-  .bx.b{background:var(--bar2)}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
   .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
   .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:88px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
   .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
   .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
   .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
-  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
   th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
-  th{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
   .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
     padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
   .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
@@ -80,26 +76,25 @@
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
   .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
-  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
-  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.bx{width:36px}}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="shell">
 
 <div id="intro">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations &amp; Algebra</div>
   <div class="card">
     <div class="tag">Lesson · 4.OA.A.2</div>
-    <h1>Multiply &amp; divide word problems</h1>
-    <p>Three problems can use the exact same two numbers and need three different operations. The hard part was never the arithmetic — it's working out which one the question is actually asking for.</p>
+    <h1>Comparison word problems</h1>
+    <p>A cat, a dog, and three questions about them — all using the same numbers, all needing different math. The arithmetic was never the hard part. The hard part is spotting <b>which number is hiding</b>, and two little boxes make it obvious every time.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.OA.A.2</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
 </div>
 
 <div id="lesson" class="hide">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Multiply &amp; divide word problems</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Comparison word problems</div>
   <div class="steps" id="steps"></div>
   <div class="card" id="stage"></div>
 </div>
@@ -108,25 +103,17 @@
 
 <script>
 var step=0,TOTAL=11;
-var picks={},checked=false,sortWon=false;
+var wonCount=0,answeredBars=false;
+var TASKS=[
+  {fig:0, ans:0, txt:'A cat weighs <b>4 kg</b>. The dog weighs <b>5 times as much</b>. How heavy is the dog?',
+   opts:['Multiply — the BIG pile is hiding: 5 × 4','Divide — the small pile is hiding','Add — it’s a more-than story'], won:'big hidden: 5 × 4 = 20 kg'},
+  {fig:1, ans:1, txt:'The dog weighs <b>20 kg</b> — that’s <b>5 times as much</b> as the cat. How heavy is the cat?',
+   opts:['Multiply — 5 × 20','Divide — the SMALL pile is hiding: 20 ÷ 5','Add — 20 + 5'], won:'small hidden: 20 ÷ 5 = 4 kg'},
+  {fig:2, ans:2, txt:'The rabbit weighs <b>4 kg more</b> than the 4 kg cat. How heavy is the rabbit?',
+   opts:['Multiply — 4 × 4','Divide — 4 ÷ 4','Add — no “times” here, just extra: 4 + 4'], won:'more-story: 4 + 4 = 8 kg'}
+];
 var predictDone=false,mistakeTested=false;
 var qIndex=0,qCorrect=0,answered=false;
-
-var CARDS=[
-  {t:'Maya has 6 stickers. Ben has <b>4 times as many</b> as Maya. How many does Ben have?',op:'x',
-   why:'<b>24.</b> Four copies of Maya\'s 6.'},
-  {t:'Ben has 24 stickers. Maya has 6. <b>How many times as many</b> does Ben have?',op:'/',
-   why:'<b>4.</b> You are asking how many 6s fit into 24, so you divide.'},
-  {t:'Maya has 6 stickers. Ben has <b>4 more</b> than Maya. How many does Ben have?',op:'+',
-   why:'<b>10.</b> More than means extras on top, so you add.'},
-  {t:'A rope is 3 metres long. Another rope is <b>7 times as long</b>. How long is it?',op:'x',
-   why:'<b>21 m.</b> Seven copies of 3.'},
-  {t:'The big shelf holds 45 books. That is <b>5 times as many</b> as the small shelf. How many on the small shelf?',op:'/',
-   why:'<b>9.</b> The unknown is the small one this time, so you divide 45 by 5.'},
-  {t:'Sam ran 8 laps. Kim ran <b>3 more laps</b> than Sam. How many did Kim run?',op:'+',
-   why:'<b>11.</b> More laps, not times as many.'}
-];
-var OPNAME={'x':'\u00d7 multiply','/':'\u00f7 divide','+':'+ add'};
 
 function el(i){return document.getElementById(i);}
 function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
@@ -134,68 +121,134 @@ function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=s
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
 
-function tapeHTML(nA,valA,nB,valB,labelA,labelB){
-  var h='<div class="tape"><div class="taperow"><div class="tapename">'+labelA+'</div><div class="boxes">';
-  for(var i=0;i<nA;i++)h+='<div class="bx a">'+valA+'</div>';
-  h+='</div></div><div class="taperow"><div class="tapename">'+labelB+'</div><div class="boxes">';
-  for(var j=0;j<nB;j++)h+='<div class="bx b">'+valB+'</div>';
-  return h+'</div></div></div>';
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',FILL='rgba(27,79,138,.20)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+/* a comparison bar: n sections of width w at x,y; labels inside; dash = mystery */
+function bar(x,y,n,w,label,dash,tot){
+  var s='';
+  for(var i=0;i<n;i++){
+    s+='<rect x="'+(x+i*w)+'" y="'+y+'" width="'+w+'" height="34" fill="'+(dash?'none':FILL)+'" stroke="'+(dash?GREY:INK)+'" stroke-width="'+(dash?1.8:2.2)+'"'+(dash?' stroke-dasharray="5 4"':'')+'/>';
+    if(label)s+=tx(x+i*w+w/2,y+22,label,13,dash?MUT:INK,700);
+  }
+  if(tot)s+=tx(x+n*w+14,y+22,tot,13.5,ACC,700,'start');
+  return s;
+}
+function figDog(){
+  var s=tx(60,40,'cat',11.5,MUT,400,'start')+bar(120,20,1,80,'4');
+  s+=tx(60,96,'dog — 5 times as much',11.5,MUT,400,'start');
+  s+=bar(120,106,5,80,'4',true,'? kg');
+  s+=tx(310,178,'five copies of the cat — the BIG number is the mystery',11.5,MUT,400);
+  return boxSVG(s,190);
+}
+function figCat(){
+  var s=tx(60,40,'cat',11.5,MUT,400,'start')+bar(120,20,1,80,'?',true);
+  s+=tx(60,96,'dog — 20 kg, which is 5 times the cat',11.5,MUT,400,'start');
+  s+=bar(120,106,5,80,'');
+  s+=ln(120,150,520,150,ACC,2)+ln(120,144,120,156,ACC,2)+ln(520,144,520,156,ACC,2);
+  s+=tx(320,170,'20 kg in all',12.5,ACC,700);
+  s+=tx(310,192,'20 split into 5 equal copies — the SMALL number is the mystery',11.5,MUT,400);
+  return boxSVG(s,202);
+}
+function figRabbit(){
+  var s=tx(60,40,'cat',11.5,MUT,400,'start')+bar(120,20,1,80,'4');
+  s+=tx(60,96,'rabbit — 4 kg more',11.5,MUT,400,'start');
+  s+=bar(120,106,1,80,'4')+bar(200,106,1,80,'+4',true)+tx(294,128,'? kg',13.5,ACC,700,'start');
+  s+=tx(310,178,'no copies anywhere — just the cat’s weight with extra stuck on',11.5,MUT,400);
+  return boxSVG(s,190);
+}
+function figFor(i){return i===0?figDog():i===1?figCat():figRabbit();}
+function figLeo(){
+  var s=tx(60,40,'Leo',11.5,MUT,400,'start')+bar(130,20,1,90,'?',true);
+  s+=tx(60,96,'Maya — $18, which is 3 times Leo',11.5,MUT,400,'start');
+  s+=bar(130,106,3,90,'');
+  s+=ln(130,150,400,150,ACC,2)+ln(130,144,130,156,ACC,2)+ln(400,144,400,156,ACC,2);
+  s+=tx(265,170,'$18 in all',12.5,ACC,700);
+  return boxSVG(s,182);
+}
+function figBoth(){
+  var s=tx(60,34,'3 times as many as 5:',12,MUT,400,'start');
+  s+=bar(60,44,3,70,'5')+tx(285,66,'= 15',14,GRN,700,'start');
+  s+=tx(60,116,'3 more than 5:',12,MUT,400,'start');
+  s+=bar(60,126,1,70,'5')+bar(130,126,1,42,'+3',true)+tx(186,148,'= 8',14,GRN,700,'start');
+  s+=tx(310,186,'same 3, same 5 — the word between them picks the math',11.5,MUT,400);
+  return boxSVG(s,198);
+}
+function figZoe(){
+  var s=tx(310,48,'oak 24 m · sapling 4 m',15,MUT,400);
+  s+=tx(310,80,'“24 − 4 = 20, so the oak is…”',15,MUT,400);
+  s+=tx(310,124,'20 times as tall?',22,ACC);
+  return boxSVG(s,148);
+}
+function figZoeFix(){
+  var s=tx(60,40,'sapling',11.5,MUT,400,'start')+bar(150,20,1,72,'4');
+  s+=tx(60,96,'oak — 24 m',11.5,MUT,400,'start');
+  s+=bar(150,106,6,72,'4');
+  s+=tx(310,178,'the sapling fits into the oak 6 times — 6 × 4 = 24',12.5,GRN);
+  return boxSVG(s,190);
 }
 
 /* ---------- BEAT 1 ---------- */
 function beat1(){
-  var h='';
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
-  h+='<h2>Which operation does each one need?</h2>';
-  h+='<p>Don\'t work out any answers yet. Just decide, for each problem, whether you would multiply, divide, or add. Then check all six at once.</p>';
-  for(var i=0;i<CARDS.length;i++){
-    var C=CARDS[i],cls='sortcard',sel=picks[i];
-    if(checked&&sel)cls+=(sel===C.op?' right':' wrong');
-    h+='<div class="'+cls+'" id="sc'+i+'"><div class="sctext">'+C.t+'</div><div class="ops">';
-    ['x','/','+'].forEach(function(o){
-      h+='<button class="op'+(sel===o?' sel':'')+'" onclick="setOp('+i+',\''+o+'\')">'+OPNAME[o]+'</button>';
-    });
-    h+='</div>';
-    if(checked&&sel===C.op)h+='<div class="scwhy">'+C.why+'</div>';
-    else if(checked&&sel)h+='<div class="scwhy">Not this one. It needs <b>'+OPNAME[C.op]+'</b>.</div>';
-    h+='</div>';
+  h+='<h2>Which number is hiding?</h2>';
+  h+='<p>A “times as much” story always has a <b>small pile</b> and a <b>big pile</b> — the big one is copies of the small one. Draw them as boxes and look for the mystery: <b>big pile hiding → multiply</b> the copies. <b>Small pile hiding → divide</b> the big one into the copies. And if the story says “<b>more than</b>” instead of “times” — no copies at all, just <b>add</b> the extra. Pick the move for each story.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
   }
-  var n=Object.keys(picks).length;
-  h+='<div class="tally" id="tally">'+n+' of 6 sorted</div>';
-  h+='<div class="row" style="justify-content:center"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="checkSort()">Check all six</button></div>';
-  h+='<div id="sfb"></div>';
-  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(sortWon?'':'disabled')+' onclick="next()">Next →</button></div>';
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickBars('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Find the mystery box in the picture, then pick the move that fills it.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
+  answeredBars=false;
 }
-function setOp(i,o){
-  if(sortWon)return;
-  picks[i]=o;checked=false;beat1();
-}
-function checkSort(){
-  if(Object.keys(picks).length<6){
-    var t=el('tally');t.innerHTML='<b style="color:var(--accent)">Sort all six before checking.</b>';return;
+function pickBars(i){
+  if(answeredBars||wonCount>=TASKS.length)return;answeredBars=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The dog’s bar is 5 mystery copies of 4. Multiply: 5 × 4 = 20 kg.'
+           :wonCount===1?'✓ Now the 20 is known and the little bar is the mystery. Split 20 into 5 equal copies: 20 ÷ 5 = 4 kg.'
+                        :'✓ “More” means no copies — just 4 with 4 extra: 4 + 4 = 8 kg. Times-moves never touch a more-story.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Look at the boxes. Big pile hiding → multiply the copies. Small pile hiding → divide. “More than” → just add the extra. Try again.';
+    setTimeout(function(){if(step===0){answeredBars=false;beat1();}},2600);
   }
-  checked=true;
-  var wrong=0;
-  for(var i=0;i<CARDS.length;i++)if(picks[i]!==CARDS[i].op)wrong++;
-  if(wrong===0)sortWon=true;
-  beat1();
-  var fb=el('sfb');
-  if(wrong===0){fb.className='fb ok';fb.innerHTML='<b>All six right.</b> The words told you which operation, not the numbers.';el('nx').disabled=false;}
-  else{fb.className='fb no';fb.innerHTML='<b>'+wrong+' wrong.</b> Read the marked ones again and change them.';}
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- BEAT 2 ---------- */
 function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
-  h+='<h2>Three sentence shapes</h2>';
-  h+='<p>Every problem you sorted was one of these three, and the same pair of numbers can appear in all of them.</p>';
-  h+='<table><tr><th>Sentence</th><th>Operation</th><th>6 and 4 gives</th></tr>';
-  h+='<tr><td>4 <b>times as many</b> as 6, find the big one</td><td>multiply</td><td>24</td></tr>';
-  h+='<tr><td>24 is how many <b>times as many</b> as 6</td><td>divide</td><td>4</td></tr>';
-  h+='<tr><td>4 <b>more than</b> 6</td><td>add</td><td>10</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The tell</div><p><b>Times as many</b> means multiply or divide. <b>More than</b> means add. Which of multiply or divide depends on whether the missing number is the big one or the small one.</p></div>';
+  h+='<h2>One picture, three questions</h2>';
+  h+='<p>All three stories were the same two boxes — only the mystery moved. That’s the whole method: draw the small pile, draw the big pile as copies, and circle what’s missing.</p>';
+  h+='<div class="work"><div class="lab">The cat and dog, three ways</div>';
+  h+='big hiding: &nbsp;&nbsp;? = 5 × 4 &nbsp;→&nbsp; <b>20</b> &nbsp;(multiply the copies)<br>';
+  h+='small hiding: 20 = 5 × ? &nbsp;→&nbsp; 20 ÷ 5 = <b>4</b> &nbsp;(split into the copies)<br>';
+  h+='more-story: &nbsp;&nbsp;? = 4 + 4 &nbsp;→&nbsp; <b>8</b> &nbsp;(no copies, just extra)</div>';
+  h+='<table><tr><th>The mystery</th><th>The move</th></tr>';
+  h+='<tr><td>the big pile</td><td>multiply: copies × small</td></tr>';
+  h+='<tr><td>the small pile</td><td>divide: big ÷ copies</td></tr>';
+  h+='<tr><td>a “more than” amount</td><td>add or subtract the extra</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Don’t start with the numbers — start with the boxes. Once you see which box is empty, the operation picks itself.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -204,23 +257,26 @@ function beat2(){
 function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
-  h+='<h2>The missing number is the small one</h2>';
-  h+='<p>A box of 56 crayons holds <b>8 times as many</b> as a small pack.</p>';
-  h+='<div class="ask"><div class="q">How many crayons in the small pack?</div>';
-  h+='<div class="row"><input type="text" id="pred" placeholder="?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<h2>The small pile hides again</h2>';
+  h+='<p>Maya saved <b>$18</b>. That’s <b>3 times as much</b> as Leo.</p>';
+  h+=figLeo();
+  h+='<div class="ask"><div class="q">How much has Leo saved?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">$6 — split 18 into 3 copies</button><button class="btn sm" onclick="checkPredict(\'b\')">$15 — take away the 3</button></div>';
   h+='<div id="pfb"></div></div>';
-  h+='<div id="ph" class="hide">'+tapeHTML(1,'7',8,'7','small','big')+'<p>Eight equal boxes make 56, so each box is 7. 56 \u00f7 8 = 7.</p></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Check with the boxes</div>';
+  h+='Maya’s bar = 3 copies of Leo’s: &nbsp;18 = 3 × ?<br>';
+  h+='18 ÷ 3 = <b>6</b> &nbsp;→&nbsp; Leo has $6<br>';
+  h+='rebuild it: 3 × 6 = 18 ✓</div>';
+  h+='<p>“Take away the 3” treats a times-story like a more-story. The 3 isn’t dollars — it’s the <b>number of copies</b>. Copies never get added or subtracted; they multiply or divide.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
   if(predictDone)el('ph').classList.remove('hide');
 }
-function checkPredict(){
-  var raw=(el('pred').value||'').replace(/\s/g,'');
+function checkPredict(v){
   var fb=el('pfb');
-  if(raw==='7'){fb.className='fb ok';fb.innerHTML='<b>Yes — 7.</b> 56 \u00f7 8 = 7.';}
-  else if(raw==='448'){fb.className='fb no';fb.innerHTML='<b>You multiplied.</b> That makes the answer bigger than the big box. The small pack has to be <i>smaller</i>: 56 \u00f7 8 = <b>7</b>.';}
-  else if(raw==='48'){fb.className='fb no';fb.innerHTML='<b>You subtracted.</b> The problem says times as many, not more than. 56 \u00f7 8 = <b>7</b>.';}
-  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>7</b>. Eight equal packs make 56.';}
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>$6.</b> 18 split into 3 equal copies is 6 — and 3 × 6 rebuilds the 18.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It’s $6.</b> The 3 counts copies, not dollars — you can’t subtract it. Split instead: 18 ÷ 3 = 6.';}
   el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
 }
 
@@ -228,11 +284,14 @@ function checkPredict(){
 function beat4(){
   var h='';
   h+='<div class="tag">Why</div>';
-  h+='<h2>Draw the boxes before you pick an operation</h2>';
-  h+='<p>Every times as many problem is the same picture: one small box, and a row of copies of it.</p>';
-  h+=tapeHTML(1,'6',4,'6','Maya','Ben');
-  h+='<p>If you know the small box and want the row, you <b>multiply</b>. If you know the row and want the small box, you <b>divide</b>. If you know both rows and want the gap, you <b>subtract</b>.</p>';
-  h+='<div class="goal"><div class="lab">Writing it down</div><p>Use a letter for the number you don\'t know. Ben has 4 times as many as Maya\'s 6: <b>b = 4 \u00d7 6</b>. The small shelf, when the big one is 45: <b>45 = 5 \u00d7 s</b>.</p></div>';
+  h+='<h2>The one-word difference</h2>';
+  h+='<p>Word problems love to hand you the same numbers twice. The word between them decides everything. (One more word to know: <b>twice</b> just means <b>2 times</b>.)</p>';
+  h+=figBoth();
+  h+='<div class="work"><div class="lab">Same numbers, both moves</div>';
+  h+='3 <b>times</b> as many as 5 &nbsp;→&nbsp; copies &nbsp;→&nbsp; 3 × 5 = <b>15</b><br>';
+  h+='3 <b>more</b> than 5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; extra &nbsp;&nbsp;→&nbsp; 5 + 3 = <b>8</b></div>';
+  h+='<p>Quick test when you’re unsure: <b>could you draw it as copies of the same box?</b> If yes, it’s a times-story. If the picture is one box with a stub glued on, it’s a more-story.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Numbers never pick the operation. Draw the boxes the sentence describes, and the empty box tells you whether to multiply, divide, add, or subtract.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -241,39 +300,40 @@ function beat4(){
 function beat5(){
   var h='';
   h+='<div class="tag">Catch the mistake</div>';
-  h+='<h2>Ellie sees "3 times as many as 12" and answers 15</h2>';
-  h+='<p>Her reason: <i>"There is a 3 and a 12, and 3 and 12 make 15."</i></p>';
-  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testEllie()">Draw the boxes</button></div>';
-  h+='<div id="eh" class="hide">'+tapeHTML(1,'12',3,'12','small','3 times')+'</div>';
-  h+='<div id="efb"></div>';
+  h+='<h2>Zoe says the oak is 20 times as tall</h2>';
+  h+='<p>An oak is <b>24 m</b>; a sapling is <b>4 m</b>. Zoe: <i>“24 minus 4 is 20, so the oak is 20 times as tall.”</i></p>';
+  h+=figZoe();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testZoe()">Stack the sapling</button></div>';
+  h+='<div id="mh" class="hide">'+figZoeFix()+'</div>';
+  h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(mistakeTested)testEllie();
+  if(mistakeTested)testZoe();
 }
-function testEllie(){
-  el('eh').classList.remove('hide');
-  var fb=el('efb');fb.className='fb no';
-  fb.innerHTML='<b>Ellie is wrong.</b> She added because both numbers were sitting there. Three copies of 12 is <b>36</b>. Her answer of 15 is barely bigger than the small box \u2014 nowhere near three of them. Draw the boxes and that is obvious before you calculate anything.';
+function testZoe(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Zoe subtracted when the question said “times.”</b> “Times as tall” asks how many <b>copies of the sapling</b> fit in the oak: 24 ÷ 4 = <b>6</b>. The oak is 6 times as tall. Her 20 answers a different question — “how many metres <b>more</b>?” Both are real facts; only one is the one that was asked.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- questions ---------- */
 var QUESTIONS=[
-  {q:'A film is 3 times as long as a cartoon. The cartoon is 20 minutes. How long is the film?',
-   a:['23 minutes','60 minutes','17 minutes','23 hours'],correct:1,
-   why:'Three copies of 20 minutes. 3 \u00d7 20 = 60.'},
-  {q:'Leo has 42 marbles. That is 6 times as many as Ana. How many does Ana have?',
-   a:['252','48','7','36'],correct:2,
-   why:'Ana is the small box. Six equal boxes make 42, so 42 \u00f7 6 = 7.'},
-  {q:'Which problem needs adding, not multiplying?',
-   a:['A tree is 5 times as tall as a bush','A tree is 5 metres taller than a bush','A tree is 5 times the height of a bush','A bush is a fifth of the tree'],correct:1,
-   why:'Taller than means extra height on top. Times as tall means copies.'},
-  {q:'You know the big amount and how many times as many it is. What do you do to find the small amount?',
-   a:['Divide','Multiply','Add','Subtract'],correct:0,
-   why:'The big amount is made of that many equal boxes, so you split it back up.'},
-  {q:'Why is drawing the boxes worth doing before you calculate?',
-   a:['It makes the numbers smaller','It shows whether the answer should be bigger or smaller than what you started with','It is faster than multiplying','It turns division into adding'],correct:1,
-   why:'The picture tells you which way the answer should go, so a wrong operation stands out straight away.'}
+  {q:'A box holds 6 eggs. A crate holds 4 times as many. How many eggs in the crate?',
+   a:['24 — four copies of 6','10 — 6 + 4','46','2'],correct:0,
+   why:'The big pile is hiding: 4 × 6 = 24.'},
+  {q:'A whale is 30 m long — 5 times as long as the boat. How long is the boat?',
+   a:['150 m','25 m — 30 minus 5','6 m — five copies of 6 make 30','35 m'],correct:2,
+   why:'The small pile is hiding: split 30 into 5 copies. 30 ÷ 5 = 6 m. (The 5 counts copies — you can’t subtract it.)'},
+  {q:'Tom read 7 books. Ana read 2 more than Tom. How many did Ana read?',
+   a:['14 — two times 7','9 — “more” just adds the extra','72','5'],correct:1,
+   why:'No “times” anywhere — this is a more-story. 7 + 2 = 9.'},
+  {q:'Pia has 16 stickers — twice as many as Raj. How many does Raj have?',
+   a:['8 — twice means 2 times, and 2 × 8 = 16','14 — 16 minus 2','32','18'],correct:0,
+   why:'Twice = 2 times. Pia’s 16 is 2 copies of Raj’s pile: 16 ÷ 2 = 8.'},
+  {q:'A tree is 18 m tall; a bush is 3 m. The tree is how many times as tall as the bush?',
+   a:['15 times — 18 minus 3','6 times — the bush fits into 18 six times','21 times','3 times'],correct:1,
+   why:'That was Zoe’s trap. “Times as tall” counts copies: 18 ÷ 3 = 6. Subtracting gives the “how much more” answer instead.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -281,7 +341,7 @@ function beatQ(){
   h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
   for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
   h+='<div id="qfb"></div>';
-  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">\u2190 Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
   el('stage').innerHTML=h;answered=false;
 }
 function pick(i){
@@ -310,16 +370,15 @@ function markCourseDone(){
 }
 function beatDone(){
   var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
-  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Read a comparison problem, draw it as boxes, and pick the right operation before touching the numbers.</p></div>';}
-  else h+='<p style="margin-top:16px">Go back to Ellie. She added two numbers that happened to be sitting there \u2014 the boxes would have stopped her.</p>';
-  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Draw any comparison story as two bars, find the hiding number, and let it pick the move — multiply for a hidden big pile, divide for a hidden small pile, plain adding for more-stories — without ever guessing from the numbers.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Zoe. Her subtraction was a real fact — it just answered a question nobody asked.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
   el('stage').innerHTML=h;
 }
-function restart(){step=0;picks={};checked=false;sortWon=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+function restart(){step=0;wonCount=0;answeredBars=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
 
 function render(){
   drawSteps();

@@ -1,61 +1,407 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voyage · Measurement word problems</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
-:root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;min-height:100vh}.shell{max-width:760px;margin:0 auto;padding:26px 22px 80px}.crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}h1{font-family:'Fraunces',serif;font-size:31px;line-height:1.12;margin-bottom:12px}h2{font-family:'Fraunces',serif;font-size:23px;line-height:1.22;margin-bottom:14px}p{font-size:16.5px;line-height:1.6;margin-bottom:12px}b{font-weight:600}.tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}.goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}.goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}.goal p{margin:0 0 8px}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}.btn:active{transform:translate(3px,3px);box-shadow:none}.btn.go{background:var(--accent);color:#fff}.btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}.btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}.steps{display:flex;gap:6px;margin-bottom:20px}.steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}.steps .seg.on{background:var(--blue)}.hide{display:none}.challenge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0 15px}.challenge-chip{border:1.5px solid var(--blue-line);border-radius:9px;padding:8px;font-family:'Space Mono',monospace;font-size:11px;text-align:center;background:#fff}.challenge-chip.now{border-color:var(--accent);color:var(--accent);font-weight:700}.challenge-chip.done{border-color:var(--green);color:var(--green)}.diagram{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:8px;margin:12px 0}.diagram svg{width:100%;max-height:260px;display:block}.svglabel{font-family:'Space Grotesk',sans-serif;font-size:15px;fill:var(--ink);font-weight:600}.svgtiny{font-family:'Space Mono',monospace;font-size:10px;fill:var(--muted)}.ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}.ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}.choice,.stepchoice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}.choice:hover,.stepchoice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}.choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}.choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}.inputrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}.inputrow input{font-family:'Space Mono',monospace;font-size:18px;min-width:145px;max-width:260px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;text-align:center}.checkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px}.checkopt{display:flex;gap:9px;align-items:center;background:#fff;border:1.5px solid var(--blue-line);border-radius:9px;padding:11px;font-size:15px}.feedback{font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px;min-height:44px;margin-top:12px}.feedback.ok{background:rgba(46,125,91,.12);color:var(--green)}.feedback.no{background:rgba(240,102,63,.12);color:var(--accent)}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}.qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.done-icon{font-size:44px;text-align:center;margin-bottom:8px}.attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}.lineplot{display:flex;align-items:flex-end;height:165px;padding:10px 12px 0;position:relative}.lineplot:after{content:'';position:absolute;left:12px;right:12px;bottom:38px;border-top:3px solid var(--ink)}.tick{flex:1;text-align:center;position:relative;z-index:1}.xstack{height:104px;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:center}.xmark{font-family:'Space Mono',monospace;font-size:23px;line-height:18px;color:var(--blue)}.tickline{height:15px;border-left:2px solid var(--ink);margin:0 auto;width:1px}.ticklab{font-family:'Space Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap}.formula{font-family:'Space Mono',monospace;text-align:center;font-size:19px;padding:12px}.termgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.term{background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px}.term b{display:block;color:var(--blue);margin-bottom:3px}
-.worked{width:100%;border-collapse:collapse;margin:12px 0;font-family:'Space Mono',monospace;font-size:14.5px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;overflow:hidden}
-.worked th{text-align:left;padding:9px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1.5px solid var(--blue-line)}
-.worked td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--blue-line)}
-.worked tr:last-child td{border-bottom:none}
-@media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.nav{align-items:flex-end}.lineplot{padding-left:0;padding-right:0}.ticklab{font-size:9px}}
-</style></head><body><div class="shell">
-<div id="intro"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement & Data</div><div class="card"><div class="tag">Lesson · 4.MD.2</div><h1>Measurement word problems</h1><p>Choose the units and operation before touching the numbers.</p><div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.2</span></div><button class="btn go" onclick="startLesson()">Start lesson →</button></div></div>
-<div id="lesson" class="hide"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement word problems</div><div class="steps" id="steps"></div><div class="card" id="stage"></div></div></div>
-<script>var CODE="4.MD.2",CHALLENGE_TITLE="Make the first move, then solve",DONE_TEXT="Solve time, money, and distance problems by matching units and choosing the operation.";var TASKS=[{"context": "A trail is 1 km 350 m long. A second trail is 875 m long. Find the total in meters.", "visual": "<div class=\"formula\">1 km 350 m + 875 m</div>", "steps": [{"type": "choice", "prompt": "What must happen first?", "options": ["Add 1 + 350 + 875", "Change 1 km to 1,000 m", "Change 875 m to kilometers", "Subtract the shorter trail"], "correct": 1, "why": "The measurements must use the same unit: 1 km 350 m = 1,350 m.", "wrong": "Meters and kilometers cannot be combined as if they were the same-sized unit."}, {"type": "choice", "prompt": "Which operation finds the combined distance?", "options": ["Division", "Subtraction", "Multiplication", "Addition"], "correct": 3, "why": "The two trail lengths are being joined.", "wrong": "The question asks for a total, so the lengths must be joined."}, {"type": "input", "prompt": "What is the total distance in meters?", "answers": ["2225m", "2225"], "placeholder": "meters", "why": "1,350 + 875 = 2,225 meters.", "wrong": "Add 1,350 m and 875 m."}]}, {"context": "You have $12.00 and spend $4.65. How much money remains?", "visual": "<div class=\"formula\">$12.00 \u2212 $4.65</div>", "steps": [{"type": "choice", "prompt": "Which operation matches \u201cremains\u201d?", "options": ["Addition", "Multiplication", "Subtraction", "Division"], "correct": 2, "why": "Money is being taken from the starting amount.", "wrong": "\u201cRemains\u201d asks what is left after spending."}, {"type": "input", "prompt": "How much remains?", "answers": ["7.35", "$7.35"], "placeholder": "dollars", "why": "$12.00 \u2212 $4.65 = $7.35.", "wrong": "Line up dollars with dollars and cents with cents, then subtract."}]}, {"context": "A runner completes 4 laps. Each lap is 650 meters. Find the total distance.", "visual": "<div class=\"formula\">4 equal laps \u00b7 650 m each</div>", "steps": [{"type": "choice", "prompt": "Which operation is most efficient?", "options": ["Multiplication", "Subtraction", "Division", "Addition only once"], "correct": 0, "why": "Four equal groups of 650 means 4 \u00d7 650.", "wrong": "\u201c4 laps, 650 meters each\u201d describes equal groups."}, {"type": "input", "prompt": "What is the total distance in meters?", "answers": ["2600m", "2600"], "placeholder": "meters", "why": "4 \u00d7 650 = 2,600 meters.", "wrong": "Multiply 650 by 4."}]}, {"context": "180 minutes of practice are shared equally across 3 days. How many minutes each day?", "visual": "<div class=\"formula\">180 minutes \u00f7 3 equal days</div>", "steps": [{"type": "choice", "prompt": "Which operation matches \u201cshared equally\u201d?", "options": ["Addition", "Division", "Subtraction", "Multiplication"], "correct": 1, "why": "An amount split into equal groups is division.", "wrong": "The same total is being split equally among three days."}, {"type": "input", "prompt": "How many minutes per day?", "answers": ["60m", "60", "60min"], "placeholder": "minutes", "why": "180 \u00f7 3 = 60 minutes.", "wrong": "Divide 180 by 3."}]}, {"context": "A movie starts at 2:45 and ends at 4:20. Find the elapsed time.", "visual": "<div class=\"formula\">2:45 \u2192 3:00 \u2192 4:00 \u2192 4:20</div>", "steps": [{"type": "choice", "prompt": "Which route counts the time without mixing hours and minutes?", "options": ["2:45 to 3:00, then 3:00 to 4:00, then 4:00 to 4:20", "Subtract 45 from 20", "Add 2:45 and 4:20", "Round both times to the nearest hour"], "correct": 0, "why": "Count forward through easy clock times: 15 min, 1 hr, then 20 min.", "wrong": "Clock minutes reset after 59, so ordinary digit subtraction is unreliable here."}, {"type": "input", "prompt": "What is the elapsed time?", "answers": ["1h35m", "1hour35minutes", "95m", "95min"], "placeholder": "1 h 35 min", "why": "15 minutes + 60 minutes + 20 minutes = 95 minutes, or 1 hour 35 minutes.", "wrong": "Count 15 minutes to 3:00, 60 to 4:00, and 20 to 4:20."}]}];var WHAT={"heading": "Units decide what the numbers mean", "body": "<p>A number without its unit is incomplete. Convert first when units differ, then choose the operation from the situation.</p><div class=\"termgrid\"><div class=\"term\"><b>Join</b>add</div><div class=\"term\"><b>Left or difference</b>subtract</div><div class=\"term\"><b>Equal groups of</b>multiply</div><div class=\"term\"><b>Shared equally</b>divide</div></div><div class=\"goal\"><div class=\"lab\">Clock time</div><p>For elapsed time, count forward through easy landmarks such as the next hour.</p></div>"};var PREDICT={"heading": "Call the operation first", "visual": "<div class=\"formula\">6 trail sections \u00b7 750 m each</div>", "prompt": "Which operation finds the total distance?", "options": ["Add 6 + 750", "Subtract", "Multiply 6 \u00d7 750", "Divide 750 \u00f7 6"], "correct": 2, "why": "Six equal groups of 750 meters means multiplication.", "reveal": "<div class=\"goal\"><div class=\"lab\">Then calculate</div><p>6 \u00d7 750 = 4,500 meters.</p></div>"};var WHY={"heading": "The story controls the arithmetic", "body": "<p>The same numbers can require different operations. \u201c4 bags with 6 apples each\u201d means multiply. \u201c24 apples shared among 4 bags\u201d means divide.</p><p>Conversions do not change the amount. They only rename it in units that can be combined.</p>"};var MISTAKE={"heading": "Nia says 3 km + 450 m = 453 m", "body": "<p>She added the visible digits before matching the units.</p>", "button": "Show the unit error", "reveal": "<div class=\"feedback no\"><b>3 km is 3,000 m.</b> The correct sum is 3,000 m + 450 m = 3,450 m.</div>"};var QUESTIONS=[{"q": "2 km 300 m + 900 m = ?", "a": ["3,200 m", "2,390 m", "1,400 m", "3,900 m"], "correct": 0, "why": "2 km 300 m is 2,300 m; 2,300 + 900 = 3,200 m."}, {"q": "You have $10.00 and spend $6.75. How much remains?", "a": ["$16.75", "$4.25", "$3.25", "$3.75"], "correct": 2, "why": "$10.00 \u2212 $6.75 = $3.25."}, {"q": "5 laps are 240 meters each. Total distance?", "a": ["48 m", "1,200 m", "245 m", "960 m"], "correct": 1, "why": "Five equal groups of 240 means 5 \u00d7 240 = 1,200 meters."}, {"q": "240 minutes shared equally across 4 days is...", "a": ["244 minutes", "960 minutes", "60 minutes", "236 minutes"], "correct": 2, "why": "240 \u00f7 4 = 60."}, {"q": "A class starts at 9:35 and ends at 10:20. How long?", "a": ["45 minutes", "55 minutes", "1 hour 15 minutes", "85 minutes"], "correct": 0, "why": "25 minutes to 10:00, then 20 more, gives 45 minutes."}];
-var step=0,TOTAL=11,taskIndex=0,taskStep=0,challengeDone=false,feedback='',qIndex=0,qCorrect=0,answered=false;
-function el(i){return document.getElementById(i)}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0)}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h}
-function next(){if(step<TOTAL-1){step++;render();scrollTo(0,0)}}
-function back(){if(step>0){step--;render();scrollTo(0,0)}}
-function norm(v){return String(v).toLowerCase().replace(/[,\s$°]/g,'').replace(/hours?/g,'h').replace(/minutes?/g,'m').replace(/meters?/g,'m').replace(/kilometers?/g,'km').replace(/dollars?/g,'')}
-function renderChallenge(){
- var h='<div class="tag">Challenge</div><h2>'+CHALLENGE_TITLE+'</h2>';
- h+='<div class="goal"><div class="lab">Worked example \u2014 read this first</div>'+
-    '<p>A rope is 2 m 40 cm long. You cut off 90 cm. How much is left?</p>'+
-    '<table class="worked">'+
-    '<tr><td>1. Match the units</td><td>2 m = 200 cm, so the rope is 240 cm</td><td><b>240 cm</b></td></tr>'+
-    '<tr><td>2. Choose the operation</td><td>cutting off means taking away</td><td><b>subtract</b></td></tr>'+
-    '<tr><td>3. Work it out</td><td>240 − 90</td><td><b>150 cm</b></td></tr>'+
-    '</table>'+
-    '<p>Units first, then the operation, then the arithmetic. Skipping step 1 gives 2 − 90, which is nonsense.</p></div>';
- h+='<div class="challenge-list">';for(var i=0;i<TASKS.length;i++)h+='<div class="challenge-chip '+(i<taskIndex?'done':i===taskIndex&&!challengeDone?'now':'')+'">'+(i<taskIndex?'✓ ':'')+'Round '+(i+1)+'</div>';h+='</div>';
- if(challengeDone){h+='<div class="goal"><div class="lab">Challenge complete</div><p>You made every decision yourself. Now unpack why the moves worked.</p></div>'}
- else{var T=TASKS[taskIndex],S=T.steps[taskStep];h+='<p>'+T.context+'</p>'+(T.visual||'');h+='<div class="ask"><div class="q">'+S.prompt+'</div>';
-   if(S.type==='choice'){for(var j=0;j<S.options.length;j++)h+='<button class="stepchoice" onclick="chooseStep('+j+')">'+S.options[j]+'</button>'}
-   else if(S.type==='input'){h+='<div class="inputrow"><input id="stepin" type="text" inputmode="decimal" placeholder="'+(S.placeholder||'?')+'"><button class="btn sm go" onclick="submitInput()">Lock it in</button></div>'}
-   else if(S.type==='multi'){h+='<div class="checkgrid">';for(var k=0;k<S.options.length;k++)h+='<label class="checkopt"><input type="checkbox" name="multi" value="'+k+'"> '+S.options[k]+'</label>';h+='</div><div class="inputrow"><button class="btn sm go" onclick="submitMulti()">Check choices</button></div>'}
-   h+='</div>'}
- h+='<div class="feedback '+(feedback?(feedback.indexOf('✓')===0?'ok':'no'):'')+'">'+(feedback||'Choose carefully. A wrong move stays wrong until you fix it.')+'</div>';
- h+='<div class="nav"><span></span><button class="btn" '+(challengeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h;
- if(!challengeDone){var inp=el('stepin');if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput()})}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Measurement word problems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.MD.A.2</div>
+    <h1>Measurement word problems</h1>
+    <p>Here’s a sneaky thing: a money problem, a distance problem and a juice problem can hand you the exact same two numbers — and each one demands a <b>different</b> move. The numbers never tell you what to do. The story does. Learn to read the story for its move, and no word problem can trick you again.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.A.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement word problems</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredMove=false;
+var TASKS=[
+  {fig:'shop', ans:0, txt:'A notebook costs <b>250¢</b>. A pen costs <b>75¢</b>. You buy <b>both</b>. What’s the move to find the total?', won:'250 + 75 = 325¢'},
+  {fig:'path', ans:1, txt:'The park is <b>250 m</b> away. You’ve walked <b>75 m</b> so far. What’s the move to find how much <b>farther</b> you have to go?', won:'250 − 75 = 175 m'},
+  {fig:'juice',ans:2, txt:'One juice box holds <b>250 mL</b>. You grab <b>3 of them</b>. What’s the move to find the total juice?', won:'3 × 250 = 750 mL'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',FILL='rgba(27,79,138,.22)',CUT='rgba(240,102,63,.22)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function advanceStep(message){feedback='✓ '+message;var T=TASKS[taskIndex];setTimeout(function(){taskStep++;feedback='';if(taskStep>=T.steps.length){taskIndex++;taskStep=0;if(taskIndex>=TASKS.length)challengeDone=true}renderChallenge()},650)}
-function chooseStep(i){var S=TASKS[taskIndex].steps[taskStep];if(i===S.correct)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'That does not match the quantities shown. Try another decision.');renderChallenge()}}
-function submitInput(){var S=TASKS[taskIndex].steps[taskStep],v=(el('stepin').value||'').trim();if(!v)return;var ans=S.answers||[S.answer],ok=ans.some(function(a){return norm(v)===norm(a)});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Recheck the operation, units, and arithmetic.');renderChallenge()}}
-function submitMulti(){var S=TASKS[taskIndex].steps[taskStep],got=Array.from(document.querySelectorAll('input[name=multi]:checked')).map(function(x){return +x.value}).sort(),want=S.correct.slice().sort();var ok=got.length===want.length&&got.every(function(v,i){return v===want[i]});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Use the properties you can prove from the figure, then try again.');renderChallenge()}}
-function renderInfo(obj,tag){var h='<div class="tag">'+tag+'</div><h2>'+obj.heading+'</h2>'+obj.body+'<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-var predictDone=false;
-function renderPredict(){var P=PREDICT,h='<div class="tag">Predict first</div><h2>'+P.heading+'</h2>'+P.visual+'<div class="ask"><div class="q">'+P.prompt+'</div>';for(var i=0;i<P.options.length;i++)h+='<button class="stepchoice" onclick="pickPredict('+i+')">'+P.options[i]+'</button>';h+='<div id="pfb"></div></div>';if(predictDone)h+=P.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function pickPredict(i){predictDone=true;renderPredict();var f=el('pfb');f.className='feedback '+(i===PREDICT.correct?'ok':'no');f.innerHTML=(i===PREDICT.correct?'✓ ':'✗ ')+PREDICT.why}
-var mistakeDone=false;
-function renderMistake(){var M=MISTAKE,h='<div class="tag">Catch the mistake</div><h2>'+M.heading+'</h2>'+M.body+'<div class="inputrow"><button class="btn sm" onclick="showMistake()">'+M.button+'</button></div>';if(mistakeDone)h+=M.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(mistakeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function showMistake(){mistakeDone=true;renderMistake()}
-function renderQuestion(){var Q=QUESTIONS[qIndex],h='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div><h2 style="margin-top:10px">'+Q.q+'</h2>';for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pickQ('+i+')">'+Q.a[i]+'</button>';h+='<div id="qfb"></div><div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review teaching</button><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="qnext" disabled onclick="nextQ()">Next →</button></div>';el('stage').innerHTML=h;answered=false}
-function pickQ(i){if(answered)return;answered=true;var Q=QUESTIONS[qIndex];for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong')}var f=el('qfb');f.className='feedback '+(i===Q.correct?'ok':'no');f.innerHTML=(i===Q.correct?'✓ Correct. ':'✗ Not quite. ')+Q.why;if(i===Q.correct)qCorrect++;el('qnext').disabled=false}
-function nextQ(){qIndex++;step=qIndex>=QUESTIONS.length?TOTAL-1:5+qIndex;render();scrollTo(0,0)}
-function reviewLesson(){step=0;render();scrollTo(0,0)}
-function markCourseDone(){try{var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';var key='voyage_g4math_progress_'+kid;var p={done:{},lastSkill:0};var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);if(!p.done)p.done={};p.done[CODE]=true;localStorage.setItem(key,JSON.stringify(p))}catch(e){}}
-function renderDone(){var pct=Math.round(qCorrect/QUESTIONS.length*100),pass=pct>=80,h='<div class="done-icon">'+(pass?'✓':'↻')+'</div><h2 style="text-align:center">'+(pass?'Lesson complete':'Worth one more pass')+'</h2><p style="text-align:center" class="qcount">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';if(pass){markCourseDone();h+='<div class="goal"><div class="lab">You can now</div><p>'+DONE_TEXT+'</p></div>'}else h+='<p>Review the teaching, then try the questions again.</p>';h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="goCourse()">Back to Math →</button></div><div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';el('stage').innerHTML=h}
-function goCourse(){location.href='math-course.html'}
-function restart(){step=0;taskIndex=0;taskStep=0;challengeDone=false;feedback='';predictDone=false;mistakeDone=false;qIndex=0;qCorrect=0;answered=false;render();scrollTo(0,0)}
-function render(){drawSteps();if(step===0)renderChallenge();else if(step===1)renderInfo(WHAT,'What just happened');else if(step===2)renderPredict();else if(step===3)renderInfo(WHY,'Why');else if(step===4)renderMistake();else if(step>=5&&step<TOTAL-1)renderQuestion();else renderDone()}
-</script></body></html>
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function rect(x,y,w,h,c,sw,fill,rx){
+  return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(rx===undefined?5:rx)+'" fill="'+(fill||'none')+'" stroke="'+(c||INK)+'" stroke-width="'+(sw||2.5)+'"/>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function hop(x1,x2,y,label){
+  var mx=(x1+x2)/2;
+  return '<path d="M '+x1+' '+y+' Q '+mx+' '+(y-46)+' '+x2+' '+y+'" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+tx(mx,y-52,label,12,ACC);
+}
+
+/* challenge figures */
+function figShop(){
+  var s=rect(130,40,150,95)+tx(205,80,'notebook',12)+tx(205,104,'250¢',15);
+  s+=rect(360,62,130,50)+tx(425,84,'pen',12)+tx(425,103,'75¢',14);
+  s+=tx(310,162,'you buy both',10.5,MUT,400);
+  return boxSVG(s,172);
+}
+function figPath(){
+  var s=rect(60,70,500,26,INK,2.5,'none',4);
+  s+='<rect x="62" y="72" width="146" height="22" fill="'+FILL+'"/>';
+  s+=ln(210,70,210,96,INK,2);
+  s+=tx(135,60,'walked 75 m',11.5,MUT,400)+tx(385,60,'? m to go',12.5,ACC,700);
+  s+=tx(60,120,'home',10.5,MUT,400)+tx(560,120,'park — 250 m from home',10.5,MUT,400,'end');
+  return boxSVG(s,136);
+}
+function figJuice(){
+  var s='';
+  for(var i=0;i<3;i++){var x=170+i*110;s+=rect(x,40,80,100)+tx(x+40,95,'250',13)+tx(x+40,113,'mL',11);}
+  s+=tx(310,166,'three of the same box',10.5,MUT,400);
+  return boxSVG(s,178);
+}
+function figFor(n){return n==='shop'?figShop():n==='path'?figPath():figJuice();}
+
+/* beat2: same numbers, three moves — tape diagrams */
+function figMoves(){
+  var s='';
+  s+=tx(60,28,'put together → add',11.5,MUT,400,'start');
+  s+=rect(60,36,200,24,INK,2,'none',4)+tx(160,53,'250',12)+rect(260,36,60,24,INK,2,'none',4)+tx(290,53,'75',12);
+  s+=tx(340,54,'= 325',13.5,GRN,700,'start');
+  s+=tx(60,92,'find what’s left → subtract',11.5,MUT,400,'start');
+  s+=rect(60,100,200,24,INK,2,'none',4)+'<rect x="200" y="102" width="58" height="20" fill="'+CUT+'"/>'+ln(200,100,200,124,INK,2);
+  s+=tx(130,117,'175',12)+tx(229,117,'75',11)+tx(340,118,'= 175 left',13.5,GRN,700,'start');
+  s+=tx(60,156,'same thing repeated → multiply',11.5,MUT,400,'start');
+  for(var i=0;i<3;i++)s+=rect(60+i*70,164,64,24,INK,2,'none',4)+tx(92+i*70,181,'250',12);
+  s+=tx(340,182,'= 750',13.5,GRN,700,'start');
+  return boxSVG(s,204);
+}
+/* beat3: the ribbon */
+function figRibbon(solved){
+  var s=rect(60,60,500,28,INK,2.5,'none',4);
+  s+='<rect x="460" y="62" width="98" height="24" fill="'+CUT+'"/>';
+  s+=ln(460,60,460,88,INK,2);
+  s+=tx(510,52,'cut 40 cm',11.5,ACC,700);
+  if(solved){
+    s+=tx(310,42,'2 m = 200 cm',13.5);
+    s+=tx(260,80,'200 − 40 = 160 cm left',13,GRN);
+  } else {
+    s+=tx(260,52,'the ribbon: 2 m',12.5);
+    s+=tx(260,80,'? left',13,MUT);
+  }
+  s+=tx(310,116,'numbers may only meet when they wear the same unit',10.5,MUT,400);
+  return boxSVG(s,128);
+}
+/* beat4: money bar */
+function figMoney(){
+  var s=tx(310,26,'Ella’s 200¢',12.5);
+  s+=rect(60,36,400,30,INK,2.5,'none',4);
+  for(var i=0;i<3;i++){
+    s+='<rect x="'+(62+i*90)+'" y="38" width="88" height="26" fill="'+FILL+'"/>';
+    s+=ln(62+(i+1)*90,36,62+(i+1)*90,66,INK,2);
+    s+=tx(106+i*90,56,'45¢',11.5);
+  }
+  s+=tx(365,56,'? left',12,ACC);
+  s+=tx(310,96,'3 × 45 = 135 &nbsp; · &nbsp; 200 − 135 = 65¢ left',13,GRN);
+  return boxSVG(s,110);
+}
+/* beat5: Jon's claim + the clock walk */
+function figJon(){
+  var s=tx(310,52,'2:50 → 3:20',22);
+  s+=tx(310,86,'“just subtract: 320 − 250” ↓',12,MUT,400);
+  s+=tx(310,124,'70 minutes?',22,ACC);
+  return boxSVG(s,148);
+}
+function figClockLine(){
+  var s=ln(60,110,560,110,INK,2.5);
+  var pts=[[60,'2:50'],[227,'3:00'],[560,'3:20']];
+  pts.forEach(function(p){s+=ln(p[0],102,p[0],118,INK,2.5)+tx(p[0],140,p[1],12.5);});
+  s+=hop(60,227,102,'+10 min');
+  s+=hop(227,560,102,'+20 min');
+  s+=tx(310,170,'10 + 20 = 30 minutes',14,GRN);
+  return boxSVG(s,184);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Same numbers, different story</h2>';
+  h+='<p>Every measurement story asks for one of three moves. <b>Putting amounts together</b> — that’s <b>add</b>. Finding <b>what’s left or how far apart</b> — that’s <b>subtract</b>. The <b>same amount repeated</b> — that’s <b>multiply</b>. Watch: all three stories below use 250 and a friend, and each wants a different move. Pick the move each story asks for.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  h+='<button class="endbtn" id="e0" onclick="pickMove(0)">Add — the story puts amounts together</button>';
+  h+='<button class="endbtn" id="e1" onclick="pickMove(1)">Subtract — the story asks what’s left or how far apart</button>';
+  h+='<button class="endbtn" id="e2" onclick="pickMove(2)">Multiply — the story repeats the same amount</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Read the story, decide what it’s doing with the amounts, then click the move.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredMove=false;
+}
+function pickMove(i){
+  if(answeredMove||wonCount>=TASKS.length)return;answeredMove=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ “You buy both” puts the two prices together: 250 + 75 = 325¢.'
+           :wonCount===1?'✓ “How much farther” is the gap between 250 and 75: 250 − 75 = 175 m to go.'
+                        :'✓ Three boxes of the same 250 mL is repeating: 3 × 250 = 750 mL.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Don’t look at the numbers — look at what the story does with them. Together = add. What’s left or how far apart = subtract. Same amount repeated = multiply. Try again.';
+    setTimeout(function(){if(step===0){answeredMove=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The story picks the move, not the numbers</h2>';
+  h+='<p>250 and 75 sat in three different stories and came out as three different answers. Drawing the story as <b>bars</b> makes the move obvious — bars side by side get added, a bar with a piece cut off gets subtracted, a bar repeated gets multiplied.</p>';
+  h+=figMoves();
+  h+='<table><tr><th>Story clue</th><th>The move</th></tr>';
+  h+='<tr><td>both · together · in all · total</td><td>add</td></tr>';
+  h+='<tr><td>left · how much more · how far apart</td><td>subtract</td></tr>';
+  h+='<tr><td>each · every · 3 of the same</td><td>multiply</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Read the story for its <b>move</b> first — put together, find what’s left, or repeat. Then, and only then, do the arithmetic. If the move is unclear, draw the story as bars and it shows itself.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The unit trap</h2>';
+  h+='<p>One more thing can go wrong before you even pick a move. Riya has a ribbon <b>2 metres</b> long. She cuts off <b>40 centimetres</b> for a bow. The story clearly says <b>subtract</b> — what’s left.</p>';
+  h+=figRibbon(false);
+  h+='<div class="ask"><div class="q">Can she just do 2 − 40?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'y\')">Yes — 2 − 40</button><button class="btn sm" onclick="checkPredict(\'n\')">No — the units don’t match yet</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figRibbon(true);
+  h+='<p>2 − 40 would give less than nothing — nonsense, because the 2 counts <b>metres</b> and the 40 counts <b>centimetres</b>. Different units can’t meet in one subtraction. Fix the units first: 1 m = 100 cm, so the ribbon is 2 × 100 = <b>200 cm</b>. Now both numbers speak centimetres: 200 − 40 = <b>160 cm</b> left.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='n'){fb.className='fb ok';fb.innerHTML='<b>Right — match the units first.</b> 2 m = 200 cm, then 200 − 40 = 160 cm left.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Careful — 2 − 40 is nonsense.</b> The 2 counts metres, the 40 counts centimetres. Turn 2 m into 200 cm first, then 200 − 40 = 160 cm.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Some stories take two moves</h2>';
+  h+='<p>Money works exactly like metres and centimetres: <b>$1 = 100¢</b>, big unit, small unit. And money stories love to hide <b>two moves in one story</b>. Watch:</p>';
+  h+='<p><i>Ella has $2. Stickers cost 45¢ each. She buys 3. How much money is left?</i></p>';
+  h+=figMoney();
+  h+='<p>Three moves were hiding in there: match the units ($2 = 200¢), spot “<b>45¢ each</b>, buys <b>3</b>” — that’s repeat, so <b>3 × 45 = 135¢</b> — and then “how much <b>left</b>” — that’s subtract: <b>200 − 135 = 65¢</b>. One story, moves chained together, each one picked by its own clue words.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Big stories are just small stories chained together. Take them one clue at a time: match the units, do the first move, feed its answer into the next move. The bar drawing keeps track of where you are.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Jon says the bus ride took 70 minutes</h2>';
+  h+='<p>The bus left at <b>2:50</b> and arrived at <b>3:20</b>. Jon’s reason: <i>“Easy — 320 minus 250 is 70. The ride took 70 minutes.”</i></p>';
+  h+=figJon();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testJon()">Walk the clock</button></div>';
+  h+='<div id="mh" class="hide">'+figClockLine()+'</div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testJon();
+}
+function testJon(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Clock numbers aren’t plain numbers.</b> 2:50 doesn’t mean “two hundred fifty” — an hour holds only <b>60 minutes</b>, so after 2:59 comes 3:00, not 2:60. You can’t subtract clock readings like prices. Instead, <b>walk the clock</b>: hop from 2:50 to the next o’clock — that’s 10 minutes — then from 3:00 to 3:20 is 20 more. 10 + 20 = <b>30 minutes</b>, less than half of Jon’s answer.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'A fish tank holds 400 L of water. 150 L leaks out. Which move finds how much water is left?',
+   a:['Multiply — 400 × 150','Subtract — 400 − 150 = 250 L','Add — 400 + 150 = 550 L','Walk the clock'],correct:1,
+   why:'“How much is left” is the what’s-left clue — subtract. 400 − 150 = 250 L still in the tank.'},
+  {q:'Each bag of flour weighs 2 kg. A baker buys 5 bags. How much flour is that?',
+   a:['7 kg — add them','3 kg — take away','10 kg — five bags of 2 kg each','5 kg — one for each bag'],correct:2,
+   why:'“Each bag… 5 bags” is the same amount repeated — multiply. 5 × 2 = 10 kg.'},
+  {q:'A rope is 3 m long. You cut off 50 cm. How much rope is left?',
+   a:['250 cm — turn 3 m into 300 cm first, then subtract','47 cm — just do 50 − 3','2 cm','You can’t cut cm off a rope measured in m'],correct:0,
+   why:'That’s the unit trap. 3 and 50 wear different units, so match them first: 3 m = 300 cm, then 300 − 50 = 250 cm.'},
+  {q:'Leo has $3 (that’s 300¢). He buys 2 pencils at 60¢ each. How much money is left?',
+   a:['180¢ — 2 × 60 = 120, then 300 − 120','240¢ — 300 − 60','120¢','60¢'],correct:0,
+   why:'Two moves chained: “60¢ each, buys 2” is repeat — 2 × 60 = 120¢ — and “how much left” is subtract — 300 − 120 = 180¢.'},
+  {q:'A movie starts at 4:40 and ends at 5:10. How long is it?',
+   a:['70 minutes — 510 − 440','30 minutes — hop 20 to 5:00, then 10 more','1 hour','40 minutes'],correct:1,
+   why:'That was Jon’s mistake — clock readings can’t be subtracted like plain numbers. Walk the clock: 4:40 to 5:00 is 20 minutes, 5:00 to 5:10 is 10 more. 20 + 10 = 30 minutes.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.MD.2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Read a measurement story for its move — together adds, what’s-left subtracts, repeats multiply — match the units before the numbers meet, chain two moves in one story, and walk the clock instead of subtracting clock readings.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Jon. His 320 − 250 looked so easy — and the real answer was less than half of it.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredMove=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

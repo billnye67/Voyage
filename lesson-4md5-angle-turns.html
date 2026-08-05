@@ -1,61 +1,440 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voyage · Angles as turns</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
-:root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;min-height:100vh}.shell{max-width:760px;margin:0 auto;padding:26px 22px 80px}.crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}h1{font-family:'Fraunces',serif;font-size:31px;line-height:1.12;margin-bottom:12px}h2{font-family:'Fraunces',serif;font-size:23px;line-height:1.22;margin-bottom:14px}p{font-size:16.5px;line-height:1.6;margin-bottom:12px}b{font-weight:600}.tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}.goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}.goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}.goal p{margin:0 0 8px}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}.btn:active{transform:translate(3px,3px);box-shadow:none}.btn.go{background:var(--accent);color:#fff}.btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}.btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}.steps{display:flex;gap:6px;margin-bottom:20px}.steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}.steps .seg.on{background:var(--blue)}.hide{display:none}.challenge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0 15px}.challenge-chip{border:1.5px solid var(--blue-line);border-radius:9px;padding:8px;font-family:'Space Mono',monospace;font-size:11px;text-align:center;background:#fff}.challenge-chip.now{border-color:var(--accent);color:var(--accent);font-weight:700}.challenge-chip.done{border-color:var(--green);color:var(--green)}.diagram{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:8px;margin:12px 0}.diagram svg{width:100%;max-height:260px;display:block}.svglabel{font-family:'Space Grotesk',sans-serif;font-size:15px;fill:var(--ink);font-weight:600}.svgtiny{font-family:'Space Mono',monospace;font-size:10px;fill:var(--muted)}.ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}.ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}.choice,.stepchoice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}.choice:hover,.stepchoice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}.choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}.choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}.inputrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}.inputrow input{font-family:'Space Mono',monospace;font-size:18px;min-width:145px;max-width:260px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;text-align:center}.checkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px}.checkopt{display:flex;gap:9px;align-items:center;background:#fff;border:1.5px solid var(--blue-line);border-radius:9px;padding:11px;font-size:15px}.feedback{font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px;min-height:44px;margin-top:12px}.feedback.ok{background:rgba(46,125,91,.12);color:var(--green)}.feedback.no{background:rgba(240,102,63,.12);color:var(--accent)}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}.qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.done-icon{font-size:44px;text-align:center;margin-bottom:8px}.attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}.lineplot{display:flex;align-items:flex-end;height:165px;padding:10px 12px 0;position:relative}.lineplot:after{content:'';position:absolute;left:12px;right:12px;bottom:38px;border-top:3px solid var(--ink)}.tick{flex:1;text-align:center;position:relative;z-index:1}.xstack{height:104px;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:center}.xmark{font-family:'Space Mono',monospace;font-size:23px;line-height:18px;color:var(--blue)}.tickline{height:15px;border-left:2px solid var(--ink);margin:0 auto;width:1px}.ticklab{font-family:'Space Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap}.formula{font-family:'Space Mono',monospace;text-align:center;font-size:19px;padding:12px}.termgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.term{background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px}.term b{display:block;color:var(--blue);margin-bottom:3px}
-.worked{width:100%;border-collapse:collapse;margin:12px 0;font-family:'Space Mono',monospace;font-size:14.5px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;overflow:hidden}
-.worked th{text-align:left;padding:9px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1.5px solid var(--blue-line)}
-.worked td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--blue-line)}
-.worked tr:last-child td{border-bottom:none}
-@media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.nav{align-items:flex-end}.lineplot{padding-left:0;padding-right:0}.ticklab{font-size:9px}}
-</style></head><body><div class="shell">
-<div id="intro"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement & Data</div><div class="card"><div class="tag">Lesson · 4.MD.5</div><h1>Angles as turns</h1><p>Match each turn to its fraction and degree measure.</p><div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.5</span></div><button class="btn go" onclick="startLesson()">Start lesson →</button></div></div>
-<div id="lesson" class="hide"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Angles as turns</div><div class="steps" id="steps"></div><div class="card" id="stage"></div></div></div>
-<script>var CODE="4.MD.5",CHALLENGE_TITLE="Name the turn, then name its degrees",DONE_TEXT="Explain angle measure as a fraction of a 360\u00b0 turn.";var TASKS=[{"context": "Two of eight equal turn-parts are shaded.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"2 of 8 equal parts of a turn shaded\">\n      <path d=\"M 110 110 L 110.0 25.0 A 85 85 0 0 1 170.1 49.9 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 49.9 A 85 85 0 0 1 195.0 110.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 195.0 110.0 A 85 85 0 0 1 170.1 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 170.1 A 85 85 0 0 1 110.0 195.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 110.0 195.0 A 85 85 0 0 1 49.9 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 170.1 A 85 85 0 0 1 25.0 110.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 25.0 110.0 A 85 85 0 0 1 49.9 49.9 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 49.9 A 85 85 0 0 1 110.0 25.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><circle cx=\"110\" cy=\"110\" r=\"85\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"3\"/><circle cx=\"110\" cy=\"110\" r=\"5\" fill=\"var(--ink)\"/>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "What fraction of a full turn is shaded?", "options": ["1/8", "1/4", "1/2", "3/4"], "correct": 1, "why": "2/8 simplifies to 1/4.", "wrong": "Compare the two shaded parts with all eight parts."}, {"type": "input", "prompt": "How many degrees is this turn?", "answers": ["90", "90\u00b0"], "placeholder": "degrees", "why": "One quarter of 360\u00b0 is 90\u00b0.", "wrong": "Divide 360 by 4."}]}, {"context": "Four of eight equal turn-parts are shaded.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"4 of 8 equal parts of a turn shaded\">\n      <path d=\"M 110 110 L 110.0 25.0 A 85 85 0 0 1 170.1 49.9 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 49.9 A 85 85 0 0 1 195.0 110.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 195.0 110.0 A 85 85 0 0 1 170.1 170.1 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 170.1 A 85 85 0 0 1 110.0 195.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 110.0 195.0 A 85 85 0 0 1 49.9 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 170.1 A 85 85 0 0 1 25.0 110.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 25.0 110.0 A 85 85 0 0 1 49.9 49.9 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 49.9 A 85 85 0 0 1 110.0 25.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><circle cx=\"110\" cy=\"110\" r=\"85\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"3\"/><circle cx=\"110\" cy=\"110\" r=\"5\" fill=\"var(--ink)\"/>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "What fraction of a full turn is shaded?", "options": ["1/4", "1/2", "3/4", "1/8"], "correct": 1, "why": "4/8 is one half.", "wrong": "Four of eight equal parts is half the circle."}, {"type": "input", "prompt": "How many degrees is a half turn?", "answers": ["180", "180\u00b0"], "placeholder": "degrees", "why": "360 \u00f7 2 = 180\u00b0.", "wrong": "A half turn is half of 360\u00b0."}]}, {"context": "Six of eight equal turn-parts are shaded.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"6 of 8 equal parts of a turn shaded\">\n      <path d=\"M 110 110 L 110.0 25.0 A 85 85 0 0 1 170.1 49.9 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 49.9 A 85 85 0 0 1 195.0 110.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 195.0 110.0 A 85 85 0 0 1 170.1 170.1 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 170.1 A 85 85 0 0 1 110.0 195.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 110.0 195.0 A 85 85 0 0 1 49.9 170.1 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 170.1 A 85 85 0 0 1 25.0 110.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 25.0 110.0 A 85 85 0 0 1 49.9 49.9 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 49.9 A 85 85 0 0 1 110.0 25.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><circle cx=\"110\" cy=\"110\" r=\"85\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"3\"/><circle cx=\"110\" cy=\"110\" r=\"5\" fill=\"var(--ink)\"/>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "What fraction of a full turn is shaded?", "options": ["3/4", "1/4", "6/4", "1/2"], "correct": 0, "why": "6/8 simplifies to 3/4.", "wrong": "Simplify six eighths."}, {"type": "input", "prompt": "How many degrees is this turn?", "answers": ["270", "270\u00b0"], "placeholder": "degrees", "why": "Three quarters of 360\u00b0 is 270\u00b0.", "wrong": "One quarter is 90\u00b0, so three quarters is 3 \u00d7 90\u00b0."}]}, {"context": "One of eight equal turn-parts is shaded.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"1 of 8 equal parts of a turn shaded\">\n      <path d=\"M 110 110 L 110.0 25.0 A 85 85 0 0 1 170.1 49.9 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 49.9 A 85 85 0 0 1 195.0 110.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 195.0 110.0 A 85 85 0 0 1 170.1 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 170.1 A 85 85 0 0 1 110.0 195.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 110.0 195.0 A 85 85 0 0 1 49.9 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 170.1 A 85 85 0 0 1 25.0 110.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 25.0 110.0 A 85 85 0 0 1 49.9 49.9 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 49.9 A 85 85 0 0 1 110.0 25.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><circle cx=\"110\" cy=\"110\" r=\"85\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"3\"/><circle cx=\"110\" cy=\"110\" r=\"5\" fill=\"var(--ink)\"/>\n    </svg></div>", "steps": [{"type": "input", "prompt": "How many degrees is one eighth of a full turn?", "answers": ["45", "45\u00b0"], "placeholder": "degrees", "why": "360 \u00f7 8 = 45\u00b0.", "wrong": "Divide the full 360\u00b0 turn into eight equal parts."}]}];var WHAT={"heading": "A degree is a tiny piece of a turn", "body": "<p>A full turn is divided into 360 equal parts. One part is 1 degree.</p><div class=\"termgrid\"><div class=\"term\"><b>1/4 turn</b>90\u00b0</div><div class=\"term\"><b>1/2 turn</b>180\u00b0</div><div class=\"term\"><b>3/4 turn</b>270\u00b0</div><div class=\"term\"><b>full turn</b>360\u00b0</div></div>"};var PREDICT={"heading": "Use the turn before memorizing", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"3 of 8 equal parts of a turn shaded\">\n      <path d=\"M 110 110 L 110.0 25.0 A 85 85 0 0 1 170.1 49.9 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 49.9 A 85 85 0 0 1 195.0 110.0 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 195.0 110.0 A 85 85 0 0 1 170.1 170.1 Z\" fill=\"rgba(240,102,63,.55)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 170.1 170.1 A 85 85 0 0 1 110.0 195.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 110.0 195.0 A 85 85 0 0 1 49.9 170.1 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 170.1 A 85 85 0 0 1 25.0 110.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 25.0 110.0 A 85 85 0 0 1 49.9 49.9 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><path d=\"M 110 110 L 49.9 49.9 A 85 85 0 0 1 110.0 25.0 Z\" fill=\"rgba(27,79,138,.06)\" stroke=\"white\" stroke-width=\"2\"/><circle cx=\"110\" cy=\"110\" r=\"85\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"3\"/><circle cx=\"110\" cy=\"110\" r=\"5\" fill=\"var(--ink)\"/>\n    </svg></div>", "prompt": "Three eighths of a full turn is how many degrees?", "options": ["45\u00b0", "90\u00b0", "135\u00b0", "180\u00b0"], "correct": 2, "why": "One eighth is 45\u00b0, so three eighths is 3 \u00d7 45\u00b0 = 135\u00b0.", "reveal": "<div class=\"goal\"><div class=\"lab\">Fraction reasoning</div><p>3/8 \u00d7 360\u00b0 = 135\u00b0.</p></div>"};var WHY={"heading": "Angle size measures rotation", "body": "<p>An angle tells how far one ray turns away from another around their shared endpoint. The length of the rays does not affect the angle.</p><p>Because every full turn is 360\u00b0, fractions of a turn produce consistent degree measures.</p>"};var MISTAKE={"heading": "Sam says longer rays make a larger angle", "body": "<p>He extends both rays without changing their directions.</p>", "button": "Check the turn", "reveal": "<div class=\"feedback no\"><b>The angle stays the same.</b> Ray length changed, but the amount of rotation did not.</div>"};var QUESTIONS=[{"q": "One quarter of a full turn is...", "a": ["45\u00b0", "90\u00b0", "180\u00b0", "270\u00b0"], "correct": 1, "why": "360 \u00f7 4 = 90\u00b0."}, {"q": "A 180\u00b0 angle represents...", "a": ["a quarter turn", "a half turn", "three quarters of a turn", "a full turn"], "correct": 1, "why": "180 is half of 360."}, {"q": "One eighth of a turn is...", "a": ["45\u00b0", "80\u00b0", "90\u00b0", "135\u00b0"], "correct": 0, "why": "360 \u00f7 8 = 45\u00b0."}, {"q": "270\u00b0 is what fraction of a full turn?", "a": ["1/4", "1/2", "2/3", "3/4"], "correct": 3, "why": "270 is three of four 90\u00b0 quarter turns."}, {"q": "What changes an angle\u2019s measure?", "a": ["Making the rays longer", "Changing how far one ray turns", "Moving the angle on the page", "Making the lines thicker"], "correct": 1, "why": "Angle measure depends on rotation, not appearance."}];
-var step=0,TOTAL=11,taskIndex=0,taskStep=0,challengeDone=false,feedback='',qIndex=0,qCorrect=0,answered=false;
-function el(i){return document.getElementById(i)}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0)}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h}
-function next(){if(step<TOTAL-1){step++;render();scrollTo(0,0)}}
-function back(){if(step>0){step--;render();scrollTo(0,0)}}
-function norm(v){return String(v).toLowerCase().replace(/[,\s$°]/g,'').replace(/hours?/g,'h').replace(/minutes?/g,'m').replace(/meters?/g,'m').replace(/kilometers?/g,'km').replace(/dollars?/g,'')}
-function renderChallenge(){
- var h='<div class="tag">Challenge</div><h2>'+CHALLENGE_TITLE+'</h2>';
- h+='<div class="goal"><div class="lab">Worked example \u2014 read this first</div>'+
-    '<p>A full turn all the way round is 360°. Cut it into 3 equal parts.</p>'+
-    '<table class="worked">'+
-    '<tr><td>One part</td><td>360 ÷ 3</td><td><b>120°</b></td></tr>'+
-    '<tr><td>Two parts</td><td>120 + 120</td><td><b>240°</b></td></tr>'+
-    '<tr><td>All three parts</td><td>120 + 120 + 120, right back to the start</td><td><b>360°</b></td></tr>'+
-    '</table>'+
-    '<p>Every angle is a fraction of that full 360° turn. How long you draw the rays makes no difference.</p></div>';
- h+='<div class="challenge-list">';for(var i=0;i<TASKS.length;i++)h+='<div class="challenge-chip '+(i<taskIndex?'done':i===taskIndex&&!challengeDone?'now':'')+'">'+(i<taskIndex?'✓ ':'')+'Round '+(i+1)+'</div>';h+='</div>';
- if(challengeDone){h+='<div class="goal"><div class="lab">Challenge complete</div><p>You made every decision yourself. Now unpack why the moves worked.</p></div>'}
- else{var T=TASKS[taskIndex],S=T.steps[taskStep];h+='<p>'+T.context+'</p>'+(T.visual||'');h+='<div class="ask"><div class="q">'+S.prompt+'</div>';
-   if(S.type==='choice'){for(var j=0;j<S.options.length;j++)h+='<button class="stepchoice" onclick="chooseStep('+j+')">'+S.options[j]+'</button>'}
-   else if(S.type==='input'){h+='<div class="inputrow"><input id="stepin" type="text" inputmode="decimal" placeholder="'+(S.placeholder||'?')+'"><button class="btn sm go" onclick="submitInput()">Lock it in</button></div>'}
-   else if(S.type==='multi'){h+='<div class="checkgrid">';for(var k=0;k<S.options.length;k++)h+='<label class="checkopt"><input type="checkbox" name="multi" value="'+k+'"> '+S.options[k]+'</label>';h+='</div><div class="inputrow"><button class="btn sm go" onclick="submitMulti()">Check choices</button></div>'}
-   h+='</div>'}
- h+='<div class="feedback '+(feedback?(feedback.indexOf('✓')===0?'ok':'no'):'')+'">'+(feedback||'Choose carefully. A wrong move stays wrong until you fix it.')+'</div>';
- h+='<div class="nav"><span></span><button class="btn" '+(challengeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h;
- if(!challengeDone){var inp=el('stepin');if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput()})}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Angles as turns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.MD.C.5</div>
+    <h1>Angles as turns</h1>
+    <p>A skater spins. A doorknob twists. A clock hand sweeps. Every one of those is a <b>turn</b> — and turns have their own ruler. A full spin is 360 degrees, and every angle you’ll ever meet is just a piece of that spin, frozen in place. Once you see angles as turns, their sizes stop being mysterious.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.C.5</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Angles as turns</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredTurn=false;
+var TASKS=[
+  {fig:'full', ans:1, txt:'The skater spins <b>all the way around</b> — she ends up facing the door again. How big was her turn?',
+   opts:['100°','360° — one full turn','4°'], won:'full spin = 360°'},
+  {fig:'half', ans:0, txt:'Now she turns just enough to face the <b>opposite</b> wall — half of a full spin. How big is that turn?',
+   opts:['180° — half of 360','90°','200°'], won:'half turn = 180°'},
+  {fig:'quarter', ans:2, txt:'Now only a <b>quarter</b> of a spin — half of the half. How big?',
+   opts:['45°','120°','90° — half of 180'], won:'quarter turn = 90°'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function advanceStep(message){feedback='✓ '+message;var T=TASKS[taskIndex];setTimeout(function(){taskStep++;feedback='';if(taskStep>=T.steps.length){taskIndex++;taskStep=0;if(taskIndex>=TASKS.length)challengeDone=true}renderChallenge()},650)}
-function chooseStep(i){var S=TASKS[taskIndex].steps[taskStep];if(i===S.correct)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'That does not match the quantities shown. Try another decision.');renderChallenge()}}
-function submitInput(){var S=TASKS[taskIndex].steps[taskStep],v=(el('stepin').value||'').trim();if(!v)return;var ans=S.answers||[S.answer],ok=ans.some(function(a){return norm(v)===norm(a)});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Recheck the operation, units, and arithmetic.');renderChallenge()}}
-function submitMulti(){var S=TASKS[taskIndex].steps[taskStep],got=Array.from(document.querySelectorAll('input[name=multi]:checked')).map(function(x){return +x.value}).sort(),want=S.correct.slice().sort();var ok=got.length===want.length&&got.every(function(v,i){return v===want[i]});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Use the properties you can prove from the figure, then try again.');renderChallenge()}}
-function renderInfo(obj,tag){var h='<div class="tag">'+tag+'</div><h2>'+obj.heading+'</h2>'+obj.body+'<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-var predictDone=false;
-function renderPredict(){var P=PREDICT,h='<div class="tag">Predict first</div><h2>'+P.heading+'</h2>'+P.visual+'<div class="ask"><div class="q">'+P.prompt+'</div>';for(var i=0;i<P.options.length;i++)h+='<button class="stepchoice" onclick="pickPredict('+i+')">'+P.options[i]+'</button>';h+='<div id="pfb"></div></div>';if(predictDone)h+=P.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function pickPredict(i){predictDone=true;renderPredict();var f=el('pfb');f.className='feedback '+(i===PREDICT.correct?'ok':'no');f.innerHTML=(i===PREDICT.correct?'✓ ':'✗ ')+PREDICT.why}
-var mistakeDone=false;
-function renderMistake(){var M=MISTAKE,h='<div class="tag">Catch the mistake</div><h2>'+M.heading+'</h2>'+M.body+'<div class="inputrow"><button class="btn sm" onclick="showMistake()">'+M.button+'</button></div>';if(mistakeDone)h+=M.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(mistakeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function showMistake(){mistakeDone=true;renderMistake()}
-function renderQuestion(){var Q=QUESTIONS[qIndex],h='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div><h2 style="margin-top:10px">'+Q.q+'</h2>';for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pickQ('+i+')">'+Q.a[i]+'</button>';h+='<div id="qfb"></div><div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review teaching</button><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="qnext" disabled onclick="nextQ()">Next →</button></div>';el('stage').innerHTML=h;answered=false}
-function pickQ(i){if(answered)return;answered=true;var Q=QUESTIONS[qIndex];for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong')}var f=el('qfb');f.className='feedback '+(i===Q.correct?'ok':'no');f.innerHTML=(i===Q.correct?'✓ Correct. ':'✗ Not quite. ')+Q.why;if(i===Q.correct)qCorrect++;el('qnext').disabled=false}
-function nextQ(){qIndex++;step=qIndex>=QUESTIONS.length?TOTAL-1:5+qIndex;render();scrollTo(0,0)}
-function reviewLesson(){step=0;render();scrollTo(0,0)}
-function markCourseDone(){try{var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';var key='voyage_g4math_progress_'+kid;var p={done:{},lastSkill:0};var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);if(!p.done)p.done={};p.done[CODE]=true;localStorage.setItem(key,JSON.stringify(p))}catch(e){}}
-function renderDone(){var pct=Math.round(qCorrect/QUESTIONS.length*100),pass=pct>=80,h='<div class="done-icon">'+(pass?'✓':'↻')+'</div><h2 style="text-align:center">'+(pass?'Lesson complete':'Worth one more pass')+'</h2><p style="text-align:center" class="qcount">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';if(pass){markCourseDone();h+='<div class="goal"><div class="lab">You can now</div><p>'+DONE_TEXT+'</p></div>'}else h+='<p>Review the teaching, then try the questions again.</p>';h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="goCourse()">Back to Math →</button></div><div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';el('stage').innerHTML=h}
-function goCourse(){location.href='math-course.html'}
-function restart(){step=0;taskIndex=0;taskStep=0;challengeDone=false;feedback='';predictDone=false;mistakeDone=false;qIndex=0;qCorrect=0;answered=false;render();scrollTo(0,0)}
-function render(){drawSteps();if(step===0)renderChallenge();else if(step===1)renderInfo(WHAT,'What just happened');else if(step===2)renderPredict();else if(step===3)renderInfo(WHY,'Why');else if(step===4)renderMistake();else if(step>=5&&step<TOTAL-1)renderQuestion();else renderDone()}
-</script></body></html>
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function ah(tipx,tipy,ux,uy,c){
+  var bx=tipx-12*ux,by=tipy-12*uy,nx=-uy,ny=ux;
+  return '<polygon points="'+tipx+','+tipy+' '+(bx+5*nx).toFixed(1)+','+(by+5*ny).toFixed(1)+' '+(bx-5*nx).toFixed(1)+','+(by-5*ny).toFixed(1)+'" fill="'+(c||INK)+'"/>';
+}
+function circ(cx,cy,r,c,w){
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"/>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+
+/* dials: start ray always points UP (like a clock's 12) */
+function figFull(){
+  var s=ln(310,110,310,25)+ah(310,25,0,-1);
+  s+='<path d="M 310 62 A 48 48 0 1 1 302 62.7" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+ah(305,62.5,-1,-0.1,ACC);
+  s+='<circle cx="310" cy="110" r="4.5" fill="'+INK+'"/>';
+  s+=tx(310,190,'starts facing up, sweeps all the way back around',10.5,MUT,400);
+  s+=tx(408,90,'360°',15,ACC);
+  return boxSVG(s,202);
+}
+function figHalf(){
+  var s=ln(310,105,310,20)+ah(310,20,0,-1);
+  s+=ln(310,105,310,190)+ah(310,190,0,1);
+  s+='<path d="M 310 57 A 48 48 0 0 1 310 153" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+ah(310,153,-1,0.15,ACC);
+  s+='<circle cx="310" cy="105" r="4.5" fill="'+INK+'"/>';
+  s+=tx(392,105,'180°',15,ACC);
+  s+=tx(310,214,'up → down: the opposite way',10.5,MUT,400);
+  return boxSVG(s,224);
+}
+function figQuarter(){
+  var s=ln(310,110,310,25)+ah(310,25,0,-1);
+  s+=ln(310,110,395,110)+ah(395,110,1,0);
+  s+='<path d="M 310 62 A 48 48 0 0 1 358 110" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+ah(358,110,0.15,1,ACC);
+  s+='<circle cx="310" cy="110" r="4.5" fill="'+INK+'"/>';
+  s+=tx(365,72,'90°',15,ACC);
+  s+=tx(310,150,'up → right: a quarter of the way around',10.5,MUT,400);
+  return boxSVG(s,162);
+}
+function figFor(n){return n==='full'?figFull():n==='half'?figHalf():figQuarter();}
+
+/* beat2: four mini dials */
+function miniDial(cx,cy,kind){
+  var s=ln(cx,cy,cx,cy-40)+ah(cx,cy-40,0,-1);
+  if(kind==='q'){s+=ln(cx,cy,cx+40,cy)+ah(cx+40,cy,1,0);
+    s+='<path d="M '+cx+' '+(cy-26)+' A 26 26 0 0 1 '+(cx+26)+' '+cy+'" fill="none" stroke="'+ACC+'" stroke-width="2"/>';}
+  else if(kind==='h'){s+=ln(cx,cy,cx,cy+40)+ah(cx,cy+40,0,1);
+    s+='<path d="M '+cx+' '+(cy-26)+' A 26 26 0 0 1 '+cx+' '+(cy+26)+'" fill="none" stroke="'+ACC+'" stroke-width="2"/>';}
+  else if(kind==='t'){s+=ln(cx,cy,cx-40,cy)+ah(cx-40,cy,-1,0);
+    s+='<path d="M '+cx+' '+(cy-26)+' A 26 26 0 1 1 '+(cx-26)+' '+cy+'" fill="none" stroke="'+ACC+'" stroke-width="2"/>';}
+  else {s+='<path d="M '+cx+' '+(cy-26)+' A 26 26 0 1 1 '+(cx-5)+' '+(cy-25.5)+'" fill="none" stroke="'+ACC+'" stroke-width="2"/>';}
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="'+INK+'"/>';
+  return s;
+}
+function figDials(){
+  var s='';
+  s+=miniDial(95,80,'q')+tx(95,150,'quarter',12.5)+tx(95,166,'90°',12,ACC);
+  s+=miniDial(240,80,'h')+tx(240,150,'half',12.5)+tx(240,166,'180°',12,ACC);
+  s+=miniDial(385,80,'t')+tx(385,150,'three-quarter',12.5)+tx(385,166,'270°',12,ACC);
+  s+=miniDial(530,80,'f')+tx(530,150,'full',12.5)+tx(530,166,'360°',12,ACC);
+  return boxSVG(s,180);
+}
+/* beat3: same opening, different arm lengths (both 40°) */
+function figArms(reveal){
+  var s='';
+  s+=ln(120,150,290,150)+ah(290,150,1,0);
+  s+=ln(120,150,250.2,40.4)+ah(250.2,40.4,0.766,-0.643);
+  s+='<circle cx="120" cy="150" r="4" fill="'+INK+'"/>';
+  s+=tx(205,178,'long arms',11.5,MUT,400);
+  s+=ln(420,150,505,150)+ah(505,150,1,0);
+  s+=ln(420,150,485.1,95.3)+ah(485.1,95.3,0.766,-0.643);
+  s+='<circle cx="420" cy="150" r="4" fill="'+INK+'"/>';
+  s+=tx(452,178,'short arms',11.5,MUT,400);
+  if(reveal){
+    s+='<path d="M 160 150 A 40 40 0 0 0 150.6 124.3" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>';
+    s+='<path d="M 460 150 A 40 40 0 0 0 450.6 124.3" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>';
+    s+=tx(310,206,'the orange arcs are identical — same turn between the arms',11.5,ACC);
+  }
+  return boxSVG(s,reveal?218:196);
+}
+/* beat4: clock quarter sweep */
+function clockFace(){
+  var s=circ(310,105,72);
+  s+=ln(310,33,310,41,INK,2)+ln(382,105,374,105,INK,2)+ln(310,177,310,169,INK,2)+ln(238,105,246,105,INK,2);
+  s+=tx(310,24,'12',11.5,MUT,400);
+  s+=tx(396,110,'3',11.5,MUT,400,'start');
+  s+=tx(310,196,'6',11.5,MUT,400);
+  s+=tx(224,110,'9',11.5,MUT,400,'end');
+  return s;
+}
+function figClockQ(){
+  var s=clockFace();
+  s+=ln(310,105,310,45,GREY,2.5,true);
+  s+=ln(310,105,366,105)+ah(366,105,1,0);
+  s+='<path d="M 310 61 A 44 44 0 0 1 354 105" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+ah(354,105,0.15,1,ACC);
+  s+='<circle cx="310" cy="105" r="4" fill="'+INK+'"/>';
+  s+=tx(408,62,'90°',14,ACC);
+  s+=tx(310,216,'the minute hand, 12 → 3: fifteen minutes, a quarter turn',11,MUT,400);
+  return boxSVG(s,220);
+}
+/* beat5: full sweep back to 12 */
+function figClockFull(){
+  var s=clockFace();
+  s+=ln(310,105,310,45)+ah(310,45,0,-1);
+  s+='<path d="M 310 61 A 44 44 0 1 1 302.5 61.6" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>'+ah(305,61.5,-1,-0.1,ACC);
+  s+='<circle cx="310" cy="105" r="4" fill="'+INK+'"/>';
+  s+=tx(440,56,'360°',14,ACC);
+  s+=tx(310,216,'the hand LOOKS unmoved — but it swept the whole way around',11,MUT,400);
+  return boxSVG(s,220);
+}
+function figKai(){
+  var s=tx(310,48,'“The hand is back on the 12…',15,MUT,400);
+  s+=tx(310,80,'…so it turned 0 degrees.”',15,MUT,400);
+  s+=tx(310,124,'0°?',22,ACC);
+  return boxSVG(s,148);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Measure the spin</h2>';
+  h+='<p>A skater starts facing the door. Whatever she does next is a <b>turn</b>, and turns have a ruler: one <b>full spin</b> — all the way around, back to facing the door — measures <b>360 degrees</b> (written 360°). Every smaller turn is a piece of those 360. Halving is your friend: half a spin is half of 360, a quarter spin is half of that. Measure each of her turns.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickTurn('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">A full spin is 360°. Cut it down from there.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredTurn=false;
+}
+function pickTurn(i){
+  if(answeredTurn||wonCount>=TASKS.length)return;answeredTurn=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ All the way around is the whole ruler: 360°.'
+           :wonCount===1?'✓ Facing the opposite way is half the spin: half of 360 is 180°.'
+                        :'✓ A quarter spin is half of the half: half of 180 is 90°. That’s the square corner from paper corners!';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Start from the whole spin: 360°. Half a spin is half of 360. A quarter is half again. Try it once more.';
+    setTimeout(function(){if(step===0){answeredTurn=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The turn ruler</h2>';
+  h+='<p>Why 360? Imagine the full spin chopped into <b>360 equal slivers</b>. Each sliver is <b>1 degree</b> — far too skinny to see on its own. Big turns are just piles of slivers, and the famous ones come from halving:</p>';
+  h+=figDials();
+  h+='<div class="work"><div class="lab">Show your work</div>';
+  h+='full spin: <b>360°</b><br>';
+  h+='half turn: half of 360 = <b>180°</b><br>';
+  h+='quarter turn: half of 180 = <b>90°</b><br>';
+  h+='three-quarter turn: 90 + 90 + 90 = <b>270°</b></div>';
+  h+='<table><tr><th>The turn</th><th>Where you end up</th><th>Degrees</th></tr>';
+  h+='<tr><td>quarter</td><td>facing sideways</td><td>90°</td></tr>';
+  h+='<tr><td>half</td><td>facing the opposite way</td><td>180°</td></tr>';
+  h+='<tr><td>three-quarter</td><td>sideways the other way</td><td>270°</td></tr>';
+  h+='<tr><td>full</td><td>right back where you started</td><td>360°</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Degrees are the ruler for turning: a full spin holds <b>360</b> of them, so every turn is some number of degrees out of 360. Nothing about degrees measures length — only <b>how far around</b> you went.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Freeze a turn and you get an angle</h2>';
+  h+='<p>Freeze a spin partway and draw it: one arrow for where you <b>started</b> facing, one for where you <b>ended</b>, both from the same point. That drawing is an <b>angle</b> — and its size in degrees is the <b>turn between the two arrows</b>, nothing else.</p>';
+  h+=figArms(false);
+  h+='<div class="ask"><div class="q">These two angles have the exact same opening between their arrows — but one is drawn with long arms and one with short arms. Which angle is <b>bigger</b>?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'l\')">The long-armed one</button><button class="btn sm" onclick="checkPredict(\'s\')">They’re the same size</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figArms(true);
+  h+='<p>Both are <b>40°</b> — the same turn from one arrow to the other. Arm length is just how far the artist felt like drawing; the arrows keep going forever anyway. When you compare angles, compare the <b>gap you’d turn through</b>, never the ink.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='s'){fb.className='fb ok';fb.innerHTML='<b>Same size.</b> The turn between the arrows is identical — arm length changes the drawing, not the angle.';}
+  else{fb.className='fb no';fb.innerHTML='<b>They’re the same.</b> An angle measures the turn between the arrows, not how long the arrows are drawn. Longer ink, same 40° gap.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>The clock is a turn machine</h2>';
+  h+='<p>The best place to watch turns happen is a clock face. The minute hand sweeps a <b>full 360°</b> every hour — so pieces of an hour are pieces of 360:</p>';
+  h+=figClockQ();
+  h+='<div class="work"><div class="lab">Show your work</div>';
+  h+='60 minutes: all the way around = <b>360°</b><br>';
+  h+='30 minutes: half the trip = half of 360 = <b>180°</b><br>';
+  h+='15 minutes: a quarter of the trip = half of 180 = <b>90°</b></div>';
+  h+='<p>This is why angle-talk and turn-talk are the same talk. A door opened “90 degrees” made a quarter turn on its hinge. A skateboarder’s “180” is half a spin — they land facing backwards. The number always answers one question: <b>how far around?</b></p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every angle in the world is a frozen turn: door hinges, clock hands, skate tricks. To size one up, ask how much of a full 360° spin it is — a quarter (90°), a half (180°), or somewhere in between.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Kai says the hand turned zero degrees</h2>';
+  h+='<p>Kai watched the minute hand go from 12:00 to 1:00. His reason: <i>“The hand started on the 12 and it’s back on the 12. Same position — so it turned 0 degrees.”</i></p>';
+  h+=figKai();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testKai()">Watch the sweep</button></div>';
+  h+='<div id="mh" class="hide">'+figClockFull()+'</div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testKai();
+}
+function testKai(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Kai measured the ending, not the journey.</b> Degrees count the <b>sweep</b> — how far around the hand travelled — not where it happens to stop. From 12 back to 12 the hand swept the entire face: a full <b>360°</b>. Ending where you started doesn’t erase the trip, just like the skater’s full spin was 360°, not 0.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'How many degrees are in one full turn — spinning all the way around to face where you started?',
+   a:['360°','100°','60°','180°'],correct:0,
+   why:'The full spin is the whole ruler: 360 degrees, chopped into 360 little 1° slivers.'},
+  {q:'A dancer turns to face the exact opposite direction. How many degrees did she turn?',
+   a:['90°','360°','180° — half of 360','270°'],correct:2,
+   why:'Facing the opposite way is half a full spin, and half of 360 is 180°.'},
+  {q:'Two angles have the exact same opening, but one is drawn with much longer arms. Which is bigger?',
+   a:['The long-armed one','Neither — same turn between the arms means same angle','The short-armed one','You’d need a ruler to tell'],correct:1,
+   why:'An angle measures the turn between its arrows, not the ink. Same opening, same degrees — arm length is just the drawing.'},
+  {q:'The minute hand moves from the 12 to the 3 — fifteen minutes. How many degrees did it sweep?',
+   a:['90° — a quarter of the full 360','180°','15°','45°'],correct:0,
+   why:'A full hour is a full 360° trip, so 15 minutes is a quarter of it: 90°. The minutes don’t equal the degrees — the fraction of the trip is what counts.'},
+  {q:'A spinner whirls all the way around and stops exactly where it began. How many degrees did it turn?',
+   a:['0° — it ends where it started','360° — the sweep counts, not the stopping spot','100°','It’s impossible to say'],correct:1,
+   why:'That was Kai’s mistake. Degrees measure the journey around, not the final position. A full sweep is 360° even when it looks like nothing moved.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.MD.5']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Measure turns against the 360° full spin — 90 for a quarter, 180 for a half, 270 for three quarters — see any angle as a frozen turn between two arrows, ignore arm length completely, and count the sweep instead of the stopping spot.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Kai. The hand ended where it started — and still swept every one of its 360 degrees.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredTurn=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

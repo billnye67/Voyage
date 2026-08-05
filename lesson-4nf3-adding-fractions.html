@@ -326,7 +326,7 @@ function beatDone(){
   if(pct>=80)h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Add and subtract fractions that share a bottom number, and explain why the bottom stays put.</p></div>';
   else h+='<p style="margin-top:16px">Go back to Priya. Her answer came out smaller than she started with — that is the tell.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;filled=0;poured=[];taskIdx=0;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

@@ -1,62 +1,399 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voyage · Measure & sketch angles</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
-:root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;min-height:100vh}.shell{max-width:760px;margin:0 auto;padding:26px 22px 80px}.crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}h1{font-family:'Fraunces',serif;font-size:31px;line-height:1.12;margin-bottom:12px}h2{font-family:'Fraunces',serif;font-size:23px;line-height:1.22;margin-bottom:14px}p{font-size:16.5px;line-height:1.6;margin-bottom:12px}b{font-weight:600}.tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}.goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}.goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}.goal p{margin:0 0 8px}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}.btn:active{transform:translate(3px,3px);box-shadow:none}.btn.go{background:var(--accent);color:#fff}.btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}.btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}.steps{display:flex;gap:6px;margin-bottom:20px}.steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}.steps .seg.on{background:var(--blue)}.hide{display:none}.challenge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0 15px}.challenge-chip{border:1.5px solid var(--blue-line);border-radius:9px;padding:8px;font-family:'Space Mono',monospace;font-size:11px;text-align:center;background:#fff}.challenge-chip.now{border-color:var(--accent);color:var(--accent);font-weight:700}.challenge-chip.done{border-color:var(--green);color:var(--green)}.diagram{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:8px;margin:12px 0}.diagram svg{width:100%;max-height:260px;display:block}.svglabel{font-family:'Space Grotesk',sans-serif;font-size:15px;fill:var(--ink);font-weight:600}.svgtiny{font-family:'Space Mono',monospace;font-size:10px;fill:var(--muted)}.ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}.ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}.choice,.stepchoice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}.choice:hover,.stepchoice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}.choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}.choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}.inputrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}.inputrow input{font-family:'Space Mono',monospace;font-size:18px;min-width:145px;max-width:260px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;text-align:center}.checkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px}.checkopt{display:flex;gap:9px;align-items:center;background:#fff;border:1.5px solid var(--blue-line);border-radius:9px;padding:11px;font-size:15px}.feedback{font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px;min-height:44px;margin-top:12px}.feedback.ok{background:rgba(46,125,91,.12);color:var(--green)}.feedback.no{background:rgba(240,102,63,.12);color:var(--accent)}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}.qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.done-icon{font-size:44px;text-align:center;margin-bottom:8px}.attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}.lineplot{display:flex;align-items:flex-end;height:165px;padding:10px 12px 0;position:relative}.lineplot:after{content:'';position:absolute;left:12px;right:12px;bottom:38px;border-top:3px solid var(--ink)}.tick{flex:1;text-align:center;position:relative;z-index:1}.xstack{height:104px;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:center}.xmark{font-family:'Space Mono',monospace;font-size:23px;line-height:18px;color:var(--blue)}.tickline{height:15px;border-left:2px solid var(--ink);margin:0 auto;width:1px}.ticklab{font-family:'Space Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap}.formula{font-family:'Space Mono',monospace;text-align:center;font-size:19px;padding:12px}.termgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.term{background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px}.term b{display:block;color:var(--blue);margin-bottom:3px}
-.worked{width:100%;border-collapse:collapse;margin:12px 0;font-family:'Space Mono',monospace;font-size:14.5px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;overflow:hidden}
-.worked th{text-align:left;padding:9px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1.5px solid var(--blue-line)}
-.worked td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--blue-line)}
-.worked tr:last-child td{border-bottom:none}
-@media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.nav{align-items:flex-end}.lineplot{padding-left:0;padding-right:0}.ticklab{font-size:9px}}
-</style></head><body><div class="shell">
-<div id="intro"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement & Data</div><div class="card"><div class="tag">Lesson · 4.MD.6</div><h1>Measure & sketch angles</h1><p>Choose the zero scale, then read or place the second ray.</p><div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.6</span></div><button class="btn go" onclick="startLesson()">Start lesson →</button></div></div>
-<div id="lesson" class="hide"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measure & sketch angles</div><div class="steps" id="steps"></div><div class="card" id="stage"></div></div></div>
-<script>var CODE="4.MD.6",CHALLENGE_TITLE="Use the protractor instead of guessing",DONE_TEXT="Measure and sketch angles with the correct protractor scale.";var TASKS=[{"context": "The baseline ray points right and starts at 0\u00b0.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 230\" role=\"img\" aria-label=\"Semicircular protractor with two scales\">\n      <path d=\"M 75 175 A 135 135 0 0 1 345 175\" fill=\"rgba(27,79,138,.05)\" stroke=\"var(--ink)\" stroke-width=\"3\"/>\n      <line x1=\"75\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--ink)\" stroke-width=\"3\"/><line x1=\"335.0\" y1=\"175.0\" x2=\"345.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"333.1\" y1=\"153.3\" x2=\"342.9\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"327.5\" y1=\"132.2\" x2=\"336.9\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"318.3\" y1=\"112.5\" x2=\"326.9\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"305.8\" y1=\"94.7\" x2=\"313.4\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"290.3\" y1=\"79.2\" x2=\"296.8\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"272.5\" y1=\"66.7\" x2=\"277.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"252.8\" y1=\"57.5\" x2=\"256.2\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"231.7\" y1=\"51.9\" x2=\"233.4\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"210.0\" y1=\"50.0\" x2=\"210.0\" y2=\"40.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"188.3\" y1=\"51.9\" x2=\"186.6\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"167.2\" y1=\"57.5\" x2=\"163.8\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"147.5\" y1=\"66.7\" x2=\"142.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"129.7\" y1=\"79.2\" x2=\"123.2\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"114.2\" y1=\"94.7\" x2=\"106.6\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"101.7\" y1=\"112.5\" x2=\"93.1\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"92.5\" y1=\"132.2\" x2=\"83.1\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"86.9\" y1=\"153.3\" x2=\"77.1\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"85.0\" y1=\"175.0\" x2=\"75.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><text x=\"363.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">0</text><text x=\"318.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">180</text><text x=\"342.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">30</text><text x=\"303.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">150</text><text x=\"286.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">60</text><text x=\"264.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">120</text><text x=\"210.0\" y=\"27.0\" text-anchor=\"middle\" class=\"svgtiny\">90</text><text x=\"210.0\" y=\"71.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">90</text><text x=\"133.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">120</text><text x=\"156.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">60</text><text x=\"77.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">150</text><text x=\"116.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">30</text><text x=\"57.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">180</text><text x=\"102.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">0</text>\n      <line x1=\"210\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--blue)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"210\" y1=\"175\" x2=\"270.0\" y2=\"71.1\" stroke=\"var(--accent)\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n      <circle cx=\"210\" cy=\"175\" r=\"5\" fill=\"var(--ink)\"/>\n      <text x=\"210\" y=\"222\" text-anchor=\"middle\" class=\"svgtiny\">read the scale starting at 0\u00b0 on the blue ray</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Which scale must you follow?", "options": ["The scale that starts at 0\u00b0 on the right", "The scale that starts at 180\u00b0 on the right", "Whichever number is larger", "Add both scales"], "correct": 0, "why": "Start reading from the zero on the baseline ray.", "wrong": "A protractor has two scales; the baseline decides which zero to use."}, {"type": "input", "prompt": "What is the angle measure?", "answers": ["60", "60\u00b0"], "placeholder": "degrees", "why": "The second ray crosses the 60\u00b0 mark on the scale starting at the right.", "wrong": "Follow the scale from 0\u00b0 on the right to the orange ray."}]}, {"context": "Again, the baseline points right and starts at 0\u00b0.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 230\" role=\"img\" aria-label=\"Semicircular protractor with two scales\">\n      <path d=\"M 75 175 A 135 135 0 0 1 345 175\" fill=\"rgba(27,79,138,.05)\" stroke=\"var(--ink)\" stroke-width=\"3\"/>\n      <line x1=\"75\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--ink)\" stroke-width=\"3\"/><line x1=\"335.0\" y1=\"175.0\" x2=\"345.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"333.1\" y1=\"153.3\" x2=\"342.9\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"327.5\" y1=\"132.2\" x2=\"336.9\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"318.3\" y1=\"112.5\" x2=\"326.9\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"305.8\" y1=\"94.7\" x2=\"313.4\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"290.3\" y1=\"79.2\" x2=\"296.8\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"272.5\" y1=\"66.7\" x2=\"277.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"252.8\" y1=\"57.5\" x2=\"256.2\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"231.7\" y1=\"51.9\" x2=\"233.4\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"210.0\" y1=\"50.0\" x2=\"210.0\" y2=\"40.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"188.3\" y1=\"51.9\" x2=\"186.6\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"167.2\" y1=\"57.5\" x2=\"163.8\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"147.5\" y1=\"66.7\" x2=\"142.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"129.7\" y1=\"79.2\" x2=\"123.2\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"114.2\" y1=\"94.7\" x2=\"106.6\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"101.7\" y1=\"112.5\" x2=\"93.1\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"92.5\" y1=\"132.2\" x2=\"83.1\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"86.9\" y1=\"153.3\" x2=\"77.1\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"85.0\" y1=\"175.0\" x2=\"75.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><text x=\"363.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">0</text><text x=\"318.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">180</text><text x=\"342.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">30</text><text x=\"303.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">150</text><text x=\"286.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">60</text><text x=\"264.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">120</text><text x=\"210.0\" y=\"27.0\" text-anchor=\"middle\" class=\"svgtiny\">90</text><text x=\"210.0\" y=\"71.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">90</text><text x=\"133.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">120</text><text x=\"156.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">60</text><text x=\"77.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">150</text><text x=\"116.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">30</text><text x=\"57.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">180</text><text x=\"102.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">0</text>\n      <line x1=\"210\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--blue)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"210\" y1=\"175\" x2=\"141.2\" y2=\"76.7\" stroke=\"var(--accent)\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n      <circle cx=\"210\" cy=\"175\" r=\"5\" fill=\"var(--ink)\"/>\n      <text x=\"210\" y=\"222\" text-anchor=\"middle\" class=\"svgtiny\">read the scale starting at 0\u00b0 on the blue ray</text>\n    </svg></div>", "steps": [{"type": "input", "prompt": "What is the angle measure?", "answers": ["125", "125\u00b0"], "placeholder": "degrees", "why": "The ray passes 90\u00b0 and reaches 125\u00b0, so the angle is obtuse.", "wrong": "Start at the right-hand 0\u00b0 and continue past 90\u00b0."}]}, {"context": "Sketch a 40\u00b0 angle from the baseline by choosing the correct candidate ray.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 230\" role=\"img\" aria-label=\"Semicircular protractor with two scales\">\n      <path d=\"M 75 175 A 135 135 0 0 1 345 175\" fill=\"rgba(27,79,138,.05)\" stroke=\"var(--ink)\" stroke-width=\"3\"/>\n      <line x1=\"75\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--ink)\" stroke-width=\"3\"/><line x1=\"335.0\" y1=\"175.0\" x2=\"345.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"333.1\" y1=\"153.3\" x2=\"342.9\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"327.5\" y1=\"132.2\" x2=\"336.9\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"318.3\" y1=\"112.5\" x2=\"326.9\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"305.8\" y1=\"94.7\" x2=\"313.4\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"290.3\" y1=\"79.2\" x2=\"296.8\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"272.5\" y1=\"66.7\" x2=\"277.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"252.8\" y1=\"57.5\" x2=\"256.2\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"231.7\" y1=\"51.9\" x2=\"233.4\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"210.0\" y1=\"50.0\" x2=\"210.0\" y2=\"40.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"188.3\" y1=\"51.9\" x2=\"186.6\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"167.2\" y1=\"57.5\" x2=\"163.8\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"147.5\" y1=\"66.7\" x2=\"142.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"129.7\" y1=\"79.2\" x2=\"123.2\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"114.2\" y1=\"94.7\" x2=\"106.6\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"101.7\" y1=\"112.5\" x2=\"93.1\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"92.5\" y1=\"132.2\" x2=\"83.1\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"86.9\" y1=\"153.3\" x2=\"77.1\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"85.0\" y1=\"175.0\" x2=\"75.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><text x=\"363.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">0</text><text x=\"318.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">180</text><text x=\"342.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">30</text><text x=\"303.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">150</text><text x=\"286.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">60</text><text x=\"264.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">120</text><text x=\"210.0\" y=\"27.0\" text-anchor=\"middle\" class=\"svgtiny\">90</text><text x=\"210.0\" y=\"71.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">90</text><text x=\"133.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">120</text><text x=\"156.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">60</text><text x=\"77.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">150</text><text x=\"116.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">30</text><text x=\"57.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">180</text><text x=\"102.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">0</text>\n      <line x1=\"210\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--blue)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"210\" y1=\"175\" x2=\"312.2\" y2=\"116.0\" stroke=\"var(--blue)\" stroke-width=\"3\" opacity=\".65\"/><text x=\"335.6\" y=\"107.5\" text-anchor=\"middle\" class=\"svglabel\">A</text><line x1=\"210\" y1=\"175\" x2=\"300.4\" y2=\"99.2\" stroke=\"var(--blue)\" stroke-width=\"3\" opacity=\".65\"/><text x=\"321.1\" y=\"86.8\" text-anchor=\"middle\" class=\"svglabel\">B</text><line x1=\"210\" y1=\"175\" x2=\"285.8\" y2=\"84.6\" stroke=\"var(--blue)\" stroke-width=\"3\" opacity=\".65\"/><text x=\"303.2\" y=\"68.9\" text-anchor=\"middle\" class=\"svglabel\">C</text><line x1=\"210\" y1=\"175\" x2=\"119.6\" y2=\"99.2\" stroke=\"var(--blue)\" stroke-width=\"3\" opacity=\".65\"/><text x=\"98.9\" y=\"86.8\" text-anchor=\"middle\" class=\"svglabel\">D</text>\n      <circle cx=\"210\" cy=\"175\" r=\"5\" fill=\"var(--ink)\"/>\n      <text x=\"210\" y=\"222\" text-anchor=\"middle\" class=\"svgtiny\">read the scale starting at 0\u00b0 on the blue ray</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Which candidate ray should be used?", "options": ["Ray A", "Ray B", "Ray C", "Ray D"], "correct": 1, "why": "Ray B passes through the 40\u00b0 mark.", "wrong": "Begin at 0\u00b0 on the right and count to 40\u00b0."}]}];var WHAT={"heading": "Three placements control the measurement", "body": "<div class=\"termgrid\"><div class=\"term\"><b>1. Center</b>on the vertex</div><div class=\"term\"><b>2. Baseline</b>on one ray</div><div class=\"term\"><b>3. Scale</b>start at 0\u00b0 on that ray</div></div><p>Then read where the second ray crosses. To sketch, reverse the process: mark the degree, then draw the second ray through it.</p>"};var PREDICT={"heading": "Reject the wrong scale with the shape", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 230\" role=\"img\" aria-label=\"Semicircular protractor with two scales\">\n      <path d=\"M 75 175 A 135 135 0 0 1 345 175\" fill=\"rgba(27,79,138,.05)\" stroke=\"var(--ink)\" stroke-width=\"3\"/>\n      <line x1=\"75\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--ink)\" stroke-width=\"3\"/><line x1=\"335.0\" y1=\"175.0\" x2=\"345.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"333.1\" y1=\"153.3\" x2=\"342.9\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"327.5\" y1=\"132.2\" x2=\"336.9\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"318.3\" y1=\"112.5\" x2=\"326.9\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"305.8\" y1=\"94.7\" x2=\"313.4\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"290.3\" y1=\"79.2\" x2=\"296.8\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"272.5\" y1=\"66.7\" x2=\"277.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"252.8\" y1=\"57.5\" x2=\"256.2\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"231.7\" y1=\"51.9\" x2=\"233.4\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"210.0\" y1=\"50.0\" x2=\"210.0\" y2=\"40.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"188.3\" y1=\"51.9\" x2=\"186.6\" y2=\"42.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"167.2\" y1=\"57.5\" x2=\"163.8\" y2=\"48.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"147.5\" y1=\"66.7\" x2=\"142.5\" y2=\"58.1\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"129.7\" y1=\"79.2\" x2=\"123.2\" y2=\"71.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"114.2\" y1=\"94.7\" x2=\"106.6\" y2=\"88.2\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"101.7\" y1=\"112.5\" x2=\"93.1\" y2=\"107.5\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"92.5\" y1=\"132.2\" x2=\"83.1\" y2=\"128.8\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"86.9\" y1=\"153.3\" x2=\"77.1\" y2=\"151.6\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><line x1=\"85.0\" y1=\"175.0\" x2=\"75.0\" y2=\"175.0\" stroke=\"var(--muted)\" stroke-width=\"1.5\"/><text x=\"363.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">0</text><text x=\"318.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">180</text><text x=\"342.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">30</text><text x=\"303.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">150</text><text x=\"286.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">60</text><text x=\"264.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">120</text><text x=\"210.0\" y=\"27.0\" text-anchor=\"middle\" class=\"svgtiny\">90</text><text x=\"210.0\" y=\"71.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">90</text><text x=\"133.5\" y=\"47.5\" text-anchor=\"middle\" class=\"svgtiny\">120</text><text x=\"156.0\" y=\"85.5\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">60</text><text x=\"77.5\" y=\"103.5\" text-anchor=\"middle\" class=\"svgtiny\">150</text><text x=\"116.5\" y=\"125.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">30</text><text x=\"57.0\" y=\"180.0\" text-anchor=\"middle\" class=\"svgtiny\">180</text><text x=\"102.0\" y=\"179.0\" text-anchor=\"middle\" class=\"svgtiny\" opacity=\".75\">0</text>\n      <line x1=\"210\" y1=\"175\" x2=\"345\" y2=\"175\" stroke=\"var(--blue)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"210\" y1=\"175\" x2=\"308.3\" y2=\"106.2\" stroke=\"var(--accent)\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n      <circle cx=\"210\" cy=\"175\" r=\"5\" fill=\"var(--ink)\"/>\n      <text x=\"210\" y=\"222\" text-anchor=\"middle\" class=\"svgtiny\">read the scale starting at 0\u00b0 on the blue ray</text>\n    </svg></div>", "prompt": "The angle is clearly acute. Which reading is possible?", "options": ["145\u00b0", "180\u00b0", "35\u00b0", "215\u00b0"], "correct": 2, "why": "An acute angle is less than 90\u00b0, and the correct scale reads 35\u00b0.", "reveal": "<div class=\"goal\"><div class=\"lab\">Visual check</div><p>The wrong protractor scale often gives the supplement, 180\u00b0 \u2212 the correct angle.</p></div>"};var WHY={"heading": "Both scales are valid\u2014but not for the same baseline", "body": "<p>The two number rows run in opposite directions so the protractor can work from either side. Only the row beginning with 0\u00b0 on your baseline measures your angle.</p><p>A rough angle type\u2014acute, right, or obtuse\u2014is a useful error check.</p>"};var MISTAKE={"heading": "Iris reads an acute angle as 150\u00b0", "body": "<p>The ray crosses marks labeled 30 and 150.</p>", "button": "Choose the valid scale", "reveal": "<div class=\"feedback no\"><b>The angle is 30\u00b0.</b> The baseline starts at the zero belonging to the 30\u00b0 scale; 150\u00b0 would be obtuse.</div>"};var QUESTIONS=[{"q": "Where does the protractor\u2019s center mark go?", "a": ["On the second ray", "On the vertex", "At the page edge", "On the 90\u00b0 mark"], "correct": 1, "why": "The center aligns with the shared endpoint, the vertex."}, {"q": "Which scale should you read?", "a": ["The darker one", "The outer one every time", "The one beginning at 0\u00b0 on the baseline", "The one with the larger number"], "correct": 2, "why": "The baseline determines the starting zero."}, {"q": "A ray crosses marks 40\u00b0 and 140\u00b0. The angle is acute. Its measure is...", "a": ["40\u00b0", "100\u00b0", "140\u00b0", "180\u00b0"], "correct": 0, "why": "An acute angle is below 90\u00b0, so 40\u00b0 is the valid reading."}, {"q": "To sketch 70\u00b0, what happens after marking 70\u00b0?", "a": ["Erase the baseline", "Draw the second ray through the mark", "Move the vertex", "Add 70 to 180"], "correct": 1, "why": "The vertex and degree mark determine the second ray."}, {"q": "A measured angle looks obtuse but your answer is 55\u00b0. Best next step?", "a": ["Keep 55\u00b0 automatically", "Use no scale", "Recheck the opposite scale", "Double the ray length"], "correct": 2, "why": "An obtuse angle must exceed 90\u00b0, so the scale was likely read backward."}];
-var step=0,TOTAL=11,taskIndex=0,taskStep=0,challengeDone=false,feedback='',qIndex=0,qCorrect=0,answered=false;
-function el(i){return document.getElementById(i)}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0)}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h}
-function next(){if(step<TOTAL-1){step++;render();scrollTo(0,0)}}
-function back(){if(step>0){step--;render();scrollTo(0,0)}}
-function norm(v){return String(v).toLowerCase().replace(/[,\s$°]/g,'').replace(/hours?/g,'h').replace(/minutes?/g,'m').replace(/meters?/g,'m').replace(/kilometers?/g,'km').replace(/dollars?/g,'')}
-function renderChallenge(){
- var h='<div class="tag">Challenge</div><h2>'+CHALLENGE_TITLE+'</h2>';
- h+='<div class="goal"><div class="lab">Worked example \u2014 read this first</div>'+
-    '<p>A protractor carries two scales, running opposite ways, so every mark shows two numbers.</p>'+
-    '<table class="worked">'+
-    '<tr><td>1. Place it</td><td>the centre hole on the corner point</td><td><b>vertex at the centre</b></td></tr>'+
-    '<tr><td>2. Line it up</td><td>one ray along the flat baseline</td><td><b>that ray reads 0°</b></td></tr>'+
-    '<tr><td>3. Pick the scale</td><td>the one that starts at 0° on your baseline ray</td><td><b>ignore the other</b></td></tr>'+
-    '<tr><td>4. Read</td><td>follow that scale to where the second ray crosses</td><td><b>the angle</b></td></tr>'+
-    '</table>'+
-    '<p>Step 3 is where it goes wrong. Both scales are printed at every mark, and only the baseline tells you which one is yours.</p></div>';
- h+='<div class="challenge-list">';for(var i=0;i<TASKS.length;i++)h+='<div class="challenge-chip '+(i<taskIndex?'done':i===taskIndex&&!challengeDone?'now':'')+'">'+(i<taskIndex?'✓ ':'')+'Round '+(i+1)+'</div>';h+='</div>';
- if(challengeDone){h+='<div class="goal"><div class="lab">Challenge complete</div><p>You made every decision yourself. Now unpack why the moves worked.</p></div>'}
- else{var T=TASKS[taskIndex],S=T.steps[taskStep];h+='<p>'+T.context+'</p>'+(T.visual||'');h+='<div class="ask"><div class="q">'+S.prompt+'</div>';
-   if(S.type==='choice'){for(var j=0;j<S.options.length;j++)h+='<button class="stepchoice" onclick="chooseStep('+j+')">'+S.options[j]+'</button>'}
-   else if(S.type==='input'){h+='<div class="inputrow"><input id="stepin" type="text" inputmode="decimal" placeholder="'+(S.placeholder||'?')+'"><button class="btn sm go" onclick="submitInput()">Lock it in</button></div>'}
-   else if(S.type==='multi'){h+='<div class="checkgrid">';for(var k=0;k<S.options.length;k++)h+='<label class="checkopt"><input type="checkbox" name="multi" value="'+k+'"> '+S.options[k]+'</label>';h+='</div><div class="inputrow"><button class="btn sm go" onclick="submitMulti()">Check choices</button></div>'}
-   h+='</div>'}
- h+='<div class="feedback '+(feedback?(feedback.indexOf('✓')===0?'ok':'no'):'')+'">'+(feedback||'Choose carefully. A wrong move stays wrong until you fix it.')+'</div>';
- h+='<div class="nav"><span></span><button class="btn" '+(challengeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h;
- if(!challengeDone){var inp=el('stepin');if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput()})}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Using a protractor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.MD.C.6</div>
+    <h1>Using a protractor</h1>
+    <p>The protractor is the ruler for turns — a half-moon of little degree marks. But it plays a trick on beginners: <b>every mark shows two numbers</b>, like 60 and 120 sharing one spot. Read the wrong one and your answer isn’t just off, it’s backwards. There’s a simple rule that picks the right number every single time.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.C.6</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Using a protractor</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredRead=false;
+var TASKS=[
+  {fig:0, ans:0, txt:'The slanted arm points at the mark sharing <b>60 and 120</b>. The bottom arm lies on the <b>right-side 0</b> — the inner scale’s 0. How big is the angle?',
+   opts:['60° — count up from your own 0: 10, 20, 30… 60','120°','90°'], won:'inner 0 → read 60'},
+  {fig:1, ans:1, txt:'New angle. The mark <b>also</b> shows 60 and 120 — but look how wide the angle opens. Bottom arm still on the right-side 0.',
+   opts:['60° — same numbers, same answer','120° — it opens way past the square corner','30°'], won:'wide open → 120'},
+  {fig:2, ans:2, txt:'Now the bottom arm lies on the <b>left-side 0</b> — the outer scale’s 0. The slanted arm points at a mark sharing <b>120 and 60</b>.',
+   opts:['120°','180°','60° — count up from the left 0 this time'], won:'left 0 → read 60'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function advanceStep(message){feedback='✓ '+message;var T=TASKS[taskIndex];setTimeout(function(){taskStep++;feedback='';if(taskStep>=T.steps.length){taskIndex++;taskStep=0;if(taskIndex>=TASKS.length)challengeDone=true}renderChallenge()},650)}
-function chooseStep(i){var S=TASKS[taskIndex].steps[taskStep];if(i===S.correct)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'That does not match the quantities shown. Try another decision.');renderChallenge()}}
-function submitInput(){var S=TASKS[taskIndex].steps[taskStep],v=(el('stepin').value||'').trim();if(!v)return;var ans=S.answers||[S.answer],ok=ans.some(function(a){return norm(v)===norm(a)});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Recheck the operation, units, and arithmetic.');renderChallenge()}}
-function submitMulti(){var S=TASKS[taskIndex].steps[taskStep],got=Array.from(document.querySelectorAll('input[name=multi]:checked')).map(function(x){return +x.value}).sort(),want=S.correct.slice().sort();var ok=got.length===want.length&&got.every(function(v,i){return v===want[i]});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Use the properties you can prove from the figure, then try again.');renderChallenge()}}
-function renderInfo(obj,tag){var h='<div class="tag">'+tag+'</div><h2>'+obj.heading+'</h2>'+obj.body+'<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-var predictDone=false;
-function renderPredict(){var P=PREDICT,h='<div class="tag">Predict first</div><h2>'+P.heading+'</h2>'+P.visual+'<div class="ask"><div class="q">'+P.prompt+'</div>';for(var i=0;i<P.options.length;i++)h+='<button class="stepchoice" onclick="pickPredict('+i+')">'+P.options[i]+'</button>';h+='<div id="pfb"></div></div>';if(predictDone)h+=P.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function pickPredict(i){predictDone=true;renderPredict();var f=el('pfb');f.className='feedback '+(i===PREDICT.correct?'ok':'no');f.innerHTML=(i===PREDICT.correct?'✓ ':'✗ ')+PREDICT.why}
-var mistakeDone=false;
-function renderMistake(){var M=MISTAKE,h='<div class="tag">Catch the mistake</div><h2>'+M.heading+'</h2>'+M.body+'<div class="inputrow"><button class="btn sm" onclick="showMistake()">'+M.button+'</button></div>';if(mistakeDone)h+=M.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(mistakeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function showMistake(){mistakeDone=true;renderMistake()}
-function renderQuestion(){var Q=QUESTIONS[qIndex],h='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div><h2 style="margin-top:10px">'+Q.q+'</h2>';for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pickQ('+i+')">'+Q.a[i]+'</button>';h+='<div id="qfb"></div><div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review teaching</button><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="qnext" disabled onclick="nextQ()">Next →</button></div>';el('stage').innerHTML=h;answered=false}
-function pickQ(i){if(answered)return;answered=true;var Q=QUESTIONS[qIndex];for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong')}var f=el('qfb');f.className='feedback '+(i===Q.correct?'ok':'no');f.innerHTML=(i===Q.correct?'✓ Correct. ':'✗ Not quite. ')+Q.why;if(i===Q.correct)qCorrect++;el('qnext').disabled=false}
-function nextQ(){qIndex++;step=qIndex>=QUESTIONS.length?TOTAL-1:5+qIndex;render();scrollTo(0,0)}
-function reviewLesson(){step=0;render();scrollTo(0,0)}
-function markCourseDone(){try{var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';var key='voyage_g4math_progress_'+kid;var p={done:{},lastSkill:0};var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);if(!p.done)p.done={};p.done[CODE]=true;localStorage.setItem(key,JSON.stringify(p))}catch(e){}}
-function renderDone(){var pct=Math.round(qCorrect/QUESTIONS.length*100),pass=pct>=80,h='<div class="done-icon">'+(pass?'✓':'↻')+'</div><h2 style="text-align:center">'+(pass?'Lesson complete':'Worth one more pass')+'</h2><p style="text-align:center" class="qcount">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';if(pass){markCourseDone();h+='<div class="goal"><div class="lab">You can now</div><p>'+DONE_TEXT+'</p></div>'}else h+='<p>Review the teaching, then try the questions again.</p>';h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="goCourse()">Back to Math →</button></div><div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';el('stage').innerHTML=h}
-function goCourse(){location.href='math-course.html'}
-function restart(){step=0;taskIndex=0;taskStep=0;challengeDone=false;feedback='';predictDone=false;mistakeDone=false;qIndex=0;qCorrect=0;answered=false;render();scrollTo(0,0)}
-function render(){drawSteps();if(step===0)renderChallenge();else if(step===1)renderInfo(WHAT,'What just happened');else if(step===2)renderPredict();else if(step===3)renderInfo(WHY,'Why');else if(step===4)renderMistake();else if(step>=5&&step<TOTAL-1)renderQuestion();else renderDone()}
-</script></body></html>
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+var CX=310,CY=195,R=155;
+function pt(rad,deg){var a=deg*Math.PI/180;return [CX+rad*Math.cos(a),CY-rad*Math.sin(a)];}
+/* the protractor body: half-moon, ticks, double scale labelled every 30 */
+function protBody(){
+  var s='<path d="M '+(CX-R)+' '+CY+' A '+R+' '+R+' 0 0 1 '+(CX+R)+' '+CY+'" fill="#fff" stroke="'+INK+'" stroke-width="2.5"/>';
+  s+=ln(CX-R,CY,CX+R,CY,INK,2.5);
+  for(var a=0;a<=180;a+=10){
+    var big=(a%30===0),p1=pt(R,a),p2=pt(R-(big?16:9),a);
+    s+=ln(p1[0].toFixed(1),p1[1].toFixed(1),p2[0].toFixed(1),p2[1].toFixed(1),INK,big?2:1.3);
+  }
+  s+='<circle cx="'+CX+'" cy="'+CY+'" r="5" fill="none" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<circle cx="'+CX+'" cy="'+CY+'" r="1.8" fill="'+INK+'"/>';
+  return s;
+}
+function protLabels(){
+  var s='';
+  for(var a=0;a<=180;a+=30){
+    var po=pt(R-28,a),pi=pt(R-48,a);
+    var yo=(a===0||a===180)?po[1]-2:po[1]+4, yi=(a===0||a===180)?pi[1]-2:pi[1]+4;
+    if(a!==90)s+=tx(po[0].toFixed(1),yo.toFixed(1),(180-a),10,MUT,400);
+    s+=tx(pi[0].toFixed(1),yi.toFixed(1),a,10,INK,700);
+  }
+  return s;
+}
+function protractor(){return protBody()+protLabels();}
+/* an angle laid under it: baseline arm on side ('r'|'l'), other arm at deg */
+function figProt(deg,side,caption,extra){
+  var s=protBody();
+  var bx=(side==='l')?CX-R-40:CX+R+40;
+  s+=ln(CX,CY,bx,CY,ACC,3.5);
+  var tip=pt(R+40,deg);
+  s+=ln(CX,CY,tip[0].toFixed(1),tip[1].toFixed(1),ACC,3.5);
+  s+=protLabels();
+  var a0=pt(36,(side==='l')?180:0),a1=pt(36,deg);
+  s+='<path d="M '+((side==='l')?a1[0].toFixed(1)+' '+a1[1].toFixed(1):a0[0]+' '+a0[1])+' A 36 36 0 0 0 '+((side==='l')?(a0[0]+' '+a0[1]):(a1[0].toFixed(1)+' '+a1[1].toFixed(1)))+'" fill="none" stroke="'+GRN+'" stroke-width="2.5"/>';
+  var m=pt(R+22,deg);
+  if(deg<90)s+=tx((m[0]+6).toFixed(1),m[1].toFixed(1),'◄ this mark',10.5,ACC,700,'start');
+  else s+=tx((m[0]-6).toFixed(1),m[1].toFixed(1),'this mark ►',10.5,ACC,700,'end');
+  if(extra)s+=extra;
+  if(caption)s+=tx(310,CY+38,caption,11,MUT,400);
+  return boxSVG(s,CY+50);
+}
+function figAnatomy(){
+  var s=protractor();
+  s+=ln(CX,CY+1,CX,CY-40,GREY,2,true);
+  s+=tx(CX,CY+34,'1. the center dot goes on the angle’s corner',11.5,INK,700);
+  var pr=pt(R-70,12);
+  s+=tx(448,60,'outer 0 starts LEFT',11,MUT,400,'start');
+  s+=tx(448,80,'inner 0 starts RIGHT',11,INK,700,'start');
+  s+=tx(30,60,'the two numbers at one mark',11,MUT,400,'start');
+  s+=tx(30,80,'always add up to 180',11,MUT,400,'start');
+  return boxSVG(s,CY+48);
+}
+function figSketch(){
+  var s=protractor();
+  s+=ln(CX,CY,CX+R+40,CY,INK,3.5);
+  var d=pt(R+10,60);
+  s+='<circle cx="'+d[0].toFixed(1)+'" cy="'+d[1].toFixed(1)+'" r="5" fill="'+ACC+'"/>';
+  s+=ln(CX,CY,pt(R-2,60)[0].toFixed(1),pt(R-2,60)[1].toFixed(1),ACC,2.5,true);
+  s+=tx(d[0]+14,d[1]-6,'dot at 60 on the inner scale',11,ACC,700,'start');
+  s+=tx(310,CY+38,'arm on the right 0 → count up the inner scale → dot at 60 → connect',11,MUT,400);
+  return boxSVG(s,CY+50);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Two numbers, one answer</h2>';
+  h+='<p>To measure an angle: put the protractor’s <b>center dot on the angle’s corner</b>, and lay one arm along the flat edge so it passes through a <b>0</b>. Here’s the trap — there are TWO scales, one starting its 0 on the right, one on the left, so every mark shows two numbers. The rule: <b>use the scale whose 0 your arm is lying on</b>, and count up from that 0. Double-check with the <b>square corner</b> — the corner of a sheet of paper, exactly 90°: an angle tighter than it gets the small number, one opened wider gets the big number.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  var figs=[figProt(60,'r','the angle’s arms in orange — bottom arm through the right-side 0'),
+            figProt(120,'r','same two numbers at the mark — but a much wider angle'),
+            figProt(120,'l','bottom arm now lies through the LEFT-side 0')];
+  h+=figs[T.fig];
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickRead('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Find which 0 the bottom arm lies on, then count up that scale.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredRead=false;
+}
+function pickRead(i){
+  if(answeredRead||wonCount>=TASKS.length)return;answeredRead=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Your arm sits on the inner scale’s 0, so count up the inner numbers: 30, 60. It’s 60° — and it looks tighter than a square corner, which agrees.'
+           :wonCount===1?'✓ Same mark, different angle! This one opens past the square corner, so it takes the big partner: 120°. The numbers alone can’t tell you — the angle can.'
+                        :'✓ The arm moved to the left 0, so now the outer scale is yours: count up from the left — it’s 60°.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Two checks: which 0 does the bottom arm lie on? Count up from THAT one. Then eyeball it — tighter than a square corner means the small number, wider means the big one. Try again.';
+    setTimeout(function(){if(step===0){answeredRead=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The protractor, piece by piece</h2>';
+  h+='<p>Everything you just used has a name and a job:</p>';
+  h+=figAnatomy();
+  h+='<table><tr><th>Step</th><th>What you do</th></tr>';
+  h+='<tr><td>1. place</td><td>center dot on the angle’s corner</td></tr>';
+  h+='<tr><td>2. line up</td><td>one arm along the flat edge, through a 0</td></tr>';
+  h+='<tr><td>3. pick the scale</td><td>the one whose 0 your arm is on</td></tr>';
+  h+='<tr><td>4. read</td><td>count UP from that 0 to the other arm</td></tr>';
+  h+='<tr><td>5. sanity check</td><td>tighter than square corner → small number; wider → big</td></tr></table>';
+  h+='<div class="work"><div class="lab">Your three challenges, re-checked</div>';
+  h+='angle 1: arm on right 0 → inner scale → <b>60°</b> (tight ✓)<br>';
+  h+='angle 2: arm on right 0 → inner scale → <b>120°</b> (wide ✓)<br>';
+  h+='angle 3: arm on left 0 → outer scale → <b>60°</b> (tight ✓)</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>The two numbers at every mark are partners that <b>add to 180</b>. Your baseline arm picks the honest one: whichever scale has its 0 under that arm is the scale that’s measuring your angle.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Partners that add to 180</h2>';
+  h+='<p>Here’s a skinny angle. Its slanted arm points at the mark where <b>30 and 150</b> share a spot, and its bottom arm lies on the right-side 0.</p>';
+  h+=figProt(30,'r','a skinny angle — bottom arm through the right-side 0');
+  h+='<div class="ask"><div class="q">Which number is the angle’s real size?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">30°</button><button class="btn sm" onclick="checkPredict(\'b\')">150°</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Both checks agree</div>';
+  h+='scale check: arm on the right 0 → inner scale → <b>30°</b><br>';
+  h+='eyeball check: way tighter than a square corner → the small partner → <b>30°</b><br>';
+  h+='and notice: 30 + 150 = <b>180</b> — the two numbers at a mark ALWAYS add to 180</div>';
+  h+='<p>That partner fact is a free spare tool: if you ever read one scale by mistake, subtract from 180 and you’ve got the other. A 150° reading on a clearly skinny angle really means 180 − 150 = 30°.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>30°.</b> The arm sits on the right 0 — inner scale — and the angle is clearly skinnier than a square corner.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It’s 30°.</b> A 150° angle would open way past the square corner — this one is skinny. The arm lies on the inner scale’s 0, so read the inner number.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Drawing an angle to order</h2>';
+  h+='<p>The protractor also works in reverse: someone asks for a <b>60° angle</b>, and you build it. Same tools, backwards order:</p>';
+  h+=figSketch();
+  h+='<div class="work"><div class="lab">Sketching 60°, step by step</div>';
+  h+='1) draw one arm — a plain line — and mark its endpoint (the future corner)<br>';
+  h+='2) set the center dot on that endpoint, arm through the right-side 0<br>';
+  h+='3) count up the inner scale to 60 and make a dot at the edge<br>';
+  h+='4) take the protractor away, connect corner to dot. Done — 60°.</div>';
+  h+='<p>The same square-corner sense keeps guarding you here: a 60° request should come out <b>tighter</b> than a paper corner. If your sketch looks wide open, you counted up the wrong scale — you drew the 120° partner by accident.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Measuring reads the number an angle already has; sketching dots the number first and draws the arm to it. Both run on the same rule: start at your 0 and count up its own scale.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Lena says this wide angle is 30°</h2>';
+  h+='<p>Lena measured the angle below — it opens <b>way past</b> a square corner. Her reason: <i>“The arm points at the mark with 30 and 150 on it, and 30 is the number on the inner row, so it’s 30°.”</i></p>';
+  h+=figProt(150,'r','Lena’s angle — bottom arm through the right-side 0');
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testLena()">Check with a square corner</button></div>';
+  h+='<div id="mh" class="hide">'+figProt(150,'r','the dashed line is the square corner — Lena’s angle blows right past it',ln(CX,CY,CX,CY-R-30,GREY,2.5,true)+tx(CX+8,58,'90°',11,GREY,700,'start'))+'</div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testLena();
+}
+function testLena(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The angle itself vetoes her.</b> It opens far past the square corner, and nothing past a square corner can be 30°. Lena grabbed a number from the inner row without checking whose 0 her arm was on — and counting up the inner scale from the right, the other arm lands at <b>150</b>, not 30. Both checks say the same thing: <b>150°</b>. When the two partners argue, the square corner settles it.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Where does the protractor go when you measure an angle?',
+   a:['Anywhere, as long as it covers the angle','Center dot on the angle’s corner, one arm through a 0','Centered on the number 90','Balanced on the angle’s longest arm'],correct:1,
+   why:'Placement is step one: the little center dot sits exactly on the corner, and one arm runs along the flat edge through a 0.'},
+  {q:'Your bottom arm lies on the RIGHT-side 0 (the inner scale). The other arm points at a mark sharing 60 and 120. The angle looks tighter than a square corner. What is it?',
+   a:['120°','90°','60° — your 0’s scale, and the tight look agrees','Can’t tell without a ruler'],correct:2,
+   why:'Count up from the 0 your arm is on — the inner scale — and the square-corner check agrees: tighter than square means the small partner, 60°.'},
+  {q:'One scale reads 80 at a certain mark. What does the other scale read at that same mark?',
+   a:['80','100 — the two numbers at a mark always add to 180','20','8'],correct:1,
+   why:'The two scales are partners adding to 180 at every mark: 180 − 80 = 100.'},
+  {q:'What’s the FIRST step to draw a 45° angle with a protractor?',
+   a:['Draw one arm and put the center dot on its endpoint','Trace around the whole protractor','Find 45 on both scales','Draw both arms, then check the size'],correct:0,
+   why:'Sketching runs backwards: arm first, center dot on its endpoint, then count up to 45, dot, and connect.'},
+  {q:'An angle opens much wider than a square corner. The mark shows 20 and 160. Which is its size?',
+   a:['20°','90°','160° — wider than square means the big partner','180°'],correct:2,
+   why:'That was Lena’s trap. Wider than a square corner can’t be 20° — the angle takes the big partner, 160°.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.MD.6']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Place a protractor — center dot on the corner, arm through a 0 — pick the scale whose 0 your arm lies on, sanity-check with the square corner, use the partners-add-to-180 fact, and sketch an angle of any requested size.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Lena. Her angle blew past the square corner — no number smaller than 90 could ever be right.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredRead=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

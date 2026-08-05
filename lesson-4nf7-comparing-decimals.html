@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
-    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--fill:#1b4f8a}
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -27,6 +27,9 @@
   .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
   .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
   .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
     border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
@@ -37,61 +40,54 @@
   .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
   .steps .seg.on{background:var(--blue)}
   .hide{display:none}
-  .pair{display:flex;gap:22px;justify-content:center;margin:18px 0 8px;flex-wrap:wrap}
-  .side{flex:1;min-width:150px;max-width:230px;text-align:center}
-  .pick{width:100%;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:16px 10px;cursor:pointer;
-    font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--ink);transition:.15s}
-  .pick:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
-  .pick.right{border-color:var(--green);background:rgba(46,125,91,.10)}
-  .pick.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
-  .g100{display:grid;grid-template-columns:repeat(10,1fr);width:100%;max-width:150px;margin:10px auto 0;
-    border:2px solid var(--ink);background:var(--ink)}
-  .gc{aspect-ratio:1;background:#fff;border:.5px solid rgba(22,35,58,.3)}
-  .gc.on{background:var(--fill)}
-  .glab{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:5px}
-  .streak{display:flex;gap:5px;margin-top:14px;justify-content:center}
-  .pip{width:22px;height:8px;border-radius:4px;background:var(--blue-line)}
-  .pip.on{background:var(--green)}
-  .score{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.08em;color:var(--muted);margin-top:10px;text-align:center}
-  .score b{color:var(--green);font-size:16px}
-  .pv{display:flex;justify-content:center;align-items:flex-end;gap:2px;margin:14px 0 8px;font-family:'Space Mono',monospace}
-  .pvcol{text-align:center}
-  .pvhead{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;width:56px}
-  .pvbox{width:56px;height:52px;border:2px solid var(--ink);border-radius:7px;background:#fff;display:flex;align-items:center;
-    justify-content:center;font-size:24px;font-weight:700}
-  .pvbox.hi{background:rgba(240,102,63,.14);border-color:var(--accent)}
-  .pvdot{font-size:28px;font-weight:700;padding:0 3px 8px}
-  .pvname{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-bottom:4px}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
   .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
-  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-  .fb{margin-top:14px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
   .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
   .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
   table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
   th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
   th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
   .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
-    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
   .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
   .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
   .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
   .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
-  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
-  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.pick{font-size:26px}}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="shell">
 
 <div id="intro">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions &amp; Decimals</div>
   <div class="card">
     <div class="tag">Lesson · 4.NF.C.7</div>
     <h1>Comparing decimals</h1>
-    <p>Two runners. One covered 0.3 of the track, the other covered 0.25. Most people say the second one went further, because 25 is a bigger number than 3. They're wrong, and this lesson is about why.</p>
+    <p>Two runners stop mid-race. One covered 0.3 of the track, the other 0.25. Most people pick the second runner — 25 is bigger than 3, right? They’re wrong, and one picture makes it impossible to ever fall for it again.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NF.C.7</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
@@ -107,20 +103,17 @@
 
 <script>
 var step=0,TOTAL=11;
-var streak=0,best=0,roundIdx=0,roundAnswered=false;
+var wonCount=0,answeredCmp=false;
+var TASKS=[
+  {v:[40,20], lab:['0.4','0.2'], ans:0, txt:'Shade <b>0.4</b> and <b>0.2</b>. Which is more of the whole square?',
+   opts:['0.4 — 40 little squares beat 20','0.2','They’re equal'], won:'0.4 > 0.2 (40 vs 20)'},
+  {v:[30,25], lab:['0.3','0.25'], ans:1, txt:'The runners: <b>0.3</b> and <b>0.25</b>. Count little squares before you answer.',
+   opts:['0.25 — 25 is bigger than 3','0.3 — 30 squares beat 25','They’re equal'], won:'0.3 > 0.25 (30 vs 25)'},
+  {v:[50,50], lab:['0.5','0.50'], ans:2, txt:'<b>0.5</b> and <b>0.50</b>. Careful.',
+   opts:['0.5 is more','0.50 is more','Equal — 50 little squares either way'], won:'0.5 = 0.50'}
+];
 var predictDone=false,mistakeTested=false;
 var qIndex=0,qCorrect=0,answered=false;
-
-/* [labelA, hundredthsA, labelB, hundredthsB] — no ties */
-var ROUNDS=[
-  ['0.3',30,'0.25',25],
-  ['0.45',45,'0.5',50],
-  ['0.08',8,'0.1',10],
-  ['0.7',70,'0.63',63],
-  ['0.19',19,'0.2',20],
-  ['0.6',60,'0.55',55],
-  ['0.89',89,'0.9',90]
-];
 
 function el(i){return document.getElementById(i);}
 function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
@@ -128,84 +121,121 @@ function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=s
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
 
-function gridHTML(id){
-  var h='<div class="g100" id="'+id+'">';
-  for(var i=0;i<100;i++)h+='<div class="gc"></div>';
-  return h+'</div>';
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',FILL='rgba(27,79,138,.30)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function paintGrid(id,n){
-  var g=el(id);if(!g)return;
-  for(var i=0;i<100;i++)g.children[i].className='gc'+(i<n?' on':'');
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
 }
-function pvHTML(t,hu,hiT,hiH){
-  return '<div class="pv">'+
-    '<div class="pvcol"><div class="pvhead">ones</div><div class="pvbox">0</div></div>'+
-    '<div class="pvdot">.</div>'+
-    '<div class="pvcol"><div class="pvhead">tenths</div><div class="pvbox'+(hiT?' hi':'')+'">'+t+'</div></div>'+
-    '<div class="pvcol"><div class="pvhead">hundredths</div><div class="pvbox'+(hiH?' hi':'')+'">'+hu+'</div></div></div>';
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+/* hundred grid at x,y, cell size c, with n of 100 shaded (column by column) */
+function grid100(x,y,c,n){
+  var s='';
+  var full=Math.floor(n/10),rem=n%10;
+  if(full>0)s+='<rect x="'+x+'" y="'+y+'" width="'+(full*c)+'" height="'+(10*c)+'" fill="'+FILL+'"/>';
+  if(rem>0)s+='<rect x="'+(x+full*c)+'" y="'+y+'" width="'+c+'" height="'+(rem*c)+'" fill="'+FILL+'"/>';
+  for(var i=0;i<=10;i++){
+    s+=ln(x+i*c,y,x+i*c,y+10*c,GREY,1);
+    s+=ln(x,y+i*c,x+10*c,y+i*c,GREY,1);
+  }
+  s+='<rect x="'+x+'" y="'+y+'" width="'+(10*c)+'" height="'+(10*c)+'" fill="none" stroke="'+INK+'" stroke-width="2.5"/>';
+  return s;
+}
+function figGrids(n1,n2,lab1,lab2,cap){
+  var s=grid100(115,26,14,n1)+grid100(365,26,14,n2);
+  s+=tx(185,192,lab1,15)+tx(435,192,lab2,15);
+  s+=tx(185,210,n1+' little squares',11,MUT,400)+tx(435,210,n2+' little squares',11,MUT,400);
+  if(cap)s+=tx(310,236,cap,11.5,MUT,400);
+  return boxSVG(s,cap?246:222);
+}
+function figAnatomy(){
+  var s=grid100(115,26,14,30);
+  s+='<rect x="115" y="26" width="14" height="140" fill="none" stroke="'+ACC+'" stroke-width="2.5"/>';
+  s+='<rect x="255" y="152" width="14" height="14" fill="none" stroke="'+GRN+'" stroke-width="2.5"/>';
+  s+=tx(185,192,'the whole square = 1',12.5);
+  s+=tx(380,60,'one column',12.5,ACC,700,'start');
+  s+=tx(380,78,'= one tenth = 0.1',12.5,ACC,700,'start');
+  s+=tx(380,116,'one little square',12.5,GRN,700,'start');
+  s+=tx(380,134,'= one hundredth = 0.01',12.5,GRN,700,'start');
+  s+=tx(380,168,'shaded here: 0.3 =',12.5,MUT,400,'start');
+  s+=tx(380,186,'3 columns = 30 squares',12.5,MUT,400,'start');
+  return boxSVG(s,222);
+}
+function figMoney(){
+  var s=tx(80,44,'0.30',18,INK,700,'start');
+  for(var i=0;i<3;i++)s+='<circle cx="'+(190+i*52)+'" cy="38" r="20" fill="none" stroke="'+INK+'" stroke-width="2.5"/>'+tx(190+i*52,43,'10¢',10.5);
+  s+=tx(360,44,'= 30¢',16,GRN,700,'start');
+  s+=tx(80,116,'0.25',18,INK,700,'start');
+  for(i=0;i<2;i++)s+='<circle cx="'+(190+i*52)+'" cy="110" r="20" fill="none" stroke="'+INK+'" stroke-width="2.5"/>'+tx(190+i*52,115,'10¢',10.5);
+  for(i=0;i<5;i++)s+='<circle cx="'+(292+i*32)+'" cy="110" r="13" fill="none" stroke="'+MUT+'" stroke-width="2"/>'+tx(292+i*32,114,'1¢',8.5,MUT);
+  s+=tx(470,116,'= 25¢',16,GRN,700,'start');
+  s+=tx(310,168,'tenths are dimes, hundredths are pennies — 30¢ beats 25¢',11.5,MUT,400);
+  return boxSVG(s,182);
+}
+function figTheo(){
+  var s=tx(310,48,'“0.12 is bigger than 0.9,',15,MUT,400);
+  s+=tx(310,80,'because 12 beats 9.”',15,MUT,400);
+  s+=tx(310,124,'0.12 > 0.9 ?',22,ACC);
+  return boxSVG(s,148);
 }
 
 /* ---------- BEAT 1 ---------- */
 function beat1(){
-  var R=ROUNDS[roundIdx],h='';
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
-  h+='<h2>Which runner went further?</h2>';
-  h+='<p>Both tracks are the same length. Click the bigger decimal. The squares appear after you choose. <b>Get 5 right in a row.</b></p>';
-  h+='<div class="pair">';
-  h+='<div class="side"><button class="pick" id="A" onclick="choose(\'A\')">'+R[0]+'</button><div id="ga" class="hide">'+gridHTML('gA')+'<div class="glab">'+R[1]+' of 100</div></div></div>';
-  h+='<div class="side"><button class="pick" id="B" onclick="choose(\'B\')">'+R[2]+'</button><div id="gb" class="hide">'+gridHTML('gB')+'<div class="glab">'+R[3]+' of 100</div></div></div>';
-  h+='</div>';
-  h+='<div class="streak" id="pips"></div>';
-  h+='<div class="score" id="sc">Streak: <b>'+streak+'</b> of 5 &nbsp;·&nbsp; round '+(roundIdx+1)+'</div>';
-  h+='<div id="rfb"></div>';
-  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(best>=5?'':'disabled')+' onclick="next()">Next →</button></div>';
-  el('stage').innerHTML=h;
-  drawPips();roundAnswered=false;
-}
-function drawPips(){
-  var h='';for(var i=0;i<5;i++)h+='<div class="pip'+(i<streak?' on':'')+'"></div>';
-  var p=el('pips');if(p)p.innerHTML=h;
-}
-function choose(id){
-  if(roundAnswered)return;roundAnswered=true;
-  var R=ROUNDS[roundIdx];
-  var correct=R[1]>R[3]?'A':'B';
-  el('ga').classList.remove('hide');el('gb').classList.remove('hide');
-  paintGrid('gA',R[1]);paintGrid('gB',R[3]);
-  el(correct).classList.add('right');
-  if(id!==correct)el(id).classList.add('wrong');
-
-  var win=correct==='A'?R[0]:R[2], lose=correct==='A'?R[2]:R[0];
-  var winH=correct==='A'?R[1]:R[3], loseH=correct==='A'?R[3]:R[1];
-  var msg=win+' fills '+winH+' squares, '+lose+' fills '+loseH+'.';
-
-  var fb=el('rfb');
-  if(id===correct){
-    streak++;if(streak>best)best=streak;
-    fb.className='fb ok';fb.innerHTML='<b>Right.</b> '+msg;
-  }else{
-    streak=0;fb.className='fb no';fb.innerHTML='<b>No — '+win+' is bigger.</b> '+msg+' Streak back to zero.';
+  h+='<h2>Count the little squares</h2>';
+  h+='<p>A decimal names part of <b>one whole</b>. Take a square cut into 100 little squares: one <b>column</b> is a tenth (0.1), one <b>little square</b> is a hundredth (0.01). So 0.3 means 3 columns — <b>30 little squares</b> — and 0.25 means <b>25 little squares</b>. To compare two decimals, shade them both and count: <b>more little squares wins</b>. Never compare the digits like whole numbers.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
   }
-  drawPips();
-  el('sc').innerHTML='Streak: <b>'+streak+'</b> of 5 &nbsp;·&nbsp; round '+(roundIdx+1);
-  if(best>=5){el('nx').disabled=false;fb.innerHTML+=' <b>Five in a row — move on.</b>';}
-  setTimeout(function(){
-    if(best>=5||step!==0)return;
-    roundIdx=(roundIdx+1)%ROUNDS.length;beat1();
-  },2800);
+  h+=figGrids(T.v[0],T.v[1],T.lab[0],T.lab[1]);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickCmp('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Count the shaded little squares in each grid, then compare the counts.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredCmp=false;
+}
+function pickCmp(i){
+  if(answeredCmp||wonCount>=TASKS.length)return;answeredCmp=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ 0.4 shades 4 whole columns — 40 squares against 20. More shaded, more value.'
+           :wonCount===1?'✓ 0.3 is 30 little squares; 0.25 is only 25. The “25 beats 3” trick compares digits, not amounts — the grids don’t lie.'
+                        :'✓ 0.50 is just 0.5 wearing an extra zero. Both shade exactly 50 squares — equal.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Ignore how the digits look — count squares. Each column is 10, each little square is 1 out of 100. Try again.';
+    setTimeout(function(){if(step===0){answeredCmp=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- BEAT 2 ---------- */
 function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
-  h+='<h2>More digits does not mean bigger</h2>';
-  h+='<p>0.25 has more digits than 0.3, and it is still smaller. Whole numbers work the other way round, and that is exactly what trips people up.</p>';
-  h+='<table><tr><th>Pair</th><th>Squares filled</th><th>Bigger</th></tr>';
-  h+='<tr><td>0.3 vs 0.25</td><td>30 vs 25</td><td>0.3</td></tr>';
-  h+='<tr><td>0.45 vs 0.5</td><td>45 vs 50</td><td>0.5</td></tr>';
-  h+='<tr><td>0.08 vs 0.1</td><td>8 vs 10</td><td>0.1</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The trick that always works</div><p>Give both the same number of digits, then compare. <b>0.3 becomes 0.30</b>, and 30 beats 25. Adding that zero does not change the amount — it just fills the empty hundredths box.</p></div>';
+  h+='<h2>The grid, decoded</h2>';
+  h+=figAnatomy();
+  h+='<div class="work"><div class="lab">Turn any decimal into a square count</div>';
+  h+='0.3 &nbsp;= 3 tenths &nbsp;= 3 columns &nbsp;= <b>30</b> squares<br>';
+  h+='0.25 = 2 tenths + 5 hundredths = <b>25</b> squares<br>';
+  h+='0.50 = 5 tenths + 0 hundredths = <b>50</b> squares — same as 0.5</div>';
+  h+='<table><tr><th>Compare</th><th>As squares</th><th>Verdict</th></tr>';
+  h+='<tr><td>0.4 vs 0.2</td><td>40 vs 20</td><td>0.4 &gt; 0.2</td></tr>';
+  h+='<tr><td>0.3 vs 0.25</td><td>30 vs 25</td><td>0.3 &gt; 0.25</td></tr>';
+  h+='<tr><td>0.5 vs 0.50</td><td>50 vs 50</td><td>0.5 = 0.50</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every decimal to hundredths is a count out of 100. Turn both into their square counts and the comparison is just whole numbers again. (The symbols work as always: the open mouth of &gt; and &lt; eats the bigger side.)</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -214,37 +244,41 @@ function beat2(){
 function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
-  h+='<h2>Before you look</h2>';
-  h+='<p>One runner covered <b>0.4</b> of the track. The other covered <b>0.38</b>.</p>';
-  h+='<div class="ask"><div class="q">Who went further?</div>';
-  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">0.4</button><button class="btn sm" onclick="checkPredict(\'b\')">0.38</button></div>';
+  h+='<h2>The short one wins?</h2>';
+  h+='<p>Two decimals: <b>0.09</b> and <b>0.1</b>. One has bigger-looking digits, one is shorter.</p>';
+  h+='<div class="ask"><div class="q">Which is more of the whole?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">0.1</button><button class="btn sm" onclick="checkPredict(\'b\')">0.09 — 9 beats 1</button></div>';
   h+='<div id="pfb"></div></div>';
-  h+='<div id="ph" class="hide"><div class="pair">';
-  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.40</div>'+gridHTML('p1')+'<div class="glab">40 of 100</div></div>';
-  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.38</div>'+gridHTML('p2')+'<div class="glab">38 of 100</div></div>';
-  h+='</div></div>';
+  h+='<div id="ph" class="hide">'+figGrids(9,10,'0.09','0.1','nine little squares against one full column');
+  h+='<div class="work"><div class="lab">As square counts</div>';
+  h+='0.09 = 0 tenths + 9 hundredths = <b>9</b> squares<br>';
+  h+='0.1 &nbsp;&nbsp;= 1 tenth &nbsp;= 1 full column = <b>10</b> squares<br>';
+  h+='10 &gt; 9, so <b>0.1 &gt; 0.09</b></div>';
+  h+='<p>Shortcut for later: compare the <b>tenths place first</b>. 0.1 has 1 tenth; 0.09 has 0 tenths. The tenths decide it before the hundredths even get a vote.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(predictDone)showP();
+  if(predictDone)el('ph').classList.remove('hide');
 }
-function showP(){el('ph').classList.remove('hide');paintGrid('p1',40);paintGrid('p2',38);}
-function checkPredict(c){
+function checkPredict(v){
   var fb=el('pfb');
-  if(c==='a'){fb.className='fb ok';fb.innerHTML='<b>Right — 0.4.</b> Write it as 0.40 and it is 40 squares against 38.';}
-  else{fb.className='fb no';fb.innerHTML='<b>It is 0.4.</b> Write it as <b>0.40</b> and compare: 40 squares against 38. Two squares in it.';}
-  showP();predictDone=true;el('nx').disabled=false;
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>0.1.</b> One full column is 10 squares; 0.09 only fills 9.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It’s 0.1.</b> The 9 in 0.09 counts hundredths — tiny squares. 0.1 is a whole column of 10. Count squares, not digits.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
 }
 
 /* ---------- BEAT 4 ---------- */
 function beat4(){
   var h='';
   h+='<div class="tag">Why</div>';
-  h+='<h2>Check the tenths box first</h2>';
-  h+='<p>The tenths box is worth ten times the hundredths box, so it decides the whole thing unless the two are equal.</p>';
-  h+='<div class="pvname">0.3</div>'+pvHTML(3,0,true,false);
-  h+='<div class="pvname">0.25</div>'+pvHTML(2,5,true,false);
-  h+='<p>3 beats 2 in the orange box, so 0.3 wins. The 5 sitting in 0.25 never gets a say — it is only worth hundredths, and it cannot make up a whole tenth.</p>';
-  h+='<div class="goal"><div class="lab">The rule</div><p>Compare the tenths box. If it is a tie, move to the hundredths box. Or add a zero so both have two digits and compare the numbers straight across.</p></div>';
+  h+='<h2>Money already taught you this</h2>';
+  h+='<p>Decimals of a dollar are coins: a <b>tenth is a dime</b>, a <b>hundredth is a penny</b>. You’d never say 25¢ beats 30¢:</p>';
+  h+=figMoney();
+  h+='<div class="work"><div class="lab">The runner problem, in coins</div>';
+  h+='0.30 of a dollar = 3 dimes = <b>30¢</b><br>';
+  h+='0.25 of a dollar = 2 dimes + 5 pennies = <b>25¢</b><br>';
+  h+='30¢ &gt; 25¢ — so 0.3 &gt; 0.25</div>';
+  h+='<p>One warning: comparisons only work when both decimals cut up the <b>same whole</b>. 0.5 of a small pizza can be less food than 0.3 of a giant one — the grids, the coins, the runners all share one whole before you compare.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>If a comparison feels slippery, turn it into money: dimes for tenths, pennies for hundredths. And only compare parts of the same whole.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -253,39 +287,40 @@ function beat4(){
 function beat5(){
   var h='';
   h+='<div class="tag">Catch the mistake</div>';
-  h+='<h2>Lena says 0.25 beats 0.3 because 25 is bigger than 3</h2>';
-  h+='<p>She is reading the digits as whole numbers and ignoring the boxes.</p>';
-  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testLena()">Fill both tracks</button></div>';
-  h+='<div id="lh" class="hide"><div class="pair">';
-  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.25</div>'+gridHTML('l1')+'<div class="glab">25 of 100</div></div>';
-  h+='<div class="side"><div style="font-family:\'Space Mono\',monospace;font-size:20px;font-weight:700">0.3</div>'+gridHTML('l2')+'<div class="glab">30 of 100</div></div>';
-  h+='</div></div>';
-  h+='<div id="lfb"></div>';
+  h+='<h2>Theo says 0.12 beats 0.9</h2>';
+  h+='<p>His reason: <i>“12 is bigger than 9. Longer number, bigger number.”</i></p>';
+  h+=figTheo();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testTheo()">Shade the grids</button></div>';
+  h+='<div id="mh" class="hide">'+figGrids(12,90,'0.12','0.9')+'</div>';
+  h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(mistakeTested)testLena();
+  if(mistakeTested)testTheo();
 }
-function testLena(){
-  el('lh').classList.remove('hide');paintGrid('l1',25);paintGrid('l2',30);
-  var fb=el('lfb');fb.className='fb no';
-  fb.innerHTML='<b>Lena is wrong.</b> Her 25 is 25 hundredths, but the 3 is 3 <i>tenths</i> — 30 hundredths. She compared the digits without checking which box they sat in. Write 0.3 as <b>0.30</b> and the argument disappears.';
+function testTheo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The grids demolish it.</b> 0.12 is 1 column and 2 squares — <b>12</b> out of 100. 0.9 is 9 full columns — <b>90</b> out of 100. In money: 12¢ against 90¢. “Longer number” means nothing after the decimal point; extra digits are just smaller and smaller pieces. Check the tenths first: 9 tenths crushes 1 tenth.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- questions ---------- */
 var QUESTIONS=[
-  {q:'Which is bigger: 0.6 or 0.55?',a:['0.55','0.6','They are equal','Cannot tell'],correct:1,
-   why:'Write 0.6 as 0.60. That is 60 squares against 55.'},
-  {q:'Which is bigger: 0.09 or 0.2?',a:['0.2','0.09','They are equal','Cannot tell'],correct:0,
-   why:'0.2 is 2 in the tenths box; 0.09 has a 0 there. 20 squares against 9.'},
-  {q:'0.7 and 0.70 — what is true?',a:['0.70 is bigger','0.7 is bigger','They fill the same squares','You cannot write 0.70'],correct:2,
-   why:'The extra zero fills the empty hundredths box without changing the amount. Both are 70 squares.'},
-  {q:'Why does 0.4 beat 0.38 even though 38 is a bigger number than 4?',
-   a:['Because 4 is even','Because the 4 is in the tenths box and the 3 is only 3 tenths','Because shorter decimals always win','It does not — 0.38 is bigger'],correct:1,
-   why:'The tenths box decides it: 4 tenths against 3 tenths. The 8 hundredths cannot make up a whole tenth.'},
-  {q:'You compare two decimals and the tenths boxes are the same. What do you do next?',
-   a:['Pick the longer one','Compare the hundredths box','Add them together','They must be equal'],correct:1,
-   why:'A tie in tenths moves the decision down to the hundredths box.'}
+  {q:'Which is more of the same whole: 0.7 or 0.5?',
+   a:['0.7 — 70 little squares beat 50','0.5','They’re equal','Can’t compare decimals'],correct:0,
+   why:'0.7 shades 7 columns (70 squares), 0.5 shades 5 (50). So 0.7 > 0.5.'},
+  {q:'The runners again: 0.4 of the track vs 0.35. Who went farther?',
+   a:['0.35 — 35 beats 4','0.4 — 40 hundredths beat 35','They tied','The one with more digits'],correct:1,
+   why:'0.4 = 40 out of 100; 0.35 = 35 out of 100. Digits lie, square counts don’t.'},
+  {q:'Compare 0.2 and 0.20.',
+   a:['0.20 is bigger','0.2 is bigger','0.2 = 0.20 — both are 20 little squares','Impossible to tell'],correct:2,
+   why:'The extra zero adds zero hundredths. Both shade 20 squares out of 100.'},
+  {q:'Which is more of a dollar: 0.09 or 0.30?',
+   a:['0.09 — 9 beats 3','0.30 — that’s 30¢ against 9¢','They’re equal','0.09, because it’s longer'],correct:1,
+   why:'0.09 is 9 pennies; 0.30 is 3 dimes — 30¢. The tenths place decides: 3 tenths beats 0 tenths.'},
+  {q:'Theo’s next claim: 0.15 beats 0.8, “because 15 > 8.” Is he right?',
+   a:['Yes — 15 beats 8','Yes — longer decimals are bigger','No — 0.8 is 80 out of 100, 0.15 is only 15','No — decimals can never be compared'],correct:2,
+   why:'Same trap as before. 0.8 = 8 tenths = 80 squares; 0.15 = 15 squares. Count the amount, not the digits.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -293,7 +328,7 @@ function beatQ(){
   h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
   for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
   h+='<div id="qfb"></div>';
-  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">\u2190 Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
   el('stage').innerHTML=h;answered=false;
 }
 function pick(i){
@@ -325,13 +360,12 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Compare any two decimals to hundredths, and explain why more digits does not mean a bigger amount.</p></div>';}
-  else h+='<p style="margin-top:16px">Go back to Lena. She compared the digits without checking which box they sat in.</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Turn any decimal into a count out of 100, compare by squares or by coins instead of by digits, spot that trailing zeros change nothing, and check the tenths place first.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Theo. His “longer means bigger” lost to a one-column count: 90 squares against 12.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
   el('stage').innerHTML=h;
 }
-function restart(){step=0;streak=0;best=0;roundIdx=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+function restart(){step=0;wonCount=0;answeredCmp=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
 
 function render(){
   drawSteps();

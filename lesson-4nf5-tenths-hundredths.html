@@ -323,7 +323,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trade tenths for hundredths and add them together.</p></div><p style="margin-top:14px">Next: writing these as <b>decimals</b>.</p>';}
   else h+='<p style="margin-top:16px">Go back to Nia. She counted 3 rows as 3 spaces — that is the whole trap.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;count=0;hist=[];wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

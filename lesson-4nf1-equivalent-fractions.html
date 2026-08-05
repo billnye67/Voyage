@@ -326,7 +326,7 @@ function beatDone(){
   if(pct>=80)h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Make equivalent fractions by multiplying or dividing top and bottom by the same number — and prove it on a bar.</p></div><p style="margin-top:14px">Next: <b>comparing fractions</b> — which is more, 3/4 or 2/3?</p>';
   else h+='<p style="margin-top:16px">Go back to the three bars. More pieces, smaller pieces, same amount — that one line is the whole lesson.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;won={};predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;pieces=4;shaded=0;render();scrollTo(0,0);}

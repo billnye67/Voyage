@@ -1,59 +1,402 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voyage · Area & perimeter of rectangles</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
-:root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;min-height:100vh}.shell{max-width:760px;margin:0 auto;padding:26px 22px 80px}.crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}h1{font-family:'Fraunces',serif;font-size:31px;line-height:1.12;margin-bottom:12px}h2{font-family:'Fraunces',serif;font-size:23px;line-height:1.22;margin-bottom:14px}p{font-size:16.5px;line-height:1.6;margin-bottom:12px}b{font-weight:600}.tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}.goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}.goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}.goal p{margin:0 0 8px}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}.btn:active{transform:translate(3px,3px);box-shadow:none}.btn.go{background:var(--accent);color:#fff}.btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}.btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}.steps{display:flex;gap:6px;margin-bottom:20px}.steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}.steps .seg.on{background:var(--blue)}.hide{display:none}.challenge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0 15px}.challenge-chip{border:1.5px solid var(--blue-line);border-radius:9px;padding:8px;font-family:'Space Mono',monospace;font-size:11px;text-align:center;background:#fff}.challenge-chip.now{border-color:var(--accent);color:var(--accent);font-weight:700}.challenge-chip.done{border-color:var(--green);color:var(--green)}.diagram{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:8px;margin:12px 0}.diagram svg{width:100%;max-height:260px;display:block}.svglabel{font-family:'Space Grotesk',sans-serif;font-size:15px;fill:var(--ink);font-weight:600}.svgtiny{font-family:'Space Mono',monospace;font-size:10px;fill:var(--muted)}.ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:16px 0}.ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}.choice,.stepchoice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}.choice:hover,.stepchoice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}.choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}.choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}.inputrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}.inputrow input{font-family:'Space Mono',monospace;font-size:18px;min-width:145px;max-width:260px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;text-align:center}.checkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px}.checkopt{display:flex;gap:9px;align-items:center;background:#fff;border:1.5px solid var(--blue-line);border-radius:9px;padding:11px;font-size:15px}.feedback{font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px;min-height:44px;margin-top:12px}.feedback.ok{background:rgba(46,125,91,.12);color:var(--green)}.feedback.no{background:rgba(240,102,63,.12);color:var(--accent)}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}.qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.done-icon{font-size:44px;text-align:center;margin-bottom:8px}.attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}.lineplot{display:flex;align-items:flex-end;height:165px;padding:10px 12px 0;position:relative}.lineplot:after{content:'';position:absolute;left:12px;right:12px;bottom:38px;border-top:3px solid var(--ink)}.tick{flex:1;text-align:center;position:relative;z-index:1}.xstack{height:104px;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:center}.xmark{font-family:'Space Mono',monospace;font-size:23px;line-height:18px;color:var(--blue)}.tickline{height:15px;border-left:2px solid var(--ink);margin:0 auto;width:1px}.ticklab{font-family:'Space Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap}.formula{font-family:'Space Mono',monospace;text-align:center;font-size:19px;padding:12px}.termgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.term{background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;padding:12px}.term b{display:block;color:var(--blue);margin-bottom:3px}
-.worked{width:100%;border-collapse:collapse;margin:12px 0;font-family:'Space Mono',monospace;font-size:14.5px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;overflow:hidden}
-.worked th{text-align:left;padding:9px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1.5px solid var(--blue-line)}
-.worked td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--blue-line)}
-.worked tr:last-child td{border-bottom:none;font-weight:700}
-.workedlab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-top:16px}@media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.nav{align-items:flex-end}.lineplot{padding-left:0;padding-right:0}.ticklab{font-size:9px}}
-</style></head><body><div class="shell">
-<div id="intro"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement & Data</div><div class="card"><div class="tag">Lesson · 4.MD.3</div><h1>Area & perimeter of rectangles</h1><p>Choose whether the question follows the edge or fills the inside.</p><div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.3</span></div><button class="btn go" onclick="startLesson()">Start lesson →</button></div></div>
-<div id="lesson" class="hide"><div class="crumb">Grade 4 Math &nbsp;›&nbsp; Area & perimeter of rectangles</div><div class="steps" id="steps"></div><div class="card" id="stage"></div></div></div>
-<script>var CODE="4.MD.3",CHALLENGE_TITLE="Pick the formula before calculating",DONE_TEXT="Use rectangle formulas for area and perimeter, with the correct units.";var TASKS=[{"context": "A rectangular garden is 7 units long and 4 units wide. Find the space inside.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 210\" role=\"img\" aria-label=\"Rectangle, 7 by 4\">\n      <rect x=\"80\" y=\"35\" width=\"250\" height=\"125\" rx=\"4\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"3\"/>\n      <text x=\"205\" y=\"190\" text-anchor=\"middle\" class=\"svglabel\">7 units</text>\n      <text x=\"48\" y=\"102\" text-anchor=\"middle\" class=\"svglabel\" transform=\"rotate(-90 48 102)\">4 units</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Which calculation measures the inside?", "options": ["7 + 4", "2 \u00d7 7 + 2 \u00d7 4", "7 \u00d7 4", "7 \u2212 4"], "correct": 2, "why": "Area counts rows times columns: length \u00d7 width.", "wrong": "The question asks for the inside, not the distance around it."}, {"type": "input", "prompt": "What is the area?", "answers": ["28", "28squareunits", "28squnits"], "placeholder": "square units", "why": "7 \u00d7 4 = 28 square units.", "wrong": "Multiply the side lengths."}]}, {"context": "A picture frame is 9 units long and 3 units wide. Find the distance around its edge.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 210\" role=\"img\" aria-label=\"Rectangle, 9 by 3\">\n      <rect x=\"80\" y=\"35\" width=\"250\" height=\"125\" rx=\"4\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"3\"/>\n      <text x=\"205\" y=\"190\" text-anchor=\"middle\" class=\"svglabel\">9 units</text>\n      <text x=\"48\" y=\"102\" text-anchor=\"middle\" class=\"svglabel\" transform=\"rotate(-90 48 102)\">3 units</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Which calculation measures the edge?", "options": ["9 \u00d7 3", "9 + 3", "2 \u00d7 9 + 2 \u00d7 3", "9 \u2212 3"], "correct": 2, "why": "Perimeter includes both lengths and both widths.", "wrong": "The edge uses all four sides."}, {"type": "input", "prompt": "What is the perimeter?", "answers": ["24", "24units"], "placeholder": "units", "why": "9 + 3 + 9 + 3 = 24 units.", "wrong": "Add all four sides."}]}, {"context": "A square tile has side length 6 units. Find its area.", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 210\" role=\"img\" aria-label=\"Square, 6 by 6\">\n      <rect x=\"80\" y=\"35\" width=\"250\" height=\"125\" rx=\"4\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"3\"/>\n      <text x=\"205\" y=\"190\" text-anchor=\"middle\" class=\"svglabel\">6 units</text>\n      <text x=\"48\" y=\"102\" text-anchor=\"middle\" class=\"svglabel\" transform=\"rotate(-90 48 102)\">6 units</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Which formula still works for this square?", "options": ["Area = length \u00d7 width", "Area = length + width", "Perimeter = length \u00d7 width", "Area = 4 \u00d7 side"], "correct": 0, "why": "A square is a rectangle with equal length and width.", "wrong": "Area still measures the inside with length \u00d7 width."}, {"type": "input", "prompt": "What is the area?", "answers": ["36", "36squareunits"], "placeholder": "square units", "why": "6 \u00d7 6 = 36 square units.", "wrong": "Multiply 6 by 6."}]}, {"context": "A rectangular pen is 12 meters long and 5 meters wide. How much fencing surrounds it?", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 210\" role=\"img\" aria-label=\"Rectangle, 12 by 5\">\n      <rect x=\"80\" y=\"35\" width=\"250\" height=\"125\" rx=\"4\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"3\"/>\n      <text x=\"205\" y=\"190\" text-anchor=\"middle\" class=\"svglabel\">12 units</text>\n      <text x=\"48\" y=\"102\" text-anchor=\"middle\" class=\"svglabel\" transform=\"rotate(-90 48 102)\">5 units</text>\n    </svg></div>", "steps": [{"type": "choice", "prompt": "Does \u201cfencing surrounds it\u201d ask for area or perimeter?", "options": ["Area", "Perimeter", "Both", "Neither"], "correct": 1, "why": "Fencing follows the outside edge.", "wrong": "Anything surrounding the shape measures the boundary."}, {"type": "input", "prompt": "How many meters of fencing?", "answers": ["34", "34m"], "placeholder": "meters", "why": "2 \u00d7 12 + 2 \u00d7 5 = 34 meters.", "wrong": "Add 12 + 5 + 12 + 5."}]}];var WHAT={"heading": "Inside and around are different measurements", "body": "<div class=\"termgrid\"><div class=\"term\"><b>Area</b>inside space<br>length \u00d7 width<br>square units</div><div class=\"term\"><b>Perimeter</b>distance around<br>2 \u00d7 length + 2 \u00d7 width<br>units</div></div><p>The formulas come from the picture: area counts a grid of rows and columns; perimeter adds every side.</p>"};var PREDICT={"heading": "Read the purpose, not just the numbers", "visual": "<div class=\"diagram\"><svg viewBox=\"0 0 420 210\" role=\"img\" aria-label=\"Rectangle, 10 by 4\">\n      <rect x=\"80\" y=\"35\" width=\"250\" height=\"125\" rx=\"4\" fill=\"rgba(27,79,138,.08)\" stroke=\"var(--blue)\" stroke-width=\"3\"/>\n      <text x=\"205\" y=\"190\" text-anchor=\"middle\" class=\"svglabel\">10 units</text>\n      <text x=\"48\" y=\"102\" text-anchor=\"middle\" class=\"svglabel\" transform=\"rotate(-90 48 102)\">4 units</text>\n    </svg></div>", "prompt": "A rug must cover this floor. What should be calculated?", "options": ["10 + 4", "Area: 10 \u00d7 4", "Perimeter: 2 \u00d7 10 + 2 \u00d7 4", "10 \u2212 4"], "correct": 1, "why": "Covering a surface asks for the inside area.", "reveal": "<div class=\"goal\"><div class=\"lab\">Result</div><p>10 \u00d7 4 = 40 square units.</p></div>"};var WHY={"heading": "The unit exposes the measurement", "body": "<p>Perimeter is one-dimensional, so its answer uses units such as meters. Area covers a two-dimensional surface, so its answer uses square meters.</p><p>A correct number with the wrong unit can describe the wrong measurement.</p>"};var MISTAKE={"heading": "Leo says a 5-by-3 rectangle has area 16", "body": "<p>He calculated 5 + 3 + 5 + 3.</p>", "button": "Name what Leo found", "reveal": "<div class=\"feedback no\"><b>Leo found the perimeter.</b> The area is 5 \u00d7 3 = 15 square units.</div>"};var QUESTIONS=[{"q": "Area of an 8-by-6 rectangle?", "a": ["28 square units", "48 square units", "48 units", "14 square units"], "correct": 1, "why": "Area = 8 \u00d7 6 = 48 square units."}, {"q": "Perimeter of an 8-by-6 rectangle?", "a": ["48 units", "14 units", "28 units", "24 units"], "correct": 2, "why": "8 + 6 + 8 + 6 = 28 units."}, {"q": "Which situation asks for area?", "a": ["Fencing a yard", "Framing a picture", "Tiling a floor", "Walking around a field"], "correct": 2, "why": "Tiles cover the inside surface."}, {"q": "A square has side 5. Its perimeter is...", "a": ["20 units", "10 units", "25 square units", "15 units"], "correct": 0, "why": "Four sides of 5 total 20 units."}, {"q": "Which unit fits the area of a classroom floor?", "a": ["meters", "minutes", "degrees", "square meters"], "correct": 3, "why": "Area uses square units."}];
-var step=0,TOTAL=11,taskIndex=0,taskStep=0,challengeDone=false,feedback='',qIndex=0,qCorrect=0,answered=false;
-function el(i){return document.getElementById(i)}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0)}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h}
-function next(){if(step<TOTAL-1){step++;render();scrollTo(0,0)}}
-function back(){if(step>0){step--;render();scrollTo(0,0)}}
-function norm(v){return String(v).toLowerCase().replace(/[,\s$°]/g,'').replace(/hours?/g,'h').replace(/minutes?/g,'m').replace(/meters?/g,'m').replace(/kilometers?/g,'km').replace(/dollars?/g,'')}
-function renderChallenge(){
- var h='<div class="tag">Challenge</div><h2>'+CHALLENGE_TITLE+'</h2>';
- h+='<div class="goal"><div class="lab">Worked example \u2014 read this first</div>'+
-    '<p>Take a rectangle <b>8 units long</b> and <b>2 units wide</b>.</p>'+
-    '<table class="worked"><tr><th>Question</th><th>Working</th><th>Answer</th></tr>'+
-    '<tr><td>Area \u2014 space inside</td><td>2 rows of 8 squares<br>8 \u00d7 2</td><td>16 square units</td></tr>'+
-    '<tr><td>Perimeter \u2014 distance around</td><td>8 + 2 + 8 + 2<br>or 2 \u00d7 8 + 2 \u00d7 2</td><td>20 units</td></tr></table>'+
-    '<p>Same rectangle, same two numbers, two different answers \u2014 and two different units.</p></div>';
- h+='<div class="challenge-list">';for(var i=0;i<TASKS.length;i++)h+='<div class="challenge-chip '+(i<taskIndex?'done':i===taskIndex&&!challengeDone?'now':'')+'">'+(i<taskIndex?'✓ ':'')+'Round '+(i+1)+'</div>';h+='</div>';
- if(challengeDone){h+='<div class="goal"><div class="lab">Challenge complete</div><p>You made every decision yourself. Now unpack why the moves worked.</p></div>'}
- else{var T=TASKS[taskIndex],S=T.steps[taskStep];h+='<p>'+T.context+'</p>'+(T.visual||'');h+='<div class="ask"><div class="q">'+S.prompt+'</div>';
-   if(S.type==='choice'){for(var j=0;j<S.options.length;j++)h+='<button class="stepchoice" onclick="chooseStep('+j+')">'+S.options[j]+'</button>'}
-   else if(S.type==='input'){h+='<div class="inputrow"><input id="stepin" type="text" inputmode="decimal" placeholder="'+(S.placeholder||'?')+'"><button class="btn sm go" onclick="submitInput()">Lock it in</button></div>'}
-   else if(S.type==='multi'){h+='<div class="checkgrid">';for(var k=0;k<S.options.length;k++)h+='<label class="checkopt"><input type="checkbox" name="multi" value="'+k+'"> '+S.options[k]+'</label>';h+='</div><div class="inputrow"><button class="btn sm go" onclick="submitMulti()">Check choices</button></div>'}
-   h+='</div>'}
- h+='<div class="feedback '+(feedback?(feedback.indexOf('✓')===0?'ok':'no'):'')+'">'+(feedback||'Choose carefully. A wrong move stays wrong until you fix it.')+'</div>';
- h+='<div class="nav"><span></span><button class="btn" '+(challengeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h;
- if(!challengeDone){var inp=el('stepin');if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput()})}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Area and perimeter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
+  .steps .seg.on{background:var(--blue)}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="intro">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Measurement</div>
+  <div class="card">
+    <div class="tag">Lesson · 4.MD.A.3</div>
+    <h1>Area and perimeter</h1>
+    <p>A rectangle keeps two secrets with the same two numbers. Ask “how much fence goes <b>around</b> it?” and you get one answer. Ask “how many squares fit <b>inside</b> it?” and you get a completely different one. Mixing the two up is the most popular mistake in fourth grade — and by the end of this lesson it won’t be yours.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.MD.A.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div id="lesson" class="hide">
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Area and perimeter</div>
+  <div class="steps" id="steps"></div>
+  <div class="card" id="stage"></div>
+</div>
+
+</div>
+
+<script>
+var step=0,TOTAL=11;
+var wonCount=0,answeredGarden=false;
+var TASKS=[
+  {fig:'fence', ans:1, txt:'The garden is <b>5 m long and 3 m wide</b>. How many metres of <b>fence</b> does it take to go all the way around?',
+   opts:['15 m','16 m — walk all four sides: 5 + 3 + 5 + 3','8 m — just 5 + 3'], won:'fence: 5+3+5+3 = 16 m'},
+  {fig:'tiles', ans:0, txt:'Same garden, <b>5 m by 3 m</b>. You cover the inside with <b>1-metre grass squares</b>. How many squares does it take?',
+   opts:['15 squares — 3 rows of 5','16 squares — same as the fence','30 squares'], won:'grass: 3 rows of 5 = 15'},
+  {fig:'skinny',ans:2, txt:'A different garden: <b>6 m by 2 m</b>. How much fence goes around this one?',
+   opts:['12 m','20 m','16 m — the same fence as the 5 × 3 garden!'], won:'6+2+6+2 = 16 m again!'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
+function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',FILL='rgba(46,125,91,.14)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
 }
-function advanceStep(message){feedback='✓ '+message;var T=TASKS[taskIndex];setTimeout(function(){taskStep++;feedback='';if(taskStep>=T.steps.length){taskIndex++;taskStep=0;if(taskIndex>=TASKS.length)challengeDone=true}renderChallenge()},650)}
-function chooseStep(i){var S=TASKS[taskIndex].steps[taskStep];if(i===S.correct)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'That does not match the quantities shown. Try another decision.');renderChallenge()}}
-function submitInput(){var S=TASKS[taskIndex].steps[taskStep],v=(el('stepin').value||'').trim();if(!v)return;var ans=S.answers||[S.answer],ok=ans.some(function(a){return norm(v)===norm(a)});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Recheck the operation, units, and arithmetic.');renderChallenge()}}
-function submitMulti(){var S=TASKS[taskIndex].steps[taskStep],got=Array.from(document.querySelectorAll('input[name=multi]:checked')).map(function(x){return +x.value}).sort(),want=S.correct.slice().sort();var ok=got.length===want.length&&got.every(function(v,i){return v===want[i]});if(ok)advanceStep(S.why);else{feedback='✗ '+(S.wrong||'Use the properties you can prove from the figure, then try again.');renderChallenge()}}
-function renderInfo(obj,tag){var h='<div class="tag">'+tag+'</div><h2>'+obj.heading+'</h2>'+obj.body+'<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-var predictDone=false;
-function renderPredict(){var P=PREDICT,h='<div class="tag">Predict first</div><h2>'+P.heading+'</h2>'+P.visual+'<div class="ask"><div class="q">'+P.prompt+'</div>';for(var i=0;i<P.options.length;i++)h+='<button class="stepchoice" onclick="pickPredict('+i+')">'+P.options[i]+'</button>';h+='<div id="pfb"></div></div>';if(predictDone)h+=P.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function pickPredict(i){predictDone=true;renderPredict();var f=el('pfb');f.className='feedback '+(i===PREDICT.correct?'ok':'no');f.innerHTML=(i===PREDICT.correct?'✓ ':'✗ ')+PREDICT.why}
-var mistakeDone=false;
-function renderMistake(){var M=MISTAKE,h='<div class="tag">Catch the mistake</div><h2>'+M.heading+'</h2>'+M.body+'<div class="inputrow"><button class="btn sm" onclick="showMistake()">'+M.button+'</button></div>';if(mistakeDone)h+=M.reveal;h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" '+(mistakeDone?'':'disabled')+' onclick="next()">Next →</button></div>';el('stage').innerHTML=h}
-function showMistake(){mistakeDone=true;renderMistake()}
-function renderQuestion(){var Q=QUESTIONS[qIndex],h='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div><h2 style="margin-top:10px">'+Q.q+'</h2>';for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pickQ('+i+')">'+Q.a[i]+'</button>';h+='<div id="qfb"></div><div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review teaching</button><span class="qcount">Score: '+qCorrect+'</span><button class="btn" id="qnext" disabled onclick="nextQ()">Next →</button></div>';el('stage').innerHTML=h;answered=false}
-function pickQ(i){if(answered)return;answered=true;var Q=QUESTIONS[qIndex];for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong')}var f=el('qfb');f.className='feedback '+(i===Q.correct?'ok':'no');f.innerHTML=(i===Q.correct?'✓ Correct. ':'✗ Not quite. ')+Q.why;if(i===Q.correct)qCorrect++;el('qnext').disabled=false}
-function nextQ(){qIndex++;step=qIndex>=QUESTIONS.length?TOTAL-1:5+qIndex;render();scrollTo(0,0)}
-function reviewLesson(){step=0;render();scrollTo(0,0)}
-function markCourseDone(){try{var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';var key='voyage_g4math_progress_'+kid;var p={done:{},lastSkill:0};var raw=localStorage.getItem(key);if(raw)p=JSON.parse(raw);if(!p.done)p.done={};p.done[CODE]=true;localStorage.setItem(key,JSON.stringify(p))}catch(e){}}
-function renderDone(){var pct=Math.round(qCorrect/QUESTIONS.length*100),pass=pct>=80,h='<div class="done-icon">'+(pass?'✓':'↻')+'</div><h2 style="text-align:center">'+(pass?'Lesson complete':'Worth one more pass')+'</h2><p style="text-align:center" class="qcount">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';if(pass){markCourseDone();h+='<div class="goal"><div class="lab">You can now</div><p>'+DONE_TEXT+'</p></div>'}else h+='<p>Review the teaching, then try the questions again.</p>';h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="goCourse()">Back to Math →</button></div><div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';el('stage').innerHTML=h}
-function goCourse(){location.href='math-course.html'}
-function restart(){step=0;taskIndex=0;taskStep=0;challengeDone=false;feedback='';predictDone=false;mistakeDone=false;qIndex=0;qCorrect=0;answered=false;render();scrollTo(0,0)}
-function render(){drawSteps();if(step===0)renderChallenge();else if(step===1)renderInfo(WHAT,'What just happened');else if(step===2)renderPredict();else if(step===3)renderInfo(WHY,'Why');else if(step===4)renderMistake();else if(step>=5&&step<TOTAL-1)renderQuestion();else renderDone()}
-</script></body></html>
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+/* grid rectangle: cols x rows of cell-size squares at x,y */
+function grid(x,y,cols,rows,cell,fill,numbered){
+  var s='';
+  if(fill)s+='<rect x="'+x+'" y="'+y+'" width="'+cols*cell+'" height="'+rows*cell+'" fill="'+FILL+'"/>';
+  for(var i=1;i<cols;i++)s+=ln(x+i*cell,y,x+i*cell,y+rows*cell,GREY,1.5);
+  for(var j=1;j<rows;j++)s+=ln(x,y+j*cell,x+cols*cell,y+j*cell,GREY,1.5);
+  s+='<rect x="'+x+'" y="'+y+'" width="'+cols*cell+'" height="'+rows*cell+'" fill="none" stroke="'+INK+'" stroke-width="2.5"/>';
+  if(numbered){var n=1;for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){s+=tx(x+c*cell+cell/2,y+r*cell+cell/2+4,n,11,MUT,400);n++;}}
+  return s;
+}
+function figFence(){
+  var s=grid(210,30,5,3,40);
+  s+='<rect x="202" y="22" width="216" height="136" fill="none" stroke="'+ACC+'" stroke-width="2.5" stroke-dasharray="7 5"/>';
+  s+=tx(310,16,'5 m',12.5)+tx(190,95,'3 m',12.5,INK,700,'end');
+  s+=tx(310,180,'the fence walks the dashed path — all four sides',10.5,MUT,400);
+  return boxSVG(s,192);
+}
+function figTiles(){
+  var s=grid(210,30,5,3,40,true,true);
+  s+=tx(310,16,'5 m',12.5)+tx(190,95,'3 m',12.5,INK,700,'end');
+  s+=tx(310,180,'1-metre grass squares fill the inside',10.5,MUT,400);
+  return boxSVG(s,192);
+}
+function figSkinny(){
+  var s=grid(190,45,6,2,40);
+  s+='<rect x="182" y="37" width="256" height="96" fill="none" stroke="'+ACC+'" stroke-width="2.5" stroke-dasharray="7 5"/>';
+  s+=tx(310,28,'6 m',12.5)+tx(170,90,'2 m',12.5,INK,700,'end');
+  s+=tx(310,160,'how far around?',10.5,MUT,400);
+  return boxSVG(s,172);
+}
+function figFor(n){return n==='fence'?figFence():n==='tiles'?figTiles():figSkinny();}
+
+function figBoth(){
+  var s=grid(70,40,5,3,34,false);
+  s+='<rect x="64" y="34" width="182" height="114" fill="none" stroke="'+ACC+'" stroke-width="2" stroke-dasharray="6 4"/>';
+  s+=tx(155,26,'around: perimeter',11.5,ACC,700);
+  s+=grid(360,40,5,3,34,true,false);
+  s+=tx(445,26,'inside: area',11.5,GRN,700);
+  s+=tx(155,172,'5+3+5+3 = 16 m of fence',11.5,MUT,400);
+  s+=tx(445,172,'3 rows of 5 = 15 square metres',11.5,MUT,400);
+  return boxSVG(s,186);
+}
+function figCompare(){
+  var s=grid(80,36,5,3,30,true);
+  s+=tx(155,24,'5 × 3',12.5);
+  s+=tx(155,150,'fence 16 m · grass 15',11.5,MUT,400);
+  s+=grid(360,51,6,2,30,true);
+  s+=tx(450,39,'6 × 2',12.5);
+  s+=tx(450,150,'fence 16 m · grass 12',11.5,MUT,400);
+  s+=tx(310,180,'same fence — different grass',12.5,ACC);
+  return boxSVG(s,192);
+}
+function figMissing(){
+  var s=grid(170,40,6,4,30,true);
+  s+=tx(260,28,'6 m',12.5)+tx(152,105,'? m',13,ACC,700,'end');
+  s+=tx(430,80,'area = 24 square metres',12.5,INK,700,'start');
+  s+=tx(430,102,'6 × ? = 24',12.5,ACC,700,'start');
+  s+=tx(310,190,'the area is known — one side is the mystery',10.5,MUT,400);
+  return boxSVG(s,202);
+}
+function figAva(){
+  var s=grid(130,45,9,2,40);
+  s+=tx(310,32,'9 m',12.5)+tx(110,90,'2 m',12.5,INK,700,'end');
+  s+=tx(310,155,'Ava’s rug — how many 1-metre squares does it cover?',10.5,MUT,400);
+  return boxSVG(s,168);
+}
+function figAvaCount(){
+  var s=grid(130,45,9,2,40,true,true);
+  s+=tx(310,32,'9 m',12.5)+tx(110,90,'2 m',12.5,INK,700,'end');
+  s+=tx(310,158,'2 rows of 9 — count them: 18 squares, not 22',12.5,GRN);
+  return boxSVG(s,172);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Fence it, then fill it</h2>';
+  h+='<p>A rectangle answers two different questions. <b>Perimeter</b> is the distance <b>around</b> the outside — walk every side and add up your steps. <b>Area</b> is the space <b>inside</b> — count how many 1-metre squares it takes to cover the floor. Same garden, two totally different counts. Work each one out.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickGarden('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Fence = walk around and add. Grass = count the squares inside.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredGarden=false;
+}
+function pickGarden(i){
+  if(answeredGarden||wonCount>=TASKS.length)return;answeredGarden=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Walk the dashed path: 5 across, 3 down, 5 back, 3 up. 5+3+5+3 = 16 m of fence.'
+           :wonCount===1?'✓ The inside holds 3 rows of 5 squares: 5+5+5 = 15. Area is a count of squares, so it can differ from the fence.'
+                        :'✓ 6+2+6+2 = 16 m — exactly the fence of the 5×3 garden. Two different gardens, one fence length. Remember this one.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Which question is this — <b>around</b> or <b>inside</b>? Fence walks all four sides and adds them. Grass counts the squares row by row. Try it again.';
+    setTimeout(function(){if(step===0){answeredGarden=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Two questions, two shortcuts</h2>';
+  h+='<p>You already did both jobs the long way. The shortcuts just tidy up what you did:</p>';
+  h+=figBoth();
+  h+='<div class="work"><div class="lab">Perimeter — the walk around</div>';
+  h+='5 + 3 + 5 + 3 = 16 m<br>each side appears twice, so: <b>2 × (5 + 3) = 2 × 8 = 16 m</b></div>';
+  h+='<div class="work"><div class="lab">Area — the squares inside</div>';
+  h+='3 rows, 5 squares in each row: 5 + 5 + 5 = 15<br>rows of equal squares is repeating, so: <b>5 × 3 = 15 square metres</b></div>';
+  h+='<table><tr><th>Question</th><th>Shortcut</th><th>Answer’s label</th></tr>';
+  h+='<tr><td>around — perimeter</td><td>2 × (long + short)</td><td>m (plain metres)</td></tr>';
+  h+='<tr><td>inside — area</td><td>long × short</td><td>square metres</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Perimeter <b>adds</b> the sides because you’re walking them. Area <b>multiplies</b> the sides because the inside is rows of equal squares. The labels are different on purpose: a fence is measured in metres, a floor in <b>square</b> metres.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Same fence, same grass?</h2>';
+  h+='<p>Challenge 3 ended on a surprise: the <b>5 × 3</b> garden and the <b>6 × 2</b> garden need exactly the same <b>16 m of fence</b>.</p>';
+  h+='<div class="ask"><div class="q">If two gardens need the same fence, do they hold the same amount of grass too?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'y\')">Yes — same fence, same grass</button><button class="btn sm" onclick="checkPredict(\'n\')">No — the grass can differ</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figCompare();
+  h+='<div class="work"><div class="lab">Check both</div>';
+  h+='5 × 3 garden: &nbsp;fence 2 × (5+3) = 16 m &nbsp;· &nbsp;grass 5 × 3 = <b>15</b><br>';
+  h+='6 × 2 garden: &nbsp;fence 2 × (6+2) = 16 m &nbsp;· &nbsp;grass 6 × 2 = <b>12</b><br>';
+  h+='7 × 1 garden: &nbsp;fence 2 × (7+1) = 16 m &nbsp;· &nbsp;grass 7 × 1 = <b>7</b></div>';
+  h+='<p>Three gardens, one fence length — and the grass shrinks as the garden gets skinnier. <b>Perimeter and area don’t travel together.</b> Knowing one tells you nothing certain about the other; you have to work each question out on its own.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='n'){fb.className='fb ok';fb.innerHTML='<b>Right — the grass can differ.</b> 5 × 3 holds 15 squares, 6 × 2 holds only 12, and both wear a 16 m fence.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Surprise — it can differ.</b> 5 × 3 = 15 squares of grass, but 6 × 2 = only 12. Same 16 m fence around both.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Running the shortcuts backwards</h2>';
+  h+='<p>Real problems love to hide one number. A builder knows the floor’s <b>area</b> and one side, and needs the other side. No panic — the shortcut still holds, you just read it backwards.</p>';
+  h+=figMissing();
+  h+='<div class="work"><div class="lab">Missing side from area</div>';
+  h+='area: 6 × ? = 24<br>ask it as a times fact: 6 times <b>what</b> makes 24? &nbsp;6 × <b>4</b> = 24<br>the missing side is <b>4 m</b></div>';
+  h+='<p>Perimeter hides sides too. A 20 m fence, and the long side is 7 m — how wide is the garden?</p>';
+  h+='<div class="work"><div class="lab">Missing side from perimeter</div>';
+  h+='the two long sides eat up: 7 + 7 = 14 m of fence<br>left for the two short sides: 20 − 14 = 6 m<br>two equal short sides share it: 3 + 3 = 6, so each is <b>3 m</b></div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>When a side is missing, write the shortcut with a <b>?</b> in the gap and solve it like a puzzle: a times fact for area, take-away-then-share for perimeter. The formula doesn’t care which number is hiding.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Ava says her rug covers 22 squares</h2>';
+  h+='<p>Ava’s rug is <b>9 m by 2 m</b>. Her reason: <i>“9 + 2 + 9 + 2 = 22. So it covers 22 squares.”</i></p>';
+  h+=figAva();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testAva()">Count the squares</button></div>';
+  h+='<div id="mh" class="hide">'+figAvaCount()+'</div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testAva();
+}
+function testAva(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Ava answered the wrong question.</b> 9+2+9+2 = 22 is the <b>walk around</b> the rug — its perimeter, in plain metres. “How many squares does it <b>cover</b>” is the <b>inside</b> question: 2 rows of 9 squares, 9 × 2 = <b>18 square metres</b>. Before touching the numbers, ask: am I going <b>around</b> it, or <b>covering</b> it?';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'A playground is 6 m long and 4 m wide. How much fence goes all the way around it?',
+   a:['24 m','10 m — just 6 + 4','20 m — 2 × (6 + 4)','26 m'],correct:2,
+   why:'Fence is the walk around — perimeter. 6+4+6+4, or the shortcut 2 × (6+4) = 2 × 10 = 20 m.'},
+  {q:'A kitchen floor is 7 m by 3 m. How many 1-metre square tiles cover it?',
+   a:['20 tiles — 2 × (7 + 3)','21 tiles — 7 × 3','10 tiles','14 tiles'],correct:1,
+   why:'Covering the floor is the inside question — area. 3 rows of 7 tiles: 7 × 3 = 21 square metres.'},
+  {q:'Two gardens each need exactly 16 m of fence. Must they hold the same amount of grass?',
+   a:['Yes — same fence always means same grass','No — a 5 × 3 holds 15 squares but a 6 × 2 holds only 12','Yes, as long as both are rectangles','Only if the fences are the same colour'],correct:1,
+   why:'Perimeter and area don’t travel together. All of 5 × 3, 6 × 2 and 7 × 1 wear a 16 m fence — with 15, 12 and 7 squares of grass inside.'},
+  {q:'A rectangular floor has an area of 24 square metres. One side is 6 m. How long is the other side?',
+   a:['4 m — because 6 × 4 = 24','18 m — 24 − 6','30 m — 24 + 6','You can’t tell'],correct:0,
+   why:'Run the area shortcut backwards: 6 × ? = 24 is a times fact, and 6 × 4 = 24. The other side is 4 m.'},
+  {q:'A rug is 8 m by 2 m. How many 1-metre squares does it cover?',
+   a:['20 — add all four sides','16 — 2 rows of 8 squares','10','18'],correct:1,
+   why:'That was Ava’s mistake. Adding the sides (8+2+8+2 = 20) gives the walk around, not the cover. Covering is area: 8 × 2 = 16 square metres.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var acct=JSON.parse(localStorage.getItem('voyage_account')||'null');
+    var kid=(acct&&acct.activeKidId)?acct.activeKidId:'solo';
+    var key='voyage_g4math_progress_'+kid;
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4.MD.3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Tell the around-question from the inside-question, use 2 × (long + short) for fence and long × short for cover, label answers in metres vs square metres, find a hidden side by running a shortcut backwards — and never assume same perimeter means same area.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ava. Her 22 was a real number — it just answered the <b>around</b> question when the rug asked the <b>inside</b> one.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
+  
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;wonCount=0;answeredGarden=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSteps();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

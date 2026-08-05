@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voyage · Adding &amp; subtracting big numbers</title>
+<title>Voyage · Add & subtract big numbers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
   .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
   .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
   .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
-  h1{font-family:'Fraunces',serif;font-weight:700;font-size:31px;line-height:1.12;margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
   h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
   p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
   b{font-weight:600}
@@ -27,6 +27,9 @@
   .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
   .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
   .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
     border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
@@ -45,35 +48,26 @@
   .chaltxt{font-size:16px;line-height:1.45}
   .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
   .chal.won .chalstate{color:var(--green);font-weight:700}
-  /* sum grid */
-  .sumbox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:18px 14px 14px;margin:14px 0;overflow-x:auto}
-  .sgrid{display:table;margin:0 auto;font-family:'Space Mono',monospace;border-collapse:collapse}
-  .srow{display:table-row}
-  .sc{display:table-cell;width:48px;height:44px;text-align:center;vertical-align:middle;font-size:24px;font-weight:700}
-  .sc.hdr{height:22px;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400}
-  .sc.carry{height:24px;font-size:14px;color:var(--accent)}
-  .sc.op{font-size:22px;color:var(--muted);width:30px}
-  .srow.line .sc{border-top:2.5px solid var(--ink);height:12px}
-  .sc.cur{background:rgba(240,102,63,.14);border-radius:6px}
-  .sc.ans{color:var(--green)}
-  .sc.blank{color:var(--blue-line)}
-  .colprog{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--accent);text-align:center;margin-top:10px}
-  .work{font-family:'Space Mono',monospace;font-size:16px;text-align:center;margin:12px 0 6px;min-height:24px}
-  .work b{color:var(--accent)}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
   .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
   .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
   .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
   .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
   .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-  input[type=text]{font-family:'Space Mono',monospace;font-size:19px;width:70px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
   .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
   .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
   .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
-  table.t{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
-  table.t th,table.t td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
-  table.t th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
   .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
     padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
   .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
@@ -82,26 +76,34 @@
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
   .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
-  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
-  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:25px}.sc{width:38px;font-size:20px}}
+  .pv-mat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+  .pv-col{background:#fff;border:2px solid var(--blue-line);border-radius:12px;min-height:170px;padding:12px;text-align:center}
+  .pv-col.active{border-color:var(--accent);background:#fff8f3}
+  .pv-name{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .pv-count{font-family:'Fraunces',serif;font-size:34px;font-weight:700;margin-bottom:8px}
+  .dot-bank{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:94px;margin:0 auto}
+  .dot-bank i{display:block;width:14px;height:14px;border-radius:50%;background:var(--accent)}
+  .ten-stick{display:inline-block;width:22px;height:94px;border-radius:6px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(22,35,58,.18)}
+  .carry-move{background:rgba(46,125,91,.09);border:1.5px solid rgba(46,125,91,.35);border-radius:10px;padding:12px 15px;margin:12px 0;font-size:16px;line-height:1.45;text-align:center}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="shell">
 
 <div id="intro">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Base Ten</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Numbers in Base Ten</div>
   <div class="card">
     <div class="tag">Lesson · 4.NBT.B.4</div>
-    <h1>Adding &amp; subtracting big numbers</h1>
-    <p>Add 6 and 7 in the ones column and you get 13 — but only one digit fits there. What happens to the other ten is the whole trick behind carrying, and the same trick backwards when you borrow.</p>
+    <h1>Add &amp; subtract big numbers</h1>
+    <p>Add 7 and 8 in the ones column and you get 15 — but only ONE digit fits in a column. Where the extra ten goes is the whole trick. Master that one trade and no number is too big to add or subtract.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.NBT.B.4</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
 </div>
 
 <div id="lesson" class="hide">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Adding &amp; subtracting big numbers</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Add &amp; subtract big numbers</div>
   <div class="steps" id="steps"></div>
   <div class="card" id="stage"></div>
 </div>
@@ -109,15 +111,18 @@
 </div>
 
 <script>
-var step=0,TOTAL=11;
-var NAMES=['thousands','hundreds','tens','ones'];
+var step=0,TOTAL=12;
+var wonCount=0,answeredCol=false;
+var placeLabStage=0;
 var TASKS=[
-  {a:3456,b:2687,op:'+'},
-  {a:5028,b:1975,op:'+'},
-  {a:6352,b:1928,op:'-'}
+  {fig:0, ans:0, txt:'Add <b>254 + 133</b>. No column tops 9 — just add each column, right to left.',
+   opts:['387 — each column on its own','487','363'], won:'254 + 133 = 387'},
+  {fig:1, ans:1, txt:'Watch <b>246 + 127</b> get carried in the worked example below. Then do the same trade for <b>138 + 225</b>.',
+   opts:['3513 — write the whole 13','363 — write 3, trade the 1 ten','353'], won:'138 + 225 = 363'},
+  {fig:2, ans:2, txt:'In the worked example below, <b>185 + 167</b> carries TWICE. Then solve <b>367 + 258</b>.',
+   opts:['515','5115','625 — carry from the ones, then again from the tens'], won:'367 + 258 = 625'}
 ];
-var wonCount=0,col=3,carry=0,answer=[null,null,null,null];
-var predictDone=false,mistakeTested=false;
+var predictDone=false,mistakeTested=false,borrowStage=0;
 var qIndex=0,qCorrect=0,answered=false;
 
 function el(i){return document.getElementById(i);}
@@ -125,131 +130,224 @@ function startLesson(){el('intro').classList.add('hide');el('lesson').classList.
 function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
-function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
-function digits(n){var s=('0000'+n).slice(-4);return s.split('').map(Number);}
 
-/* the column-by-column state for the current task */
-function colInfo(T,c,carryIn){
-  /* guard: this lesson never uses a subtraction that drives a column below zero */
-  var A=digits(T.a),B=digits(T.b);
-  if(T.op==='+'){
-    var sum=A[c]+B[c]+carryIn;
-    return {sum:sum,stay:sum%10,out:sum>=10?1:0,
-      work:A[c]+' + '+B[c]+(carryIn?' + '+carryIn+' carried':'')+' = '+sum};
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+/* column arithmetic: digits at fixed column centers so carries/strikes line up */
+var W=19,RX=352;
+function colx(i){return RX-(i+0.5)*W;} /* i = 0 for ones, 1 for tens, ... */
+function setRX(v){RX=v;}
+function digits(str,y,size,color){
+  var s='',n=str.length;
+  for(var i=0;i<n;i++){var ch=str[n-1-i];if(ch!==' ')s+=tx(colx(i),y,ch,size||30,color||INK,700);}
+  return s;
+}
+function opSign(sign,y){return tx(RX-4.5*W,y,sign,30,INK,700);}
+function rule(y){return ln(RX-5*W,y,RX+8,y,INK,2.5);}
+function figAdd1(){
+  var s=digits('254',66)+digits('133',104)+opSign('+',104)+rule(120)+tx(colx(1),152,'?',26,ACC,700);
+  s+=tx(468,86,'ones under ones,',13,MUT,400,'start')+tx(468,104,'tens under tens',13,MUT,400,'start');
+  return boxSVG(s,172);
+}
+function carryHook(fromCol,toCol,yTop){
+  /* curved accent connector: from the top of one column up into the carry mark of the next */
+  var x0=colx(fromCol),x1=colx(toCol)+7,ym=yTop-14;
+  return '<path d="M '+x0+' '+yTop+' Q '+((x0+x1)/2)+' '+ym+' '+(x1+3)+' '+(yTop-8)+'" fill="none" stroke="'+ACC+'" stroke-width="2"/>'+
+         '<polygon points="'+x1+','+(yTop-10)+' '+(x1+9)+','+(yTop-4)+' '+(x1+8)+','+(yTop-13)+'" fill="'+ACC+'"/>';
+}
+function figCarry1(){
+  var s='';
+  setRX(230);
+  s+=tx(60,34,'WATCH: 246 + 127, every step',14,GRN,700,'start');
+  s+=tx(colx(1),66,'1',20,ACC,700)+carryHook(0,1,72);
+  s+=digits('246',102)+digits('127',138)+opSign('+',138)+rule(152)+digits('373',186,32,GRN);
+  s+=tx(320,72,'1. ones: 6 + 7 = 13',14.5,INK,700,'start');
+  s+=tx(320,102,'2. 13 is 1 ten and 3 ones —',14.5,MUT,400,'start');
+  s+=tx(320,124,'   write the 3 in the ones place',14.5,MUT,400,'start');
+  s+=tx(320,154,'3. carry the 1 ten (orange 1)',14.5,ACC,700,'start');
+  s+=tx(320,184,'4. tens: 4 + 2 + 1 = 7',14.5,MUT,400,'start');
+  s+=tx(320,214,'5. hundreds: 2 + 1 = 3',14.5,MUT,400,'start');
+  setRX(352);
+  var demo=boxSVG(s,232);
+  setRX(310);
+  var t=tx(60,40,'YOUR TURN: 138 + 225',14,ACC,700,'start');
+  t+=digits('138',82)+digits('225',118)+opSign('+',118)+rule(132)+tx(colx(1),168,'?',28,ACC,700);
+  t+=tx(400,100,'8 + 5 tops 9 —',14,MUT,400,'start');
+  t+=tx(400,124,'make the same trade',14,MUT,400,'start');
+  setRX(352);
+  return demo+boxSVG(t,186);
+}
+function figCarry2(){
+  var s='';
+  setRX(230);
+  s+=tx(60,34,'WATCH: 185 + 167 — the carry chain',14,GRN,700,'start');
+  s+=tx(colx(2),66,'1',20,ACC,700)+tx(colx(1),66,'1',20,ACC,700);
+  s+=digits('185',102)+digits('167',138)+opSign('+',138)+rule(152)+digits('352',186,32,GRN);
+  s+=tx(320,66,'1. ones: 5 + 7 = 12 → write 2',14.5,INK,700,'start');
+  s+=tx(320,96,'2. carry the 1 ten to the tens',14.5,ACC,700,'start');
+  s+=tx(320,126,'3. tens: 8 + 6 + 1 = 15 → write 5',14.5,INK,700,'start');
+  s+=tx(320,156,'4. carry the 1 hundred too!',14.5,ACC,700,'start');
+  s+=tx(320,186,'5. hundreds: 1 + 1 + 1 = 3',14.5,MUT,400,'start');
+  s+=tx(320,214,'one carry set off another',14.5,MUT,400,'start');
+  setRX(352);
+  var demo=boxSVG(s,232);
+  setRX(310);
+  var t=tx(60,40,'YOUR TURN: 367 + 258',14,ACC,700,'start');
+  t+=digits('367',82)+digits('258',118)+opSign('+',118)+rule(132)+tx(colx(1),168,'?',28,ACC,700);
+  t+=tx(400,100,'the ones overflow,',14,MUT,400,'start');
+  t+=tx(400,124,'then the tens do too',14,MUT,400,'start');
+  setRX(352);
+  return demo+boxSVG(t,186);
+}
+function figSub1(){
+  setRX(230);
+  var s=tx(60,34,'WATCH: 452 − 231 — no trades needed',14,GRN,700,'start');
+  s+=digits('452',84)+digits('231',120)+opSign('−',120)+rule(134)+digits('221',168,32,GRN);
+  s+=tx(330,88,'ones: 2 − 1 = 1',14.5,MUT,400,'start');
+  s+=tx(330,118,'tens: 5 − 3 = 2',14.5,MUT,400,'start');
+  s+=tx(330,148,'hundreds: 4 − 2 = 2',14.5,MUT,400,'start');
+  setRX(352);
+  return boxSVG(s,190);
+}
+function figFor(i){return i===0?figAdd1():i===1?figCarry1():figCarry2();}
+function strike(i,y){return ln(colx(i)-9,y+4,colx(i)+9,y-14,ACC,2);}
+function figBorrow(reveal){
+  var s=digits('341',66)+digits('172',104)+opSign('−',104)+rule(120);
+  if(reveal){
+    s+=strike(1,60)+strike(0,60);
+    s+=tx(colx(1),36,'3',15,ACC,700)+tx(colx(0),36,'11',15,ACC,700);
+    s+=digits('169',152,30,GRN);
+    s+=tx(452,78,'a ten moves over:',13,MUT,400,'start');
+    s+=tx(452,96,'4 tens → 3 tens',13,MUT,400,'start');
+    s+=tx(452,114,'1 one → 11 ones',13,MUT,400,'start');
   } else {
-    var start=A[c],given=carryIn,top=start-given,bot=B[c],borrowed=false;
-    if(top<bot){top+=10;borrowed=true;}
-    var w='';
-    if(given) w+=start+' gave one away, so it is '+(start-given)+'. ';
-    if(borrowed) w+=(start-given)+' \u2212 '+bot+' will not go, so unbundle one from the left: '+(start-given)+' becomes '+top+'. ';
-    w+=top+' \u2212 '+bot+' = '+(top-bot);
-    return {sum:top-bot,stay:top-bot,out:borrowed?1:0,borrowed:borrowed,work:w};
+    s+='<rect x="'+(colx(0)-13)+'" y="44" width="26" height="76" fill="none" stroke="'+ACC+'" stroke-width="2" stroke-dasharray="5 4"/>';
+    s+=tx(colx(1),152,'?',26,ACC,700);
+    s+=tx(452,86,'the ones column:',13,MUT,400,'start')+tx(452,104,'1 take away 2?',13,MUT,400,'start');
   }
+  return boxSVG(s,172);
+}
+function figZero(){
+  var s=digits('503',66)+digits(' 47',104)+opSign('−',104)+rule(120);
+  s+=strike(2,60)+strike(1,60)+strike(0,60);
+  s+=tx(colx(2),36,'4',15,ACC,700)+tx(colx(1),36,'9',15,ACC,700)+tx(colx(0),36,'13',15,ACC,700);
+  s+=digits('456',152,30,GRN);
+  s+=tx(452,70,'no tens to trade —',13,MUT,400,'start');
+  s+=tx(452,88,'go one door down:',13,MUT,400,'start');
+  s+=tx(452,106,'a hundred becomes',13,MUT,400,'start');
+  s+=tx(452,124,'ten tens first',13,MUT,400,'start');
+  return boxSVG(s,172);
+}
+function figRia(){
+  var s=digits('476',66);
+  s+=tx(colx(2),104,'8',30,ACC,700)+tx(colx(1),104,'5',30,ACC,700);
+  s+=opSign('+',104)+rule(120)+tx(colx(1),152,'?',26,ACC,700);
+  s+=tx(452,78,'Ria slid the 85',13,MUT,400,'start');
+  s+=tx(452,96,'to the left —',13,MUT,400,'start');
+  s+=tx(452,114,'8 under the 4',13,MUT,400,'start');
+  return boxSVG(s,172);
+}
+function figRiaFix(){
+  var s=digits('476',66)+digits(' 85',104)+opSign('+',104)+rule(120);
+  s+=tx(colx(1),36,'1',15,ACC,700)+tx(colx(2),36,'1',15,ACC,700);
+  s+=digits('561',152,30,GRN);
+  s+=tx(452,78,'ones under ones:',13,MUT,400,'start');
+  s+=tx(452,96,'5 under 6, 8 under 7',13,MUT,400,'start');
+  s+=tx(452,114,'476 + 85 = 561',13.5,GRN,700,'start');
+  return boxSVG(s,172);
 }
 
-function gridHTML(T,upto,curCol,carries){
-  var A=digits(T.a),B=digits(T.b),h='<div class="sumbox"><div class="sgrid">';
-  h+='<div class="srow"><div class="sc op"></div>';
-  for(var i=0;i<4;i++)h+='<div class="sc hdr">'+NAMES[i]+'</div>';
-  h+='</div>';
-  h+='<div class="srow"><div class="sc op"></div>';
-  for(i=0;i<4;i++)h+='<div class="sc carry">'+(carries[i]?(T.op==='+'?'+'+carries[i]:'\u2212'+carries[i]):'')+'</div>';
-  h+='</div>';
-  h+='<div class="srow"><div class="sc op"></div>';
-  for(i=0;i<4;i++)h+='<div class="sc'+(i===curCol?' cur':'')+'">'+A[i]+'</div>';
-  h+='</div>';
-  h+='<div class="srow"><div class="sc op">'+T.op+'</div>';
-  for(i=0;i<4;i++)h+='<div class="sc'+(i===curCol?' cur':'')+'">'+B[i]+'</div>';
-  h+='</div>';
-  h+='<div class="srow line"><div class="sc op"></div>';
-  for(i=0;i<4;i++)h+='<div class="sc"></div>';
-  h+='</div>';
-  h+='<div class="srow"><div class="sc op"></div>';
-  for(i=0;i<4;i++)h+='<div class="sc '+(answer[i]===null?'blank':'ans')+'">'+(answer[i]===null?'?':answer[i])+'</div>';
-  h+='</div>';
-  return h+'</div></div>';
+/* ---------- PLACE-VALUE LAB ---------- */
+function unitDots(n){var h='<div class="dot-bank">';for(var i=0;i<n;i++)h+='<i></i>';return h+'</div>';}
+function beat0(){
+  var h='<div class="tag">Touch the idea</div><h2>Make a carry yourself</h2>';
+  if(placeLabStage===0){
+    h+='<p><b>6 ones + 7 ones makes 13 ones.</b> But the ones column can only show one digit. Start by bundling ten of the ones.</p>';
+    h+='<div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">0</div></div><div class="pv-col"><div class="pv-name">Tens</div><div class="pv-count">0</div></div><div class="pv-col active"><div class="pv-name">Ones</div><div class="pv-count">13</div>'+unitDots(13)+'</div></div>';
+    h+='<div class="row"><button class="btn" onclick="placeLab(1)">Bundle 10 ones</button></div>';
+  }else if(placeLabStage===1){
+    h+='<p>Ten ones have become <b>one ten</b>. Three loose ones stay in the ones column.</p>';
+    h+='<div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">0</div></div><div class="pv-col"><div class="pv-name">Tens</div><div class="pv-count">0</div></div><div class="pv-col active"><div class="pv-name">Ones left</div><div class="pv-count">3</div>'+unitDots(3)+'</div></div>';
+    h+='<div class="carry-move"><span class="ten-stick"></span><br><b>This bundle is 1 ten.</b> Move it one column left, where tens belong.</div>';
+    h+='<div class="row"><button class="btn" onclick="placeLab(2)">Move the ten left</button></div>';
+  }else if(placeLabStage===2){
+    h+='<p>Now the place-value mat shows <b>1 ten and 3 ones</b>. That is the number 13.</p>';
+    h+='<div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">0</div></div><div class="pv-col active"><div class="pv-name">Tens</div><div class="pv-count">1</div><span class="ten-stick"></span></div><div class="pv-col"><div class="pv-name">Ones</div><div class="pv-count">3</div>'+unitDots(3)+'</div></div>';
+    h+='<div class="carry-move"><b>The little carried 1 is not an extra one.</b><br>It stands for the bundle of <b>1 ten</b> you just moved.</div>';
+    h+='<div class="row"><button class="btn" onclick="placeLab(3)">Use that trade in addition</button></div>';
+  }else{
+    h+='<p>You built the rule: when a column makes 10 or more, keep its loose ones and trade each group of ten into the next column.</p>';
+    h+='<div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">0</div></div><div class="pv-col active"><div class="pv-name">Tens</div><div class="pv-count">1</div><span class="ten-stick"></span></div><div class="pv-col"><div class="pv-name">Ones</div><div class="pv-count">3</div>'+unitDots(3)+'</div></div>';
+    h+='<div class="goal"><div class="lab">What to remember</div><p><b>13 ones = 1 ten + 3 ones.</b> Write 3 in the ones place. Carry the 1 ten left.</p></div>';
+  }
+  h+='<div class="nav"><span></span><button class="btn" '+(placeLabStage===3?'':'disabled')+' onclick="next()">Practice it &rarr;</button></div>';
+  el('stage').innerHTML=h;
 }
-
-var carries=[0,0,0,0];
+function placeLab(n){placeLabStage=n;beat0();}
 
 /* ---------- BEAT 1 ---------- */
 function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
-  var info=colInfo(T,col,carry);
   h+='<div class="tag">Challenge</div>';
   h+='<h2>One column at a time</h2>';
-  h+='<p>The orange column is where you are. Type the digit that <b>stays</b> there.</p>';
-  if(T.op==='+'){
-    h+='<div class="goal"><div class="lab">Worked example \u2014 adding a column</div>'+
-       '<p>Say the ones column is <b>8 + 5</b>. That is <b>13</b> ones, and only one digit fits in a column, so:<br>'+
-       '\u2022 ten of those ones bundle into <b>one ten</b> and move one column left<br>'+
-       '\u2022 the leftover <b>3</b> stays here<br>'+
-       'You would type <b>3</b>, and a small +1 appears above the tens column.</p></div>';
-  } else {
-    h+='<div class="goal"><div class="lab">Worked example \u2014 subtracting a column</div>'+
-       '<p>This one is take-away, and it works the same idea backwards.<br><br>'+
-       'Say the ones column is <b>3 \u2212 7</b>. You cannot take 7 from 3, so:<br>'+
-       '\u2022 fetch <b>one ten</b> from the column on the left and unbundle it into ten ones<br>'+
-       '\u2022 the 3 becomes <b>13</b>, and 13 \u2212 7 = <b>6</b><br>'+
-       '\u2022 the column you took from is now <b>one smaller</b>, shown as a small \u22121 above it<br>'+
-       'You would type <b>6</b>. Nothing was lost \u2014 one ten just changed into ten ones.</p></div>';
-  }
+  h+='<p>Line up matching places, then work <b>right to left</b>. If a column makes 10 or more, use the trade you just built. Watch the worked example, then solve the matching problem below it.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
-    var st=i<wonCount?'\u2713 done':(i===wonCount?((4-col)-1)+' of 4 columns done':'locked');
-    var t=TASKS[i];
-    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+fmt(t.a)+' '+t.op+' '+fmt(t.b)+'</div><div class="chalstate">'+st+'</div></div>';
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
   }
-  h+=gridHTML(T,col,col,carries);
-  h+='<div class="colprog">Column '+(4-col)+' of 4 in this problem</div>';
-  h+='<div class="work">'+NAMES[col]+' column: <b>'+info.work+'</b></div>';
-  h+='<div class="ask"><div class="q">Which digit stays in the '+NAMES[col]+' column?</div>';
-  h+='<div class="row"><input type="text" id="dg" placeholder="?"><button class="btn sm" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div></div>';
-  h+='<div class="verdict" id="v"></div>';
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickCol('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Start at the ones column, on the right.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  var v=el('v');v.className='verdict';v.textContent='Type the digit for this column.';
+  answeredCol=false;
 }
-function lockIn(){
-  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
-  var info=colInfo(T,col,carry);
-  var raw=(el('dg').value||'').replace(/\s/g,'');
-  if(raw==='')return;
-  var v=el('v');
-  if(parseInt(raw,10)===info.stay){
-    answer[col]=info.stay;
-    if(info.out&&col>0)carries[col-1]=1;
-    v.className='verdict exact';
-    v.innerHTML='\u2713 '+info.stay+' stays'+(info.out?(T.op==='+'?', and one bundle of ten moves left.':', after unbundling one from the left.'):'.');
-    carry=info.out;col--;
-    if(col<0){
-      var real=(T.op==='+')?(T.a+T.b):(T.a-T.b);
-      v.innerHTML='\u2713 Done \u2014 <b>'+fmt(real)+'</b>';
-      wonCount++;col=3;carry=0;carries=[0,0,0,0];answer=[null,null,null,null];
-      setTimeout(function(){if(step===0)beat1();},2100);
-      if(wonCount>=3&&el('nx'))el('nx').disabled=false;
-      return;
-    }
-    setTimeout(function(){if(step===0)beat1();},2000);
+function pickCol(i){
+  if(answeredCol||wonCount>=TASKS.length)return;answeredCol=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ 4+3=7, 5+3=8, 2+1=3. Read it off: 387.'
+           :wonCount===1?'✓ Same trade as the worked example: 8+5=13 → write 3, carry the 1 ten. Then 3+2+1=6 and 1+2=3. 363.'
+                        :'✓ Ones: 7+8=15 → write 5, carry 1. Tens: 6+5+1=12 → write 2, carry 1 again. Hundreds: 3+2+1=6. 625 — a chain of two trades.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===1)beat1();},1900);
   } else {
     v.className='verdict over';
-    v.innerHTML='\u2717 Not '+raw+'. Only one digit fits in a column \u2014 look at the working line above.';
+    v.innerHTML='✗ One column at a time, right to left. If a column tops 9, write just the ones digit and hand the ten to the next column. Try again.';
+    setTimeout(function(){if(step===1){answeredCol=false;beat1();}},2600);
   }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- BEAT 2 ---------- */
 function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
-  h+='<h2>Ten of one becomes one of the next</h2>';
-  h+='<p>6 + 7 gave 13 ones. Only one digit fits, so ten of them bundled into a single ten and went left. The 3 stayed.</p>';
-  h+='<table class="t"><tr><th>Column</th><th>Working</th><th>Stays</th><th>Moves left</th></tr>';
-  h+='<tr><td>ones</td><td>6 + 7 = 13</td><td>3</td><td>1 ten</td></tr>';
-  h+='<tr><td>tens</td><td>5 + 8 + 1 = 14</td><td>4</td><td>1 hundred</td></tr>';
-  h+='<tr><td>hundreds</td><td>4 + 6 + 1 = 11</td><td>1</td><td>1 thousand</td></tr>';
-  h+='<tr><td>thousands</td><td>3 + 2 + 1 = 6</td><td>6</td><td>\u2014</td></tr></table>';
-  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;font-size:18px">3,456 + 2,687 = <b>6,143</b></p>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Carrying is not a rule about digits. It is <b>trading ten of one column for one of the next</b>.</p></div>';
+  h+='<h2>Carrying is just a trade</h2>';
+  h+='<p>A column can only hold one digit. When 7 + 8 makes 15, the 15 is really <b>1 ten and 5 ones</b> — so the 5 stays home and the ten moves next door, where the tens live. That’s all “carrying” is.</p>';
+  h+='<div class="work"><div class="lab">367 + 258, every trade shown</div>';
+  h+='ones: &nbsp;7 + 8 = 15 &nbsp;→&nbsp; write <b>5</b>, trade 1 ten<br>';
+  h+='tens: &nbsp;6 + 5 + 1 = 12 &nbsp;→&nbsp; write <b>2</b>, trade 1 hundred<br>';
+  h+='hundreds: &nbsp;3 + 2 + 1 = <b>6</b><br>';
+  h+='answer: <b>625</b></div>';
+  h+='<table><tr><th>Rule</th><th>Why</th></tr>';
+  h+='<tr><td>ones under ones</td><td>columns only add with their own kind</td></tr>';
+  h+='<tr><td>start at the right</td><td>trades always move leftward</td></tr>';
+  h+='<tr><td>column over 9? trade</td><td>ten of these = one of the next</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Ten of any column equals one of the next column over. Adding trades tens <b>leftward</b>; you’re about to see subtraction trade them back.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -258,35 +356,56 @@ function beat2(){
 function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
-  h+='<h2>When the top digit is too small</h2>';
-  h+='<p>In <b>6,352 \u2212 1,928</b> the ones column has 2 on top and 8 underneath. You cannot take 8 from 2.</p>';
-  h+='<div class="ask"><div class="q">What do you do?</div>';
-  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Swap them and do 8 &minus; 2</button><button class="btn sm" onclick="checkPredict(\'b\')">Unbundle a ten into ten ones</button><button class="btn sm" onclick="checkPredict(\'c\')">Write 0 and move on</button></div>';
+  h+='<h2>When a column comes up short</h2>';
+  h+='<p>Subtracting uses the very same lineup — ones under ones, right to left — but now each column <b>takes away</b>. When every column has enough, it’s easy:</p>';
+  h+=figSub1();
+  h+='<p>Now <b>341 − 172</b>. The ones column asks: 1 take away 2. There aren’t enough ones.</p>';
+  h+=figBorrow(false);
+  h+='<div class="ask"><div class="q">What does the ones digit of the answer turn out to be?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">9</button><button class="btn sm" onclick="checkPredict(\'b\')">1 — just flip it to 2 − 1</button></div>';
   h+='<div id="pfb"></div></div>';
-  h+='<div id="ph" class="hide"><p>Fetch one ten from the tens column and break it into ten ones. The 2 becomes <b>12</b>, so there is now enough to take 8 from.';
-  h+='<p style="font-family:\'Space Mono\',monospace;text-align:center;font-size:17px">12 \u2212 8 = <b>4</b></p>';
-  h+='<p>Nothing was created or lost \u2014 one ten changed shape into ten ones. If the tens column is empty too, fetch from the hundreds first.</p></div>';
+  h+='<div id="blab" class="hide"></div>';
+  h+='<div id="ph" class="hide">'+figBorrow(true);
+  h+='<div class="work"><div class="lab">341 − 172, every trade shown</div>';
+  h+='ones: 1 − 2 can’t go &nbsp;→&nbsp; trade a ten: 4 tens → 3, ones → 11 &nbsp;→&nbsp; 11 − 2 = <b>9</b><br>';
+  h+='tens: 3 − 7 can’t go &nbsp;→&nbsp; trade a hundred: 3 → 2, tens → 13 &nbsp;→&nbsp; 13 − 7 = <b>6</b><br>';
+  h+='hundreds: 2 − 1 = <b>1</b> &nbsp;·&nbsp; answer: <b>169</b></div>';
+  h+='<p>Flipping to 2 − 1 changes the problem. The real fix is the same trade from adding, run in reverse: <b>break one of the next column into ten of yours</b>.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(predictDone)el('ph').classList.remove('hide');
+  if(predictDone)showBorrowLab();
 }
-function checkPredict(c){
+function checkPredict(v){
   var fb=el('pfb');
-  if(c==='b'){fb.className='fb ok';fb.innerHTML='<b>Right.</b> Unbundle a ten into ten ones and the 2 becomes 12.';}
-  else if(c==='a'){fb.className='fb no';fb.innerHTML='<b>Swapping changes the answer.</b> 2 \u2212 8 is not the same as 8 \u2212 2. Unbundle instead.';}
-  else{fb.className='fb no';fb.innerHTML='<b>Writing 0 loses the amount.</b> Unbundle a ten into ten ones so there is enough to take from.';}
-  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>9.</b> Trade a ten: the 1 becomes 11, and 11 − 2 = 9.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It’s 9.</b> Flipping to 2 − 1 solves a different problem. Trade a ten instead: 11 − 2 = 9.';}
+  predictDone=true;borrowStage=1;showBorrowLab();
 }
+function showBorrowLab(){
+  var b=el('blab');if(!b)return;b.classList.remove('hide');
+  if(borrowStage===1){
+    b.innerHTML='<div class="carry-move"><b>1 one cannot take away 2 ones.</b><br>Break one of the 4 tens into 10 ones.</div><div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">3</div></div><div class="pv-col active"><div class="pv-name">Tens</div><div class="pv-count">4</div><span class="ten-stick"></span></div><div class="pv-col active"><div class="pv-name">Ones</div><div class="pv-count">1</div>'+unitDots(1)+'</div></div><div class="row" style="grid-column:1/-1"><button class="btn" onclick="borrowTrade(2)">Break 1 ten into 10 ones</button></div></div>';
+  }else if(borrowStage===2){
+    b.innerHTML='<div class="carry-move"><b>The value did not change.</b><br>4 tens and 1 one became 3 tens and 11 ones.</div><div class="pv-mat"><div class="pv-col"><div class="pv-name">Hundreds</div><div class="pv-count">3</div></div><div class="pv-col"><div class="pv-name">Tens left</div><div class="pv-count">3</div></div><div class="pv-col active"><div class="pv-name">Ones now</div><div class="pv-count">11</div>'+unitDots(11)+'</div></div><div class="row" style="grid-column:1/-1"><button class="btn" onclick="borrowTrade(3)">Now subtract the columns</button></div></div>';
+  }else{
+    b.classList.add('hide');el('ph').classList.remove('hide');el('nx').disabled=false;
+  }
+}
+function borrowTrade(n){borrowStage=n;showBorrowLab();}
 
 /* ---------- BEAT 4 ---------- */
 function beat4(){
   var h='';
   h+='<div class="tag">Why</div>';
-  h+='<h2>Carrying and borrowing are one move</h2>';
-  h+='<p>Adding: too much for the column, so <b>bundle ten and send it left</b>.</p>';
-  h+='<p>Subtracting: too little, so <b>fetch one from the left and unbundle it into ten</b>.</p>';
-  h+='<p>The total never moves \u2014 only its shape, like swapping a ten dollar bill for ten coins.</p>';
-  h+='<div class="goal"><div class="lab">Checking your answer</div><p>Estimate first. 3,456 + 2,687 is roughly 3,000 + 3,000, so expect about 6,000. A wildly different answer stands out at once.</p></div>';
+  h+='<h2>Trading through a zero</h2>';
+  h+='<p><b>503 − 47.</b> The ones need a trade, but the tens column has <b>nothing to give</b>. So the trade takes two steps: break a hundred into ten tens, THEN break a ten into ten ones.</p>';
+  h+=figZero();
+  h+='<div class="work"><div class="lab">503 − 47, every trade shown</div>';
+  h+='tens are 0 &nbsp;→&nbsp; break a hundred: 5 → 4, tens → 10<br>';
+  h+='now trade a ten: 10 → 9, ones → 13<br>';
+  h+='ones: 13 − 7 = <b>6</b> &nbsp;· &nbsp;tens: 9 − 4 = <b>5</b> &nbsp;·&nbsp; hundreds: <b>4</b> &nbsp;→&nbsp; <b>456</b></div>';
+  h+='<p>Free double-check: adding undoes subtracting. 456 + 47 should rebuild 503 — and it does. If your add-back misses, a trade went wrong.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>A zero can’t lend, so borrow from the next door down and pass it along. Then check any subtraction by adding your answer back.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -295,40 +414,40 @@ function beat4(){
 function beat5(){
   var h='';
   h+='<div class="tag">Catch the mistake</div>';
-  h+='<h2>Sofia gets 502 &minus; 176 = 474</h2>';
-  h+='<p>Her working: <i>"2 minus 6 doesn\'t go, so I did 6 minus 2. Then 0 minus 7 doesn\'t go, so I did 7 minus 0."</i></p>';
-  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testSofia()">Check it by adding back</button></div>';
-  h+='<div id="sh" class="hide"><table class="t"><tr><th>Check</th><th>Result</th></tr>';
-  h+='<tr><td>If 502 \u2212 176 were 474</td><td>then 474 + 176 = 502</td></tr>';
-  h+='<tr><td>474 + 176</td><td><b>650</b></td></tr>';
-  h+='<tr><td>The real answer</td><td><b>326</b>, and 326 + 176 = 502</td></tr></table></div>';
-  h+='<div id="sfb"></div>';
+  h+='<h2>Ria says 476 + 85 is more than 1300</h2>';
+  h+='<p>Her reason: <i>“I lined the numbers up at the front — 8 under 4 — and got 1326.”</i></p>';
+  h+=figRia();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testRia()">Fix the lineup</button></div>';
+  h+='<div id="mh" class="hide">'+figRiaFix()+'</div>';
+  h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(mistakeTested)testSofia();
+  if(mistakeTested)testRia();
 }
-function testSofia(){
-  el('sh').classList.remove('hide');
-  var fb=el('sfb');fb.className='fb no';
-  fb.innerHTML='<b>Sofia flipped the columns instead of unbundling.</b> 4 \u2212 8 is nothing like 8 \u2212 4. Adding her answer back gives 650, not 502 \u2014 that is how you catch it.';
+function testRia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Ria’s 8 was pretending to be 800.</b> Sliding 85 to the left put the 8 in the hundreds column — she really added 850. Numbers line up by <b>place value</b>, not by their first digits: the 5 goes under the 6 (ones under ones), the 8 under the 7. Then 476 + 85 = <b>561</b>, which makes sense — 85 is small, so the answer should be close to 476, nowhere near 1300.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- questions ---------- */
 var QUESTIONS=[
-  {q:'In the ones column you get 8 + 5. What stays and what moves?',
-   a:['13 stays','3 stays, 1 ten moves left','1 stays, 3 move left','8 stays, 5 move left'],correct:1,
-   why:'Only one digit fits, so ten of the thirteen ones bundle into a single ten and travel left. The 3 stays.'},
-  {q:'4,271 + 3,865 = ?',a:['8,136','7,136','8,036','7,036'],correct:0,
-   why:'Ones 1+5=6. Tens 7+6=13, so 3 stays and 1 carries. Hundreds 2+8+1=11, so 1 stays and 1 carries. Thousands 4+3+1=8.'},
-  {q:'When you unbundle in subtraction, what actually happens?',
-   a:['A digit is crossed out','The two numbers swap places','You add ten to the answer','One of the column to the left becomes ten of this column'],correct:3,
-   why:'One ten becomes ten ones, or one hundred becomes ten tens. The total never changes, only its shape.'},
-  {q:'A quick estimate for 5,912 &minus; 2,088 is about...',a:['8,000','4,000','2,000','800'],correct:1,
-   why:'Roughly 6,000 minus 2,000, so an answer near 4,000. The exact answer is 3,824.'},
-  {q:'Why can you not just subtract the smaller digit from the bigger one in each column?',
-   a:['Because it changes the answer \u2014 4 minus 8 is not 8 minus 4','Because it is against the rules','Because the columns are different sizes','You can, it always works'],correct:0,
-   why:'Flipping a column invents an amount that was never there. Sofia did it and finished 148 out.'}
+  {q:'235 + 142 = ?',
+   a:['377 — no column tops 9, add each one','397','93','477'],correct:0,
+   why:'5+2=7, 3+4=7, 2+1=3. No trades needed: 377.'},
+  {q:'456 + 178 = ?',
+   a:['524','634 — trade in the ones and in the tens','624','534'],correct:1,
+   why:'Ones: 6+8=14 → write 4, trade 1. Tens: 5+7+1=13 → write 3, trade 1. Hundreds: 4+1+1=6. Answer 634.'},
+  {q:'452 − 238 = ?',
+   a:['226','186','214 — trade a ten so the ones become 12 − 8','224'],correct:2,
+   why:'Ones: 2−8 can’t go → trade a ten: 12−8=4. Tens: 4−3=1. Hundreds: 4−2=2. Answer 214 — no flipping to 8−2!'},
+  {q:'700 − 326 = ?',
+   a:['374 — trade through the zeros','474','384','426'],correct:0,
+   why:'The tens are 0, so break a hundred down the line: 700 becomes 6 hundreds, 9 tens, 10 ones. Then 10−6=4, 9−2=7, 6−3=3. Check: 374+326=700 ✓'},
+  {q:'523 + 67 = ?',
+   a:['1193','590 — ones under ones: 7 under 3, 6 under 2','1230','580'],correct:1,
+   why:'That was Ria’s trap — lining up at the front turns 67 into 670. Right-align it: 3+7=10 → write 0 trade 1, 2+6+1=9, 5. Answer 590.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -336,7 +455,7 @@ function beatQ(){
   h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
   for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
   h+='<div id="qfb"></div>';
-  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">\u2190 Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
   el('stage').innerHTML=h;answered=false;
 }
 function pick(i){
@@ -348,8 +467,8 @@ function pick(i){
   else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
   el('nx').disabled=false;
 }
-function reviewLesson(){ step=1; render(); scrollTo(0,0); }
-function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+function reviewLesson(){ step=2; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:6+qIndex;render();scrollTo(0,0);}
 
 function markCourseDone(){
   try{
@@ -365,22 +484,21 @@ function markCourseDone(){
 }
 function beatDone(){
   var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
-  h+='<div class="done-icon">'+(pct>=80?'\u2713':'\u21bb')+'</div>';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Add and subtract multi-digit numbers column by column, and explain carrying and borrowing as trading ten for one.</p></div>';}
-  else h+='<p style="margin-top:16px">Go back to Sofia. She flipped a column instead of unbundling, and adding her answer back exposed it.</p>';
-  h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Line numbers up by place value, add with trades moving left, subtract with trades running back — even through zeros — and catch a bad answer by adding it back.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ria. Her answer tripled the real one — the lineup is everything.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
   el('stage').innerHTML=h;
 }
-function restart(){step=0;wonCount=0;col=3;carry=0;carries=[0,0,0,0];answer=[null,null,null,null];predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+function restart(){step=0;wonCount=0;answeredCol=false;placeLabStage=0;predictDone=false;borrowStage=0;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
 
 function render(){
   drawSteps();
-  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
-  else if(step===3)beat4();else if(step===4)beat5();
-  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+  if(step===0)beat0();else if(step===1)beat1();else if(step===2)beat2();else if(step===3)beat3();
+  else if(step===4)beat4();else if(step===5)beat5();
+  else if(step>=6&&step<TOTAL-1)beatQ();else beatDone();
 }
 </script>
 </body>

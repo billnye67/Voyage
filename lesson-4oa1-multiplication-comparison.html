@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voyage · Multiplication as comparison</title>
+<title>Voyage · Times as many</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
-    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b;--them:#8a9aa8;--you:#1b4f8a}
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -27,6 +27,9 @@
   .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
   .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
   .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
     border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
@@ -45,31 +48,20 @@
   .chaltxt{font-size:16px;line-height:1.45}
   .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
   .chal.won .chalstate{color:var(--green);font-weight:700}
-  /* towers */
-  .towers{display:flex;gap:34px;justify-content:center;align-items:flex-end;margin:20px 0 6px;min-height:210px}
-  .tw{text-align:center}
-  .stack{display:flex;flex-direction:column-reverse;gap:3px;align-items:center;min-height:180px;justify-content:flex-start}
-  .blk{width:52px;height:15px;border:1.5px solid var(--ink);border-radius:3px}
-  .blk.them{background:var(--them)}
-  .blk.you{background:var(--you)}
-  .blk.grp{border-top:3px solid var(--accent)}
-  .twlab{font-family:'Space Mono',monospace;font-size:13px;margin-top:9px;color:var(--muted)}
-  .twlab b{color:var(--ink);font-size:17px}
-  .pinned{font-family:'Space Mono',monospace;font-size:13px;background:#fff;border:1.5px solid var(--blue-line);
-    border-radius:8px;padding:9px 13px;margin:10px 0 14px;line-height:1.6;text-align:center}
-  .pinned b{color:var(--blue);font-weight:700}
-  .pours{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
-  .pour{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;padding:10px 14px;border-radius:9px;
-    border:1.5px solid var(--ink);background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
-  .pour:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
   .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
-  .verdict.short{background:rgba(27,79,138,.08);color:var(--blue)}
   .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
   .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
   .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
-  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  input[type=text]{font-family:'Space Mono',monospace;font-size:17px;width:88px;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:#fff;text-align:center}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
   .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
   .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
   .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
@@ -77,33 +69,32 @@
   th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
   th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
   .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
-    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px}
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
   .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
   .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
   .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
   .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
-  .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
-  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}.blk{width:40px}}
+  @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="shell">
 
 <div id="intro">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Operations &amp; Algebra</div>
   <div class="card">
     <div class="tag">Lesson · 4.OA.A.1</div>
-    <h1>Multiplication as comparison</h1>
-    <p>Sam builds a tower. You have to build one that is "3 times as tall" as his. Then one that is "3 taller" than his. Those two sentences sound almost the same and they are not — one of them is multiplying and the other is not.</p>
+    <h1>Times as many</h1>
+    <p>“Build a train 3 times as long as mine” and “build a train 3 longer than mine” sound nearly identical. They aren’t. One means three whole copies; the other means three measly extra blocks. Hear the difference once and word problems lose their favorite trick.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4.OA.A.1</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
 </div>
 
 <div id="lesson" class="hide">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Multiplication as comparison</div>
+  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Times as many</div>
   <div class="steps" id="steps"></div>
   <div class="card" id="stage"></div>
 </div>
@@ -112,11 +103,14 @@
 
 <script>
 var step=0,TOTAL=11;
-var mine=0,wonCount=0;
+var wonCount=0,answeredTrain=false;
 var TASKS=[
-  {sam:4,target:12,txt:'Sam has <b>4</b> blocks. Build a tower <b>3 times as tall</b> as his.',mode:'times',k:3},
-  {sam:3,target:15,txt:'Sam has <b>3</b> blocks. Build one <b>5 times as tall</b>.',mode:'times',k:5},
-  {sam:4,target:7,txt:'Sam has <b>4</b> blocks. Now build one that is <b>3 taller</b> than his. Read that carefully.',mode:'more',k:3}
+  {fig:0, ans:1, txt:'Sam’s train is <b>4 blocks</b>. Build one <b>3 times as long</b>. How many blocks?',
+   opts:['7 — add 3 blocks','12 — three copies of Sam’s 4','34'], won:'3 copies of 4 = 12'},
+  {fig:1, ans:0, txt:'Same 4-block train. Now build one just <b>3 longer</b>. How many blocks?',
+   opts:['7 — Sam’s 4 plus 3 extra','12 — three copies','43'], won:'4 + 3 extra = 7'},
+  {fig:2, ans:2, txt:'A <b>5-block</b> train. Build one <b>4 times as long</b>.',
+   opts:['9 blocks','45 blocks','20 — four copies of 5'], won:'4 copies of 5 = 20'}
 ];
 var predictDone=false,mistakeTested=false;
 var qIndex=0,qCorrect=0,answered=false;
@@ -127,83 +121,143 @@ function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=s
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
 
-function stackHTML(n,cls,groupOf){
-  var h='<div class="stack">';
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',FILL='rgba(27,79,138,.20)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+/* a train of n blocks starting at x,y; dashed=outline only; sections marks every 'per' blocks */
+var BW=25;
+function train(x,y,n,opts){
+  opts=opts||{};
+  var s='';
   for(var i=0;i<n;i++){
-    var mark=(groupOf && i>0 && i%groupOf===0)?' grp':'';
-    h+='<div class="blk '+cls+mark+'"></div>';
+    s+='<rect x="'+(x+i*BW)+'" y="'+y+'" width="'+BW+'" height="'+BW+'" fill="'+(opts.dash?'none':FILL)+'" stroke="'+(opts.dash?GREY:INK)+'" stroke-width="'+(opts.dash?1.8:2)+'"'+(opts.dash?' stroke-dasharray="4 3"':'')+'/>';
   }
-  return h+'</div>';
+  if(opts.per){
+    for(var k=opts.per;k<n;k+=opts.per)s+=ln(x+k*BW,y-6,x+k*BW,y+BW+6,ACC,2.5);
+  }
+  return s;
+}
+function figT1(){
+  var s=tx(60,44,'Sam’s train — 4 blocks',11.5,MUT,400,'start')+train(60,54,4);
+  s+=tx(60,118,'yours: 3 times as long = 3 copies',11.5,ACC,700,'start')+train(60,128,12,{dash:true,per:4});
+  s+=tx(372,146,'?  blocks',13,ACC,700,'start');
+  return boxSVG(s,186);
+}
+function figT2(){
+  var s=tx(60,44,'Sam’s train — 4 blocks',11.5,MUT,400,'start')+train(60,54,4);
+  s+=tx(60,118,'yours: just 3 longer = 3 extra blocks',11.5,ACC,700,'start')+train(60,128,4)+train(60+4*BW,128,3,{dash:true});
+  s+=tx(248,146,'?  blocks',13,ACC,700,'start');
+  return boxSVG(s,186);
+}
+function figT3(){
+  var s=tx(60,44,'the train — 5 blocks',11.5,MUT,400,'start')+train(60,54,5);
+  s+=tx(60,118,'yours: 4 times as long = 4 copies',11.5,ACC,700,'start')+train(60,128,20,{dash:true,per:5});
+  s+=tx(572,146,'?',13,ACC,700,'start');
+  return boxSVG(s,186);
+}
+function figFor(i){return i===0?figT1():i===1?figT2():figT3();}
+function figEq(){
+  var s=train(60,40,12,{per:4});
+  s+=tx(60,32,'12 blocks',11.5,MUT,400,'start');
+  s+=tx(420,58,'12 = 3 × 4',17,INK,700,'start');
+  s+=train(60,116,7)+ln(60+4*BW,110,60+4*BW,147,ACC,2.5);
+  s+=tx(60,108,'7 blocks',11.5,MUT,400,'start');
+  s+=tx(420,134,'7 = 4 + 3',17,INK,700,'start');
+  s+=tx(310,182,'copies write themselves as ×, extras write themselves as +',11.5,MUT,400);
+  return boxSVG(s,194);
+}
+function figPiles(){
+  var s='';
+  for(var g=0;g<5;g++){
+    for(var i=0;i<3;i++)s+='<circle cx="'+(105+g*105+(i%2)*20)+'" cy="'+(58+Math.floor(i/2)*24-(i%2)*10)+'" r="9" fill="'+FILL+'" stroke="'+INK+'" stroke-width="2"/>';
+    s+=tx(115+g*105,116,'3',13);
+  }
+  s+=tx(310,150,'5 piles of Leo’s 3 — 15 stickers in all: 15 = 5 × 3',12.5,GRN);
+  return boxSVG(s,162);
+}
+function figBoth(){
+  var s=tx(60,34,'2 times as many as 6:',12,MUT,400,'start')+train(60,44,12,{per:6})+tx(380,60,'= 12',14,GRN,700,'start');
+  s+=tx(60,110,'2 more than 6:',12,MUT,400,'start')+train(60,120,6)+train(60+6*BW,120,2,{dash:true})+tx(280,136,'= 8',14,GRN,700,'start');
+  s+=tx(310,176,'same numbers in the sentence — different answers',11.5,MUT,400);
+  return boxSVG(s,188);
+}
+function figAva(){
+  var s=tx(310,48,'“3 times as many as my 6…',15,MUT,400);
+  s+=tx(310,80,'…6 + 3 = 9, right?”',15,MUT,400);
+  s+=tx(310,124,'9 marbles?',22,ACC);
+  return boxSVG(s,148);
+}
+function figAvaFix(){
+  var s='';
+  for(var r=0;r<3;r++){
+    s+=tx(48,66+r*36,'copy '+(r+1),10.5,MUT,400,'start');
+    s+=train(120,48+r*36,6);
+  }
+  s+=tx(310,178,'3 copies of 6 = 18 — Ava’s “+3” only got her to 9',12.5,GRN);
+  return boxSVG(s,192);
 }
 
 /* ---------- BEAT 1 ---------- */
 function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
-  h+='<h2>Build the tower</h2>';
-  h+='<p>Sam\'s tower is grey. Yours is blue. Add or remove blocks until yours matches the instruction.</p>';
+  h+='<h2>Copies or extras?</h2>';
+  h+='<p>Two sentences that sound alike do completely different things. “<b>3 times as long</b>” means <b>3 whole copies</b> of the train, lined up. “<b>3 longer</b>” means the same train with <b>3 extra blocks</b> stuck on. Copies multiply; extras just add. Build each one.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
-    var st=i<wonCount?'✓ done':(i===wonCount?'now':'locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
     h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
   }
-  h+='<div class="pinned">Sam has <b id="samn">'+T.sam+'</b> blocks &nbsp;|&nbsp; you have <b id="myn">'+mine+'</b></div>';
-  h+='<div class="towers" id="tw"></div>';
-  h+='<div class="pours"><button class="pour" onclick="addB(1)">+ 1 block</button><button class="pour" onclick="addB(-1)">− 1 block</button><button class="pour" onclick="addB(0)">clear</button><button class="pour" style="background:var(--accent);color:#fff" onclick="lockIn()">Lock it in</button></div>';
-  h+='<div class="verdict" id="v">Your tower is empty.</div>';
+  h+=figFor(T.fig);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickTrain('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Copies or extras? The dashed train shows which one this is.</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  upd();
+  answeredTrain=false;
 }
-function addB(d){
-  if(wonCount>=TASKS.length)return;
-  if(d===0)mine=0; else mine=Math.max(0,Math.min(24,mine+d));
-  upd();
-}
-function upd(){
-  var T=TASKS[Math.min(wonCount,TASKS.length-1)];
-  el('tw').innerHTML=
-    '<div class="tw">'+stackHTML(T.sam,'them',0)+'<div class="twlab">Sam<br><b>'+T.sam+'</b></div></div>'+
-    '<div class="tw">'+stackHTML(mine,'you',T.mode==='times'?T.sam:0)+'<div class="twlab">You<br><b>'+mine+'</b></div></div>';
-  el('myn').textContent=mine;
-  var v=el('v');
-  if(mine===0){v.className='verdict';v.textContent='Your tower is empty. Build it, then lock it in.';}
-  else{v.className='verdict';v.textContent='Your tower is '+mine+' blocks. Lock it in when you are sure.';}
-  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
-}
-function lockIn(){
-  if(wonCount>=TASKS.length||mine===0)return;
+function pickTrain(i){
+  if(answeredTrain||wonCount>=TASKS.length)return;answeredTrain=true;
   var T=TASKS[wonCount],v=el('v');
-  if(mine===T.target){
-    v.className='verdict exact';
-    v.innerHTML=T.mode==='times'
-      ? '✓ '+mine+' blocks — that is <b>'+T.k+' copies of Sam\'s '+T.sam+'</b>. The orange lines show where each copy starts.'
-      : '✓ '+mine+' blocks — that is Sam\'s '+T.sam+' <b>plus '+T.k+' more</b>. Only 3 blocks taller, not 3 copies.';
-    wonCount++;setTimeout(function(){if(step===0){mine=0;beat1();}},2200);
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Three copies of 4: 4 + 4 + 4 = 12. “Times as long” multiplies.'
+           :wonCount===1?'✓ Just 3 extra blocks: 4 + 3 = 7. “Longer” adds — no copies anywhere.'
+                        :'✓ Four copies of 5: 5+5+5+5 = 20. That’s 4 × 5.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
   } else {
     v.className='verdict over';
-    v.innerHTML=T.mode==='times'
-      ? '✗ Not '+mine+'. Lay Sam\'s whole tower of '+T.sam+' down '+T.k+' separate times and count. Starting over.'
-      : '✗ Not '+mine+'. Taller means loose blocks on top of Sam\'s '+T.sam+', not copies. Starting over.';
-    mine=0;
-    setTimeout(function(){if(step===0)upd();},2400);
+    v.innerHTML='✗ Read the sentence again. “Times as long” = whole copies of the train. “Longer” = a few extra blocks. Count the dashed picture. Try again.';
+    setTimeout(function(){if(step===0){answeredTrain=false;beat1();}},2600);
   }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- BEAT 2 ---------- */
 function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
-  h+='<h2>Two words, two completely different towers</h2>';
-  h+='<div class="towers">';
-  h+='<div class="tw">'+stackHTML(4,'them',0)+'<div class="twlab">Sam<br><b>4</b></div></div>';
-  h+='<div class="tw">'+stackHTML(12,'you',4)+'<div class="twlab">3 times as tall<br><b>12</b></div></div>';
-  h+='<div class="tw">'+stackHTML(7,'you',0)+'<div class="twlab">3 taller<br><b>7</b></div></div>';
-  h+='</div>';
-  h+='<table><tr><th>Sentence</th><th>What you do</th><th>From 4 you get</th></tr>';
-  h+='<tr><td>3 times as tall</td><td>3 copies of the whole tower</td><td>12</td></tr>';
-  h+='<tr><td>3 taller</td><td>Stick 3 more blocks on top</td><td>7</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The idea</div><p><b>"Times as many"</b> means copies, and that is multiplying. <b>"More than"</b> means extra blocks on top, and that is adding.</p></div>';
+  h+='<h2>The sentences write themselves as math</h2>';
+  h+='<p>“12 is <b>3 times as many</b> as 4” is an equation wearing words: <b>12 = 3 × 4</b>. The “times” number counts the copies. “7 is <b>3 more</b> than 4” is <b>7 = 4 + 3</b>.</p>';
+  h+=figEq();
+  h+='<div class="work"><div class="lab">Your three trains, as equations</div>';
+  h+='3 times as long as 4 &nbsp;→&nbsp; <b>12 = 3 × 4</b><br>';
+  h+='3 longer than 4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; <b>7 = 4 + 3</b><br>';
+  h+='4 times as long as 5 &nbsp;→&nbsp; <b>20 = 4 × 5</b></div>';
+  h+='<table><tr><th>The words</th><th>The picture</th><th>The math</th></tr>';
+  h+='<tr><td>times as many / as long</td><td>whole copies</td><td>multiply</td></tr>';
+  h+='<tr><td>more than / longer</td><td>a few extras</td><td>add</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>“Times as many” always means copies of the whole thing — multiply. “More than” means extras stuck on — add. The equation is just the sentence with symbols.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -212,25 +266,24 @@ function beat2(){
 function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
-  h+='<h2>Before you look</h2>';
-  h+='<p>Sam has <b>6</b> blocks. You have <b>24</b>.</p>';
-  h+='<div class="ask"><div class="q">Your tower is how many times as tall as Sam\'s? Type a number.</div>';
-  h+='<div class="row"><input type="text" id="pred" placeholder="?"><button class="btn sm" onclick="checkPredict()">Check it</button></div>';
+  h+='<h2>Running the sentence backwards</h2>';
+  h+='<p>Mia has <b>15 stickers</b>. That’s <b>5 times as many as Leo</b>. So Mia’s 15 is five copies of Leo’s pile: 15 = 5 × Leo.</p>';
+  h+='<div class="ask"><div class="q">How many stickers does Leo have?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">3 — five 3s make 15</button><button class="btn sm" onclick="checkPredict(\'b\')">10 — take away the 5</button></div>';
   h+='<div id="pfb"></div></div>';
-  h+='<div id="ph" class="hide"><div class="towers">';
-  h+='<div class="tw">'+stackHTML(6,'them',0)+'<div class="twlab">Sam<br><b>6</b></div></div>';
-  h+='<div class="tw">'+stackHTML(24,'you',6)+'<div class="twlab">You<br><b>24</b></div></div>';
-  h+='</div><p style="margin-top:12px">Four copies of Sam\'s tower, marked by the orange lines. 4 × 6 = 24.</p></div>';
+  h+='<div id="ph" class="hide">'+figPiles();
+  h+='<div class="work"><div class="lab">The missing partner</div>';
+  h+='15 = 5 × ? &nbsp;→&nbsp; ask it as a times fact: 5 times what makes 15?<br>';
+  h+='5 × <b>3</b> = 15 &nbsp;→&nbsp; Leo has <b>3</b></div>';
+  h+='<p>Backwards sentences don’t need new math — the same equation just hides a different number. Write it with a ? and fill the gap.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
   if(predictDone)el('ph').classList.remove('hide');
 }
-function checkPredict(){
-  var raw=(el('pred').value||'').replace(/\s/g,'');
+function checkPredict(v){
   var fb=el('pfb');
-  if(raw==='4'){fb.className='fb ok';fb.innerHTML='<b>Yes — 4 times.</b> 4 × 6 = 24.';}
-  else if(raw==='18'){fb.className='fb no';fb.innerHTML='<b>That is how many <i>more</i> you have.</b> 24 − 6 = 18. But the question asked how many <i>times</i>, which is <b>4</b>.';}
-  else{fb.className='fb no';fb.innerHTML='<b>Not quite.</b> It is <b>4</b>. Ask how many copies of 6 fit into 24.';}
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>3.</b> Five copies of 3 make 15 — the piles below prove it.';}
+  else{fb.className='fb no';fb.innerHTML='<b>It’s 3.</b> Taking away 5 answers a “more than” question. This is a copies question: 5 × ? = 15, and 5 × 3 = 15.';}
   el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
 }
 
@@ -238,11 +291,14 @@ function checkPredict(){
 function beat4(){
   var h='';
   h+='<div class="tag">Why</div>';
-  h+='<h2>Multiplying makes copies, adding makes extras</h2>';
-  h+='<p>When you built 3 times as tall, you laid Sam\'s whole tower down three separate times. Each orange line was the start of a new copy.</p>';
-  h+='<p>When you built 3 taller, Sam\'s tower stayed as one thing and you stuck 3 loose blocks on the end.</p>';
-  h+='<div class="goal"><div class="lab">Writing it down</div><p>"12 is 3 times as many as 4" is written <b>12 = 3 × 4</b>.<br>"7 is 3 more than 4" is written <b>7 = 4 + 3</b>.</p></div>';
-  h+='<p>It also works backwards. If you are told 35 is 5 times as many as some number, you are looking for what fits into 35 five times: <b>7</b>.</p>';
+  h+='<h2>Same numbers, different sentence</h2>';
+  h+='<p>Here’s the trap word problems love. Both sentences below use a 2 and a 6 — and land on different answers:</p>';
+  h+=figBoth();
+  h+='<div class="work"><div class="lab">Side by side</div>';
+  h+='2 <b>times as many</b> as 6 &nbsp;→&nbsp; 2 copies of 6 &nbsp;→&nbsp; 2 × 6 = <b>12</b><br>';
+  h+='2 <b>more</b> than 6 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; 6 and 2 extras &nbsp;→&nbsp; 6 + 2 = <b>8</b></div>';
+  h+='<p>So never grab the numbers and guess. Find the signal word first: <b>times</b> → copies → ×. <b>More</b> → extras → +.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>The numbers in a sentence don’t choose the operation — the words do. One word, “times,” turns 8 into 12.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -251,39 +307,40 @@ function beat4(){
 function beat5(){
   var h='';
   h+='<div class="tag">Catch the mistake</div>';
-  h+='<h2>Jo says 12 is 3 times as many as 9</h2>';
-  h+='<p>Her reason: <i>"12 is 3 bigger than 9, so it is 3 times as many."</i></p>';
-  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testJo()">Build both towers</button></div>';
-  h+='<div id="jh" class="hide"><div class="towers">';
-  h+='<div class="tw">'+stackHTML(9,'them',0)+'<div class="twlab">Jo\'s 9</div></div>';
-  h+='<div class="tw">'+stackHTML(12,'you',0)+'<div class="twlab">Jo\'s 12</div></div>';
-  h+='<div class="tw">'+stackHTML(27,'you',9)+'<div class="twlab">3 times as many<br><b>27</b></div></div>';
-  h+='</div></div>';
-  h+='<div id="jfb"></div>';
+  h+='<h2>Ava says Marcus has 9 marbles</h2>';
+  h+='<p>Ava has 6 marbles. Marcus has <b>3 times as many</b>. Ava: <i>“Times 3 just means 3 more. 6 + 3 = 9.”</i></p>';
+  h+=figAva();
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testAva()">Stack the copies</button></div>';
+  h+='<div id="mh" class="hide">'+figAvaFix()+'</div>';
+  h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
-  if(mistakeTested)testJo();
+  if(mistakeTested)testAva();
 }
-function testJo(){
-  el('jh').classList.remove('hide');
-  var fb=el('jfb');fb.className='fb no';
-  fb.innerHTML='<b>Jo is wrong.</b> 12 is 3 <i>more</i> than 9. Three <i>times</i> as many would be three whole copies of 9, which is <b>27</b> — the tall one on the right. She swapped adding for multiplying because both sentences use the number 3.';
+function testAva(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>“Times” is not “more.”</b> 3 times as many means three whole copies of Ava’s 6 — the rows above: 6 + 6 + 6 = <b>18</b>, which is 3 × 6. Her 9 answered a different sentence: “3 more than 6.” One word apart, nine marbles apart.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
 /* ---------- questions ---------- */
 var QUESTIONS=[
-  {q:'Sam has 5 blocks. You build 4 times as many. How many do you have?',a:['9','45','20','54'],correct:2,
-   why:'4 copies of 5 blocks. 4 × 5 = 20.'},
-  {q:'Which sentence matches 24 = 6 × 4?',a:['24 is 6 more than 4','24 is 4 more than 6','6 is 24 times as many as 4','24 is 6 times as many as 4'],correct:3,
-   why:'Six copies of 4 makes 24. That is the times as many sentence.'},
-  {q:'A tower has 8 blocks. Another has 8 more than that. How tall is the second one?',a:['64','16','1','88'],correct:1,
-   why:'More than means extra blocks on top: 8 + 8 = 16. Only 2 copies would give 16 as well here, but the sentence says more, so you add.'},
-  {q:'32 is 8 times as many as what number?',a:['24','4','40','256'],correct:1,
-   why:'You want the number that fits into 32 eight times. 8 × 4 = 32.'},
-  {q:'Why do "3 times as tall" and "3 taller" give different towers?',
-   a:['One makes copies of the whole tower, the other sticks extras on top','They do not, both give the same tower','Because 3 is an odd number','Because towers cannot be compared'],correct:0,
-   why:'Times as many lays the whole tower down again. More than adds loose blocks to the end.'}
+  {q:'A red ribbon is 4 times as long as a 2-metre blue ribbon. How long is the red ribbon?',
+   a:['6 m — add 4','8 m — four copies of 2','42 m','2 m'],correct:1,
+   why:'“Times as long” means copies: 4 copies of 2 m is 4 × 2 = 8 m.'},
+  {q:'Which equation says “21 is 3 times as many as 7”?',
+   a:['21 = 7 + 3','21 = 3 + 7','21 = 3 × 7','7 = 3 × 21'],correct:2,
+   why:'“Times as many” writes itself as ×: three copies of 7 make 21, so 21 = 3 × 7.'},
+  {q:'Sam has 6 shells. Jade has 2 times as many. How many does Jade have?',
+   a:['8 — that’s 6 + 2','12 — two copies of 6','62','4'],correct:1,
+   why:'One word decides it: TIMES means copies. 2 × 6 = 12. (6 + 2 = 8 answers “2 more than 6.”)'},
+  {q:'30 is 5 times as many as which number?',
+   a:['25 — take away 5','35','6 — because 5 × 6 = 30','150'],correct:2,
+   why:'Backwards sentence, same equation: 30 = 5 × ?, and 5 × 6 = 30.'},
+  {q:'A puppy weighs 4 kg. Its mom weighs 3 times as much. How much does the mom weigh?',
+   a:['7 kg — 4 + 3','43 kg','1 kg','12 kg — three copies of 4'],correct:3,
+   why:'That was Ava’s trap. Three TIMES as much is three copies: 3 × 4 = 12 kg, not 4 + 3.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -291,7 +348,7 @@ function beatQ(){
   h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
   for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
   h+='<div id="qfb"></div>';
-  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">\u2190 Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
   el('stage').innerHTML=h;answered=false;
 }
 function pick(i){
@@ -323,13 +380,12 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Tell a times as many sentence from a more than sentence, and write either one as an equation.</p></div>';}
-  else h+='<p style="margin-top:16px">Go back to Jo. She had 9, 12 and 27 in front of her and picked the wrong one.</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Tell “times as many” (copies — multiply) from “more than” (extras — add), write either sentence as an equation, and run a times-sentence backwards to find the hidden number.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ava. One word — “times” — was worth nine marbles.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
   el('stage').innerHTML=h;
 }
-function restart(){step=0;mine=0;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+function restart(){step=0;wonCount=0;answeredTrain=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
 
 function render(){
   drawSteps();

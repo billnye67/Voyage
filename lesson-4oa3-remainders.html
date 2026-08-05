@@ -326,7 +326,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Decide what a remainder means in a real situation \u2014 drop it, round up, or report it \u2014 and check an answer by putting it back in the story.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Marcus. His division was right and 5 kids were still on the pavement.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  h+='';
   el('stage').innerHTML=h;
 }
 function restart(){step=0;loaded=false;wonCount=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

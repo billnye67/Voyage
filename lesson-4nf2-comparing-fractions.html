@@ -306,7 +306,7 @@ function beatDone(){
   if(pct>=80)h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Compare any two fractions — matching bottoms, matching tops, or neither — using half as your benchmark.</p></div><p style="margin-top:14px">Next: <b>adding fractions</b>.</p>';
   else h+='<p style="margin-top:16px">Go back to the table of three tricks. Which one you use depends on what matches.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM® K–5 Math authored by Illustrative Mathematics®, licensed under CC BY 4.0.</div>';
+  
   el('stage').innerHTML=h;
 }
 function restart(){step=0;streak=0;best=0;roundIdx=0;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}

@@ -348,7 +348,7 @@ function beatDone(){
   if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Multiply a big number by splitting both sides into place value pieces and adding the boxes.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Owen. He filled two boxes and left 260 on the table.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">\u21bb Again</button><button class="btn go" onclick="location.href=\'math-course.html\'">Back to Math →</button></div>';
-  h+='<div class="attrib">Task design based on IM\u00ae K\u20135 Math authored by Illustrative Mathematics\u00ae, licensed under CC BY 4.0.</div>';
+  h+='';
   el('stage').innerHTML=h;
 }
 function restart(){step=0;wonCount=0;cellIdx=0;filled=[];phase='cells';predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
