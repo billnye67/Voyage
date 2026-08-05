@@ -267,7 +267,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>The rabbit’s half-second</h2>';
-  h+='<p>Animal reactions run on a <b>three-link chain</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal inward</b>, and it gets figured out. <b>3. RESPOND</b> — a signal goes back out to the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Two rules to hold onto: <b>sense organs only receive</b> — an ear can’t decide anything — and for reactions that involve <b>recognizing, remembering, or choosing</b>, the processing happens in the <b>brain</b>. (One exception you’ll meet later: a few emergency reactions get handled faster and lower down, before the brain is even involved.) Now walk the rabbit through its half-second.</p>';
+  h+='<p>Animal reactions run on a <b>three-link chain</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal inward</b>, and it gets figured out. <b>3. RESPOND</b> — a signal goes back out to the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Two rules to hold onto: <b>sense organs only receive</b> — an ear can’t decide anything — and for reactions that involve <b>recognizing, remembering, or choosing</b>, the processing happens in the <b>brain</b>. (One shortcut you’ll meet later: some automatic responses get handled faster and lower down, before the brain is involved at all.) Now walk the rabbit through its half-second.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -316,11 +316,12 @@ function beat2(){
   h+='<div class="work"><div class="lab">The claim–evidence frame, behavior edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;the rabbit ran because its ears received the snap<br>';
   h+='EVIDENCE: it bolted the instant the sound happened,<br>and a DEAF rabbit in the same test keeps chewing —<br>break the receive link and the response never comes</div>';
-  h+='<div class="work"><div class="lab">The exception: emergency reflexes</div>';
+  h+='<div class="work"><div class="lab">The shortcut: reflexes</div>';
   h+='touch a hot pan &nbsp;→&nbsp; your hand yanks back BEFORE you feel the pain<br>';
   h+='why so fast? &nbsp;the signal reaches your <b>spinal cord</b> — the nerve<br>cable in your back — and it fires the muscles straight away<br>';
   h+='your brain &nbsp;→&nbsp; gets the news a moment LATER (“ow!”)<br>';
-  h+='these <b>reflexes</b> are rare and always protective. anything involving<br>recognizing or choosing still goes to the brain</div>';
+  h+='<b>reflexes</b> are fast automatic responses your body makes without<br>deciding. some protect you (yanking off a hot pan, blinking at a<br>puff of air); others just run the body quietly all day — your pupils<br>shrinking in bright light, your legs adjusting so you don’t topple over<br>';
+  h+='what they all share &nbsp;→&nbsp; no recognizing, no choosing, no waiting<br>for the brain. anything that DOES involve recognizing or choosing<br>goes to the brain</div>';
   h+='<div class="goal"><div class="lab">The idea</div><p>Animals sense with organs, process the signal, and respond with the body. Recognizing and choosing happen in the <b>brain</b>; a few emergency <b>reflexes</b> are handled by the spinal cord first, so the body moves before the brain even knows.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;

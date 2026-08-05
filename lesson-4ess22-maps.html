@@ -266,7 +266,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Read the world map</h2>';
-  h+='<p>A map isn’t just for finding places — it’s a tool for finding <b>patterns</b>. Here’s how to use one. <b>1.</b> Check the <b>key</b> (also called a legend): it tells you what each symbol means. <b>2.</b> Ask whether the marks are <b>scattered evenly</b> or <b>clustered into a shape</b> — a clump, a line, a band. <b>3.</b> If they cluster, that pattern is <b>evidence that location matters</b> — something about those particular places is involved — and it lets you <b>predict where the same thing is likely to happen again</b>. Below is a <b>simplified drawing</b> of a real world map — the continents are rough shapes and each dot stands for a whole cluster of big earthquakes, not one quake. Real scientists use maps with thousands of dots; this one keeps the same overall pattern so you can read it.</p>';
+  h+='<p>A map isn’t just for finding places — it’s a tool for finding <b>patterns</b>. Here’s how to use one. <b>1.</b> Check the <b>key</b> (also called a legend): it tells you what each symbol means. <b>2.</b> Ask whether the marks are <b>scattered evenly</b> or <b>clustered into a shape</b> — a clump, a line, a band. <b>3.</b> If they cluster, the map has shown you that <b>WHERE matters</b>: those places have something in common worth investigating. Careful — the map shows you where, <b>not why</b>. Finding the cause takes more work. What the pattern DOES give you right away is the power to <b>predict where the same thing is likely to happen again</b>. Below is a <b>simplified drawing</b> of a real world map — the continents are rough shapes and each dot stands for a whole cluster of big earthquakes, not one quake. Real scientists use maps with thousands of dots; this one keeps the same overall pattern so you can read it.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -306,15 +306,15 @@ function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
   h+='<h2>Maps as evidence</h2>';
-  h+='<p>Those bands are real, and they have a name: the edges of Earth’s giant surface plates. Nobody could see them from the ground — the map is what revealed them.</p>';
+  h+='<p>Those bands are real. The map didn’t explain them — but it told scientists exactly where to look, and years of investigating turned up an answer: the bands trace the edges of Earth’s giant surface plates. Nobody could see those edges from the ground. The map is what pointed at them.</p>';
   h+='<div class="work"><div class="lab">The claim–evidence frame, map edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;earthquakes and volcanoes happen along the same narrow zones<br>';
   h+='EVIDENCE: on the world map, both cluster into the SAME long bands,<br>while enormous regions in between have almost none</div>';
   h+='<table><tr><th>Map pattern</th><th>What it means</th></tr>';
   h+='<tr><td>marks scattered evenly</td><td>the map doesn’t reveal a cause tied to LOCATION</td></tr>';
-  h+='<tr><td>marks clustered in a shape</td><td>something is causing them THERE</td></tr>';
+  h+='<tr><td>marks clustered in a shape</td><td>WHERE matters — those places share something worth investigating</td></tr>';
   h+='<tr><td>two different marks sharing a shape</td><td>worth investigating — they may share a cause</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Maps turn thousands of separate facts into one picture. A <b>pattern</b> on a map is evidence — and evidence you can use to predict.</p></div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Maps turn thousands of separate facts into one picture. A <b>pattern</b> on a map tells you where something happens and lets you predict where it will happen again — and it points scientists toward the cause without proving it by itself.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -395,10 +395,10 @@ function testDev(){
 /* ---------- questions ---------- */
 var QUESTIONS=[
   {q:'On a world map, earthquake dots form long narrow bands instead of spreading evenly. What does that pattern tell you?',
-   a:['Quakes are random','Something about those specific zones is involved in causing earthquakes there','Mapmakers missed some places','Earthquakes only happen on maps'],correct:1,
-   why:'Clustering is evidence that location matters. Even scattering would mean the map reveals no location-linked cause.'},
+   a:['Quakes are random','WHERE matters — those zones share something worth investigating, and quakes are likely to strike there again','Mapmakers missed some places','The map by itself proves what causes earthquakes'],correct:1,
+   why:'Clustering shows WHERE, not why. It marks the zones worth investigating and supports predictions — but the map alone never proves the cause.'},
   {q:'Volcano symbols land along the SAME bands as the earthquake dots. The best conclusion is—',
-   a:['Volcanoes cause maps','The pattern proves nothing at all','Volcanoes avoid earthquakes','They may well share a cause in those zones — a match that strong is worth investigating'],correct:3,
+   a:['Volcanoes cause maps','The map has now proven what causes both','Volcanoes avoid earthquakes','A match that strong is a lead worth investigating — the two may share a cause'],correct:3,
    why:'A match that strong is a lead worth chasing — and when scientists chased it, they found the plate edges underneath.'},
   {q:'What did depth maps reveal about the ocean floor?',
    a:['It has mountains, valleys, and deep trenches, like dry land','It is perfectly flat','It is solid ice','It has no features worth mapping'],correct:0,
@@ -446,7 +446,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Read a map’s key, tell a clustered pattern from a scattered one, use map patterns as evidence about Earth’s features, and state predictions as odds instead of guarantees.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Read a map’s key, tell a clustered pattern from a scattered one, use map patterns to say WHERE something happens and predict where it will happen again, keep the difference between a pattern and its cause straight, and state predictions as odds instead of guarantees.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Dev. A map pattern gives you likely and unlikely — never impossible.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;
