@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Reading waves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Waves &amp; Information</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-PS4-1</div>
+    <h1>Reading waves</h1>
+    <p>Flick a jump rope and a hump races down it. Toss a pebble in a pond and rings spread out in perfect circles. Waves are everywhere — and they all follow the same repeating pattern. Learn the two measurements scientists use to describe ANY wave, and what a passing wave does to a rubber duck.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS4-1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-PS4-1</div>
+      <div class="side-title">Reading waves</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredWav=false;
+var TASKS=[
+  {ans:0, txt:'<b>Compare waves A and B in the picture.</b> Which has the bigger AMPLITUDE?',
+   opts:['Wave A — its peaks rise higher above the rest line','Wave B — its peaks are closer together','They’re equal'], won:'A: taller peaks'},
+  {ans:2, txt:'<b>Same two waves.</b> Which has the longer WAVELENGTH?',
+   opts:['Wave A — it’s taller','Neither — all waves have the same wavelength','Wave B — its peaks are spread farther apart'], won:'B: peaks farther apart'},
+  {ans:1, txt:'<b>A rubber duck floats on the pond as waves pass under it.</b> What do the waves do to the duck?',
+   opts:['Drag it across the pond to the far shore','Lift it up and drop it down, over and over, as each peak passes','Nothing — waves can’t move objects'], won:'the duck bobs'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Measure two waves'}]},
+  {phase:'Learn',   items:[{s:1, n:'Wave anatomy'},{s:2, n:'Shake it harder'},{s:3, n:'Patterns you can trust'},{s:4, n:'Catch Mia’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',BLU='#1b4f8a',PALE='rgba(240,102,63,.15)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function wavePath(x0,y0,len,amp,wl){
+  var d='M '+x0+' '+y0,x=x0;
+  while(x<x0+len-1){
+    d+=' q '+(wl/4)+' '+(-amp*2)+' '+(wl/2)+' 0';
+    d+=' q '+(wl/4)+' '+(amp*2)+' '+(wl/2)+' 0';
+    x+=wl;
+  }
+  return '<path d="'+d+'" fill="none" stroke="'+BLU+'" stroke-width="3"/>';
+}
+function figTwoWaves(){
+  var s=tx(310,22,'TWO WAVES, SAME POND',11.5,INK,700);
+  s+=tx(50,64,'A',15,ACC,700);
+  s+=ln(80,78,560,78,GREY,1.5,true);
+  s+=wavePath(80,78,480,26,96);
+  s+=tx(575,82,'rest',9,MUT,400,'start');
+  s+=tx(50,168,'B',15,ACC,700);
+  s+=ln(80,182,560,182,GREY,1.5,true);
+  s+=wavePath(80,182,480,13,160);
+  s+=tx(575,186,'rest',9,MUT,400,'start');
+  s+=tx(310,232,'the dashed line is the REST LINE — where the water sits with no wave',10.5,MUT,400);
+  return boxSVG(s,244);
+}
+function figAnatomy(){
+  /* wavePath(60,110,…,34,160): peaks at x=100,260,420 with peak y=76; troughs y=144 */
+  var s=tx(310,22,'WAVE ANATOMY',11.5,INK,700);
+  s+=ln(60,110,560,110,GREY,1.5,true)+tx(575,114,'rest',9,MUT,400,'start');
+  s+=wavePath(60,110,480,34,160);
+  s+=tx(100,62,'peak',9.5,MUT,400)+tx(420,62,'peak',9.5,MUT,400);
+  /* amplitude bracket on the middle peak (x=260): rest line up to the peak */
+  s+=ln(260,110,260,76,ACC,2.5)+ln(252,76,268,76,ACC,2.5)+ln(252,110,268,110,ACC,2.5);
+  s+=tx(260,54,'AMPLITUDE — rest line up to a peak',10,ACC,700);
+  /* wavelength bracket peak-to-peak: x=100 to x=260, below the trough (y=144) */
+  s+=ln(100,162,260,162,GRN,2.5)+ln(100,155,100,169,GRN,2.5)+ln(260,155,260,169,GRN,2.5);
+  s+=tx(180,186,'WAVELENGTH — one peak to the next',10,GRN,700);
+  return boxSVG(s,200);
+}
+function figDuck(){
+  var s=tx(310,22,'THE DUCK TEST',11.5,INK,700);
+  s+=ln(60,120,560,120,GREY,1.5,true);
+  s+=wavePath(60,120,480,24,120);
+  /* duck riding a peak at x=240 (peak y = 120-48=72... amp 24 → peak at 120-48) */
+  s+='<circle cx="240" cy="62" r="12" fill="#fbd66e" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<circle cx="250" cy="55" r="6" fill="#fbd66e" stroke="'+INK+'" stroke-width="2"/>';
+  s+=ln(240,86,240,104,ACC,2)+'<polygon points="240,110 235,100 245,100" fill="'+ACC+'"/>';
+  s+=ln(240,38,240,50,ACC,2)+'<polygon points="240,32 235,42 245,42" fill="'+ACC+'"/>';
+  s+=tx(288,44,'up… down… up… down',9.5,ACC,700,'start');
+  s+=tx(310,160,'the duck bobs in place as peaks pass — it does NOT ride across the pond',10.5,MUT,400);
+  return boxSVG(s,172);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Measure two waves</h2>';
+  h+='<p>A wave is a <b>repeating pattern</b> that travels along, carrying energy. Scientists describe any wave with two measurements. <b>Amplitude</b> is the wave’s HEIGHT: how far a peak rises above the <b>rest line</b> (the flat level the water sits at with no wave). <b>Wavelength</b> is the wave’s SPACING: the distance from <b>one peak to the next peak</b>. One more rule: a passing wave <b>can move objects</b> — it lifts a floating object up and drops it back down as each peak passes, but it does <b>not drag the object along</b> with it. Now read the picture and measure.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figTwoWaves();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickWav('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Amplitude = height above the rest line. Wavelength = peak-to-peak distance.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredWav=false;
+}
+function pickWav(i){
+  if(answeredWav||wonCount>=TASKS.length)return;answeredWav=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Amplitude is HEIGHT above the rest line — and A’s peaks tower over B’s. Bigger amplitude: A.'
+           :wonCount===1?'✓ Wavelength is SPACING — peak to peak. B’s peaks are spread far apart; A’s are bunched close. Longer wavelength: B.'
+                        :'✓ Each passing peak lifts the duck; each dip drops it. Up, down, repeat — but it stays put. Waves move objects without carrying them away.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Check the definitions: amplitude is how HIGH a peak rises above the rest line; wavelength is the distance from one peak to the NEXT; a wave bobs a floater in place. Try again.';
+    setTimeout(function(){if(step===0){answeredWav=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Wave anatomy, labeled</h2>';
+  h+='<p>Here’s the model with everything pinned down. This one diagram describes ocean swells, jump-rope wiggles, and sound vibrations alike:</p>';
+  h+=figAnatomy();
+  h+='<div class="work"><div class="lab">The claim–evidence frame, wave edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;wave A carries a taller pattern than wave B<br>';
+  h+='EVIDENCE: measure both amplitudes against the rest line —<br>A’s peaks rise about twice as high</div>';
+  h+='<table><tr><th>Measurement</th><th>How to take it</th></tr>';
+  h+='<tr><td>amplitude</td><td>rest line straight up to a peak</td></tr>';
+  h+='<tr><td>wavelength</td><td>one peak straight across to the next peak</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every wave is a repeating pattern you can measure two ways: <b>amplitude</b> (height above rest) and <b>wavelength</b> (peak-to-peak spacing). Two numbers, any wave, anywhere.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Shake it harder</h2>';
+  h+='<p>You’re holding one end of a long rope, making gentle waves. Now you shake with <b>much more energy</b> — bigger, stronger swings of your arm.</p>';
+  h+='<div class="ask"><div class="q">Predict: what happens to the waves on the rope?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The amplitude grows — taller peaks</button><button class="btn sm" onclick="checkPredict(\'b\')">The waves disappear — energy flattens a rope</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">The reasoning chain</div>';
+  h+='more energy into the rope &nbsp;→&nbsp; a bigger pattern comes out<br>';
+  h+='“bigger” for a wave means &nbsp;→&nbsp; peaks rising HIGHER above rest<br>';
+  h+='higher peaks &nbsp;=&nbsp; <b>bigger amplitude</b></div>';
+  h+='<p>Amplitude is the wave’s energy gauge. Gentle breeze: ripples with tiny amplitude. Storm: towering amplitude. Same pond, same wavelength rules — the energy shows up in the HEIGHT.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Taller peaks.</b> More energy in, bigger amplitude out. The wave’s height IS its energy gauge.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Other way.</b> Energy doesn’t flatten a wave — it feeds it. More shake, higher peaks: the amplitude grows.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Patterns you can trust</h2>';
+  h+='<p>The magic word in “a wave is a repeating pattern” is <b>repeating</b>. Peaks arrive one after another, evenly spaced, like a drumbeat you can count on. That regularity is what makes waves so useful:</p>';
+  h+=figDuck();
+  h+='<div class="work"><div class="lab">Reading the duck</div>';
+  h+='the duck bobs UP &nbsp;→&nbsp; a peak is passing under it right now<br>';
+  h+='it bobs on a steady beat &nbsp;→&nbsp; the peaks are evenly spaced<br>';
+  h+='it bobs HIGHER than before &nbsp;→&nbsp; the amplitude (energy) grew<br>';
+  h+='it’s still in the same spot &nbsp;→&nbsp; waves pass THROUGH, they don’t drag</div>';
+  h+='<p>Surfers count wave patterns to pick their moment. Scientists read earthquake waves the same way. Even the duck is a measuring tool: watch what bobs, and you know what the wave is doing.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Waves repeat on a pattern you can measure and predict — and a passing wave sets objects in motion (up and down) without carrying them along.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Mia says the water travels</h2>';
+  h+='<p>Watching rings spread from a pebble-splash, Mia claimed: <i>“The water itself is racing outward — the splash-water travels all the way to the pond’s edge.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testMia()">Test it with the duck</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The duck experiment</div>';
+  h+='if the WATER travels &nbsp;→&nbsp; the duck should ride it to the edge<br>';
+  h+='what actually happens &nbsp;→&nbsp; the duck bobs up and down IN PLACE<br>';
+  h+='so what’s moving outward? &nbsp;→&nbsp; the PATTERN — and the energy it carries<br>';
+  h+='the water &nbsp;→&nbsp; rises and falls, then stays right where it was</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMia();
+}
+function testMia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The duck sinks her claim.</b> If water traveled with the wave, every floating thing would wash to the edge with it. Instead the duck bobs in place while ring after ring passes underneath. What crosses the pond is the <b>pattern</b>, carrying energy — the water just rises and falls where it is. Mia confused the messenger with the message.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What is a wave’s AMPLITUDE?',
+   a:['The distance from one peak to the next','How far a peak rises above the rest line','How fast the water travels to shore','The number of ducks it can bob'],correct:1,
+   why:'Amplitude is height: rest line straight up to a peak.'},
+  {q:'Wave X’s peaks are 2 meters apart. Wave Y’s peaks are 6 meters apart. Which is true?',
+   a:['X has the bigger amplitude','Y is carrying no energy','Y has the longer wavelength','They have the same wavelength'],correct:2,
+   why:'Wavelength is peak-to-peak spacing — 6 meters beats 2. (Peak spacing says nothing about amplitude.)'},
+  {q:'You shake a rope with much more energy. What does the wave show?',
+   a:['A bigger amplitude — the peaks rise taller','The rope goes flat','The wave runs backward','Nothing changes'],correct:0,
+   why:'Amplitude is the energy gauge: more energy in, taller peaks out.'},
+  {q:'Waves pass under a floating duck for a full minute. Where is the duck at the end?',
+   a:['Washed up on the far shore','Underwater','Wherever the wind isn’t','About where it started — it bobbed up and down in place'],correct:3,
+   why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along.'},
+  {q:'Mia said the splash-water itself races to the pond’s edge. What actually travels outward?',
+   a:['The water, just like she said','The repeating pattern, carrying energy — the water rises and falls in place','The pebble','Nothing travels at all'],correct:1,
+   why:'That was Mia’s trap. The duck test proves it: pattern and energy cross the pond; the water stays put.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-PS4-1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Measure any wave’s amplitude and wavelength from a diagram, read amplitude as an energy gauge, and use the duck test to show that waves move objects in place without carrying them away.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to the duck. It bobs in place — the pattern travels, the water doesn’t.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredWav=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

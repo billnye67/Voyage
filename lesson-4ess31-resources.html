@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Where energy comes from</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; People &amp; the Planet</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-ESS3-1</div>
+    <h1>Where energy comes from</h1>
+    <p>Every light in your house is powered by something that came out of the Earth or out of the sky. Some of those sources will run out. Some never will. And every single one changes the environment somehow — even the clean ones. Learn to compare energy sources honestly, using evidence instead of slogans.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-ESS3-1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-ESS3-1</div>
+      <div class="side-title">Where energy comes from</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredRes=false;
+var TASKS=[
+  {ans:2, txt:'<b>Coal, dug from underground and burned in a power plant.</b> Renewable or non-renewable?',
+   opts:['Renewable — miners keep finding more','Neither — coal isn’t an energy source','NON-renewable — it took millions of years to form, so once burned it’s gone for good'], won:'coal: non-renewable'},
+  {ans:0, txt:'<b>Sunlight hitting a solar panel.</b> Renewable or non-renewable?',
+   opts:['RENEWABLE — the sun keeps arriving every single day','Non-renewable — we’ll use up the sunlight','Neither — sunlight isn’t energy'], won:'sun: renewable'},
+  {ans:1, txt:'<b>A wind farm goes up on a ridge. Renewable — so does it affect the environment at all?</b>',
+   opts:['No — renewable means zero effect on anything','YES — every source affects the environment somehow. Turbines take up land and can harm birds','Only if it breaks'], won:'every source has effects'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Sort the sources'}]},
+  {phase:'Learn',   items:[{s:1, n:'The trade-off table'},{s:2, n:'Choose for the island'},{s:3, n:'Resources beyond energy'},{s:4, n:'Catch Zoe’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',YEL='#e8b93c',SKY='#cfe0ee';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function figSources(){
+  var s=tx(310,22,'TWO KINDS OF ENERGY SOURCE',11.5,INK,700);
+  s+='<rect x="30" y="38" width="270" height="176" rx="10" fill="rgba(46,125,91,.08)" stroke="'+GRN+'" stroke-width="2"/>';
+  s+=tx(165,60,'RENEWABLE',12,GRN,700)+tx(165,76,'nature keeps resupplying it',9.5,MUT,400);
+  /* sun */
+  s+='<circle cx="80" cy="112" r="16" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2"/>';
+  for(var a=0;a<8;a++){var r=Math.PI/4*a;s+=ln(80+Math.cos(r)*20,112+Math.sin(r)*20,80+Math.cos(r)*26,112+Math.sin(r)*26,YEL,2);}
+  s+=tx(80,152,'sun',9.5,MUT,400);
+  /* wind turbine */
+  s+=ln(165,132,165,92,INK,3);
+  s+=ln(165,92,145,78,INK,2.5)+ln(165,92,187,80,INK,2.5)+ln(165,92,167,116,INK,2.5);
+  s+=tx(165,152,'wind',9.5,MUT,400);
+  /* water */
+  s+='<path d="M 232 108 q 14 -18 28 0 q 14 18 28 0" fill="none" stroke="#7fb0d4" stroke-width="4"/>';
+  s+='<path d="M 232 122 q 14 -18 28 0 q 14 18 28 0" fill="none" stroke="#7fb0d4" stroke-width="4"/>';
+  s+=tx(260,152,'moving water',9.5,MUT,400);
+  s+=tx(165,190,'sun rises tomorrow. wind blows again.',9.5,GRN,700);
+  s+=tx(165,206,'these do not run out.',9.5,GRN,700);
+  s+='<rect x="320" y="38" width="270" height="176" rx="10" fill="rgba(240,102,63,.07)" stroke="'+ACC+'" stroke-width="2"/>';
+  s+=tx(455,60,'NON-RENEWABLE',12,ACC,700)+tx(455,76,'a limited supply — it can run out',9.5,MUT,400);
+  s+='<rect x="356" y="98" width="44" height="30" rx="4" fill="#4a4a4a" stroke="'+INK+'" stroke-width="2"/>'+tx(378,152,'coal',9.5,MUT,400);
+  s+='<path d="M 432 96 h 40 v 32 h -40 Z" fill="#6b5b3e" stroke="'+INK+'" stroke-width="2"/>'+tx(452,113,'OIL',9,'#fff',700)+tx(452,152,'oil',9.5,MUT,400);
+  s+='<rect x="508" y="98" width="44" height="30" rx="4" fill="#9aa7ae" stroke="'+INK+'" stroke-width="2"/>'+tx(530,152,'natural gas',9.5,MUT,400);
+  s+=tx(455,190,'took MILLIONS of years to form underground.',9.5,ACC,700);
+  s+=tx(455,206,'burn it and it is gone.',9.5,ACC,700);
+  return boxSVG(s,224);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Sort the sources</h2>';
+  h+='<p>A <b>natural resource</b> is anything people take from the Earth and use. Energy resources split into two groups. <b>RENEWABLE</b> means nature keeps resupplying it on a human timescale — <b>sunlight, wind, moving water</b>; they don’t run out. <b>NON-RENEWABLE</b> means there’s a limited supply that took millions of years to form — <b>coal, oil, natural gas</b>; burn it and that portion is gone forever. And here’s the rule people forget: <b>EVERY source affects the environment in some way</b>. Burning fuels releases pollution into the air; even renewables take up land, change habitats, and require mining to build the equipment. Sort these.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figSources();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickRes('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Renewable = nature resupplies it. And every source affects the environment.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredRes=false;
+}
+function pickRes(i){
+  if(answeredRes||wonCount>=TASKS.length)return;answeredRes=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Coal formed from plants buried for millions of years. Finding more doesn’t make more — the total underground only shrinks.'
+           :wonCount===1?'✓ The sun shows up tomorrow no matter how much we used today. That’s exactly what renewable means.'
+                        :'✓ This is the honest part most people skip. Renewable means it won’t run out — NOT that it has zero effect. Every choice costs the environment something.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Two questions: does nature resupply it (renewable) or did it take millions of years (non-renewable)? And remember — EVERY source affects the environment. Try again.';
+    setTimeout(function(){if(step===0){answeredRes=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The trade-off table</h2>';
+  h+='<p>Grown-ups argue about energy constantly. Scientists cut through it by laying every source on one table and comparing the same three things:</p>';
+  h+='<table><tr><th>Source</th><th>Runs out?</th><th>Effect on the environment</th></tr>';
+  h+='<tr><td>coal</td><td>yes</td><td>lots of air pollution; mining tears up land</td></tr>';
+  h+='<tr><td>oil</td><td>yes</td><td>air pollution; spills harm oceans and wildlife</td></tr>';
+  h+='<tr><td>natural gas</td><td>yes</td><td>less air pollution than coal, but still some</td></tr>';
+  h+='<tr><td>sunlight</td><td>no</td><td>panels need land and mined materials</td></tr>';
+  h+='<tr><td>wind</td><td>no</td><td>takes up land; turbines can kill birds</td></tr>';
+  h+='<tr><td>moving water</td><td>no</td><td>dams flood valleys and block fish</td></tr></table>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, resource edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;solar is a better long-term choice for this town than coal<br>';
+  h+='EVIDENCE: coal runs out and pollutes the air heavily;<br>sunlight never runs out and its main cost is land and materials<br>';
+  h+='HONEST NOTE: solar still has effects — “better” is not “perfect”</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>There is no cost-free energy source. Comparing them means weighing <b>trade-offs</b> — does it run out, and what does it do to the environment — with evidence on both sides.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Choose for the island</h2>';
+  h+='<p>A small island town needs electricity. Here’s the situation: it’s <b>sunny nearly every day</b>, it’s <b>windy on the ridge</b>, and there is <b>no coal or oil on the island</b> — every barrel has to arrive by ship from 500 kilometers away.</p>';
+  h+='<div class="ask"><div class="q">Which plan does the evidence support?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Solar and wind — the island already has both, free and unlimited</button><button class="btn sm" onclick="checkPredict(\'b\')">Ship in oil forever — oil is what everyone else uses</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Comparing the two plans</div>';
+  h+='oil plan: &nbsp;&nbsp;&nbsp;must be shipped 500 km forever, price can spike,<br>supply can be cut off, and it pollutes the island’s air<br>';
+  h+='sun + wind: &nbsp;already ON the island, never runs out, no fuel deliveries<br>';
+  h+='its costs: &nbsp;&nbsp;&nbsp;panels and turbines cost money up front and take up land<br>';
+  h+='the honest verdict: &nbsp;<b>sun + wind wins HERE</b> — because of what this<br>place actually has</div>';
+  h+='<p>Notice the reasoning: the best source depends on the <b>place</b>. A cloudy, windless valley sitting on a coal seam would get a different answer — and the same method would produce it.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Use what the island has.</b> Sun and wind are already there and never run out — no 500 km fuel deliveries required.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Check the evidence for THIS place:</b> the island has no oil, so every drop costs a 500 km voyage — while free sun and wind sit unused overhead.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Resources beyond energy</h2>';
+  h+='<p>Energy isn’t the only thing we take from the Earth, and the same renewable/non-renewable question applies to all of it:</p>';
+  h+='<table><tr><th>Resource</th><th>Runs out?</th><th>What people do about it</th></tr>';
+  h+='<tr><td>fresh water</td><td>renewable, but only if used slower than rain refills it</td><td>conserve during droughts</td></tr>';
+  h+='<tr><td>trees</td><td>renewable — if replanted</td><td>replant forests after cutting</td></tr>';
+  h+='<tr><td>metals (iron, copper)</td><td>non-renewable</td><td>recycle instead of mining more</td></tr>';
+  h+='<tr><td>soil</td><td>takes centuries to rebuild</td><td>plant cover crops to stop erosion</td></tr></table>';
+  h+='<div class="work"><div class="lab">Three ways to use less</div>';
+  h+='REDUCE &nbsp;→&nbsp; use less in the first place (turn the lights off)<br>';
+  h+='REUSE &nbsp;&nbsp;→&nbsp; use the same thing again instead of buying new<br>';
+  h+='RECYCLE →&nbsp; turn old material into new material<br>';
+  h+='every one of these means less taken out of the Earth</div>';
+  h+='<p>Notice that “renewable” for water and trees comes with a condition attached: they only stay renewable if we take them slower than nature replaces them. Cut a forest faster than it regrows and it stops being renewable in practice.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>People depend on many natural resources. Some regrow, some never will — and how fast we use them decides which is which.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Zoe says solar has zero effects</h2>';
+  h+='<p>Zoe made her case: <i>“Solar panels are renewable, so they have absolutely NO effect on the environment. Zero. Perfectly clean, no downsides at all.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testZoe()">Audit a solar farm honestly</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The honest audit</div>';
+  h+='the land: &nbsp;a big solar farm covers habitat that plants and animals used<br>';
+  h+='the panels: &nbsp;built from metals that had to be MINED out of the ground<br>';
+  h+='the end: &nbsp;&nbsp;&nbsp;worn-out panels have to be disposed of or recycled<br>';
+  h+='the verdict: &nbsp;far fewer harms than burning coal — but <b>not zero</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testZoe();
+}
+function testZoe(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>“Renewable” answers a different question than “harmless.”</b> Renewable means the SOURCE won’t run out. It says nothing about land use, mining for materials, or disposal — and solar has all three. The strong version of Zoe’s argument is the true one: solar’s effects are much smaller than coal’s. Scientists don’t need a perfect option to recommend one; they need an honest comparison.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which of these energy sources is NON-renewable?',
+   a:['Wind','Coal — it took millions of years to form and burning it uses it up','Sunlight','Moving water in a river'],correct:1,
+   why:'Non-renewable means a limited supply that can’t be replaced on any useful timescale.'},
+  {q:'What does it mean that sunlight is a RENEWABLE energy source?',
+   a:['It never causes any effects','Nature keeps resupplying it — the sun arrives again tomorrow no matter how much we used','It’s free to install','It only works in summer'],correct:1,
+   why:'Renewable is about resupply, not about being effect-free or cheap.'},
+  {q:'A sunny, windy island has no coal or oil and must ship fuel 500 km. Which plan does the evidence support?',
+   a:['Ship oil forever','Use no electricity','Build solar and wind — the island already has both, and they never run out','Dig for coal that isn’t there'],correct:2,
+   why:'The best source depends on what the place actually has; here sun and wind are on site and unlimited.'},
+  {q:'Which statement about environmental effects is TRUE?',
+   a:['Every energy source affects the environment in some way','Only coal has effects','Renewables have zero effects','Effects only matter for oil'],correct:0,
+   why:'Even renewables take land, need mined materials, and change habitats — smaller effects, not none.'},
+  {q:'Zoe said solar panels have absolutely zero environmental effects. What’s the honest correction?',
+   a:['Solar is worse than coal','Nothing — she’s right','Solar farms take land, need mined metals, and must be disposed of — much less harm than coal, but not zero','Solar doesn’t actually work'],correct:2,
+   why:'That was Zoe’s trap. Renewable means the source won’t run out; it doesn’t mean harmless.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-ESS3-1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Sort energy sources into renewable and non-renewable, weigh their trade-offs with evidence, pick the source that fits a particular place, and stay honest that every source affects the environment.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Zoe. Renewable means the source won’t run out — not that it’s harmless.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredRes=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

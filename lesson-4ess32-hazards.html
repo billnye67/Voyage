@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Designing for disasters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; People &amp; the Planet</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-ESS3-2</div>
+    <h1>Designing for disasters</h1>
+    <p>Nobody can stop an earthquake. Nobody can talk a hurricane out of landing. But two towns hit by the very same storm can end up with wildly different damage — and the difference is design. Learn how engineers use maps, evidence, and clever building to shrink what a disaster can do.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-ESS3-2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-ESS3-2</div>
+      <div class="side-title">Designing for disasters</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredHaz=false;
+var TASKS=[
+  {ans:1, txt:'<b>A river town floods every spring.</b> Which design REDUCES the impact?',
+   opts:['Stop the rain from falling','Build the houses UP on stilts so floodwater passes underneath','Ask the river to move'], won:'stilts beat floods'},
+  {ans:2, txt:'<b>A town sits on an earthquake band (remember: quakes cluster in bands).</b> Which design reduces the impact?',
+   opts:['Build everything from heavy loose bricks that stack fast','Prevent the earthquake from happening','Build with FLEXIBLE frames that sway instead of snapping, and bolt houses to their foundations'], won:'flex beats shaking'},
+  {ans:0, txt:'<b>A coastal town gets hurricanes.</b> Which design reduces the impact?',
+   opts:['A warning system so people can leave in time, plus storm shutters on windows','Bigger windows to watch the storm','Nothing — hurricanes can’t be prepared for'], won:'warn + protect'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Match the defense'}]},
+  {phase:'Learn',   items:[{s:1, n:'Can’t stop, can prepare'},{s:2, n:'Two towns, one quake'},{s:3, n:'Where the map goes first'},{s:4, n:'Catch Mateo’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',WAT='#7fb0d4',HOUSE='#d9cdb6';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function house(x,y,w,hh,lean){
+  var sk=lean?' transform="rotate('+lean+' '+(x+w/2)+' '+(y+hh)+')"':'';
+  return '<g'+sk+'><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+hh+'" fill="'+HOUSE+'" stroke="'+INK+'" stroke-width="2.5"/>'+
+    '<polygon points="'+(x-8)+','+y+' '+(x+w/2)+','+(y-22)+' '+(x+w+8)+','+y+'" fill="#c2714f" stroke="'+INK+'" stroke-width="2.5"/></g>';
+}
+function figFlood(){
+  var s=tx(310,22,'SAME FLOOD, TWO DESIGNS',11.5,INK,700);
+  /* left: on the ground, flooded */
+  s+=tx(160,48,'HOUSE ON THE GROUND',10.5,INK,700);
+  s+=ln(40,160,280,160,'#8a6a4a',2.5);
+  s+=house(110,104,100,56);
+  s+='<rect x="40" y="128" width="240" height="32" fill="'+WAT+'" opacity=".75"/>';
+  s+=tx(160,182,'water is INSIDE the house',10,ACC,700);
+  /* right: on stilts, dry */
+  s+=tx(460,48,'HOUSE ON STILTS',10.5,INK,700);
+  s+=ln(340,160,580,160,'#8a6a4a',2.5);
+  s+=house(410,72,100,42);
+  s+=ln(424,114,424,160,INK,4)+ln(496,114,496,160,INK,4);
+  s+='<rect x="340" y="128" width="240" height="32" fill="'+WAT+'" opacity=".75"/>';
+  s+=tx(460,182,'water passes UNDERNEATH — house dry',10,GRN,700);
+  s+=tx(310,208,'the flood was identical. the DESIGN decided the damage.',10.5,MUT,400);
+  return boxSVG(s,220);
+}
+function figQuake(){
+  var s=tx(310,22,'SAME EARTHQUAKE, TWO BUILDINGS',11.5,INK,700);
+  /* stiff, cracked */
+  s+=tx(160,48,'STIFF, UNBOLTED',10.5,INK,700);
+  s+=ln(40,166,280,166,'#8a6a4a',2.5);
+  s+=house(110,100,100,66,6);
+  s+=ln(150,116,132,150,ACC,3)+ln(132,150,152,158,ACC,3);
+  s+=tx(160,192,'cracks, slides off its base',10,ACC,700);
+  /* flexible, bolted */
+  s+=tx(460,48,'FLEXIBLE + BOLTED DOWN',10.5,INK,700);
+  s+=ln(340,166,580,166,'#8a6a4a',2.5);
+  s+=house(410,100,100,66,2);
+  s+='<path d="M 402 168 q 8 -8 16 0" fill="none" stroke="'+GRN+'" stroke-width="3"/>';
+  s+='<path d="M 502 168 q 8 -8 16 0" fill="none" stroke="'+GRN+'" stroke-width="3"/>';
+  s+=tx(460,192,'sways, stays standing, bolted to its base',10,GRN,700);
+  s+=tx(310,216,'shaking is the same — survival is a design choice',10.5,MUT,400);
+  return boxSVG(s,228);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Match the defense</h2>';
+  h+='<p>A <b>natural hazard</b> is a dangerous Earth event — earthquake, flood, hurricane, wildfire, tornado. Two hard truths run this whole lesson. <b>1. People cannot prevent hazards from happening.</b> No one stops an earthquake or cancels a storm. <b>2. People CAN reduce their impact</b> — how much damage and harm the event causes — in three ways: <b>build stronger</b> (stilts above flood level, flexible frames that sway, shutters over windows), <b>build somewhere safer</b> (use hazard maps to avoid the riskiest ground), and <b>warn early</b> (alarms and forecasts that give people time to get out). Match each hazard to a defense.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figFlood();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickHaz('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">You can’t stop the event. You can shrink the damage: build strong, build smart, warn early.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredHaz=false;
+}
+function pickHaz(i){
+  if(answeredHaz||wonCount>=TASKS.length)return;answeredHaz=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The flood still comes — it just goes under the floor instead of through the living room. Same hazard, far less impact.'
+           :wonCount===1?'✓ Rigid things snap; flexible things sway and survive. Bolting the house to its foundation stops it sliding off when the ground jerks.'
+                        :'✓ Two defenses at once: warning gets PEOPLE out of danger, shutters protect the BUILDING. Good plans usually stack more than one.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Remember: you can’t prevent the event, so pick a defense that reduces IMPACT — build stronger, build somewhere safer, or warn early. Try again.';
+    setTimeout(function(){if(step===0){answeredHaz=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Can’t stop it — can prepare for it</h2>';
+  h+='<p>Split every idea into two columns and the confusion disappears:</p>';
+  h+='<table><tr><th>Can people PREVENT it?</th><th>Can people REDUCE the impact?</th></tr>';
+  h+='<tr><td>earthquake — no</td><td>yes: flexible buildings, bolted foundations, drills</td></tr>';
+  h+='<tr><td>flood — no</td><td>yes: stilts, levees, don’t build on the floodplain</td></tr>';
+  h+='<tr><td>hurricane — no</td><td>yes: warnings, evacuation routes, storm shutters</td></tr>';
+  h+='<tr><td>wildfire — no</td><td>yes: clear brush around houses, fire-resistant roofs</td></tr></table>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, hazard edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;building on stilts reduces flood damage<br>';
+  h+='EVIDENCE: after the same flood, ground-level houses had water<br>inside and stilt houses stayed dry — same storm, same street</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Hazards are unstoppable; damage is not. Engineers reduce impact by making structures tougher, choosing safer locations, and getting people warned in time.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Two towns, one earthquake</h2>';
+  h+='<p>One earthquake, one valley, two towns the same size and the same distance from it. <b>Town A</b> built with stiff brick walls resting loose on the dirt. <b>Town B</b> built with flexible frames bolted to their foundations, and ran earthquake drills every year.</p>';
+  h+='<div class="ask"><div class="q">Predict the morning after.</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Town B has far less damage — the design decided it</button><button class="btn sm" onclick="checkPredict(\'b\')">Identical damage — the quake was the same</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figQuake();
+  h+='<div class="work"><div class="lab">Why the same quake did different damage</div>';
+  h+='stiff walls &nbsp;→&nbsp; can’t bend with the shaking, so they CRACK<br>';
+  h+='loose on the dirt &nbsp;→&nbsp; the ground jerks out from under the house<br>';
+  h+='flexible + bolted &nbsp;→&nbsp; sways with the shaking and stays attached<br>';
+  h+='the drills &nbsp;→&nbsp; people knew where to go in the first ten seconds<br>';
+  h+='the hazard was identical. the PREPARATION was not.</div>';
+  h+='<p>This is the strongest evidence in the whole field: the shaking can’t explain the difference, because the shaking was the same. Only the design can.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Town B, by a mile.</b> Same quake, different preparation — so any difference in damage points straight at the design.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Same quake, different buildings.</b> Stiff unbolted walls crack and slide; flexible bolted frames sway and stand. The event was equal, the outcome wasn’t.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Where the map goes first</h2>';
+  h+='<p>Before any building goes up, engineers pull out the hazard maps — the same kind of map you learned to read: dots and bands showing where past events happened.</p>';
+  h+='<div class="work"><div class="lab">From map to decision</div>';
+  h+='the quake map shows a band through the valley<br>';
+  h+='→ new schools get flexible frames and bolted foundations<br>';
+  h+='the flood map shows the river’s past high-water line<br>';
+  h+='→ no houses below that line; the park goes there instead<br>';
+  h+='the wildfire map shows dry brush zones<br>';
+  h+='→ clear a gap between the forest and the neighborhood</div>';
+  h+='<table><tr><th>Defense</th><th>What it protects</th></tr>';
+  h+='<tr><td>warning sirens and forecasts</td><td>people — they get time to move</td></tr>';
+  h+='<tr><td>stronger buildings</td><td>the structures themselves</td></tr>';
+  h+='<tr><td>smart location choices</td><td>both — the danger never reaches them</td></tr></table>';
+  h+='<p>None of it makes anyone hazard-proof; that isn’t on the menu. It makes the difference between a scary night and a destroyed town — which, when the hazard is coming anyway, is the entire game.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Hazard maps turn history into decisions: where to build, how strong to build, and who to warn. Evidence in, damage down.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Mateo says preparing is pointless</h2>';
+  h+='<p>Mateo shrugged off the whole thing: <i>“You can’t stop an earthquake, so why bother preparing? If it’s coming anyway, nothing you do matters.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testMateo()">Put his logic next to the evidence</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The flaw in Mateo’s logic</div>';
+  h+='what he got right: &nbsp;you truly cannot prevent the earthquake<br>';
+  h+='the leap he made: &nbsp;“therefore the damage is fixed too”<br>';
+  h+='the counter-evidence: &nbsp;Town A cracked apart, Town B stayed up —<br><b>same quake</b><br>';
+  h+='the real choice: &nbsp;not “quake or no quake,” but<br><b>“how much damage when it comes”</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMateo();
+}
+function testMateo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>He mixed up the event with its impact.</b> Preventing an earthquake is off the table — Mateo’s right about that, and it’s the reason engineers stopped trying. What’s absolutely on the table is how much it destroys: two towns, one quake, opposite mornings. Preparation doesn’t control whether the hazard arrives. It controls what’s still standing when it leaves.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which statement about natural hazards is TRUE?',
+   a:['People can prevent earthquakes with enough technology','People can’t prevent hazards, but they CAN reduce the damage they cause','Hazards only happen where nobody lives','Preparing makes no difference'],correct:1,
+   why:'Prevention isn’t possible; impact reduction absolutely is. That distinction runs the whole field.'},
+  {q:'A town floods every spring. Which design reduces the impact?',
+   a:['Build houses on stilts so water passes underneath','Paint the houses blue','Build in the lowest part of the floodplain','Remove the roofs'],correct:0,
+   why:'Stilts lift the living space above the water — the flood still comes, but it goes under the floor.'},
+  {q:'Two same-size towns, same earthquake. Town A: stiff brick walls sitting loose on dirt. Town B: flexible frames bolted to foundations. What do you predict?',
+   a:['Identical damage','Town A does better','Town B has far less damage — flexible bolted buildings sway and stay standing','Both are destroyed equally'],correct:2,
+   why:'Same shaking, different design. Since the quake was equal, the design must explain the difference.'},
+  {q:'How do engineers use a hazard map before building a new school?',
+   a:['They frame it for the lobby','They check whether the site is in a risky zone and design for that hazard','They ignore it — maps only show the past','They use it to predict the exact date of the next quake'],correct:1,
+   why:'Maps turn past events into decisions: where to build and how strong to build there.'},
+  {q:'Mateo said preparing is pointless because you can’t stop an earthquake. What’s wrong with that?',
+   a:['You actually can stop earthquakes','Nothing — he’s right','Earthquakes aren’t real hazards','You can’t stop the event, but preparation changes how much damage it does — Town A and Town B prove it'],correct:3,
+   why:'That was Mateo’s trap. He confused the event (unstoppable) with the impact (very much changeable).'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-ESS3-2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Separate a hazard you can’t prevent from an impact you can shrink, match defenses to floods, quakes, and hurricanes, and use hazard maps to decide where and how to build.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Mateo. Same quake, two towns, opposite mornings — that’s the proof preparation works.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredHaz=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

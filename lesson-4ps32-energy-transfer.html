@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · How energy travels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Energy</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-PS3-2</div>
+    <h1>How energy travels</h1>
+    <p>A drum booms across a gym and your chest feels it. The sun sits 150 million kilometers away and still warms your face. A switch on one wall lights a bulb on another. Energy is constantly on the move — and it only travels four ways. Learn the four carriers, and you can trace any energy delivery on Earth.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS3-2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-PS3-2</div>
+      <div class="side-title">How energy travels</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredCar=false;
+var TASKS=[
+  {ans:0, txt:'<b>Across the gym, a drummer hits the bass drum — and you feel the boom in your chest.</b> Which carrier delivered that energy to you?',
+   opts:['Sound — the drum’s vibration traveled through the air to your body','Heat — the drum warmed you','Electric current — through hidden wires'], won:'sound carried it'},
+  {ans:1, txt:'<b>A metal spoon sits in hot soup. Soon the dry handle — high above the soup — is hot too.</b> Which carrier moved the energy up the spoon?',
+   opts:['Sound','Heat — energy flowed through the metal from the hot end to the cool end','Electric current'], won:'heat flowed up the metal'},
+  {ans:2, txt:'<b>You flip a switch by the door, and a bulb across the room instantly glows.</b> Which carrier delivered energy to the bulb?',
+   opts:['Sound','Heat','Electric current — energy flowing through the wires in the wall'], won:'current through the wires'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Name the carrier'}]},
+  {phase:'Learn',   items:[{s:1, n:'The four carriers'},{s:2, n:'The light puzzle'},{s:3, n:'Carrier chains'},{s:4, n:'Catch Ren’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',BLU='rgba(27,79,138,.25)',PALE='rgba(240,102,63,.15)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function arrow(x1,y1,x2,y2,c){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L;
+  return ln(x1,y1,x2,y2,c,2.5)+'<polygon points="'+x2+','+y2+' '+(x2-10*ux+5*(-uy)).toFixed(1)+','+(y2-10*uy+5*ux).toFixed(1)+' '+(x2-10*ux-5*(-uy)).toFixed(1)+','+(y2-10*uy-5*ux).toFixed(1)+'" fill="'+(c||INK)+'"/>';
+}
+function figCarriers(){
+  var s=tx(310,24,'FOUR WAYS ENERGY TRAVELS',11.5,INK,700);
+  /* sound */
+  s+='<rect x="46" y="60" width="34" height="46" rx="4" fill="'+BLU+'" stroke="'+INK+'" stroke-width="2"/>';
+  for(var i=0;i<3;i++)s+='<path d="M '+(92+i*13)+' 68 Q '+(100+i*13)+' 83 '+(92+i*13)+' 98" fill="none" stroke="'+ACC+'" stroke-width="2"/>';
+  s+=tx(100,132,'SOUND',11.5)+tx(100,148,'vibrations travel',9.5,MUT,400)+tx(100,160,'through air & stuff',9.5,MUT,400);
+  /* light */
+  s+='<circle cx="238" cy="78" r="15" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>';
+  for(i=0;i<3;i++)s+=ln(258+i*3,64+i*10,286+i*3,58+i*14,ACC,2);
+  s+=tx(262,132,'LIGHT',11.5)+tx(262,148,'beams travel — even',9.5,MUT,400)+tx(262,160,'through empty space',9.5,MUT,400);
+  /* heat */
+  s+='<rect x="380" y="86" width="60" height="14" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+=tx(388,78,'HOT',8.5,ACC,700)+tx(432,78,'cool',8.5,MUT,400);
+  s+=arrow(392,93,428,93,ACC);
+  s+=tx(410,132,'HEAT',11.5)+tx(410,148,'flows from warm',9.5,MUT,400)+tx(410,160,'things to cool ones',9.5,MUT,400);
+  /* electric */
+  s+='<rect x="500" y="60" width="24" height="34" rx="3" fill="'+BLU+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<path d="M 524 77 C 548 77 548 95 566 95" fill="none" stroke="'+INK+'" stroke-width="2.5"/>';
+  s+='<circle cx="578" cy="95" r="10" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+=tx(546,132,'ELECTRIC CURRENT',10.5)+tx(546,148,'energy flowing',9.5,MUT,400)+tx(546,160,'through wires',9.5,MUT,400);
+  return boxSVG(s,176);
+}
+function figChain(){
+  var s=tx(310,24,'ONE TOASTER, TWO CARRIERS IN A CHAIN',11.5,INK,700);
+  s+='<rect x="50" y="66" width="56" height="40" rx="4" fill="'+BLU+'" stroke="'+INK+'" stroke-width="2"/>'+tx(78,90,'wall',10)+tx(78,118,'outlet',9.5,MUT,400);
+  s+=arrow(112,86,208,86,ACC)+tx(160,72,'electric current',9.5,ACC,700)+tx(160,104,'through the cord',9,MUT,400);
+  s+='<rect x="214" y="60" width="80" height="52" rx="6" fill="'+PALE+'" stroke="'+INK+'" stroke-width="2"/>'+tx(254,86,'toaster',10)+tx(254,98,'wires glow',8.5,MUT,400);
+  s+=arrow(300,86,388,86,ACC)+tx(344,72,'heat',9.5,ACC,700)+tx(344,104,'to the bread',9,MUT,400);
+  s+='<rect x="394" y="66" width="52" height="40" rx="5" fill="#fff" stroke="'+INK+'" stroke-width="2"/>'+tx(420,90,'toast!',10);
+  s+=tx(310,148,'energy hops carriers: current in the cord, then heat into the bread',10,MUT,400);
+  return boxSVG(s,160);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Name the carrier</h2>';
+  h+='<p>Energy can move from one place to another — and it travels by <b>four carriers</b>. <b>Sound</b>: a vibration travels through air (or walls, or water) — that’s how a drum’s energy reaches your chest. <b>Light</b>: beams travel in straight lines, even through empty space — that’s how the sun’s energy reaches Earth. <b>Heat</b>: energy flows through materials <b>from warm ends to cool ends</b> — that’s how a pan handle gets hot. <b>Electric current</b>: energy flows <b>through wires</b> — that’s how a wall outlet feeds a lamp. Name the carrier in each delivery.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Delivery '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figCarriers();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickCar('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Ask: what did the energy travel THROUGH to get there?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredCar=false;
+}
+function pickCar(i){
+  if(answeredCar||wonCount>=TASKS.length)return;answeredCar=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ The drum shook the air, the shaking crossed the gym, and your chest caught it. Energy delivered by sound.'
+           :wonCount===1?'✓ The soup end is warm, the handle is cool — and heat always flows from warm to cool, straight up the metal.'
+                        :'✓ No warmth traveled, no sound — the energy raced through the wires in the wall. Electric current.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Trace the route: through shaking air = sound. Through a warm-to-cool material = heat. Through wires = electric current. Try again.';
+    setTimeout(function(){if(step===0){answeredCar=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The four carriers, on one card</h2>';
+  h+=figCarriers();
+  h+='<div class="work"><div class="lab">Your three deliveries, traced start to finish</div>';
+  h+='drum → shaking air → your chest &nbsp;&nbsp;(carrier: SOUND)<br>';
+  h+='hot soup → up the metal spoon → cool handle &nbsp;&nbsp;(carrier: HEAT)<br>';
+  h+='wall outlet → wires in the wall → glowing bulb &nbsp;&nbsp;(carrier: CURRENT)</div>';
+  h+='<table><tr><th>Carrier</th><th>Travels through</th><th>Evidence it arrived</th></tr>';
+  h+='<tr><td>sound</td><td>air, walls, water</td><td>you hear it or feel the vibration</td></tr>';
+  h+='<tr><td>light</td><td>air — and empty space</td><td>you see it; surfaces warm up</td></tr>';
+  h+='<tr><td>heat</td><td>materials, warm → cool</td><td>the cool end warms up</td></tr>';
+  h+='<tr><td>electric current</td><td>wires</td><td>devices switch on far from the source</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every energy delivery has a <b>start</b>, a <b>route</b>, and an <b>arrival</b> you can observe. Naming the carrier means naming the route: shaking air, a light beam, warm-to-cool material, or a wire.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The light puzzle</h2>';
+  h+='<p>Stand in a sunbeam and your face warms up. But here’s the puzzle: between the sun and Earth lies 150 million kilometers of <b>empty space — no air at all</b>. Sound needs air to shake. Heat needs material to flow through. Wires? None out there.</p>';
+  h+='<div class="ask"><div class="q">So which carrier delivered the sun’s energy to your face?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Light — the one carrier that crosses empty space</button><button class="btn sm" onclick="checkPredict(\'b\')">Heat — flowing through the air between</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">Ruling out the carriers</div>';
+  h+='sound? &nbsp;&nbsp;&nbsp;needs air to shake — space is empty ✗<br>';
+  h+='heat? &nbsp;&nbsp;&nbsp;&nbsp;needs material to flow through — none for millions of km ✗<br>';
+  h+='current? &nbsp;needs wires — no cosmic extension cord ✗<br>';
+  h+='light? &nbsp;&nbsp;&nbsp;&nbsp;travels through empty space ✓ — <b>the only carrier left</b></div>';
+  h+='<p>And notice what light delivers when it lands: your face <b>warms</b>, and your eyes <b>see</b>. A light beam is energy on the move — sunlight is the biggest energy delivery on Earth, powering plants, weather, everything.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Light.</b> It’s the only carrier that doesn’t need air, material, or wires — it crosses empty space and lands as warmth on your face.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Check the route.</b> Heat needs material to flow through, and space is empty for 150 million km. Only light makes that trip.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Real machines chain the carriers</h2>';
+  h+='<p>Most energy deliveries aren’t one hop — they’re a <b>relay race</b>, with the energy switching carriers along the way:</p>';
+  h+=figChain();
+  h+='<div class="work"><div class="lab">More relay races you know</div>';
+  h+='speaker: &nbsp;outlet →(current)→ speaker →(sound)→ your ears<br>';
+  h+='lamp: &nbsp;&nbsp;&nbsp;&nbsp;outlet →(current)→ bulb →(light)→ the whole room<br>';
+  h+='stove: &nbsp;&nbsp;&nbsp;outlet →(current)→ burner →(heat)→ the pot of soup</div>';
+  h+='<p>Tracing a chain is easy if you ask at every hop: <b>what is the energy traveling through right now?</b> Wire → current. Air shaking → sound. Beam → light. Warm-to-cool material → heat.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Energy hops carriers like runners passing a baton. To trace any device: follow the energy hop by hop, naming each carrier by its route.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Ren says the lamp makes its own energy</h2>';
+  h+='<p>Ren declared: <i>“The lamp makes its own light energy inside the bulb. The cord is just there to hold it in place.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testRen()">Test it with one observation</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The unplug test</div>';
+  h+='if the lamp MAKES its own energy &nbsp;→&nbsp; unplugging should change nothing<br>';
+  h+='unplug it &nbsp;→&nbsp; instant darkness<br>';
+  h+='so the light was DELIVERED, not homemade —<br>';
+  h+='<b>power station →(current through wires)→ bulb →(light)→ room</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testRen();
+}
+function testRen(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>One unplug destroys Ren’s claim.</b> If the bulb were its own energy source, the cord wouldn’t matter — but cut the wire’s delivery and the light dies instantly. That’s evidence: the energy arrives by electric current from far away, then leaves the bulb as light (and a little heat — feel a bulb that’s been on!). Devices don’t make energy; they receive it and change its carrier.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Thunder from a distant storm rattles your window. Which carrier delivered that energy?',
+   a:['Sound — the vibration traveled through the air to the glass','Light','Heat','Electric current'],correct:0,
+   why:'The boom is a vibration crossing kilometers of air — sound is the carrier, and the rattling window is the evidence it arrived.'},
+  {q:'Heat always flows in one direction. Which is it?',
+   a:['From big things to small things','From warm things to cool things','From metal to plastic','It flows randomly'],correct:1,
+   why:'Warm to cool, always — that’s why the spoon handle heats up and your cocoa cools down.'},
+  {q:'The sun’s energy crosses 150 million km of EMPTY space to reach Earth. Which carrier can make that trip?',
+   a:['Sound','Heat flowing through air','Light — it needs no air, material, or wires','Electric current'],correct:2,
+   why:'Empty space rules out sound (no air), heat (no material), and current (no wires). Light is the one carrier that crosses the void.'},
+  {q:'Trace the toaster: energy leaves the wall outlet and ends up browning the bread. What’s the carrier chain?',
+   a:['Sound, then light','Electric current through the cord, then heat into the bread','Heat the whole way','Light, then sound'],correct:1,
+   why:'A relay: current carries the energy through the cord to the glowing wires, then heat carries it into the bread.'},
+  {q:'Ren said the lamp makes its own energy and the cord is decoration. What proved him wrong?',
+   a:['Lamps are too small to make energy','The bulb was warm','Unplugging it kills the light instantly — the energy was being DELIVERED by current through the wire','Nothing — he was right'],correct:2,
+   why:'That was Ren’s trap. One unplug shows the truth: no delivery, no light. Devices receive energy and change its carrier — they don’t create it.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-PS3-2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Name energy’s four carriers by their routes, rule carriers in or out with evidence, trace relay chains through real devices, and unplug any claim that a machine makes its own energy.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ren. One unplug shows whether energy is homemade or delivered.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredCar=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

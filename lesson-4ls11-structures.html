@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Built to survive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Living Things</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-LS1-1</div>
+    <h1>Built to survive</h1>
+    <p>A cactus has spines instead of leaves. A hawk has talons instead of paws. Nothing on a living body is decoration — every part is a tool doing a job that keeps its owner alive. Learn to look at any plant or animal and read its parts like a toolbox.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-LS1-1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-LS1-1</div>
+      <div class="side-title">Built to survive</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredStr=false;
+var TASKS=[
+  {ans:1, txt:'<b>Cactus spines.</b> Which job do they do?',
+   opts:['Soak up rainwater like a sponge','Protection — sharp points keep thirsty animals from biting in','Hold the cactus upright in wind'], won:'spines = protection'},
+  {ans:2, txt:'<b>A tree’s roots, spreading underground.</b> Which job?',
+   opts:['Make seeds for new trees','Catch sunlight below the soil','Take in water from the soil — and anchor the tree in place'], won:'roots = water + anchor'},
+  {ans:0, txt:'<b>A hawk’s hooked talons.</b> Which job?',
+   opts:['Grabbing and holding prey — getting food','Digesting food inside the body','Sensing where the wind is coming from'], won:'talons = getting food'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Name the job'}]},
+  {phase:'Learn',   items:[{s:1, n:'The survival toolbox'},{s:2, n:'The mystery animal'},{s:3, n:'Same job, many tools'},{s:4, n:'Catch Nia’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',LEAF='#4c8f6b',BROWN='#8a6a4a';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function figPlant(){
+  var s=tx(310,22,'ONE PLANT, FOUR TOOLS',11.5,INK,700);
+  s+=ln(60,168,560,168,BROWN,2,true)+tx(596,164,'soil',9,MUT,400,'end');
+  /* stem */
+  s+='<rect x="296" y="70" width="14" height="98" fill="'+LEAF+'" stroke="'+INK+'" stroke-width="2"/>';
+  /* leaves */
+  s+='<ellipse cx="248" cy="88" rx="40" ry="16" fill="'+LEAF+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<ellipse cx="358" cy="88" rx="40" ry="16" fill="'+LEAF+'" stroke="'+INK+'" stroke-width="2"/>';
+  /* flower */
+  for(var a=0;a<6;a++){var r=Math.PI/3*a;s+='<ellipse cx="'+(303+Math.cos(r)*17)+'" cy="'+(52+Math.sin(r)*17)+'" rx="10" ry="8" fill="#e8b93c" stroke="'+INK+'" stroke-width="1.8"/>';}
+  s+='<circle cx="303" cy="52" r="8" fill="#fff" stroke="'+INK+'" stroke-width="2"/>';
+  /* roots */
+  s+=ln(303,168,268,206,BROWN,2.5)+ln(303,168,303,212,BROWN,2.5)+ln(303,168,340,206,BROWN,2.5);
+  /* labels */
+  s+=tx(408,50,'FLOWER — makes seeds',10,ACC,700,'start')+ln(330,52,400,50,GREY,1.5);
+  s+=tx(24,84,'LEAVES —',10,ACC,700,'start')+tx(24,100,'catch sunlight to make food',9,MUT,400,'start')+ln(180,90,206,88,GREY,1.5);
+  s+=tx(410,120,'STEM — holds it up,',10,ACC,700,'start')+tx(410,136,'carries water upward',9,MUT,400,'start')+ln(316,124,404,122,GREY,1.5);
+  s+=tx(24,204,'ROOTS —',10,ACC,700,'start')+tx(24,220,'take in water, anchor the plant',9,MUT,400,'start')+ln(196,208,262,206,GREY,1.5);
+  return boxSVG(s,238);
+}
+function figMystery(reveal){
+  var s=tx(310,22,'MYSTERY ANIMAL — READ THE TOOLS',11.5,INK,700);
+  /* webbed foot */
+  s+='<path d="M 110 130 L 90 90 M 110 130 L 110 86 M 110 130 L 130 90" stroke="'+INK+'" stroke-width="3" fill="none"/>';
+  s+='<path d="M 90 90 Q 110 112 130 90 Q 110 100 90 90 Z" fill="#e8b93c" stroke="'+INK+'" stroke-width="2"/>';
+  s+=tx(110,152,'webbed feet',10,INK,700)+tx(110,168,'skin between the toes',8.5,MUT,400);
+  /* oily feathers */
+  s+='<path d="M 290 84 q 34 14 0 46 q -18 -22 0 -46 Z" fill="#cfe0ee" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<circle cx="270" cy="94" r="6" fill="none" stroke="'+GRN+'" stroke-width="2"/><circle cx="262" cy="112" r="5" fill="none" stroke="'+GRN+'" stroke-width="2"/>';
+  s+=tx(290,152,'oily feathers',10,INK,700)+tx(290,168,'water beads up and rolls off',8.5,MUT,400);
+  /* head with a wide flat bill */
+  s+='<circle cx="452" cy="104" r="20" fill="#cfe0ee" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<circle cx="458" cy="98" r="3" fill="'+INK+'"/>';
+  s+='<path d="M 470 98 q 34 -2 40 8 q -34 12 -42 4 Z" fill="#e8b93c" stroke="'+INK+'" stroke-width="2"/>';
+  s+=tx(490,152,'wide flat bill',10,INK,700)+tx(490,168,'strains food out of pond mud',8.5,MUT,400);
+  if(reveal)s+=tx(310,198,'a swimming, dabbling water bird — a DUCK',11.5,GRN,700);
+  else s+=tx(310,198,'three tools. what life do they add up to?',10.5,MUT,400);
+  return boxSVG(s,210);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Name the job</h2>';
+  h+='<p>A <b>structure</b> is a body part — a root, a spine, a claw. Every structure has a <b>function</b>: the job it does. And living things survive by getting a handful of jobs done: <b>getting food and water</b>, <b>protection from harm</b>, <b>support</b> (holding the body up or in place), <b>sensing the world</b>, and <b>making new young</b>. Here’s the plant version up front: <b>roots take in water and anchor the plant</b>, <b>the stem holds it up and carries water</b>, <b>leaves catch sunlight to make food</b>, <b>flowers make seeds</b>, and <b>sharp spines protect</b>. Match each structure to its job.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figPlant();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickStr('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Every part is a tool. Ask: what job keeps its owner alive?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredStr=false;
+}
+function pickStr(i){
+  if(answeredStr||wonCount>=TASKS.length)return;answeredStr=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Spines are the cactus’s armor. In a desert where every animal is desperate for the water inside it, protection IS survival.'
+           :wonCount===1?'✓ Roots do double duty: they drink from the soil AND grip like cables, which is why a storm can bend a tree without lifting it.'
+                        :'✓ Talons are hooks for catching. Every part of a hawk’s hunt runs through those grabbers — no talons, no dinner.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Re-read the job list: food/water, protection, support, sensing, making young — and the plant parts named above. Try again.';
+    setTimeout(function(){if(step===0){answeredStr=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The survival toolbox</h2>';
+  h+='<p>Line up plants and animals side by side and you see the same jobs solved with different hardware:</p>';
+  h+='<table><tr><th>Job</th><th>Plant tool</th><th>Animal tool</th></tr>';
+  h+='<tr><td>get food</td><td>leaves (catch sunlight)</td><td>teeth, beak, talons</td></tr>';
+  h+='<tr><td>get water</td><td>roots</td><td>mouth, tongue</td></tr>';
+  h+='<tr><td>protection</td><td>spines, thick bark</td><td>shell, quills, fur</td></tr>';
+  h+='<tr><td>support</td><td>stem, trunk</td><td>bones, skeleton</td></tr>';
+  h+='<tr><td>sense the world</td><td>—</td><td>eyes, ears, nose, whiskers</td></tr>';
+  h+='<tr><td>make young</td><td>flowers, seeds</td><td>eggs, live young</td></tr></table>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, structure edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;a cactus’s spines are for protection<br>';
+  h+='EVIDENCE: they’re sharp and cover the whole plant,<br>and desert animals that bite one get stabbed instead of a drink</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p><b>Structure fits function.</b> Look at a part’s shape and where it sits, and you can figure out the survival job it does.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The mystery animal</h2>';
+  h+='<p>Scientists get handed unknown creatures all the time. They don’t panic — they read the tools. Here are three structures from one animal you’ve never been told the name of:</p>';
+  h+=figMystery(false);
+  h+='<div class="ask"><div class="q">Where does this animal live and how does it eat?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">In water — it swims and strains food from the mud</button><button class="btn sm" onclick="checkPredict(\'b\')">In dry desert sand — it hunts by chasing</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figMystery(true);
+  h+='<div class="work"><div class="lab">The reasoning chain</div>';
+  h+='webbed feet &nbsp;→&nbsp; paddles. only useful in WATER<br>';
+  h+='oily feathers &nbsp;→&nbsp; water rolls off. only needed if you get WET<br>';
+  h+='wide flat bill &nbsp;→&nbsp; a strainer, not a stabber. scoops from soft mud<br>';
+  h+='three tools, one answer: &nbsp;<b>a swimming water bird</b></div>';
+  h+='<p>You identified an animal’s whole way of life without being told a single fact about it — just by reading its structures. That’s exactly how scientists work.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>A water bird.</b> Paddling feet, waterproof feathers, straining bill — every tool points to the same pond.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Check the tools against a desert:</b> webbed paddles are useless in sand, and waterproof feathers only matter if you get soaked. These are water tools.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Same job, many tools</h2>';
+  h+='<p>Here’s the twist that makes this fun: one job gets solved a dozen different ways depending on where you live.</p>';
+  h+='<table><tr><th>Job: protection</th><th>The tool</th></tr>';
+  h+='<tr><td>turtle</td><td>a hard shell it hides inside</td></tr>';
+  h+='<tr><td>porcupine</td><td>quills that stab whatever bites</td></tr>';
+  h+='<tr><td>rose bush</td><td>thorns along every stem</td></tr>';
+  h+='<tr><td>skunk</td><td>a spray nobody wants a second dose of</td></tr></table>';
+  h+='<div class="work"><div class="lab">Two ways to explain a structure</div>';
+  h+='the SHAPE tells you the job &nbsp;→&nbsp; hooked and sharp = grabbing<br>';
+  h+='the PLACE tells you the job &nbsp;→&nbsp; underground = water and anchoring<br>';
+  h+='both agree? &nbsp;→&nbsp; you’ve almost certainly got the function right</div>';
+  h+='<p>Engineers steal these answers constantly: burrs stuck to a dog’s fur became Velcro, and a duck’s webbed feet became swim fins. Nature has been testing designs for a very long time.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Different living things solve the same survival job with different structures. Reading shape and position tells you which job a part is doing.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Nia says the spines are decoration</h2>';
+  h+='<p>Looking at a cactus, Nia shrugged: <i>“The spines are just how it looks. Some plants are spiky, some aren’t — it doesn’t DO anything.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testNia()">Run the removal test</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The removal test</div>';
+  h+='imagine a cactus with every spine shaved off<br>';
+  h+='the desert is bone dry, and the cactus is <b>full of water</b><br>';
+  h+='every thirsty animal for miles &nbsp;→&nbsp; walks up and bites in<br>';
+  h+='the spineless cactus &nbsp;→&nbsp; eaten within days. the spiky one lives</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNia();
+}
+function testNia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The removal test settles it.</b> Take the spines away and the cactus becomes a juice box in the middle of a desert — eaten fast. A part that changes whether its owner lives or dies is not decoration; it’s a survival tool. That’s the test to run on any body part you’re unsure about: <b>what happens without it?</b>';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What job do a plant’s ROOTS do?',
+   a:['Make seeds for new plants','Catch sunlight to make food','Take in water from the soil and anchor the plant','Protect the plant from animals'],correct:2,
+   why:'Roots drink and grip — water in, plant held down.'},
+  {q:'A porcupine’s quills and a turtle’s shell are different structures. What do they have in common?',
+   a:['They both do the job of protection','They both catch sunlight','They both help the animal swim','They both make young'],correct:0,
+   why:'Same survival job, different hardware — that’s the pattern across living things.'},
+  {q:'An unfamiliar animal has webbed feet and oily feathers water rolls off of. What can you conclude?',
+   a:['It lives in dry sand','It spends its life in water — those are swimming and waterproofing tools','It never moves','It eats only rocks'],correct:1,
+   why:'Read the tools: paddles plus waterproofing point straight to a water life.'},
+  {q:'Which structure does the job of SUPPORT — holding a body up?',
+   a:['A flower','A tree’s trunk (and an animal’s bones)','A leaf','A nose'],correct:1,
+   why:'Trunks and skeletons are the support hardware; leaves and flowers have other jobs.'},
+  {q:'Nia called cactus spines “just decoration.” What proves her wrong?',
+   a:['Spines look nice','Nothing — she was right','Spines are made of wood','Remove them and thirsty desert animals eat the water-filled cactus — the spines decide whether it lives'],correct:3,
+   why:'That was Nia’s trap. The removal test — what happens without it? — separates survival tools from decoration.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-LS1-1']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Match structures to survival jobs in plants and animals, read an unfamiliar creature’s way of life from its parts, and use the removal test to prove a structure earns its keep.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Nia. The removal test — what happens without it? — is the tool to use.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredStr=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

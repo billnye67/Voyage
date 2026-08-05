@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · How seeing works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Waves &amp; Information</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-PS4-2</div>
+    <h1>How seeing works</h1>
+    <p>Deep inside a cave with the flashlight off, you see nothing. Not shadowy shapes — NOTHING. Click the light on, and the whole cavern appears. What actually happens between a rock and your eye that makes seeing possible? Build the model and you’ll know why darkness beats even the sharpest eyes.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS4-2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-PS4-2</div>
+      <div class="side-title">How seeing works</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredLit=false;
+var TASKS=[
+  {ans:1, txt:'<b>Flashlight OFF, deep in the cave.</b> You wait and stare. What do you see?',
+   opts:['Faint gray shapes, if you squint','Absolutely nothing — no light means nothing can enter your eyes','Everything, but in black and white'], won:'zero light, zero sight'},
+  {ans:2, txt:'<b>Flashlight ON, aimed at a rock.</b> Why can you see the rock now?',
+   opts:['The rock started glowing on its own','Your eyes shoot out sight-beams that feel the rock','Flashlight light BOUNCES off the rock and enters your eyes'], won:'bounced light reached your eye'},
+  {ans:0, txt:'<b>Your friend across the cave sees the flashlight bulb itself, glowing.</b> How does THAT light reach them?',
+   opts:['Straight from the glowing bulb to their eye — no bounce needed','It bounces off the bulb like it does off the rock','It doesn’t — bulbs can’t be seen'], won:'sources shine straight to the eye'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'In the dark cave'}]},
+  {phase:'Learn',   items:[{s:1, n:'The seeing path'},{s:2, n:'The moon puzzle'},{s:3, n:'Break the path'},{s:4, n:'Catch Sam’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',BLU='rgba(27,79,138,.25)',YEL='#e8b93c';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function arrow(x1,y1,x2,y2,c,w){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L;
+  return ln(x1,y1,x2,y2,c,w||2.5)+'<polygon points="'+x2+','+y2+' '+(x2-10*ux+5*(-uy)).toFixed(1)+','+(y2-10*uy+5*ux).toFixed(1)+' '+(x2-10*ux-5*(-uy)).toFixed(1)+','+(y2-10*uy-5*ux).toFixed(1)+'" fill="'+(c||INK)+'"/>';
+}
+function eye(x,y){
+  return '<path d="M '+(x-20)+' '+y+' Q '+x+' '+(y-14)+' '+(x+20)+' '+y+' Q '+x+' '+(y+14)+' '+(x-20)+' '+y+' Z" fill="#fff" stroke="'+INK+'" stroke-width="2"/>'+
+         '<circle cx="'+x+'" cy="'+y+'" r="6" fill="'+INK+'"/>';
+}
+function torch(x,y){
+  return '<rect x="'+(x-34)+'" y="'+(y-9)+'" width="34" height="18" rx="4" fill="'+BLU+'" stroke="'+INK+'" stroke-width="2"/>'+
+         '<polygon points="'+x+','+(y-12)+' '+(x+14)+','+(y-16)+' '+(x+14)+','+(y+16)+' '+x+','+(y+12)+'" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2"/>';
+}
+function figCave(){
+  var s=tx(310,22,'THE SEEING PATH — SOURCE, BOUNCE, EYE',11.5,INK,700);
+  s+='<rect x="20" y="34" width="580" height="180" rx="10" fill="rgba(22,35,58,.06)"/>';
+  s+=torch(120,150)+tx(103,190,'flashlight (source)',9.5,MUT,400);
+  /* rock */
+  s+='<path d="M 320 176 q -8 -34 24 -40 q 30 -8 40 18 q 8 22 -14 24 Z" fill="#cfd6de" stroke="'+INK+'" stroke-width="2.5"/>';
+  s+=tx(352,192,'rock',9.5,MUT,400);
+  s+=eye(520,80)+tx(520,56,'your eye',9.5,MUT,400);
+  /* light path: torch -> rock -> eye */
+  s+=arrow(140,138,330,148,YEL,3.5)+tx(230,124,'1. light leaves the source',9.5,ACC,700);
+  s+=arrow(352,138,500,88,YEL,3.5)+tx(455,132,'2. it BOUNCES off the rock',9.5,ACC,700);
+  s+=tx(560,80,'3. in!',9.5,GRN,700,'start');
+  return boxSVG(s,226);
+}
+function figMoon(){
+  var s=tx(310,22,'WHY WE SEE THE MOON',11.5,INK,700);
+  s+='<circle cx="90" cy="90" r="26" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2.5"/>'+tx(90,138,'sun (glows)',9.5,MUT,400);
+  s+='<circle cx="330" cy="70" r="18" fill="#cfd6de" stroke="'+INK+'" stroke-width="2.5"/>'+tx(330,42,'moon (rock — no glow)',9.5,MUT,400);
+  s+='<path d="M 490 150 q 14 -20 34 0 q -16 12 -34 0 Z" fill="#fff" stroke="'+INK+'" stroke-width="2"/>';
+  s+='<circle cx="507" cy="147" r="5" fill="'+INK+'"/>'+tx(507,178,'your eye, at night',9.5,MUT,400);
+  s+=arrow(118,82,310,72,YEL,3.5)+tx(212,60,'sunlight',9.5,ACC,700);
+  s+=arrow(348,80,492,140,YEL,3.5)+tx(448,102,'bounces to you',9.5,ACC,700);
+  return boxSVG(s,192);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>In the dark cave</h2>';
+  h+='<p>Here is the whole secret of seeing, up front. <b>Light travels in straight lines</b> from things that glow — the sun, a bulb, a flame. You see a <b>glowing source</b> when its light travels straight into your eye. You see <b>everything else</b> — rocks, chairs, faces — when source light <b>bounces (reflects) off it and enters your eye</b>. Your eyes are <b>catchers, not flashlights</b>: they only receive light, they never send any out. So in a place with <b>zero light, you see zero</b> — nothing to catch means nothing to see, no matter how long you wait. Now: you’re in a pitch-black cave.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figCave();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickLit('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Seeing needs light IN the eye — straight from a source, or bounced off a thing.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredLit=false;
+}
+function pickLit(i){
+  if(answeredLit||wonCount>=TASKS.length)return;answeredLit=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Eyes are catchers. With zero light in the cave, there is nothing for them to catch — so you see nothing at all. Not shapes. Nothing.'
+           :wonCount===1?'✓ The full path: light leaves the flashlight, bounces off the rock, and lands in your eye. Three legs, and the rock appears.'
+                        :'✓ The bulb GLOWS — it’s a source. Its light travels straight to your friend’s eye, no bounce required. That’s the short path.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Trace the path. Seeing = light entering your eye — straight from a glowing source, or bounced off an object. No light in, no sight. Try again.';
+    setTimeout(function(){if(step===0){answeredLit=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>The seeing path, drawn out</h2>';
+  h+='<p>Every act of seeing follows one of two paths. Both END the same place — inside your eye:</p>';
+  h+='<table><tr><th>What you’re seeing</th><th>The light’s path</th></tr>';
+  h+='<tr><td>a glowing source (sun, bulb, flame)</td><td>source → your eye</td></tr>';
+  h+='<tr><td>everything else (rock, chair, face)</td><td>source → bounces off it → your eye</td></tr></table>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, light edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;I see the rock because light bounced off it into my eye<br>';
+  h+='EVIDENCE: flashlight off → rock invisible.<br>flashlight on → rock appears instantly.<br>the only thing that changed was the LIGHT</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Seeing is light <b>arriving</b>: straight from a source, or reflected off an object, into your eye. Remove the light and sight is gone — the eye has nothing to catch.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The moon puzzle</h2>';
+  h+='<p>The moon is a ball of gray rock. Rock doesn’t glow — hold one in the dark and it stays dark. And yet the moon shines bright enough to light a whole night sky.</p>';
+  h+='<div class="ask"><div class="q">How can we see a rock that makes no light of its own?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Sunlight bounces off the moon and travels to our eyes</button><button class="btn sm" onclick="checkPredict(\'b\')">Moon rock secretly glows at night</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figMoon();
+  h+='<div class="work"><div class="lab">The reasoning chain</div>';
+  h+='the moon doesn’t glow &nbsp;→&nbsp; so its light must come from somewhere else<br>';
+  h+='the sun IS a source &nbsp;→&nbsp; its light travels straight to the moon<br>';
+  h+='the moon is an object &nbsp;→&nbsp; the light BOUNCES off it → into your eye<br>';
+  h+='same path as the cave rock — just 400,000 kilometers longer</div>';
+  h+='<p>“Moonlight” is secondhand sunlight. The biggest nightlight in the sky runs on the exact model you built in the cave.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Secondhand sunlight.</b> The moon is the cave rock and the sun is the flashlight — bounce, then into your eye.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Test that claim:</b> moon rocks brought back to Earth sit in the dark like any rock — no glow. The shine must be BOUNCED light. Source: the sun.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Break the path, break the seeing</h2>';
+  h+='<p>The seeing path has three legs — source, bounce, eye. Snap ANY leg and the object vanishes from sight:</p>';
+  h+='<table><tr><th>Break this leg</th><th>What happens</th></tr>';
+  h+='<tr><td>turn off the source</td><td>windowless closet: everything invisible</td></tr>';
+  h+='<tr><td>block the bounce</td><td>rock behind a boulder: light can’t reach it or can’t reach YOU</td></tr>';
+  h+='<tr><td>close your eyes</td><td>light arrives at the lids — and stops</td></tr></table>';
+  h+='<div class="work"><div class="lab">Eyes are catchers — the proof</div>';
+  h+='if eyes sent out sight-beams &nbsp;→&nbsp; you could see in ANY darkness<br>';
+  h+='can anyone see in a sealed dark room? &nbsp;→&nbsp; no one, ever<br>';
+  h+='so eyes must only CATCH &nbsp;→&nbsp; seeing waits on arriving light</div>';
+  h+='<p>This is why headlights exist, why you can’t read under the covers without a torch, and why a cat’s “glowing” eyes at night are really just bounced light from a porch lamp.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Sight requires a complete, unbroken light path ending in your eye. Every trick of darkness and shadow is just a broken leg in that path.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Sam plans to out-wait the dark</h2>';
+  h+='<p>Back in the sealed cave, Sam declared: <i>“Just wait. My eyes always adjust to the dark — give them ten minutes and I’ll see this whole cave.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testSam()">Hold his claim to the model</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The trial</div>';
+  h+='what does “adjusting” do? &nbsp;→&nbsp; eyes get better at catching TINY bits of light<br>';
+  h+='a dim bedroom has tiny light &nbsp;→&nbsp; streetlight glow, clock LEDs — so adjusting works there<br>';
+  h+='a sealed cave has &nbsp;→&nbsp; ZERO light. nothing to catch<br>';
+  h+='better catching × zero light &nbsp;=&nbsp; <b>still zero</b>. forever.</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testSam();
+}
+function testSam(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Sam mixed up “dim” and “dark.”</b> Adjusting makes eyes better catchers — brilliant in a dim room where SOME light sneaks in. But a sealed cave has none. A better catcher with nothing to catch still catches nothing. Cavers know it: without a lamp, you could wait a year and see exactly as much as you did in minute one — nothing.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'You see a red chair across the room. What is happening?',
+   a:['The chair is glowing red','Your eyes send beams that touch the chair','Light from a source bounces off the chair and enters your eyes','Chairs are always visible, light or not'],correct:2,
+   why:'Chairs don’t glow. Source light reflects off the chair and lands in your eye — that arrival IS the seeing.'},
+  {q:'A room is perfectly sealed — zero light gets in. What can you see inside it?',
+   a:['Nothing at all — there is no light to enter your eyes','Everything, once your eyes adjust','Faint outlines of big objects','Only bright-colored things'],correct:0,
+   why:'Eyes are catchers, not flashlights. Zero light means nothing to catch, no matter how adjusted your eyes get.'},
+  {q:'The moon is rock and makes no light of its own. Why can we see it?',
+   a:['Moon rock glows at night','Sunlight bounces off the moon and travels to our eyes','The moon is close enough to see without light','Streetlights reach the moon'],correct:1,
+   why:'Moonlight is secondhand sunlight — the same source-bounce-eye path as the cave rock.'},
+  {q:'Which statement about your eyes is TRUE?',
+   a:['They send out sight-beams that feel objects','They glow faintly in the dark','They work fine with zero light','They only CATCH light that arrives — they never send light out'],correct:3,
+   why:'If eyes sent beams, everyone could see in sealed darkness. No one can — eyes only receive.'},
+  {q:'Sam said ten minutes of adjusting would let him see a sealed cave. What’s wrong with his plan?',
+   a:['Adjusting helps catch tiny light — but the sealed cave has ZERO light to catch','Nothing — he’s right','Ten minutes isn’t long enough; he needs an hour','Caves are too cold for eyes to adjust'],correct:0,
+   why:'That was Sam’s trap. Adjusting sharpens the catcher; it can’t invent light. Zero in, zero seen — forever.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-PS4-2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trace the light path behind every act of seeing — source straight to eye, or source, bounce, eye — explain moonlight as reflected sunlight, and prove why zero light means zero sight.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to the cave. Seeing is light ARRIVING in your eye — trace the path.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredLit=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

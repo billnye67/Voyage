@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Messages in patterns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Waves &amp; Information</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-PS4-3</div>
+    <h1>Messages in patterns</h1>
+    <p>Your best friend is camped across the lake — way too far to shout. But you both have flashlights, and last night you agreed on a secret code. Tonight, blinks of light will carry whole messages across the water. Learn how patterns become information, and how to judge which signal wins when the fog rolls in.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS4-3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-PS4-3</div>
+      <div class="side-title">Messages in patterns</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredSig=false;
+var TASKS=[
+  {ans:0, txt:'<b>Across the lake: blink… blink.</b> Two flashes. What is your friend saying?',
+   opts:['“Stay where you are” — 2 flashes in the agreed code','“Come over” — flashes always mean come','Nothing — flashes can’t carry messages'], won:'2 flashes = stay'},
+  {ans:2, txt:'<b>You’re hungry.</b> Which pattern do you send to say “bring food”?',
+   opts:['One long steady beam','Two flashes','Three flashes — that’s the agreed pattern for it'], won:'3 flashes = bring food'},
+  {ans:1, txt:'<b>Now your friend sends FIVE flashes.</b> Five isn’t in your code. What can you honestly conclude?',
+   opts:['Five must mean “bring MORE food”','You can’t know — a pattern outside the agreed code carries no readable meaning','Five means the code is cancelled'], won:'no agreement, no meaning'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Blinks across the lake'}]},
+  {phase:'Learn',   items:[{s:1, n:'How codes work'},{s:2, n:'Fog rolls in'},{s:3, n:'Signals all around'},{s:4, n:'Catch Theo’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',BLU='rgba(27,79,138,.25)',YEL='#e8b93c';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function flash(x,y,on){
+  var s='<circle cx="'+x+'" cy="'+y+'" r="13" fill="'+(on?YEL:'#fff')+'" stroke="'+INK+'" stroke-width="2"/>';
+  if(on){for(var a=0;a<8;a++){var r=Math.PI/4*a;s+=ln(x+Math.cos(r)*17,y+Math.sin(r)*17,x+Math.cos(r)*23,y+Math.sin(r)*23,ACC,2);}}
+  return s;
+}
+function figCode(){
+  var s=tx(310,22,'THE AGREED CODE',11.5,INK,700);
+  s+=flash(80,62,true)+tx(120,67,'= “come over”',11,INK,700,'start');
+  s+=flash(80,112,true)+flash(118,112,true)+tx(158,117,'= “stay where you are”',11,INK,700,'start');
+  s+=flash(80,162,true)+flash(118,162,true)+flash(156,162,true)+tx(196,167,'= “bring food”',11,INK,700,'start');
+  s+=ln(390,44,390,180,GREY,1.5,true);
+  s+=tx(500,62,'agreed LAST NIGHT,',10,MUT,400);
+  s+=tx(500,80,'by BOTH campers.',10,MUT,400);
+  s+=tx(500,110,'that agreement is',10,MUT,400);
+  s+=tx(500,128,'what turns blinks',10,MUT,400);
+  s+=tx(500,146,'into messages.',10,MUT,400);
+  return boxSVG(s,196);
+}
+function figFog(){
+  var s=tx(310,22,'FOGGY NIGHT: WHICH SIGNAL GETS THROUGH?',11.5,INK,700);
+  s+='<rect x="230" y="40" width="160" height="150" rx="10" fill="rgba(93,107,126,.18)"/>';
+  s+=tx(310,60,'FOG BANK',9.5,MUT,700);
+  s+=tx(80,90,'YOU',10,INK,700);
+  s+=tx(540,90,'FRIEND',10,INK,700);
+  /* light: blocked */
+  s+=flash(80,120,true);
+  s+=ln(100,120,258,120,YEL,3.5)+tx(174,110,'light',9.5,MUT,400);
+  s+='<line x1="268" y1="106" x2="252" y2="134" stroke="'+ACC+'" stroke-width="3.5"/><line x1="252" y1="106" x2="268" y2="134" stroke="'+ACC+'" stroke-width="3.5"/>';
+  s+=tx(300,150,'scattered — blocked',9,ACC,700,'start');
+  /* sound: passes */
+  s+=tx(80,178,'DRUM',9.5,INK,700);
+  var x=100;while(x<510){s+='<path d="M '+x+' 190 q 10 -10 20 0" fill="none" stroke="'+GRN+'" stroke-width="2.5"/>';x+=26;}
+  s+=tx(310,216,'sound rolls right through the fog to your friend’s ears',10,GRN,700);
+  return boxSVG(s,228);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Blinks across the lake</h2>';
+  h+='<p>Here’s how information travels without words. A <b>signal</b> is anything you can switch in a noticeable way — a flash of light, a drumbeat. A <b>pattern of signals carries a message ONLY because sender and receiver agreed on a code beforehand</b>. Your code, agreed last night: <b>1 flash = “come over” · 2 flashes = “stay where you are” · 3 flashes = “bring food.”</b> One warning: a pattern that <b>isn’t in the agreed code carries no readable meaning</b> — without the agreement, a blink is just a blink. It’s dark. The lake is quiet. Lights up.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figCode();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickSig('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Patterns carry meaning only through the agreed code. Read the card.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredSig=false;
+}
+function pickSig(i){
+  if(answeredSig||wonCount>=TASKS.length)return;answeredSig=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Two flashes, and the code card says: stay put. A pattern became a message the instant you both agreed what it means.'
+           :wonCount===1?'✓ Three flashes fire across the lake. Your friend reads the code and packs the marshmallows. Information, delivered by light.'
+                        :'✓ Exactly — you can’t know. Five flashes were never given a meaning, so honest answer: unreadable. Codes only speak the words they were built with.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Check the code card: 1 = come over, 2 = stay, 3 = bring food — and any pattern NOT on the card is unreadable. Try again.';
+    setTimeout(function(){if(step===0){answeredSig=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>How codes actually work</h2>';
+  h+='<p>Pull the trick apart and there are three pieces, every time:</p>';
+  h+='<table><tr><th>Piece</th><th>In your lake setup</th></tr>';
+  h+='<tr><td>a signal you can switch</td><td>flashlight: on / off</td></tr>';
+  h+='<tr><td>patterns built from it</td><td>1, 2, or 3 flashes</td></tr>';
+  h+='<tr><td>an AGREEMENT on meanings</td><td>made last night, by both of you</td></tr></table>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, signal edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;the agreement — not the light — carries the meaning<br>';
+  h+='EVIDENCE: the same 2 flashes mean “stay” to your friend<br>and NOTHING to a stranger on the shore.<br>same light, different knowledge — only the code differs</div>';
+  h+='<p>And the signal doesn’t have to be light. Swap the flashlight for a drum — 1 boom, 2 booms, 3 booms — and the SAME code rides on sound instead. Patterns can travel on any signal you can switch.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Information = <b>pattern + agreed code</b>. The pattern travels (as light, sound, anything switchable); the agreement turns it back into meaning at the far end.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Fog rolls in</h2>';
+  h+='<p>Disaster: a thick fog bank settles over the middle of the lake. Fog scatters light — a flashlight beam dies inside it. But sound rolls through fog just fine. You still need to send “bring food.”</p>';
+  h+='<div class="ask"><div class="q">Two solutions, same code: flashlight flashes, or drum booms. Which gets your message through TONIGHT?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">The drum — sound crosses the fog that blocks the light</button><button class="btn sm" onclick="checkPredict(\'b\')">The flashlight — light always wins</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figFog();
+  h+='<div class="work"><div class="lab">Comparing the two solutions</div>';
+  h+='flashlight: &nbsp;silent, works at night — but FOG BLOCKS IT ✗<br>';
+  h+='drum: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fog can’t stop it ✓ — but it wakes the whole camp<br>';
+  h+='the winner &nbsp;depends on the SITUATION — that’s why engineers<br>always design MORE THAN ONE solution and compare</div></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Boom-boom-boom.</b> The fog that kills the beam can’t stop the sound. Same code, better carrier for tonight.';}
+  else{fb.className='fb no';fb.innerHTML='<b>The fog says otherwise.</b> It scatters the beam before it crosses the lake. Tonight the drum wins — same code, riding on sound instead.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Signals all around you</h2>';
+  h+='<p>Your lake code is a baby version of how the whole modern world talks:</p>';
+  h+='<table><tr><th>System</th><th>Signal</th><th>The agreed code</th></tr>';
+  h+='<tr><td>Morse code</td><td>short/long beeps</td><td>dot-dash patterns for each letter</td></tr>';
+  h+='<tr><td>ship horns</td><td>blasts of sound</td><td>1 blast = turning right, and more</td></tr>';
+  h+='<tr><td>computers &amp; phones</td><td>electric on/off pulses</td><td>patterns of 1s and 0s for EVERYTHING</td></tr></table>';
+  h+='<div class="work"><div class="lab">The astonishing part</div>';
+  h+='your code has 3 patterns &nbsp;→&nbsp; it can say exactly 3 things<br>';
+  h+='computers chain MILLIONS of on/off pulses &nbsp;→&nbsp; enough patterns<br>for every photo, song, and message ever sent<br>';
+  h+='same trick as the lake — just longer patterns, faster switching</div>';
+  h+='<p>Every text you’ve ever received crossed the world as a pattern of signals, decoded at the far end by an agreement between machines. You built the same machine tonight with a flashlight.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>From drumbeats to the internet, information transfer is one invention: switchable signals, patterns, and a code both ends agreed on.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Theo skips the agreement</h2>';
+  h+='<p>Theo scoffed at your code meeting: <i>“Waste of time. I’ll just make up flashes on the spot — my friend is smart, he’ll figure out what I mean.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testTheo()">Run his plan and see</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">Theo’s plan, tested</div>';
+  h+='Theo invents: &nbsp;4 quick flashes, meaning “meet at the dock”<br>';
+  h+='his friend sees: &nbsp;4 quick flashes… and NO code entry for it<br>';
+  h+='his friend guesses: &nbsp;“danger? …come over twice? …bugs on the lens?”<br>';
+  h+='result: &nbsp;<b>a guess, not a message</b> — they meet nowhere</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testTheo();
+}
+function testTheo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Smart can’t decode what was never agreed.</b> A pattern only carries the meaning both sides gave it BEFOREHAND — that’s the whole engine. Theo’s invented flashes arrive as pure mystery, exactly like the five flashes at the lake. The boring code meeting isn’t the waste of time; it’s the part that makes every flash after it count.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What turns a pattern of flashes into an actual MESSAGE?',
+   a:['Flashing very brightly','A code both sender and receiver agreed on beforehand','Using an expensive flashlight','Flashing at least five times'],correct:1,
+   why:'Pattern + agreed code = information. Without the agreement, a blink is just a blink.'},
+  {q:'In the lake code (1 = come over, 2 = stay, 3 = bring food), your friend sends two flashes. The message is—',
+   a:['Bring food','Come over','Stay where you are','The code is cancelled'],correct:2,
+   why:'Two flashes maps to “stay where you are” — straight off the agreed card.'},
+  {q:'Fog blocks light but lets sound through. To reach your friend across a foggy lake, the better solution is—',
+   a:['The drum — the same code carried by sound, which crosses fog','The flashlight — light is always best','Shouting the code numbers','Waiting for winter'],correct:0,
+   why:'Comparing solutions means matching them to the situation: tonight, sound beats light.'},
+  {q:'How do computers and phones send photos and messages?',
+   a:['Tiny pictures travel through the wire','As long patterns of on/off electric pulses, decoded by an agreed code','Sound waves shouted between machines','They can’t send photos'],correct:1,
+   why:'Millions of on/off pulses in agreed patterns — the lake trick, longer and faster.'},
+  {q:'Theo skipped the code meeting and invented flashes on the spot. Why did his message fail?',
+   a:['His flashlight was too dim','His friend wasn’t smart enough','Four flashes is illegal','A pattern with no prior agreement carries no readable meaning — his friend could only guess'],correct:3,
+   why:'That was Theo’s trap. The agreement is the engine; without it even a genius receives only mystery blinks.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-PS4-3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Send and decode messages as patterns of signals, explain why the agreed code — not the light — carries the meaning, compare rival signal solutions against a situation, and connect your lake code to how computers talk.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to the code card. Pattern + agreement = message; no agreement, no message.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredSig=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

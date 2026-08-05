@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · What maps reveal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Earth’s Story</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-ESS2-2</div>
+    <h1>What maps reveal</h1>
+    <p>Put every earthquake from the last hundred years on one world map and something jumps out: they’re not scattered. They line up in long, narrow bands — and the volcanoes sit in the same bands. One map, and a planet-sized secret shows itself. Learn to read maps for patterns, not just places.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-ESS2-2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-ESS2-2</div>
+      <div class="side-title">What maps reveal</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredMap=false;
+var TASKS=[
+  {ans:1, txt:'<b>Look at the earthquake map.</b> How are the quake dots arranged?',
+   opts:['Evenly sprinkled all over the map','In long narrow BANDS — most of the map has none at all','Only in the exact middle'], won:'quakes form bands'},
+  {ans:2, txt:'<b>Now the volcano triangles are added.</b> What do you notice?',
+   opts:['Volcanoes avoid the quake bands completely','Volcanoes are scattered randomly','The volcanoes sit along the SAME bands as the earthquakes'], won:'same bands'},
+  {ans:0, txt:'<b>A new town is planned right on one of those bands.</b> What does the map let you predict?',
+   opts:['This spot is likely to have earthquakes — build for shaking','Nothing — maps only show the past','The town will definitely never feel a quake'], won:'patterns predict'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Read the world map'}]},
+  {phase:'Learn',   items:[{s:1, n:'Maps as evidence'},{s:2, n:'Read the ocean floor'},{s:3, n:'Every map has a key'},{s:4, n:'Catch Dev’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',SEA='#cfe0ee',LAND='#d9d2bd';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+var QUAKES=[[112,86],[126,104],[138,124],[150,146],[160,168],[168,190],[176,208],
+            [300,70],[306,92],[300,116],[292,140],[286,164],[292,188],[300,210],
+            [430,96],[444,118],[456,140],[462,162],[452,186]];
+var VOLC=[[120,95],[144,135],[164,179],[303,81],[296,152],[296,199],[437,107],[459,151],[458,174]];
+function figQuakeMap(showV){
+  var s=tx(310,22,'WORLD MAP'+(showV?' — QUAKES + VOLCANOES':' — EVERY EARTHQUAKE, 100 YEARS'),11.5,INK,700);
+  s+='<rect x="40" y="36" width="540" height="196" rx="6" fill="'+SEA+'" stroke="'+INK+'" stroke-width="2"/>';
+  /* rough land blobs */
+  s+='<path d="M 70 70 q 60 -22 110 6 q 30 40 -6 82 q -60 30 -104 -8 Z" fill="'+LAND+'" stroke="'+GREY+'" stroke-width="1.5"/>';
+  s+='<path d="M 130 168 q 50 -14 66 20 q -6 34 -50 38 q -34 -14 -16 -58 Z" fill="'+LAND+'" stroke="'+GREY+'" stroke-width="1.5"/>';
+  s+='<path d="M 330 62 q 100 -18 160 14 q 34 44 -16 76 q -110 26 -152 -14 q -26 -42 8 -76 Z" fill="'+LAND+'" stroke="'+GREY+'" stroke-width="1.5"/>';
+  s+='<path d="M 470 172 q 44 -12 62 12 q -6 30 -48 32 q -32 -14 -14 -44 Z" fill="'+LAND+'" stroke="'+GREY+'" stroke-width="1.5"/>';
+  for(var i=0;i<QUAKES.length;i++)s+='<circle cx="'+QUAKES[i][0]+'" cy="'+QUAKES[i][1]+'" r="4.5" fill="'+ACC+'"/>';
+  if(showV)for(var j=0;j<VOLC.length;j++){var v=VOLC[j];
+    s+='<polygon points="'+v[0]+','+(v[1]-8)+' '+(v[0]-7)+','+(v[1]+5)+' '+(v[0]+7)+','+(v[1]+5)+'" fill="'+GRN+'" stroke="'+INK+'" stroke-width="1.2"/>';}
+  /* key */
+  s+='<circle cx="58" cy="252" r="4.5" fill="'+ACC+'"/>'+tx(70,256,'= earthquake',10,MUT,400,'start');
+  if(showV){s+='<polygon points="200,244 193,257 207,257" fill="'+GRN+'" stroke="'+INK+'" stroke-width="1.2"/>'+tx(214,256,'= volcano',10,MUT,400,'start');}
+  s+=tx(578,256,showV?'same bands — not a coincidence':'notice: bands, not sprinkles',10,(showV?GRN:MUT),700,'end');
+  return boxSVG(s,268);
+}
+function figOcean(){
+  var s=tx(310,22,'A SLICE THROUGH THE OCEAN FLOOR',11.5,INK,700);
+  s+='<rect x="40" y="40" width="540" height="72" fill="'+SEA+'"/>'+tx(60,60,'water',10,MUT,400,'start');
+  var d='M 40 112 L 110 112 L 150 150 L 210 156 L 250 100 L 290 152 L 360 158 L 420 196 L 470 194 L 520 120 L 580 116';
+  s+='<path d="'+d+' L 580 226 L 40 226 Z" fill="#b9a98c" stroke="'+INK+'" stroke-width="2.5"/>';
+  s+=tx(98,100,'shallow shelf',9.5,MUT,400)+ln(98,104,98,110,GREY,1.5);
+  s+=tx(250,88,'underwater MOUNTAIN',10,ACC,700)+ln(250,94,250,100,ACC,1.5);
+  s+=tx(444,214,'deep TRENCH',10,ACC,700)+ln(444,204,444,200,ACC,1.5);
+  s+=tx(310,250,'the sea floor has mountains, valleys, and trenches — just like dry land',10.5,MUT,400);
+  return boxSVG(s,262);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Read the world map</h2>';
+  h+='<p>A map isn’t just for finding places — it’s a tool for finding <b>patterns</b>. Here’s how to use one. <b>1.</b> Check the <b>key</b> (also called a legend): it tells you what each symbol means. <b>2.</b> Ask whether the marks are <b>scattered evenly</b> or <b>clustered into a shape</b> — a clump, a line, a band. <b>3.</b> If they cluster, that pattern is <b>evidence something is causing it</b>, and it lets you <b>predict where the same thing is likely to happen again</b>. Below: every earthquake of the last hundred years, one dot each.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figQuakeMap(wonCount>=1);
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickMap('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Check the key, then look for shape: scattered, or clustered?</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredMap=false;
+}
+function pickMap(i){
+  if(answeredMap||wonCount>=TASKS.length)return;answeredMap=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ Long ribbons of dots, and huge blank regions between them. That shape is the whole discovery — watch what happens when we add volcanoes.'
+           :wonCount===1?'✓ Volcano triangles land right on the quake ribbons. Two different disasters sharing one map pattern means one shared cause underneath.'
+                        :'✓ That’s the payoff. A pattern from the past tells you where to expect the same events next — so engineers design those buildings to survive shaking.';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Use the three steps: read the key, ask scattered-or-clustered, then use the pattern to predict where it happens again. Try again.';
+    setTimeout(function(){if(step===0){answeredMap=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Maps as evidence</h2>';
+  h+='<p>Those bands are real, and they have a name: the edges of Earth’s giant surface plates. Nobody could see them from the ground — the map is what revealed them.</p>';
+  h+='<div class="work"><div class="lab">The claim–evidence frame, map edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;earthquakes and volcanoes happen along the same narrow zones<br>';
+  h+='EVIDENCE: on the world map, both cluster into the SAME long bands,<br>while enormous regions in between have almost none</div>';
+  h+='<table><tr><th>Map pattern</th><th>What it means</th></tr>';
+  h+='<tr><td>marks scattered evenly</td><td>no special cause — could happen anywhere</td></tr>';
+  h+='<tr><td>marks clustered in a shape</td><td>something is causing them THERE</td></tr>';
+  h+='<tr><td>two different marks sharing a shape</td><td>they likely share a cause</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Maps turn thousands of separate facts into one picture. A <b>pattern</b> on a map is evidence — and evidence you can use to predict.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>Read the ocean floor</h2>';
+  h+='<p>For most of history nobody knew what the bottom of the ocean looked like. Then ships started measuring depth, mile after mile, and mapping it.</p>';
+  h+='<div class="ask"><div class="q">Predict: what did those depth maps show the sea floor looks like?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Mountains, valleys, and deep trenches — just like dry land</button><button class="btn sm" onclick="checkPredict(\'b\')">A perfectly flat, smooth bottom everywhere</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">'+figOcean();
+  h+='<div class="work"><div class="lab">What the depth map revealed</div>';
+  h+='shallow SHELF near the coasts &nbsp;→&nbsp; land continuing underwater<br>';
+  h+='underwater MOUNTAIN chains &nbsp;→&nbsp; some taller than any on land<br>';
+  h+='deep TRENCHES &nbsp;→&nbsp; the deepest places on the planet<br>';
+  h+='and the trenches line up with &nbsp;→&nbsp; the earthquake bands. same story again</div>';
+  h+='<p>Every one of those features was invisible until someone mapped it. A map lets you see a shape too big for any pair of eyes to take in.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Rugged, not flat.</b> The sea floor has mountain chains and trenches deeper than any canyon on land.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Not flat at all.</b> The depth measurements revealed towering underwater mountains and trenches deeper than Mount Everest is tall.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Every map has a key — read it first</h2>';
+  h+='<p>Different maps show different information about the same place. The key is what tells you which one you’re holding:</p>';
+  h+='<table><tr><th>Map type</th><th>What its symbols show</th><th>A question it answers</th></tr>';
+  h+='<tr><td>elevation map</td><td>colors = how high the land is</td><td>where are the mountains?</td></tr>';
+  h+='<tr><td>ocean depth map</td><td>colors = how deep the water is</td><td>where are the trenches?</td></tr>';
+  h+='<tr><td>earthquake map</td><td>dots = past quakes</td><td>where does the ground shake?</td></tr>';
+  h+='<tr><td>river map</td><td>lines = flowing water</td><td>where might it flood?</td></tr></table>';
+  h+='<div class="work"><div class="lab">Reading any map in three moves</div>';
+  h+='1. read the KEY &nbsp;→&nbsp; what does each symbol and color mean?<br>';
+  h+='2. look for SHAPE &nbsp;→&nbsp; scattered, or clustered into bands and clumps?<br>';
+  h+='3. ask WHY THERE &nbsp;→&nbsp; what could cause that pattern in that place?</div>';
+  h+='<p>These maps aren’t museum pieces. Towns use quake maps to decide building rules, flood maps to decide where houses can go, and depth maps to keep ships off the shallows.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Maps of Earth’s features — land height, water depth, quakes, rivers — let you find patterns, explain them, and make decisions with them.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Dev says the blank spots are safe forever</h2>';
+  h+='<p>Studying the quake map, Dev concluded: <i>“There are no dots on my town, so an earthquake is IMPOSSIBLE here. Guaranteed.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testDev()">Weigh what the map can prove</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">What the map does and doesn’t say</div>';
+  h+='what it shows: &nbsp;where quakes have happened in 100 years<br>';
+  h+='fair conclusion: &nbsp;quakes here are <b>much less likely</b> than on a band<br>';
+  h+='unfair leap: &nbsp;“impossible” and “guaranteed”<br>';
+  h+='why: &nbsp;100 years is a blink for Earth, and rare events can<br>strike outside the bands. patterns give ODDS, not promises</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testDev();
+}
+function testDev(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Dev turned “less likely” into “impossible.”</b> The map is strong evidence that his town is far safer than a town on a band — that part is real and useful. But it only records 100 years of a planet that’s billions of years old, and rare quakes do happen off the bands. Scientists say “likely” and “unlikely” for exactly this reason: a pattern tells you the odds, not the future.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'On a world map, earthquake dots form long narrow bands instead of spreading evenly. What does that pattern tell you?',
+   a:['Quakes are random','Something about those specific zones causes earthquakes there','Mapmakers missed some places','Earthquakes only happen on maps'],correct:1,
+   why:'Clustering is evidence of a cause. Even scattering would suggest no special cause.'},
+  {q:'Volcano symbols land along the SAME bands as the earthquake dots. The best conclusion is—',
+   a:['Volcanoes cause maps','It is a pure coincidence','Volcanoes avoid earthquakes','The two share a common cause in those zones'],correct:3,
+   why:'Two different features sharing one pattern points to one shared cause underneath.'},
+  {q:'What did depth maps reveal about the ocean floor?',
+   a:['It has mountains, valleys, and deep trenches, like dry land','It is perfectly flat','It is solid ice','It has no features worth mapping'],correct:0,
+   why:'Mapping depth mile by mile uncovered underwater mountain chains and the deepest trenches on Earth.'},
+  {q:'You pick up an unfamiliar map. What should you do FIRST?',
+   a:['Guess what the colors mean','Read the key, so you know what each symbol and color represents','Fold it up','Look only at the biggest shape'],correct:1,
+   why:'The key defines the map. Without it, every pattern you spot is a guess.'},
+  {q:'Dev said no dots on his town means an earthquake is impossible there. What’s the honest statement?',
+   a:['He’s right — impossible','A quake is much LESS LIKELY there, but patterns give odds, not guarantees','Quakes only happen where maps have dots','The map is useless'],correct:1,
+   why:'That was Dev’s trap. 100 years of data on an ancient planet supports “unlikely,” never “impossible.”'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-ESS2-2']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Read a map’s key, tell a clustered pattern from a scattered one, use map patterns as evidence about Earth’s features, and state predictions as odds instead of guarantees.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Dev. A map pattern gives you likely and unlikely — never impossible.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredMap=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage · Energy in collisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;
+    --grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.12;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.22;margin-bottom:14px}
+  p{font-size:16.5px;line-height:1.6;margin-bottom:12px}
+  b{font-weight:600}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:20px 0 22px}
+  .goal{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 17px;margin:16px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goal p{margin:0;font-size:16px}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:12px 16px;margin:12px 0;
+    font-family:'Space Mono',monospace;font-size:14.5px;line-height:1.9}
+  .work .lab{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .linebox{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 12px 10px;margin:14px 0}
+  .linebox svg{width:100%;height:auto;display:block}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:12px 22px;border-radius:10px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .chal{background:#fff;border:2px solid var(--blue-line);border-radius:10px;padding:13px 16px;margin:10px 0;transition:.2s}
+  .chal.locked{opacity:.4}
+  .chal.won{border-color:var(--green);background:rgba(46,125,91,.07)}
+  .chalnum{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .chal.won .chalnum{color:var(--green)}
+  .chaltxt{font-size:16px;line-height:1.45}
+  .chalstate{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px}
+  .chal.won .chalstate{color:var(--green);font-weight:700}
+  .ends{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .endbtn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:12px 16px;border-radius:10px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .endbtn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .endbtn.right{border-color:var(--green);background:rgba(46,125,91,.12);color:var(--green)}
+  .endbtn.wrong{border-color:var(--accent);background:rgba(240,102,63,.12);color:var(--accent)}
+  .verdict{font-size:15.5px;font-weight:600;padding:11px 15px;border-radius:9px;margin-top:12px;min-height:44px;display:flex;align-items:center}
+  .verdict.over{background:rgba(240,102,63,.11);color:var(--accent)}
+  .verdict.exact{background:rgba(46,125,91,.13);color:var(--green)}
+  .ask{background:#fff;border:1.5px dashed var(--blue-line);border-radius:12px;padding:18px;margin:18px 0}
+  .ask .q{font-size:16.5px;font-weight:600;margin-bottom:12px;line-height:1.45}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .fb{margin-top:12px;font-size:15.5px;line-height:1.5;padding:11px 14px;border-radius:9px}
+  .fb.ok{background:rgba(46,125,91,.12);color:var(--green)}
+  .fb.no{background:rgba(240,102,63,.12);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-family:'Space Mono',monospace;font-size:14.5px}
+  th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--blue-line)}
+  th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+  .choice{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:12px 15px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink);cursor:pointer;margin-bottom:9px;line-height:1.4}
+  .choice:hover{border-color:var(--blue);background:rgba(27,79,138,.05)}
+  .choice.right{border-color:var(--green);background:rgba(46,125,91,.10)}
+  .choice.wrong{border-color:var(--accent);background:rgba(240,102,63,.10)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Science &nbsp;›&nbsp; Energy</div>
+  <div class="card">
+    <div class="tag">Lesson · 4-PS3-3</div>
+    <h1>Energy in collisions</h1>
+    <p>CLACK. One marble slams into another: the shooter nearly stops, the target rockets away, and the whole room hears it. In that split second, energy changed hands — and none of it vanished. Learn to track every bit of a crash’s energy, and to predict what the next collision will do before it happens.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS3-3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="science-course.html">← Grade 4 Science</a>
+      <div class="side-kick">Lesson · 4-PS3-3</div>
+      <div class="side-title">Energy in collisions</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var wonCount=0,answeredCol=false;
+var TASKS=[
+  {ans:1, txt:'<b>After the hit, marble A crawls while marble B shoots away.</b> Where did most of A’s energy go?',
+   opts:['It vanished when they touched','It PASSED to marble B — that’s why B is suddenly moving','It went back up the ramp'], won:'passed to B'},
+  {ans:0, txt:'<b>At the exact moment they hit, you hear a sharp CLACK.</b> What is that clack?',
+   opts:['A bit of the crash energy leaving as sound','Just noise — noise isn’t energy','Marble B complaining'], won:'the clack IS energy'},
+  {ans:2, txt:'<b>Now A crashes into B at a much higher speed.</b> Predict: what happens to B and to the clack?',
+   opts:['B moves slower, clack gets quieter','Nothing changes — a hit is a hit','B shoots off faster AND the clack is louder — more energy arrived to share'], won:'faster crash, bigger everything'}
+];
+var predictDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Track the crash'}]},
+  {phase:'Learn',   items:[{s:1, n:'Energy bookkeeping'},{s:2, n:'The vanishing act?'},{s:3, n:'Ask like a scientist'},{s:4, n:'Catch Ana’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- SVG helpers ---------- */
+var INK='#16233a',MUT='#5d6b7e',GREY='#8a9aa8',ACC='#f0663f',GRN='#2e7d5b',BLU='rgba(27,79,138,.25)',PALE='rgba(240,102,63,.15)';
+function ln(x1,y1,x2,y2,c,w,dash){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||INK)+'" stroke-width="'+(w||2.5)+'"'+(dash?' stroke-dasharray="6 5"':'')+'/>';
+}
+function tx(x,y,t,size,color,weight,anchor){
+  return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||'middle')+'" font-family="Space Mono" font-size="'+(size||15)+'" font-weight="'+(weight||700)+'" fill="'+(color||INK)+'">'+t+'</text>';
+}
+function boxSVG(inner,h){return '<div class="linebox"><svg viewBox="0 0 620 '+h+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg></div>';}
+function arrow(x1,y1,x2,y2,c,w){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L;
+  return ln(x1,y1,x2,y2,c,w||2.5)+'<polygon points="'+x2+','+y2+' '+(x2-10*ux+5*(-uy)).toFixed(1)+','+(y2-10*uy+5*ux).toFixed(1)+' '+(x2-10*ux-5*(-uy)).toFixed(1)+','+(y2-10*uy-5*ux).toFixed(1)+'" fill="'+(c||INK)+'"/>';
+}
+function marble(x,y,fill,label){
+  return '<circle cx="'+x+'" cy="'+y+'" r="14" fill="'+fill+'" stroke="'+INK+'" stroke-width="2"/>'+tx(x,y+34,label,11);
+}
+function figCrash(){
+  var s=tx(310,22,'ONE CRASH, THREE SNAPSHOTS',11.5,INK,700);
+  /* before */
+  s+=tx(60,58,'BEFORE',10,MUT,700,'start');
+  s+=marble(180,66,BLU,'A')+arrow(202,66,268,66,ACC)+tx(236,52,'rolling fast',9,ACC,700);
+  s+=marble(360,66,'#fff','B')+tx(360,52,'sitting still',9,MUT,400);
+  /* during */
+  s+=tx(60,124,'THE HIT',10,MUT,700,'start');
+  s+=marble(300,132,BLU,'A')+marble(330,132,'#fff','B');
+  s+=tx(315,108,'CLACK!',13,ACC);
+  s+=ln(348,118,360,110,ACC,2)+ln(352,132,368,132,ACC,2)+ln(348,146,360,154,ACC,2);
+  /* after */
+  s+=tx(60,192,'AFTER',10,MUT,700,'start');
+  s+=marble(300,200,BLU,'A')+tx(300,186,'barely moving',9,MUT,400);
+  s+=marble(420,200,'#fff','B')+arrow(442,200,508,200,ACC)+tx(476,186,'shooting off!',9,ACC,700);
+  return boxSVG(s,246);
+}
+function figLedger(){
+  var s=tx(310,24,'WHERE ALL OF A’S ENERGY WENT',11.5,INK,700);
+  s+='<rect x="60" y="46" width="140" height="44" rx="8" fill="'+BLU+'" stroke="'+INK+'" stroke-width="2"/>';
+  s+=tx(130,66,'marble A’s',10.5)+tx(130,80,'crash energy',10.5);
+  s+=arrow(206,58,296,52,GRN)+tx(250,42,'most of it',9,GRN,700);
+  s+='<rect x="302" y="38" width="150" height="30" rx="6" fill="rgba(46,125,91,.10)" stroke="'+GRN+'" stroke-width="2"/>'+tx(377,57,'B starts moving',10);
+  s+=arrow(206,68,296,92,ACC)+tx(244,92,'a bit',9,ACC,700);
+  s+='<rect x="302" y="78" width="150" height="30" rx="6" fill="'+PALE+'" stroke="'+ACC+'" stroke-width="2"/>'+tx(377,97,'the CLACK (sound)',10);
+  s+=arrow(206,78,296,132,MUT)+tx(238,126,'a tiny bit',9,MUT,700);
+  s+='<rect x="302" y="118" width="150" height="30" rx="6" fill="#fff" stroke="'+MUT+'" stroke-width="2"/>'+tx(377,137,'a little warmth',10);
+  s+=tx(310,178,'add the three arrows back together = ALL of A’s energy. none vanished.',10,MUT,400);
+  return boxSVG(s,190);
+}
+
+/* ---------- BEAT 1 ---------- */
+function beat1(){
+  var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Track the crash</h2>';
+  h+='<p>Quick recap first: a moving object carries <b>energy of motion</b>, and faster means more. Now the new rule: <b>when objects collide, energy changes hands — but it never vanishes</b>. In a crash, the moving object’s energy splits three ways: <b>most passes to the object it hits</b> (which starts moving), <b>some leaves as sound</b> (the clack you hear IS energy escaping through the air), and <b>a tiny bit becomes warmth</b> where they touched. And since a faster crash brings more energy, <b>everything it produces gets bigger</b> — faster targets, louder clacks. Watch marble A slam into resting marble B, and track the energy.</p>';
+  for(var i=0;i<TASKS.length;i++){
+    var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
+    var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
+    h+='<div class="'+cls+'"><div class="chalnum">Challenge '+(i+1)+'</div><div class="chaltxt">'+TASKS[i].txt+'</div><div class="chalstate">'+st+'</div></div>';
+  }
+  h+=figCrash();
+  h+='<div class="ends">';
+  for(var k=0;k<3;k++)h+='<button class="endbtn" id="e'+k+'" onclick="pickCol('+k+')">'+T.opts[k]+'</button>';
+  h+='</div>';
+  h+='<div class="verdict" id="v">Energy changes hands in a crash — it never vanishes. Track it.</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(wonCount>=3?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  answeredCol=false;
+}
+function pickCol(i){
+  if(answeredCol||wonCount>=TASKS.length)return;answeredCol=true;
+  var T=TASKS[wonCount],v=el('v');
+  el('e'+T.ans).classList.add('right');
+  if(i!==T.ans)el('e'+i).classList.add('wrong');
+  if(i===T.ans){
+    var msg=wonCount===0?'✓ B was still — zero motion energy — and suddenly it’s flying. That energy came from somewhere: A handed it over in the hit.'
+           :wonCount===1?'✓ The clack is crash energy escaping as sound, shaking the air all the way to your ears. Hearing it means energy reached YOU.'
+                        :'✓ More speed in = more energy to split. B gets a bigger share (faster launch) and the sound gets a bigger share too (louder clack).';
+    v.className='verdict exact';v.innerHTML=msg;
+    wonCount++;
+    setTimeout(function(){if(step===0)beat1();},1900);
+  } else {
+    v.className='verdict over';
+    v.innerHTML='✗ Follow the rule: crash energy splits into B’s new motion + the sound + a little warmth — and a faster crash makes every piece bigger. Try again.';
+    setTimeout(function(){if(step===0){answeredCol=false;beat1();}},2600);
+  }
+  if(wonCount>=3&&el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- BEAT 2 ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">What just happened</div>';
+  h+='<h2>Energy bookkeeping</h2>';
+  h+='<p>Scientists treat a crash like an accountant treats money: every bit of energy that goes in must be found coming out. Here’s the crash ledger:</p>';
+  h+=figLedger();
+  h+='<div class="work"><div class="lab">The claim–evidence frame, crash edition</div>';
+  h+='CLAIM: &nbsp;&nbsp;&nbsp;A’s energy passed to B in the collision<br>';
+  h+='EVIDENCE: B was still before the hit and moving fast after —<br>and A, which was fast, is suddenly crawling</div>';
+  h+='<table><tr><th>Where it went</th><th>Evidence you observed</th></tr>';
+  h+='<tr><td>into B’s motion</td><td>B shoots away; A slows down</td></tr>';
+  h+='<tr><td>into sound</td><td>the clack reaches your ears</td></tr>';
+  h+='<tr><td>into warmth</td><td>the touch-point warms a tiny bit</td></tr></table>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>In every collision, energy is <b>transferred and transformed — never destroyed</b>. If something slowed down, something else sped up, sounded off, or warmed up. The books always balance.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 3 ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Predict first</div>';
+  h+='<h2>The vanishing act?</h2>';
+  h+='<p>Special crash: A hits B dead-center and <b>A stops completely</b>. Frozen. Zero motion left.</p>';
+  h+='<div class="ask"><div class="q">Did A’s energy just get destroyed?</div>';
+  h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">No — track it: B’s motion + the clack + warmth account for all of it</button><button class="btn sm" onclick="checkPredict(\'b\')">Yes — A stopped, so its energy is gone</button></div>';
+  h+='<div id="pfb"></div></div>';
+  h+='<div id="ph" class="hide">';
+  h+='<div class="work"><div class="lab">The audit</div>';
+  h+='A’s energy before the hit: &nbsp;a full tank<br>';
+  h+='found afterward: &nbsp;B rockets off (most of it) + CLACK (some) + warmth (a little)<br>';
+  h+='missing: &nbsp;<b>nothing</b> — A stopping just means it handed over its whole tank</div>';
+  h+='<p>A stopping completely isn’t a disappearance — it’s a <b>complete handoff</b>. This is one of the biggest rules in all of science: energy moves and changes form, but the total never goes missing.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(predictDone)el('ph').classList.remove('hide');
+}
+function checkPredict(v){
+  var fb=el('pfb');
+  if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>Nothing vanished.</b> B’s launch, the clack, and the warmth add back up to A’s whole tank. A just handed over everything.';}
+  else{fb.className='fb no';fb.innerHTML='<b>Run the audit.</b> B is suddenly flying, the room heard a clack, the touch-point warmed. Add those up — that IS A’s energy, relocated.';}
+  el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
+}
+
+/* ---------- BEAT 4 ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>Ask crash questions like a scientist</h2>';
+  h+='<p>Collisions are everywhere — kickball, bumper cars, a hammer on a nail. Scientists turn them into knowledge by asking <b>testable questions</b>: questions an experiment can actually answer with evidence.</p>';
+  h+='<table><tr><th>Question</th><th>Testable?</th></tr>';
+  h+='<tr><td>“Will a faster marble make B roll farther?”</td><td>YES — roll it and measure</td></tr>';
+  h+='<tr><td>“Does a heavier shooter launch B harder?”</td><td>YES — swap marbles and compare</td></tr>';
+  h+='<tr><td>“Are crashes cool?”</td><td>no — no measurement can answer it</td></tr></table>';
+  h+='<div class="work"><div class="lab">Everyday crashes, tracked</div>';
+  h+='kickball: &nbsp;your foot slows a little → the ball rockets off + THUMP<br>';
+  h+='hammer &amp; nail: &nbsp;hammer stops → nail drives in + BANG + warm nail<br>';
+  h+='bumper cars: &nbsp;you jolt back → the other car lurches + CRUNCH</div>';
+  h+='<p>Same ledger every time: motion handed over, sound escaping, a little warmth. Once you carry the ledger, every thump on the playground is an experiment you already understand.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Predict a collision with the ledger, then ask a testable question and check it with evidence. That question–predict–test loop IS science.</p></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+
+/* ---------- BEAT 5 ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Ana says the clack is “just noise”</h2>';
+  h+='<p>Ana insisted: <i>“The clack doesn’t count. Sound is just noise — ALL of A’s energy went into marble B.”</i></p>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testAna()">Put her claim on trial</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The trial</div>';
+  h+='how did the clack reach your ears? &nbsp;it shook the air all the way across the room<br>';
+  h+='can “nothing” shake air? &nbsp;no — <b>shaking air IS energy traveling as sound</b><br>';
+  h+='the test: if ALL energy went to B, the crash would be <b>perfectly silent</b><br>';
+  h+='ever heard a silent crash? &nbsp;neither has anyone else</div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testAna();
+}
+function testAna(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>The clack convicts her.</b> Sound is energy on the move — a vibration crossing the room to your ears. If every bit of A’s energy had gone into B, there would be nothing left to shake the air, and the crash would be silent. The very fact that you HEARD it proves some energy left as sound. Noise isn’t a leftover; it’s a delivery.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'A rolling bowling ball smashes into pins. The pins fly and the ball slows. What happened to the ball’s energy?',
+   a:['It was destroyed by the impact','Much of it transferred to the pins — that’s why they’re suddenly flying','It returned to the bowler','Pins don’t need energy to fly'],correct:1,
+   why:'Collisions hand energy over: the pins’ sudden motion came from the ball, which is why the ball slowed.'},
+  {q:'Every collision makes a sound — clack, thump, bang. What IS that sound?',
+   a:['A warning signal','Some of the crash energy escaping as a vibration through the air','Proof the objects broke','Nothing — sound isn’t real'],correct:1,
+   why:'The sound is energy leaving the crash, shaking the air all the way to your ears.'},
+  {q:'Marble A hits marble B twice: once slowly, once fast. Predict the FAST crash.',
+   a:['B launches faster and the clack is louder — more energy arrived to split','B moves the same both times','The fast crash is quieter','B refuses to move'],correct:0,
+   why:'Faster crash = more energy in = a bigger share for every output: B’s launch AND the sound.'},
+  {q:'Which is a TESTABLE question about collisions?',
+   a:['“Are marbles better than bouncy balls?”','“Do crashes have feelings?”','“Will a heavier marble knock B farther than a light one?”','“Is the clack annoying?”'],correct:2,
+   why:'Testable means an experiment can answer it with evidence — swap the marbles, measure how far B rolls.'},
+  {q:'Ana claimed ALL the energy went to marble B and the clack was “just noise.” What disproved her?',
+   a:['B didn’t actually move','Marbles can’t transfer energy','Nothing — she was right','A truly total handoff would be SILENT — hearing the clack proves energy left as sound'],correct:3,
+   why:'That was Ana’s trap. Sound is an energy delivery. A crash you can hear is a crash that split its energy.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><span><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button> <span class="qcount">Score: '+qCorrect+'</span></span><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++){var b=el('ch'+j);if(j===Q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');}
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;fb.className='fb ok';fb.innerHTML='<b>Correct.</b> '+Q.why;}
+  else{fb.className='fb no';fb.innerHTML='<b>No.</b> '+Q.why;}
+  el('nx').disabled=false;
+}
+function reviewLesson(){ step=1; render(); scrollTo(0,0); }
+function nextQ(){qIndex++;step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;render();scrollTo(0,0);}
+
+function markCourseDone(){
+  try{
+    var key='voyage_g4sci_progress';
+    var p={done:{},lastSkill:0};
+    var raw=localStorage.getItem(key); if(raw) p=JSON.parse(raw);
+    if(!p.done) p.done={};
+    p.done['4-PS3-3']=true;
+    localStorage.setItem(key,JSON.stringify(p));
+  }catch(e){}
+}
+function beatDone(){
+  var pct=Math.round(qCorrect/QUESTIONS.length*100),h='';
+  h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
+  h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Track a collision’s energy into motion, sound, and warmth, audit a crash so nothing goes missing, predict what a faster crash will do, and ask testable questions the playground can answer.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to Ana. A crash you can hear is a crash that split its energy.</p>';
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;wonCount=0;answeredCol=false;predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

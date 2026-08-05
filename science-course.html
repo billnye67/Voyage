@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5}
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -19,43 +19,40 @@
   .side .sub{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   #pcount{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px}
   #pbar{height:5px;border-radius:3px;background:var(--blue-line);margin-bottom:6px;overflow:hidden}
-  #pfill{height:100%;width:0;background:#2e7d5b;transition:width .3s}
+  #pfill{height:100%;width:0;background:var(--green);transition:width .3s}
   .domain{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--blue-line)}
   .skill-btn{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:none;border:none;cursor:pointer;
     padding:9px 10px;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);line-height:1.25;margin-bottom:1px}
   .skill-btn:hover{background:rgba(27,79,138,.07)}
   .skill-btn.active{background:var(--blue);color:#fff;box-shadow:2px 2px 0 rgba(27,79,138,.25)}
   .skill-btn .check{flex-shrink:0;font-size:13px;color:var(--blue-line);width:16px;text-align:center}
-  .skill-btn.done .check{color:#2e7d5b}
+  .skill-btn.done .check{color:var(--green)}
   .skill-btn.active .check{color:#fff}
   .skill-btn.done .stitle{color:var(--muted)}
   .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
   .stitle{flex:1}
+  .lmark{flex-shrink:0;font-size:11px;color:var(--accent)}
+  .skill-btn.active .lmark{color:#fff}
   .main{flex:1;padding:26px 30px 60px;min-width:0}
   .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-  .progress{display:flex;gap:6px;margin-bottom:22px}
-  .progress .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line);transition:background .25s}
-  .progress .seg.on{background:var(--blue)}
   .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:28px 26px;min-height:340px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
   .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
   .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;line-height:1.15;margin-bottom:14px}
   .card p{font-size:16px;line-height:1.6;margin-bottom:12px}
   .card p b{font-weight:600}
-  .card .ex{background:var(--paper);border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.6;margin:4px 0 8px}
-  .payoff{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:15.5px;margin-top:4px}
-  .qlist{margin:8px 0}
-  .qlist .q{font-size:16px;line-height:1.5;padding:8px 0;border-bottom:1px dashed var(--blue-line)}
-  .qlist .q:last-child{border-bottom:none}
-  .ans{color:#2e7d5b;font-weight:600;margin-left:6px;display:none}
-  .ans.show{display:inline}
+  .goalbox{background:rgba(27,79,138,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:13px 16px;margin:16px 0}
+  .goalbox .lab{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .goalbox p{margin:0;font-size:15.5px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);
+    border-top:1px dashed var(--blue-line);border-bottom:1px dashed var(--blue-line);padding:12px 0;margin:18px 0 20px}
+  .donebadge{display:inline-block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--green);border:1.5px solid var(--green);border-radius:8px;padding:5px 10px;margin-bottom:14px}
   .btn{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;padding:10px 18px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
   .btn.ghost{border-color:var(--blue-line);box-shadow:none;color:var(--muted)}
   .btn.sm{font-size:13px;padding:7px 13px;box-shadow:2px 2px 0 var(--ink)}
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
-  .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
-  .proj-note b{color:var(--accent);font-style:normal}
-  #revBox.show{display:block!important}
   @media(max-width:760px){.app{flex-direction:column}.side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}.main{padding:22px 18px 50px}}
 </style>
 </head>
@@ -71,12 +68,11 @@
   </nav>
   <main class="main">
     <div class="crumb" id="crumb"></div>
-    <div class="progress" id="progress"></div>
     <div class="card" id="card"></div>
     <div class="nav">
-      <button class="btn ghost" id="back">Back</button>
+      <button class="btn ghost" id="back">← Previous skill</button>
       <span class="crumb" id="counter" style="margin:0"></span>
-      <button class="btn" id="next">Next</button>
+      <button class="btn" id="next">Next skill →</button>
     </div>
   </main>
 </div>
@@ -85,177 +81,117 @@
 const COURSE = {
   subject:"Grade 4 · Science",
   domains:[
-  { name:"Energy & Motion", skills:[
-    { title:"Energy & speed", proj:"Your plane flies farther when it moves faster \u2014 that\u2019s more energy.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Energy</b> is what makes things move and happen. The <b>faster</b> something moves, the <b>more energy</b> it has. A slow rolling ball has a little; a fast one has a lot \u2014 which is why the fast one knocks things over harder.</p>`},
-        {tag:"Example", body:`<div class="ex">Roll a marble slowly into a cup \u2014 barely moves it. Roll it fast \u2014 it launches the cup. Same marble, more speed, more energy.</div>`},
-        {tag:"Your turn", practice:[["Which has more energy: a fast car or a slow car?","The fast car"],["If you speed something up, its energy goes up or down?","Up"]]},
-        {tag:"Prove it", body:`<p>Why does a fast-pitched ball hurt more than a slow toss?</p>`, reveal:`The faster ball has more energy, so it hits with more force. Speed = more energy.`}
-      ]},
-    { title:"How energy moves", proj:"Your Guard Bot\u2019s buzzer, light, and battery \u2014 sound, light, electricity.",
-      cards:[
-        {tag:"Learn", body:`<p>Energy can travel from place to place as <b>sound</b>, <b>light</b>, <b>heat</b>, or <b>electric current</b>. A speaker sends sound energy, the sun sends light and heat, a wire carries electric energy to your gadget.</p>`},
-        {tag:"Example", body:`<div class="ex">Flip a switch \u2192 electric energy flows through the wire \u2192 the bulb turns it into light and heat. Energy moved and changed form.</div>`},
-        {tag:"Your turn", practice:[["Name two ways energy can travel","(sound, light, heat, electricity)"],["A campfire sends out which kinds of energy?","Heat and light"]]},
-        {tag:"Prove it", body:`<p>How does energy get from a power outlet to light up a lamp?</p>`, reveal:`Electric current travels through the wire to the lamp, which turns it into light (and some heat).`}
-      ]},
-    { title:"Collisions", proj:"When your marble/plane hits something, energy transfers \u2014 test it.",
-      cards:[
-        {tag:"Learn", body:`<p>When objects <b>collide</b>, energy transfers from one to the other. A fast object hits a still one and makes it move \u2014 the energy passed over. Some energy also turns into sound and heat at the crash.</p>`},
-        {tag:"Example", body:`<div class="ex">In marbles, a moving marble hits a still one and stops \u2014 the still one shoots off. The energy transferred from the first to the second.</div>`},
-        {tag:"Your turn", practice:[["When a moving ball hits a still ball, what transfers?","Energy"],["Besides motion, collisions can make what?","Sound and heat"]]},
-        {tag:"Prove it", body:`<p>Why does a bowling ball knock down pins?</p>`, reveal:`The moving ball has energy; when it collides with the pins, it transfers energy to them and they fly.`}
-      ]},
-    { title:"Energy converters", proj:"Your Guard Bot converts electricity into sound + light \u2014 that\u2019s this.",
-      cards:[
-        {tag:"Learn", body:`<p>Machines <b>convert</b> energy from one form to another. A device takes energy in and gives a different kind out. Designing one that works is real engineering \u2014 you build it, test it, improve it.</p>`},
-        {tag:"Example", body:`<div class="ex">A wind-up toy: you put in motion energy (winding), it stores it, then converts it back to motion (moving). A buzzer converts electricity into sound.</div>`},
-        {tag:"Your turn", practice:[["A speaker converts electricity into what?","Sound"],["A solar panel converts sunlight into what?","Electricity"]]},
-        {tag:"Prove it", body:`<p>Your rubber-band plane \u2014 what energy goes in when you wind it, and what comes out when it flies?</p>`, reveal:`Winding stores energy in the stretched rubber band; releasing it converts that into motion energy that spins the prop and flies the plane.`}
-      ]}
+  { name:"Energy", skills:[
+    { code:"4-PS3-1", title:"Energy and speed", file:"lesson-4ps31-energy-speed.html",
+      blurb:"A marble rolled into sand leaves a crater — and the crater size tells you how much energy it carried.",
+      goal:"Read energy of motion from the evidence it leaves behind, and back every claim with what you observed." },
+    { code:"4-PS3-2", title:"How energy travels", file:"lesson-4ps32-energy-transfer.html",
+      blurb:"Sound, light, heat, and electric current — four different couriers carrying the same package.",
+      goal:"Name the carrier moving energy in any situation and trace it from source to destination." },
+    { code:"4-PS3-3", title:"Energy in collisions", file:"lesson-4ps33-energy-collisions.html",
+      blurb:"CLACK. One marble stops, the other flies — and the whole room hears where some of the energy went.",
+      goal:"Track a crash's energy into motion, sound, and warmth, and predict what a faster collision does." },
+    { code:"4-PS3-4", title:"Build an energy converter", file:"lesson-4ps34-energy-device.html",
+      blurb:"Wind the rubber band, let go, and the car races off. Now use the test data to make it go farther.",
+      goal:"Trace a device's conversion from stored energy to motion, then refine the design using evidence." }
   ]},
-  { name:"Waves & Light", skills:[
-    { title:"What waves are", proj:"Sound and ripples are waves \u2014 they carry energy without carrying stuff.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>wave</b> carries energy from place to place. Two things describe it: <b>amplitude</b> (how tall/strong the wave is) and <b>wavelength</b> (how spread out the waves are). Bigger amplitude = more energy.</p>`},
-        {tag:"Example", body:`<div class="ex">Drop a rock in water \u2014 ripples spread out. A big rock makes tall waves (big amplitude, lots of energy); a pebble makes tiny ones.</div>`},
-        {tag:"Your turn", practice:[["What does amplitude measure?","How tall/strong a wave is"],["A taller wave carries more or less energy?","More"]]},
-        {tag:"Prove it", body:`<p>Why does a loud sound (big amplitude wave) shake things more than a quiet one?</p>`, reveal:`A bigger amplitude carries more energy, so it can move objects (like a speaker rattling a window).`}
-      ]},
-    { title:"How we see", proj:"Designing what your game or bot looks like \u2014 light has to bounce to your eye.",
-      cards:[
-        {tag:"Learn", body:`<p>You see an object when <b>light bounces off it</b> and travels into your eyes. No light = no seeing. That\u2019s why a dark room is black: nothing\u2019s bouncing light to your eyes.</p>`},
-        {tag:"Example", body:`<div class="ex">A red apple looks red because it bounces red light into your eyes and soaks up the rest. In total darkness, you can\u2019t see it at all.</div>`},
-        {tag:"Your turn", practice:[["What has to happen for you to see something?","Light bounces off it into your eyes"],["Why can\u2019t you see in a pitch-black room?","No light is bouncing to your eyes"]]},
-        {tag:"Prove it", body:`<p>A student says \u201cmy eyes shoot out beams to see.\u201d What\u2019s the real way seeing works?</p>`, reveal:`Eyes don\u2019t shoot beams \u2014 light from a source bounces off objects INTO your eyes. You receive light, not send it.`}
-      ]},
-    { title:"Sending signals with patterns", proj:"Codes and signals \u2014 how your Guard Bot could \u2018message\u2019 you.",
-      cards:[
-        {tag:"Learn", body:`<p>Information can be sent using <b>patterns</b> \u2014 like flashes of light or beeps in a code. Morse code turns letters into dots and dashes. Computers send everything as patterns of on/off. Patterns carry messages.</p>`},
-        {tag:"Example", body:`<div class="ex">A lighthouse flashing a specific pattern tells ships which lighthouse it is. Morse code \u201cSOS\u201d = three short, three long, three short.</div>`},
-        {tag:"Your turn", practice:[["Morse code turns letters into what?","Dots and dashes (patterns)"],["Computers store info as patterns of what?","On and off (1s and 0s)"]]},
-        {tag:"Prove it", body:`<p>How could two people send a secret message across a dark field with just flashlights?</p>`, reveal:`Agree on a pattern code (e.g. flashes for letters) \u2014 patterns of light can carry the whole message.`}
-      ]}
+  { name:"Waves & Information", skills:[
+    { code:"4-PS4-1", title:"Reading waves", file:"lesson-4ps41-waves.html",
+      blurb:"Pond ripples, rope wiggles, ocean swells — every wave is one repeating pattern you can measure.",
+      goal:"Measure amplitude and wavelength from a diagram, and show that waves move objects without carrying them off." },
+    { code:"4-PS4-2", title:"How seeing works", file:"lesson-4ps42-light-seeing.html",
+      blurb:"In a pitch-black cave you see nothing at all. Turn on the flashlight and the whole cavern appears — why?",
+      goal:"Trace the light path behind every act of seeing, and explain moonlight as reflected sunlight." },
+    { code:"4-PS4-3", title:"Messages in patterns", file:"lesson-4ps43-signal-patterns.html",
+      blurb:"Two flashlights across a lake, one agreed code — and suddenly light is carrying sentences.",
+      goal:"Send and decode messages as patterns of signals, and compare rival solutions for a foggy night." }
   ]},
   { name:"Living Things", skills:[
-    { title:"Structures for survival", proj:"Why a plane needs wings \u2014 structures do jobs, in nature too.",
-      cards:[
-        {tag:"Learn", body:`<p>Plants and animals have <b>structures</b> (parts) \u2014 inside and outside \u2014 that help them <b>survive, grow, and reproduce</b>. Roots drink water, thorns protect, a heart pumps blood, eyes see. Each part has a job.</p>`},
-        {tag:"Example", body:`<div class="ex">A cactus has a thick stem (stores water), spines (protection), shallow wide roots (grab rain fast) \u2014 all structures for surviving the desert.</div>`},
-        {tag:"Your turn", practice:[["What job do a plant\u2019s roots do?","Take in water (and hold it in place)"],["Name an animal structure that protects it","(shell, quills, thorns, claws\u2026)"]]},
-        {tag:"Prove it", body:`<p>How do a duck\u2019s webbed feet help it survive?</p>`, reveal:`Webbed feet act like paddles, helping it swim to find food and escape \u2014 a structure built for its watery life.`}
-      ]},
-    { title:"Senses & the brain", proj:"Your Guard Bot senses motion and responds \u2014 just like an animal.",
-      cards:[
-        {tag:"Learn", body:`<p>Animals take in information through their <b>senses</b> (eyes, ears, nose), the <b>brain</b> processes it, and the animal <b>responds</b>. Sense \u2192 brain \u2192 action. That\u2019s how a deer hears a snap and bolts.</p>`},
-        {tag:"Example", body:`<div class="ex">You touch something hot: skin senses heat \u2192 brain says \u201cdanger!\u201d \u2192 you yank your hand back. All in a split second.</div>`},
-        {tag:"Your turn", practice:[["What\u2019s the order: respond, sense, brain processes \u2014 put it right","Sense \u2192 brain \u2192 respond"],["What body part processes the information?","The brain"]]},
-        {tag:"Prove it", body:`<p>Your Guard Bot senses motion, then buzzes. How is that like an animal reacting?</p>`, reveal:`The sensor is like the animal\u2019s senses, the code is like the brain deciding, and the buzzer is the response. Sense \u2192 process \u2192 react.`}
-      ]}
+    { code:"4-LS1-1", title:"Built to survive", file:"lesson-4ls11-structures.html",
+      blurb:"Cactus spines, hawk talons, tree roots — nothing on a living body is decoration.",
+      goal:"Match structures to survival jobs and read an unfamiliar animal's whole way of life from its parts." },
+    { code:"4-LS1-2", title:"Sense, think, react", file:"lesson-4ls12-senses.html",
+      blurb:"A twig snaps and the rabbit is gone in half a second. Three things happened inside it, in order.",
+      goal:"Trace reactions through receive, process, respond — and explain how memory changes the middle link." }
   ]},
-  { name:"Earth & Its Changes", skills:[
-    { title:"Weathering & erosion", proj:"How wind and water reshape land \u2014 forces you\u2019ll measure in a build.",
-      cards:[
-        {tag:"Learn", body:`<p>Land slowly changes. <b>Weathering</b> breaks rock into smaller pieces (ice, wind, plant roots). <b>Erosion</b> carries those pieces away (water, wind). Together they carve canyons and wear down mountains over a long time.</p>`},
-        {tag:"Example", body:`<div class="ex">A river slowly cut the Grand Canyon over millions of years \u2014 water weathered and eroded the rock, carrying it away bit by bit.</div>`},
-        {tag:"Your turn", practice:[["What breaks rock into smaller pieces?","Weathering"],["What carries the pieces away?","Erosion"]]},
-        {tag:"Prove it", body:`<p>How can a tiny stream eventually carve a huge canyon?</p>`, reveal:`Over a very long time, water weathers the rock and erosion carries it away, little by little \u2014 slow change adds up.`}
-      ]},
-    { title:"Rock layers & fossils", proj:"Reading clues from evidence \u2014 like debugging a build.",
-      cards:[
-        {tag:"Learn", body:`<p>Rock forms in <b>layers</b> over time \u2014 older layers on the bottom, newer on top. <b>Fossils</b> trapped in layers are clues to what lived there. Reading the layers tells you how a landscape <b>changed over time</b>.</p>`},
-        {tag:"Example", body:`<div class="ex">Sea-shell fossils found on a mountain mean that spot was once underwater \u2014 the land changed from ocean floor to mountain over ages.</div>`},
-        {tag:"Your turn", practice:[["Which rock layer is usually oldest \u2014 top or bottom?","Bottom"],["Sea fossils high on a mountain suggest the area was once what?","Underwater / ocean"]]},
-        {tag:"Prove it", body:`<p>How do scientists know a desert was once a lake?</p>`, reveal:`Fossils and rock layers from water creatures show it \u2014 the evidence in the layers records the change.`}
-      ]},
-    { title:"Maps of Earth", proj:"Maps show patterns \u2014 like plotting your flight data.",
-      cards:[
-        {tag:"Learn", body:`<p>Maps show <b>patterns</b> in Earth\u2019s features. Mapping where mountains, volcanoes, and earthquakes happen reveals they line up in patterns \u2014 not random. Maps turn scattered facts into a picture you can read.</p>`},
-        {tag:"Example", body:`<div class="ex">Plot every volcano on a world map and you see they cluster in lines \u2014 mostly around the \u201cRing of Fire\u201d in the Pacific.</div>`},
-        {tag:"Your turn", practice:[["Do earthquakes happen randomly or in patterns?","In patterns"],["What tool helps you SEE those patterns?","A map"]]},
-        {tag:"Prove it", body:`<p>Why is a map better than a list for spotting where volcanoes cluster?</p>`, reveal:`A map shows location visually, so patterns and clusters jump out \u2014 a list of names hides them.`}
-      ]},
-    { title:"Natural resources & energy", proj:"Where your gadget\u2019s battery power ultimately comes from.",
-      cards:[
-        {tag:"Learn", body:`<p>The energy and materials we use come from <b>natural resources</b> \u2014 sunlight, wind, water, and fuels like coal and oil from the ground. Some renew quickly (sun, wind); some don\u2019t (coal, oil) and can run out.</p>`},
-        {tag:"Example", body:`<div class="ex">A solar panel uses sunlight (renewable). A gas car burns oil (non-renewable \u2014 once it\u2019s gone, it\u2019s gone for a very long time).</div>`},
-        {tag:"Your turn", practice:[["Name a renewable energy source","(sun, wind, water)"],["Is coal renewable or non-renewable?","Non-renewable"]]},
-        {tag:"Prove it", body:`<p>Why might wind power be better long-term than burning oil?</p>`, reveal:`Wind renews constantly and doesn\u2019t run out or pollute the same way; oil is limited and will eventually be used up.`}
-      ]},
-    { title:"Natural hazards", proj:"Designing to reduce damage \u2014 engineering against a problem.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Natural hazards</b> \u2014 floods, earthquakes, wildfires \u2014 can\u2019t be stopped, but engineers can <b>design solutions to reduce their damage</b>. That\u2019s the same design thinking you use in your projects: find the problem, build a fix, test it.</p>`},
-        {tag:"Example", body:`<div class="ex">You can\u2019t stop an earthquake, but engineers design buildings that flex instead of crack, so fewer collapse.</div>`},
-        {tag:"Your turn", practice:[["Can engineers stop a flood from ever happening?","No \u2014 but they can reduce the damage"],["Name one way to reduce flood damage","(levees, dams, raising houses, drains\u2026)"]]},
-        {tag:"Prove it", body:`<p>How is designing an earthquake-safe building like tuning your Guard Bot?</p>`, reveal:`Both are engineering: identify the problem, design a solution, test it, and improve it until it works.`}
-      ]}
+  { name:"Earth's Story", skills:[
+    { code:"4-ESS1-1", title:"Reading rock layers", file:"lesson-4ess11-rock-layers.html",
+      blurb:"A canyon wall is a stack of pages, oldest at the bottom, with fossils marking what lived there.",
+      goal:"Order layers by age, read fossils as evidence of past environments, and explain sea fossils on a mountaintop." },
+    { code:"4-ESS2-1", title:"Breaking down, carrying away", file:"lesson-4ess21-weathering-erosion.html",
+      blurb:"The only tool that dug the Grand Canyon was a river, moving grains of rock one at a time.",
+      goal:"Tell weathering, erosion, and deposition apart, and design a fair test that changes one thing at a time." },
+    { code:"4-ESS2-2", title:"What maps reveal", file:"lesson-4ess22-maps.html",
+      blurb:"Put a century of earthquakes on one map and they don't scatter — they line up in bands.",
+      goal:"Read a map's key, tell clustered patterns from scattered ones, and state predictions as odds." }
+  ]},
+  { name:"People & the Planet", skills:[
+    { code:"4-ESS3-1", title:"Where energy comes from", file:"lesson-4ess31-resources.html",
+      blurb:"Some energy sources run out and some never will — and every single one affects the environment.",
+      goal:"Sort renewable from non-renewable, weigh trade-offs with evidence, and pick the source that fits a place." },
+    { code:"4-ESS3-2", title:"Designing for disasters", file:"lesson-4ess32-hazards.html",
+      blurb:"Two towns, one earthquake, completely different mornings. The difference was design.",
+      goal:"Separate a hazard you can't prevent from an impact you can shrink, and use hazard maps to decide how to build." }
   ]}
   ]
 };
 
-/* ---- engine (same as other courses) ---- */
 let flat = [];
 COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name})));
-let si = 0, ci = 0;
+let si = 0;
 const SAVE_KEY = 'voyage_g4sci_progress';
 let progress = { done:{}, lastSkill:0 };
-function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) progress=JSON.parse(raw); }catch(e){} }
+function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) progress=JSON.parse(raw); if(!progress.done) progress.done={}; }catch(e){} }
 function saveProgress(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); }catch(e){} }
-function markSkillDone(i){ progress.done[flat[i].title]=true; saveProgress(); }
 function resetProgress(){ progress={done:{},lastSkill:0}; saveProgress(); loadSkill(0); }
+
 function buildMenu(){
   let html='';
   COURSE.domains.forEach(d=>{
     html += `<div class="domain">${d.name}</div>`;
     d.skills.forEach(s=>{
-      const idx = flat.findIndex(f=>f.title===s.title);
-      html += `<button class="skill-btn" data-i="${idx}"><span class="check">\u25cb</span><span class="stitle">${s.title}</span></button>`;
+      const idx = flat.findIndex(f=>f.code===s.code);
+      html += `<button class="skill-btn" data-i="${idx}"><span class="check">○</span><span class="stitle">${s.title}</span><span class="lmark">◆</span></button>`;
     });
   });
   const m=document.getElementById('menu'); m.innerHTML=html;
   m.addEventListener('click',e=>{ const b=e.target.closest('.skill-btn'); if(b) loadSkill(+b.dataset.i); });
 }
-function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
-function go(d){ const cards=flat[si].cards; if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
-function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
-function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
+function loadSkill(i){ si=i; progress.lastSkill=i; saveProgress(); render(); scrollTo(0,0); }
+
 function render(){
-  const s=flat[si], c=s.cards[ci];
-  document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.title}`;
-  let inner=`<div class="tag">${c.tag}</div>`;
-  if(ci===0) inner+=`<h2>${s.title}</h2>`;
-  if(c.body) inner+=c.body;
-  if(c.practice){
-    inner+=`<div class="qlist">`;
-    c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
-    inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
-  }
-  if(c.reveal){ inner+=`<button class="btn sm" data-act="revealOne">Show the answer</button><div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`; }
-  if(ci===s.cards.length-1 && s.proj){ inner+=`<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`; }
+  const s=flat[si];
+  const isDone = !!progress.done[s.code];
+  document.getElementById('crumb').textContent = `${COURSE.subject}  ›  ${s.domain}`;
+  let inner = `<div class="tag">Lesson · ${s.code}</div>`;
+  inner += `<h2>${s.title}</h2>`;
+  if(isDone) inner += `<div class="donebadge">✔ lesson complete — replay any time</div>`;
+  inner += `<p>${s.blurb}</p>`;
+  inner += `<div class="goalbox"><div class="lab">You’ll learn to</div><p>${s.goal}</p></div>`;
+  inner += `<div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ ${s.code}</span></div>`;
+  inner += `<button class="btn go" onclick="location.href='${s.file}'">${isDone?'Replay lesson ↻':'Start lesson →'}</button>`;
   document.getElementById('card').innerHTML=inner;
-  const doneCount=Object.keys(progress.done).length;
+
+  const doneCount = flat.filter(f=>progress.done[f.code]).length;
   document.getElementById('pcount').textContent=`${doneCount} / ${flat.length} skills complete`;
   document.getElementById('pfill').style.width=(doneCount/flat.length*100)+'%';
-  document.getElementById('progress').innerHTML=s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
-  document.getElementById('counter').textContent=`${ci+1} / ${s.cards.length}`;
-  document.getElementById('back').style.visibility=ci===0?'hidden':'visible';
-  document.getElementById('next').textContent=(ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next';
-  if(ci===s.cards.length-1){ markSkillDone(si); }
+  document.getElementById('counter').textContent=`skill ${si+1} / ${flat.length}`;
+  document.getElementById('back').style.visibility = si===0?'hidden':'visible';
+  document.getElementById('next').style.visibility = si===flat.length-1?'hidden':'visible';
   document.querySelectorAll('.skill-btn').forEach(b=>{
-    const idx=+b.dataset.i, isDone=!!progress.done[flat[idx].title];
+    const idx=+b.dataset.i, d=!!progress.done[flat[idx].code];
     b.classList.toggle('active',idx===si);
-    b.classList.toggle('done',isDone);
-    const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb';
+    b.classList.toggle('done',d);
+    const chk=b.querySelector('.check'); if(chk) chk.textContent=d?'✔':'○';
   });
 }
+
 loadProgress();
 buildMenu();
-document.getElementById('back').addEventListener('click',()=>go(-1));
-document.getElementById('next').addEventListener('click',()=>go(1));
+document.getElementById('back').addEventListener('click',()=>{ if(si>0) loadSkill(si-1); });
+document.getElementById('next').addEventListener('click',()=>{ if(si<flat.length-1) loadSkill(si+1); });
 document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress?')) resetProgress(); });
-document.getElementById('card').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
-loadSkill(progress.lastSkill||0);
+loadSkill(Math.min(progress.lastSkill||0, flat.length-1));
 </script>
 </body>
 </html>
