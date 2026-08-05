@@ -242,7 +242,7 @@ function figChain(){
     s+=tx(b[0]+80,100,b[2],10,MUT,400)+tx(b[0]+80,118,b[3],10,MUT,400);
     if(i<2)s+=arrow(b[0]+164,94,b[0]+186,94,ACC,3);
   }
-  s+=tx(310,168,'always this order — no skipping links',10.5,MUT,400);
+  s+=tx(310,168,'information in, figured out, action out — in that order',10.5,MUT,400);
   return boxSVG(s,180);
 }
 function figOwl(){
@@ -267,7 +267,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>The rabbit’s half-second</h2>';
-  h+='<p>Every animal reaction runs the same <b>three-link chain, always in this order</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal to the brain</b>, which figures out what it means. <b>3. RESPOND</b> — the brain signals the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Sense organs only receive; the <b>brain</b> is the only part that decides. Now walk the rabbit through its half-second.</p>';
+  h+='<p>Animal reactions run on a <b>three-link chain</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal inward</b>, and it gets figured out. <b>3. RESPOND</b> — a signal goes back out to the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Two rules to hold onto: <b>sense organs only receive</b> — an ear can’t decide anything — and for reactions that involve <b>recognizing, remembering, or choosing</b>, the processing happens in the <b>brain</b>. (One exception you’ll meet later: a few emergency reactions get handled faster and lower down, before the brain is even involved.) Now walk the rabbit through its half-second.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -310,13 +310,18 @@ function beat2(){
   h+='<p>Run any reaction through the chain and it fits — animal or human:</p>';
   h+='<table><tr><th>Situation</th><th>Receive</th><th>Process</th><th>Respond</th></tr>';
   h+='<tr><td>rabbit + twig snap</td><td>ears</td><td>“danger”</td><td>bolt</td></tr>';
-  h+='<tr><td>you + hot pan</td><td>skin</td><td>“pain!”</td><td>hand yanks back</td></tr>';
+  h+='<tr><td>you + your name called</td><td>ears</td><td>“that’s me”</td><td>turn around</td></tr>';
   h+='<tr><td>dog + food smell</td><td>nose</td><td>“dinner”</td><td>runs to bowl</td></tr>';
   h+='<tr><td>you + red light</td><td>eyes</td><td>“stop”</td><td>brakes</td></tr></table>';
   h+='<div class="work"><div class="lab">The claim–evidence frame, behavior edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;the rabbit ran because its ears received the snap<br>';
   h+='EVIDENCE: it bolted the instant the sound happened,<br>and a DEAF rabbit in the same test keeps chewing —<br>break the receive link and the response never comes</div>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Animals sense with organs, <b>process in the brain</b>, and respond with the body. Break any link and the behavior disappears — which is exactly how scientists prove the chain is real.</p></div>';
+  h+='<div class="work"><div class="lab">The exception: emergency reflexes</div>';
+  h+='touch a hot pan &nbsp;→&nbsp; your hand yanks back BEFORE you feel the pain<br>';
+  h+='why so fast? &nbsp;the signal reaches your <b>spinal cord</b> — the nerve<br>cable in your back — and it fires the muscles straight away<br>';
+  h+='your brain &nbsp;→&nbsp; gets the news a moment LATER (“ow!”)<br>';
+  h+='these <b>reflexes</b> are rare and always protective. anything involving<br>recognizing or choosing still goes to the brain</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Animals sense with organs, process the signal, and respond with the body. Recognizing and choosing happen in the <b>brain</b>; a few emergency <b>reflexes</b> are handled by the spinal cord first, so the body moves before the brain even knows.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -398,11 +403,11 @@ function testOwen(){
 /* ---------- questions ---------- */
 var QUESTIONS=[
   {q:'Put the chain in order: an animal reacting to something in its world.',
-   a:['Respond → receive → process','Receive with a sense organ → process in the brain → respond with the body','Process → respond → receive','Sense organs do all three'],correct:1,
-   why:'Information comes in, the brain reads it, the body acts — always that order.'},
-  {q:'You touch a hot pan and yank your hand away. What did the PROCESSING?',
-   a:['Your skin','Your hand muscles','Your brain — it read the skin’s signal as “pain, danger”','The pan'],correct:2,
-   why:'Skin receives, brain decides, muscles respond. Only the brain processes.'},
+   a:['Respond → receive → process','Receive with a sense organ → process the signal → respond with the body','Process → respond → receive','Sense organs do all three'],correct:1,
+   why:'Information comes in, it gets figured out, the body acts — in that order.'},
+  {q:'You hear your name called across the playground and turn around. What did the PROCESSING?',
+   a:['Your ears','Your neck muscles','Your brain — it recognized that sound as YOUR name','The person calling'],correct:2,
+   why:'Ears receive sound; recognizing it as your name takes the brain. Sense organs never recognize anything.'},
   {q:'An owl hunts in the dark. Which receivers fit that job?',
    a:['Huge eyes for scarce light and very sharp hearing','Bright feathers','A loud call','A long tail'],correct:0,
    why:'In darkness the hunt lives or dies on the receive link — so an owl invests in eyes and ears.'},
@@ -449,7 +454,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trace any animal reaction through receive, process, respond; match an animal’s sense organs to the world it lives in; and explain how stored memories change the way a brain reads the same signal.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trace any animal reaction through receive, process, respond; match an animal’s sense organs to the world it lives in; explain how stored memories change the way a brain reads the same signal; and tell a brain-processed reaction from a spinal-cord reflex.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Owen. Ears deliver, brains decide — and memory is why the same sound gets different answers.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;

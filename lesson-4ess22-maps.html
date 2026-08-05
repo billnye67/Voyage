@@ -233,7 +233,7 @@ var QUAKES=[[112,86],[126,104],[138,124],[150,146],[160,168],[168,190],[176,208]
             [430,96],[444,118],[456,140],[462,162],[452,186]];
 var VOLC=[[120,95],[144,135],[164,179],[303,81],[296,152],[296,199],[437,107],[459,151],[458,174]];
 function figQuakeMap(showV){
-  var s=tx(310,22,'WORLD MAP'+(showV?' — QUAKES + VOLCANOES':' — EVERY EARTHQUAKE, 100 YEARS'),11.5,INK,700);
+  var s=tx(310,22,'SIMPLIFIED WORLD MAP'+(showV?' — BIG QUAKES + VOLCANOES':' — WHERE BIG EARTHQUAKES HAPPEN'),11.5,INK,700);
   s+='<rect x="40" y="36" width="540" height="196" rx="6" fill="'+SEA+'" stroke="'+INK+'" stroke-width="2"/>';
   /* rough land blobs */
   s+='<path d="M 70 70 q 60 -22 110 6 q 30 40 -6 82 q -60 30 -104 -8 Z" fill="'+LAND+'" stroke="'+GREY+'" stroke-width="1.5"/>';
@@ -244,7 +244,7 @@ function figQuakeMap(showV){
   if(showV)for(var j=0;j<VOLC.length;j++){var v=VOLC[j];
     s+='<polygon points="'+v[0]+','+(v[1]-8)+' '+(v[0]-7)+','+(v[1]+5)+' '+(v[0]+7)+','+(v[1]+5)+'" fill="'+GRN+'" stroke="'+INK+'" stroke-width="1.2"/>';}
   /* key */
-  s+='<circle cx="58" cy="252" r="4.5" fill="'+ACC+'"/>'+tx(70,256,'= earthquake',10,MUT,400,'start');
+  s+='<circle cx="58" cy="252" r="4.5" fill="'+ACC+'"/>'+tx(70,256,'= a cluster of big earthquakes',10,MUT,400,'start');
   if(showV){s+='<polygon points="200,244 193,257 207,257" fill="'+GRN+'" stroke="'+INK+'" stroke-width="1.2"/>'+tx(214,256,'= volcano',10,MUT,400,'start');}
   s+=tx(578,256,showV?'same bands — not a coincidence':'notice: bands, not sprinkles',10,(showV?GRN:MUT),700,'end');
   return boxSVG(s,268);
@@ -266,7 +266,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Read the world map</h2>';
-  h+='<p>A map isn’t just for finding places — it’s a tool for finding <b>patterns</b>. Here’s how to use one. <b>1.</b> Check the <b>key</b> (also called a legend): it tells you what each symbol means. <b>2.</b> Ask whether the marks are <b>scattered evenly</b> or <b>clustered into a shape</b> — a clump, a line, a band. <b>3.</b> If they cluster, that pattern is <b>evidence something is causing it</b>, and it lets you <b>predict where the same thing is likely to happen again</b>. Below: every earthquake of the last hundred years, one dot each.</p>';
+  h+='<p>A map isn’t just for finding places — it’s a tool for finding <b>patterns</b>. Here’s how to use one. <b>1.</b> Check the <b>key</b> (also called a legend): it tells you what each symbol means. <b>2.</b> Ask whether the marks are <b>scattered evenly</b> or <b>clustered into a shape</b> — a clump, a line, a band. <b>3.</b> If they cluster, that pattern is <b>evidence that location matters</b> — something about those particular places is involved — and it lets you <b>predict where the same thing is likely to happen again</b>. Below is a <b>simplified drawing</b> of a real world map — the continents are rough shapes and each dot stands for a whole cluster of big earthquakes, not one quake. Real scientists use maps with thousands of dots; this one keeps the same overall pattern so you can read it.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -288,7 +288,7 @@ function pickMap(i){
   if(i!==T.ans)el('e'+i).classList.add('wrong');
   if(i===T.ans){
     var msg=wonCount===0?'✓ Long ribbons of dots, and huge blank regions between them. That shape is the whole discovery — watch what happens when we add volcanoes.'
-           :wonCount===1?'✓ Volcano triangles land right on the quake ribbons. Two different disasters sharing one map pattern means one shared cause underneath.'
+           :wonCount===1?'✓ Volcano triangles land right on the quake ribbons. When two different events share one map pattern that closely, scientists go looking for a shared cause — and here they found one: the edges of Earth’s giant surface plates.'
                         :'✓ That’s the payoff. A pattern from the past tells you where to expect the same events next — so engineers design those buildings to survive shaking.';
     v.className='verdict exact';v.innerHTML=msg;
     wonCount++;
@@ -311,9 +311,9 @@ function beat2(){
   h+='CLAIM: &nbsp;&nbsp;&nbsp;earthquakes and volcanoes happen along the same narrow zones<br>';
   h+='EVIDENCE: on the world map, both cluster into the SAME long bands,<br>while enormous regions in between have almost none</div>';
   h+='<table><tr><th>Map pattern</th><th>What it means</th></tr>';
-  h+='<tr><td>marks scattered evenly</td><td>no special cause — could happen anywhere</td></tr>';
+  h+='<tr><td>marks scattered evenly</td><td>the map doesn’t reveal a cause tied to LOCATION</td></tr>';
   h+='<tr><td>marks clustered in a shape</td><td>something is causing them THERE</td></tr>';
-  h+='<tr><td>two different marks sharing a shape</td><td>they likely share a cause</td></tr></table>';
+  h+='<tr><td>two different marks sharing a shape</td><td>worth investigating — they may share a cause</td></tr></table>';
   h+='<div class="goal"><div class="lab">The idea</div><p>Maps turn thousands of separate facts into one picture. A <b>pattern</b> on a map is evidence — and evidence you can use to predict.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -395,11 +395,11 @@ function testDev(){
 /* ---------- questions ---------- */
 var QUESTIONS=[
   {q:'On a world map, earthquake dots form long narrow bands instead of spreading evenly. What does that pattern tell you?',
-   a:['Quakes are random','Something about those specific zones causes earthquakes there','Mapmakers missed some places','Earthquakes only happen on maps'],correct:1,
-   why:'Clustering is evidence of a cause. Even scattering would suggest no special cause.'},
+   a:['Quakes are random','Something about those specific zones is involved in causing earthquakes there','Mapmakers missed some places','Earthquakes only happen on maps'],correct:1,
+   why:'Clustering is evidence that location matters. Even scattering would mean the map reveals no location-linked cause.'},
   {q:'Volcano symbols land along the SAME bands as the earthquake dots. The best conclusion is—',
-   a:['Volcanoes cause maps','It is a pure coincidence','Volcanoes avoid earthquakes','The two share a common cause in those zones'],correct:3,
-   why:'Two different features sharing one pattern points to one shared cause underneath.'},
+   a:['Volcanoes cause maps','The pattern proves nothing at all','Volcanoes avoid earthquakes','They may well share a cause in those zones — a match that strong is worth investigating'],correct:3,
+   why:'A match that strong is a lead worth chasing — and when scientists chased it, they found the plate edges underneath.'},
   {q:'What did depth maps reveal about the ocean floor?',
    a:['It has mountains, valleys, and deep trenches, like dry land','It is perfectly flat','It is solid ice','It has no features worth mapping'],correct:0,
    why:'Mapping depth mile by mile uncovered underwater mountain chains and the deepest trenches on Earth.'},

@@ -166,7 +166,7 @@ var wonCount=0,answeredRock=false;
 var TASKS=[
   {ans:2, txt:'<b>Four layers in the cliff: A on top, then B, then C, then D at the bottom.</b> Which layer is OLDEST?',
    opts:['A — it’s highest, so it had the longest to sit there','They’re all the same age','D — the bottom layer was laid down first'], won:'bottom = oldest'},
-  {ans:0, txt:'<b>Layer C holds fossil shells of sea creatures.</b> What does that tell you about this spot long ago?',
+  {ans:0, txt:'<b>Layer C is packed all the way through with fossil shells of sea creatures.</b> What does that tell you about this spot long ago?',
    opts:['This place was underwater — a sea covered it when layer C formed','Someone carried shells up the cliff','Sea creatures used to live in dry rock'], won:'fossils = past environment'},
   {ans:1, txt:'<b>Layer B (above C) holds fossil tree roots and land plants.</b> What happened between C and B?',
    opts:['Nothing changed','The sea went away and this became DRY LAND — the environment changed over time','The plants swam here'], won:'the environment changed'}
@@ -270,7 +270,7 @@ function figTwo(){
   }
   s+=ln(270,79,350,79,GRN,2,true)+ln(270,123,350,123,GRN,2,true)+ln(270,167,350,167,GRN,2,true);
   s+=tx(310,212,'the same three layers, in the same order, in both places',10.5,GRN,700);
-  s+=tx(310,230,'evidence that one huge event laid each layer across the whole region',10,MUT,400);
+  s+=tx(310,230,'a strong clue — now check the fossils and details to be sure',10,MUT,400);
   return boxSVG(s,242);
 }
 
@@ -279,7 +279,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Read the cliff</h2>';
-  h+='<p>Rock layers form when sand, mud, and pebbles settle out of water or wind and press into rock over a very long time. Two rules do all the work. <b>Rule 1 — the stacking rule:</b> each new layer settles ON TOP of the ones already there, so in an undisturbed cliff <b>the bottom layer is the OLDEST and the top layer is the YOUNGEST</b>. <b>Rule 2 — the fossil rule:</b> a <b>fossil</b> is the preserved trace of a living thing, and it tells you <b>what lived there when that layer formed</b> — sea shells mean that spot was underwater, land plants and roots mean it was dry ground. Now read the wall.</p>';
+  h+='<p>Rock layers form when sand, mud, and pebbles settle out of water or wind and press into rock over a very long time. Two rules do all the work. <b>Rule 1 — the stacking rule:</b> each new layer settles ON TOP of the ones already there, so in an undisturbed cliff <b>the bottom layer is the OLDEST and the top layer is the YOUNGEST</b>. <b>Rule 2 — the fossil rule:</b> a <b>fossil</b> is the preserved trace of a living thing, and <b>a layer packed with one kind of fossil is evidence about the environment where that layer formed</b> — lots of sea shells point to water covering that spot, roots and land plants point to dry ground. Scientists look at <b>many fossils together</b>, not one, because a single shell or bone can be washed or blown somewhere before it gets buried. Now read the wall.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -323,12 +323,12 @@ function beat2(){
   h+='<table><tr><th>What you see</th><th>What it means</th></tr>';
   h+='<tr><td>a layer near the bottom</td><td>formed long ago</td></tr>';
   h+='<tr><td>a layer near the top</td><td>formed more recently</td></tr>';
-  h+='<tr><td>fossil sea shells in it</td><td>that spot was underwater then</td></tr>';
-  h+='<tr><td>fossil roots and leaves</td><td>that spot was dry land then</td></tr>';
+  h+='<tr><td>packed with sea-shell fossils</td><td>that spot was underwater then</td></tr>';
+  h+='<tr><td>full of fossil roots and leaves</td><td>that spot was dry land then</td></tr>';
   h+='<tr><td>many layers stacked</td><td>a long, long stretch of time passed</td></tr></table>';
   h+='<div class="work"><div class="lab">The claim–evidence frame, canyon edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;this desert canyon used to be a sea floor<br>';
-  h+='EVIDENCE: layer C is packed with sea-shell fossils,<br>and fossils show what lived there when the layer formed</div>';
+  h+='EVIDENCE: layer C is packed with sea-shell fossils all through it —<br>not one stray shell that could have drifted in</div>';
   h+='<div class="goal"><div class="lab">The idea</div><p>A rock stack is a <b>timeline</b>: oldest at the bottom, youngest at the top. The fossils inside each layer tell you what the environment was like at that moment in the story.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -339,14 +339,15 @@ function beat3(){
   var h='';
   h+='<div class="tag">Predict first</div>';
   h+='<h2>The fish on the mountain</h2>';
-  h+='<p>Real find: hikers on a dry mountain, thousands of meters above the sea, split open a rock and find a perfect <b>fish fossil</b> inside a layer near the middle of the peak.</p>';
+  h+='<p>Real find: hikers on a dry mountain, thousands of meters above the sea, split open a rock and find a <b>fish fossil</b> in a layer near the middle of the peak. It isn’t alone — that layer holds fish, shells, and ripple marks all through it.</p>';
   h+='<div class="ask"><div class="q">What is the best evidence-based explanation?</div>';
   h+='<div class="row"><button class="btn sm" onclick="checkPredict(\'a\')">Long ago that rock formed underwater — the land was lifted up later</button><button class="btn sm" onclick="checkPredict(\'b\')">A fish climbed the mountain and died there</button></div>';
   h+='<div id="pfb"></div></div>';
   h+='<div id="ph" class="hide">';
   h+='<div class="work"><div class="lab">The reasoning chain</div>';
-  h+='fossil rule: &nbsp;a fish fossil means a fish lived and died THERE<br>';
-  h+='fish live in &nbsp;→&nbsp; water. so that spot was underwater when the layer formed<br>';
+  h+='one fossil alone &nbsp;→&nbsp; weak: a single fish could have drifted before burial<br>';
+  h+='a whole layer of them &nbsp;→&nbsp; fish AND shells AND ripple marks together<br>';
+  h+='that pile-up of evidence &nbsp;→&nbsp; this rock formed in WATER<br>';
   h+='but it’s a mountain now &nbsp;→&nbsp; so the land itself must have RISEN since<br>';
   h+='conclusion: &nbsp;<b>the rock didn’t move to the fish — the land moved</b></div>';
   h+='<p>Earth’s surface slowly pushes upward in places over millions of years. Old sea floors have been lifted into mountaintops — which is why fossil sea creatures turn up on peaks all over the world. The rock kept the receipt.</p></div>';
@@ -357,7 +358,7 @@ function beat3(){
 function checkPredict(v){
   var fb=el('pfb');
   if(v==='a'){fb.className='fb ok';fb.innerHTML='<b>The land rose.</b> The fossil proves water was there when the rock formed; the mountain came later, lifted over millions of years.';}
-  else{fb.className='fb no';fb.innerHTML='<b>Fossils form where the animal lived and died,</b> buried in settling mud. A fish can’t climb — but land can rise. That’s the explanation the evidence supports.';}
+  else{fb.className='fb no';fb.innerHTML='<b>A fish can’t climb — but land can rise.</b> A whole layer of fish, shells, and ripple marks says this rock formed in water; the peak came later.';}
   el('ph').classList.remove('hide');predictDone=true;el('nx').disabled=false;
 }
 
@@ -368,13 +369,14 @@ function beat4(){
   h+='<h2>Same layers, two canyons</h2>';
   h+='<p>Here’s the move that turns one cliff into regional history. Scientists compare stacks from far-apart places:</p>';
   h+=figTwo();
-  h+='<div class="work"><div class="lab">What matching stacks tell you</div>';
+  h+='<div class="work"><div class="lab">What matching stacks tell you — and what they don’t</div>';
   h+='both canyons: &nbsp;white sand on top, red rock, gray shale at the bottom<br>';
   h+='300 km apart &nbsp;→&nbsp; and still the same order<br>';
-  h+='conclusion: &nbsp;each layer was laid down across the WHOLE region<br>';
-  h+='bonus: &nbsp;the red rock in canyon 1 is the same age as the red rock in canyon 2</div>';
-  h+='<p>That’s how a scientist dates a rock they’ve never seen before: match its layer to a stack somewhere else that’s already been read. Patterns that repeat across places are some of the strongest evidence in all of science.</p>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Layer patterns that <b>match across distant sites</b> are evidence of events big enough to cover a whole region — and they let scientists line up the ages of rocks far apart.</p></div>';
+  h+='this is a &nbsp;<b>CLUE, not proof</b> — colors can match by accident<br>';
+  h+='so scientists check more: &nbsp;do both red layers hold the same fossils?<br>the same grain size? the same thickness pattern?<br>';
+  h+='if all of that lines up too &nbsp;→&nbsp; they conclude the layers are <b>probably</b><br>the same age, laid down by one event spread across the region</div>';
+  h+='<p>Notice how careful that is. Matching stripes start the investigation; fossils and details finish it. A scientist who stopped at “both are red” would get burned — plenty of unrelated rocks are red.</p>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Layer patterns that <b>match across distant sites</b> are evidence worth chasing. Combined with matching fossils and details, they let scientists line up rock ages far apart — as a well-supported conclusion, not a certainty.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -416,9 +418,9 @@ var QUESTIONS=[
   {q:'Hikers find a fish fossil in rock near a mountaintop. Best explanation?',
    a:['A fish climbed up','The rock formed underwater long ago and the land was later lifted up','Someone planted it','Fish used to breathe air on mountains'],correct:1,
    why:'The fossil proves water was there when the rock formed; the mountain rose afterward over millions of years.'},
-  {q:'Two canyons 300 km apart have the same three layers in the same order. What does the match suggest?',
-   a:['One canyon copied the other','It’s a coincidence','Layers are always identical everywhere','Each layer was laid down across the whole region, so matching layers are the same age'],correct:3,
-   why:'Patterns repeating across distant sites point to region-wide events — and let scientists line up ages.'},
+  {q:'Two canyons 300 km apart have the same three layers in the same order. What should a scientist do with that?',
+   a:['Treat it as a strong clue, then check whether the fossils and details match too before concluding the layers are the same age','Immediately declare them the same age — matching colors is proof','Ignore it — matching is always coincidence','Conclude one canyon copied the other'],correct:0,
+   why:'Matching stripes start the investigation; matching fossils and details finish it. Colors alone can match by accident.'},
   {q:'Kai said the TOP layer is oldest because it’s been exposed the longest. Why is he wrong?',
    a:['New layers always settle on top, so the top layer arrived LAST — it’s the youngest','Top layers are always thinner','Sunlight makes rock older','He’s right'],correct:0,
    why:'That was Kai’s trap. Nothing can slide underneath an existing layer — order of arrival sets the age.'}
@@ -459,7 +461,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Order rock layers from oldest to youngest, read fossils as evidence of past environments, explain sea fossils on a mountaintop, and use matching layer patterns to connect distant places.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Order rock layers from oldest to youngest, read a layer full of fossils as evidence of a past environment, explain sea fossils on a mountaintop, and treat matching layers across distant sites as a clue to check rather than a conclusion to assume.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Kai. New layers settle on top — the bottom is the oldest page in the book.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;
