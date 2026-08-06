@@ -457,7 +457,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Match structures to survival jobs in plants and animals, read an unfamiliar creature’s way of life from its parts, and use the removal test to prove a structure earns its keep.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Match structures to survival jobs in plants and animals, read an unfamiliar creature’s way of life from its parts, and use the removal test to show a structure earns its keep.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Nia. The removal test — what happens without it? — is the tool to use.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;

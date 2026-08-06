@@ -168,7 +168,7 @@ var TASKS=[
    opts:['Wave A — its peaks rise higher above the rest line','Wave B — its peaks are closer together','They’re equal'], won:'A: taller peaks'},
   {ans:2, txt:'<b>Same two waves.</b> Which has the longer WAVELENGTH?',
    opts:['Wave A — it’s taller','Neither — all waves have the same wavelength','Wave B — its peaks are spread farther apart'], won:'B: peaks farther apart'},
-  {ans:1, txt:'<b>A rubber duck floats on the pond as waves pass under it.</b> What do the waves do to the duck?',
+  {ans:1, txt:'<b>A rubber duck floats on a still pond — no wind, no current — as waves pass under it.</b> What do the waves do to the duck?',
    opts:['Drag it across the pond to the far shore','Lift it up and drop it down, over and over, as each peak passes','Nothing — waves can’t move objects'], won:'the duck bobs'}
 ];
 var predictDone=false,mistakeTested=false;
@@ -274,7 +274,7 @@ function figDuck(){
   s+=ln(240,86,240,104,ACC,2)+'<polygon points="240,110 235,100 245,100" fill="'+ACC+'"/>';
   s+=ln(240,38,240,50,ACC,2)+'<polygon points="240,32 235,42 245,42" fill="'+ACC+'"/>';
   s+=tx(288,44,'up… down… up… down',9.5,ACC,700,'start');
-  s+=tx(310,160,'the duck bobs in place as peaks pass — it does NOT ride across the pond',10.5,MUT,400);
+  s+=tx(310,160,'still pond, no wind or current: the duck bobs in place as peaks pass — it does NOT ride across',10.5,MUT,400);
   return boxSVG(s,172);
 }
 
@@ -306,7 +306,7 @@ function pickWav(i){
   if(i===T.ans){
     var msg=wonCount===0?'✓ Amplitude is HEIGHT above the rest line — and A’s peaks tower over B’s. Bigger amplitude: A.'
            :wonCount===1?'✓ Wavelength is SPACING — peak to peak. B’s peaks are spread far apart; A’s are bunched close. Longer wavelength: B.'
-                        :'✓ Each passing peak lifts the duck; each dip drops it. Up, down, repeat — but it stays put. Waves move objects without carrying them away.';
+                        :'✓ Each passing peak lifts the duck; each dip drops it. Up, down, repeat — and on this still pond it stays about where it was. The wave moves the duck without carrying it away.';
     v.className='verdict exact';v.innerHTML=msg;
     wonCount++;
     setTimeout(function(){if(step===0)beat1();},1900);
@@ -373,9 +373,15 @@ function beat4(){
   h+='the duck bobs UP &nbsp;→&nbsp; a peak is passing under it right now<br>';
   h+='it bobs on a steady beat &nbsp;→&nbsp; the peaks are evenly spaced<br>';
   h+='it bobs HIGHER than before &nbsp;→&nbsp; the amplitude (energy) grew<br>';
-  h+='it’s still in the same spot &nbsp;→&nbsp; waves pass THROUGH, they don’t drag</div>';
+  h+='it’s still in about the same spot &nbsp;→&nbsp; waves pass THROUGH, they don’t drag</div>';
+  h+='<div class="work"><div class="lab">Fair-test rule: hold the pond still</div>';
+  h+='the duck test only works on a <b>still pond</b> — no wind, no current<br>';
+  h+='why? &nbsp;→&nbsp; wind and currents push floating things around on their own<br>';
+  h+='if the duck drifted, you couldn’t tell &nbsp;→&nbsp; was it the wave, or the breeze?<br>';
+  h+='so scientists say it carefully &nbsp;→&nbsp; in this <b>simplified calm-water model</b>,<br>the wave bobs the duck and leaves it about where it started<br>';
+  h+='out on a real windy lake &nbsp;→&nbsp; floating things DO drift — but that drift comes<br>from the wind and the current, not from the pattern passing under them</div>';
   h+='<p>Surfers count wave patterns to pick their moment. Scientists read earthquake waves the same way. Even the duck is a measuring tool: watch what bobs, and you know what the wave is doing.</p>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Waves repeat on a pattern you can measure and predict — and a passing wave sets objects in motion (up and down) without carrying them along.</p></div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Waves repeat on a pattern you can measure and predict — and in a calm-water model, a passing wave sets objects in motion (up and down) without carrying them along.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -389,6 +395,7 @@ function beat5(){
   h+='<div class="row" style="margin-top:12px"><button class="btn sm" onclick="testMia()">Test it with the duck</button></div>';
   h+='<div id="mh" class="hide">';
   h+='<div class="work"><div class="lab">The duck experiment</div>';
+  h+='set it up fairly &nbsp;→&nbsp; still pond, no wind, no current<br>';
   h+='if the WATER travels &nbsp;→&nbsp; the duck should ride it to the edge<br>';
   h+='what actually happens &nbsp;→&nbsp; the duck bobs up and down IN PLACE<br>';
   h+='so what’s moving outward? &nbsp;→&nbsp; the PATTERN — and the energy it carries<br>';
@@ -401,7 +408,7 @@ function beat5(){
 function testMia(){
   el('mh').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>The duck sinks her claim.</b> If water traveled with the wave, every floating thing would wash to the edge with it. Instead the duck bobs in place while ring after ring passes underneath. What crosses the pond is the <b>pattern</b>, carrying energy — the water just rises and falls where it is. Mia confused the messenger with the message.';
+  fb.innerHTML='<b>The duck sinks her claim.</b> If water traveled with the wave, every floating thing would wash to the edge with it. Instead the duck bobs in place while ring after ring passes underneath. That’s strong <b>evidence</b> that what crosses the pond is the <b>pattern</b>, carrying energy — the water just rises and falls where it is. (One calm-pond test isn’t proof on its own; scientists check the same idea with ropes, tanks, and slow-motion video before they trust it. They all agree.) Mia confused the messenger with the message.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -416,12 +423,12 @@ var QUESTIONS=[
   {q:'You shake a rope with much more energy. What does the wave show?',
    a:['A bigger amplitude — the peaks rise taller','The rope goes flat','The wave runs backward','Nothing changes'],correct:0,
    why:'Amplitude is the energy gauge: more energy in, taller peaks out.'},
-  {q:'Waves pass under a floating duck for a full minute. Where is the duck at the end?',
-   a:['Washed up on the far shore','Underwater','Wherever the wind isn’t','About where it started — it bobbed up and down in place'],correct:3,
-   why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along.'},
+  {q:'Waves pass under a duck floating on a still pond — no wind, no current — for a full minute. Where is the duck at the end?',
+   a:['Washed up on the far shore','Underwater','Halfway to the edge','About where it started — it bobbed up and down in place'],correct:3,
+   why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along. (That’s why the pond has to be still — wind or a current would push the duck for reasons that have nothing to do with the wave.)'},
   {q:'Mia said the splash-water itself races to the pond’s edge. What actually travels outward?',
    a:['The water, just like she said','The repeating pattern, carrying energy — the water rises and falls in place','The pebble','Nothing travels at all'],correct:1,
-   why:'That was Mia’s trap. The duck test proves it: pattern and energy cross the pond; the water stays put.'}
+   why:'That was Mia’s trap. The duck test shows it: pattern and energy cross the pond; the water rises and falls in place.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -459,8 +466,8 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Measure any wave’s amplitude and wavelength from a diagram, read amplitude as an energy gauge, and use the duck test to show that waves move objects in place without carrying them away.</p></div>';}
-  else h+='<p style="margin-top:16px">Go back to the duck. It bobs in place — the pattern travels, the water doesn’t.</p>';
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Measure any wave’s amplitude and wavelength from a diagram, read amplitude as an energy gauge, and use the duck test — run on still water, so wind and current can’t interfere — to show that a wave moves a floating object in place without carrying it along.</p></div>';}
+  else h+='<p style="margin-top:16px">Go back to the duck on the still pond. It bobs in place — the pattern travels, the water doesn’t.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;
 }
