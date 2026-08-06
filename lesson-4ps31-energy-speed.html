@@ -267,7 +267,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Read the craters</h2>';
-  h+='<p>A moving object carries <b>energy of motion</b> — and the faster it moves, the more energy it carries. An object that is <b>not moving carries none</b>: zero motion, zero energy of motion. You can’t see energy directly, but you can read it from <b>what it does when it stops</b> — and here’s the rule: <b>the more energy delivered, the bigger EVERY clue gets</b> — a deeper dent, a <b>louder sound</b>, a bigger splash. Scientists call those clues <b>evidence</b>. Below: one marble, rolled into a sand tray at three speeds. Read the evidence and answer.</p>';
+  h+='<p>A moving object carries <b>energy of motion</b>. Take <b>one particular object</b> and speed it up, and it carries more: <b>same object, faster, more energy</b>. (Heaviness matters too — a bowling ball and a marble at the same speed are nowhere near equal — so today we test one thing at a time and keep the object identical.) An object that is <b>not moving carries none</b>: zero motion, zero energy of motion. You can’t see energy directly, but you can read it from <b>what it does when it stops</b> — and here’s the rule: <b>the more energy delivered, the bigger EVERY clue gets</b> — a deeper dent, a <b>louder sound</b>, a bigger splash. Scientists call those clues <b>evidence</b>. Below: one marble, rolled into a sand tray at three speeds. Read the evidence and answer.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -400,7 +400,7 @@ function testJo(){
 /* ---------- questions ---------- */
 var QUESTIONS=[
   {q:'Two identical soccer balls roll across the field — one slowly, one at top speed. Which carries more energy of motion?',
-   a:['The slow one','Both the same — identical balls','The fast one — faster means more energy','Neither carries any'],correct:2,
+   a:['The slow one','Both the same — identical balls','The fast one — same ball, more speed, more energy','Neither carries any'],correct:2,
    why:'The two balls are identical, so the only difference is speed — and for the same object, faster means more energy of motion.'},
   {q:'Energy is invisible. How did our experiment SHOW the fast marble carried more?',
    a:['We just trusted the label','The evidence — it left the deepest, widest crater','We weighed the marbles','Fast things look more energetic'],correct:1,

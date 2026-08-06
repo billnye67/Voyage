@@ -283,7 +283,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Measure two waves</h2>';
-  h+='<p>A wave is a <b>repeating pattern</b> that travels along, carrying energy. Scientists describe any wave with two measurements. <b>Amplitude</b> is the wave’s HEIGHT: how far a peak rises above the <b>rest line</b> (the flat level the water sits at with no wave). <b>Wavelength</b> is the wave’s SPACING: the distance from <b>one peak to the next peak</b>. One more rule: a passing wave <b>can move objects</b> — it lifts a floating object up and drops it back down as each peak passes, but it does <b>not drag the object along</b> with it. Now read the picture and measure.</p>';
+  h+='<p>A wave is a <b>repeating pattern</b> that travels along, carrying energy. Scientists describe any wave with two measurements. <b>Amplitude</b> is the wave’s HEIGHT: how far a peak rises above the <b>rest line</b> (the flat level the water sits at with no wave). <b>Wavelength</b> is the wave’s SPACING: the distance from <b>one peak to the next peak</b>. One more rule, and we’ll test it on a <b>still pond</b> — no wind, no current, so nothing else can push things around: a passing wave <b>can move objects</b>. It lifts a floating object up and drops it back down as each peak passes, and leaves it <b>about where it started</b> instead of hauling it across. Now read the picture and measure.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -432,7 +432,7 @@ var QUESTIONS=[
    why:'Amplitude is the energy gauge: more energy in, taller peaks out.'},
   {q:'Waves pass under a duck floating on a still pond — no wind, no current — for a full minute. Where is the duck at the end?',
    a:['Washed up on the far shore','Underwater','Halfway to the edge','About where it started — it bobbed up and down in place'],correct:3,
-   why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along. (That’s why the pond has to be still — wind or a current would push the duck for reasons that have nothing to do with the wave.)'},
+   why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along. (That’s why the pond has to be still — wind or a current would shove the duck around for reasons of their own.)'},
   {q:'Mia said the splash-water itself races to the pond’s edge. What actually travels outward?',
    a:['The water, just like she said','The repeating pattern, carrying energy — the water rises and falls close to where it is','The pebble','Nothing travels at all'],correct:1,
    why:'That was Mia’s trap. On the still pond of our model the duck bobs instead of riding away, which shows the pattern and its energy crossing the pond while the water stays close to home.'}
