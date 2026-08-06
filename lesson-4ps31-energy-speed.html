@@ -133,7 +133,7 @@
   <div class="card">
     <div class="tag">Lesson · 4-PS3-1</div>
     <h1>Energy and speed</h1>
-    <p>You can’t see energy. Nobody can. But roll a marble into a tray of sand and energy leaves a confession: a dent. Roll it faster and the dent gets deeper, the thud gets louder. Today you learn to read those clues like a scientist — and to prove how much energy a moving thing carries, using evidence anyone can check.</p>
+    <p>You can’t see energy. Nobody can. But roll a marble into a tray of sand and energy leaves a confession: a dent. Roll it faster and the dent gets deeper, the thud gets louder. Today you learn to read those clues like a scientist — and to back up a claim about how much energy a moving thing carries, using evidence anyone can check.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS3-1</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
@@ -312,11 +312,19 @@ function beat2(){
   h+='CLAIM: &nbsp;&nbsp;&nbsp;the fast marble carried the most energy<br>';
   h+='EVIDENCE: because it left the deepest, widest crater —<br>and the same marble at slow speed left the smallest<br>';
   h+='(one sentence: “I claim ___ BECAUSE the evidence shows ___.”)</div>';
-  h+='<table><tr><th>Speed</th><th>Evidence in the sand</th><th>Energy</th></tr>';
+  h+='<table><tr><th>Speed (same marble every time)</th><th>Evidence in the sand</th><th>Energy</th></tr>';
   h+='<tr><td>still</td><td>no mark at all</td><td>none</td></tr>';
   h+='<tr><td>slow</td><td>small, shallow crater</td><td>a little</td></tr>';
   h+='<tr><td>fast</td><td>deep, wide crater + loud thud</td><td>a lot</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The idea</div><p><b>The faster an object moves, the more energy it carries.</b> Energy is invisible — so scientists show it with evidence: dents, sounds, splashes. Claim + evidence, every time.</p></div>';
+  h+='<div class="work"><div class="lab">Say the rule the careful way</div>';
+  h+='we rolled the <b>same marble</b> every time, into the <b>same sand</b><br>';
+  h+='the only thing we changed &nbsp;→&nbsp; the speed<br>';
+  h+='so the rule our evidence supports is<br>';
+  h+='&nbsp;&nbsp;<b>for the same object, the faster it moves, the more<br>&nbsp;&nbsp;energy of motion it carries</b><br><br>';
+  h+='why say “the same object”? &nbsp;→&nbsp; because <b>how heavy</b> it is<br>matters too. roll a bowling ball and a marble at the SAME<br>speed and the bowling ball hits with far more energy<br>';
+  h+='motion energy depends on both &nbsp;→&nbsp; speed AND mass<br>';
+  h+='our experiment only tested speed, so that’s all it can<br>tell us about</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p><b>For the same object, the faster it moves, the more energy of motion it carries.</b> (Mass counts too — a heavier object at the same speed carries more.) Energy is invisible, so scientists show it with evidence: dents, sounds, splashes. Claim + evidence, every time.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -376,7 +384,7 @@ function beat5(){
   h+='same marble every time? &nbsp;yes — identical<br>';
   h+='same sand every time? &nbsp;yes — the same tray, refilled<br>';
   h+='the ONLY thing that changed: &nbsp;the speed<br>';
-  h+='and the craters changed with it &nbsp;→&nbsp; <b>speed, not the marble, sets the energy</b></div></div>';
+  h+='and the craters changed with it &nbsp;→&nbsp; <b>with the object held identical,<br>the speed is what changed the energy</b></div></div>';
   h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -385,7 +393,7 @@ function beat5(){
 function testJo(){
   el('mh').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>Jo confused what an object IS with how it’s MOVING.</b> Energy of motion doesn’t live in the marble’s glass — it lives in its speed. The experiment kept everything identical except speed, and the craters still changed — that’s exactly the evidence that pins the energy on the speed. One object can carry a little energy, a lot, or none at all: just change how fast it’s going.';
+  fb.innerHTML='<b>Jo forgot that identical objects can be MOVING differently.</b> The experiment kept everything the same — same marble, same sand — and changed only the speed, and the craters changed right along with it. That’s the evidence: with the object held identical, speed is what made the difference. One marble can carry a little energy, a lot, or none at all, just by changing how fast it goes. (Jo isn’t wrong that the object matters — a heavier ball at the same speed would hit harder. She’s wrong that being identical settles it, because speed hadn’t been held still.)';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -393,7 +401,7 @@ function testJo(){
 var QUESTIONS=[
   {q:'Two identical soccer balls roll across the field — one slowly, one at top speed. Which carries more energy of motion?',
    a:['The slow one','Both the same — identical balls','The fast one — faster means more energy','Neither carries any'],correct:2,
-   why:'Speed sets the energy of motion: the faster object carries more, even when the objects are identical.'},
+   why:'The two balls are identical, so the only difference is speed — and for the same object, faster means more energy of motion.'},
   {q:'Energy is invisible. How did our experiment SHOW the fast marble carried more?',
    a:['We just trusted the label','The evidence — it left the deepest, widest crater','We weighed the marbles','Fast things look more energetic'],correct:1,
    why:'You read energy from what it does: the deepest crater is checkable evidence of the biggest energy delivery.'},
@@ -404,8 +412,8 @@ var QUESTIONS=[
    a:['Middle-sized — middle height gives middle speed, so middle energy','The biggest possible','No crater at all','Impossible to predict'],correct:0,
    why:'The chain: middle release → middle speed → middle energy → middle crater. The rule predicts evidence before you see it.'},
   {q:'Jo said identical marbles must carry identical energy. What did the evidence show?',
-   a:['She was right — the craters were fake','Sand types were different','The marbles were secretly different','Only the speed changed, and the craters changed with it — speed sets the energy, not what the object is'],correct:3,
-   why:'That was Jo’s trap. Everything was identical except speed — so the changing craters pin the energy on the speed.'}
+   a:['She was right — the craters were fake','Sand types were different','The marbles were secretly different','Only the speed changed, and the craters changed with it — so for one identical marble, speed makes the difference'],correct:3,
+   why:'That was Jo’s trap. Identical objects can still be moving at different speeds. Everything was held the same except speed, so the changing craters pin this difference on the speed. (Heaviness matters too — but this test never changed it.)'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';
@@ -443,7 +451,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Connect an object’s speed to the energy it carries, read invisible energy from checkable evidence, predict the evidence a speed will leave, and prove it all with a claim-because sentence.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Connect an object’s speed to the energy it carries — holding the object itself the same, since heaviness counts too — read invisible energy from checkable evidence, predict the evidence a speed will leave, and prove it all with a claim-because sentence.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Jo. Everything was identical except the speed — and the craters changed anyway.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;

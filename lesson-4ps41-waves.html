@@ -312,7 +312,7 @@ function pickWav(i){
     setTimeout(function(){if(step===0)beat1();},1900);
   } else {
     v.className='verdict over';
-    v.innerHTML='✗ Check the definitions: amplitude is how HIGH a peak rises above the rest line; wavelength is the distance from one peak to the NEXT; a wave bobs a floater in place. Try again.';
+    v.innerHTML='✗ Check the definitions: amplitude is how HIGH a peak rises above the rest line; wavelength is the distance from one peak to the NEXT; on still water a wave bobs a floater roughly in place. Try again.';
     setTimeout(function(){if(step===0){answeredWav=false;beat1();}},2600);
   }
   if(wonCount>=3&&el('nx'))el('nx').disabled=false;
@@ -323,7 +323,7 @@ function beat2(){
   var h='';
   h+='<div class="tag">What just happened</div>';
   h+='<h2>Wave anatomy, labeled</h2>';
-  h+='<p>Here’s the model with everything pinned down. This one diagram describes ocean swells, jump-rope wiggles, and sound vibrations alike:</p>';
+  h+='<p>Here’s the model with everything pinned down. It’s drawn for the waves you can watch make peaks — ocean swells, jump-rope wiggles, a shaken spring:</p>';
   h+=figAnatomy();
   h+='<div class="work"><div class="lab">The claim–evidence frame, wave edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;wave A carries a taller pattern than wave B<br>';
@@ -331,7 +331,14 @@ function beat2(){
   h+='<table><tr><th>Measurement</th><th>How to take it</th></tr>';
   h+='<tr><td>amplitude</td><td>rest line straight up to a peak</td></tr>';
   h+='<tr><td>wavelength</td><td>one peak straight across to the next peak</td></tr></table>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Every wave is a repeating pattern you can measure two ways: <b>amplitude</b> (height above rest) and <b>wavelength</b> (peak-to-peak spacing). Two numbers, any wave, anywhere.</p></div>';
+  h+='<div class="work"><div class="lab">What about sound? (not a peaks-and-dips wave)</div>';
+  h+='sound is a wave too — but it isn’t water going up and down<br>';
+  h+='it’s the air getting <b>squeezed tight, then spread thin</b>,<br>squeeze-spread-squeeze-spread, over and over<br><br>';
+  h+='scientists still describe it with the same two ideas<br>';
+  h+='&nbsp;&nbsp;<b>wavelength</b> &nbsp;→&nbsp; distance from one squeeze to the next<br>';
+  h+='&nbsp;&nbsp;<b>amplitude</b> &nbsp;→&nbsp; how HARD the squeeze is (that’s loudness)<br><br>';
+  h+='careful: &nbsp;when they graph a sound, the “height” on the<br>graph stands for the strength of the squeeze. it is NOT a<br>real height you could measure in the air with a ruler</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Every wave is a repeating pattern you can measure two ways: <b>wavelength</b> — the distance from one repeat to the next — and <b>amplitude</b> — how big each repeat is. For water and rope waves, amplitude is a real height above the rest line, which is why we measure it that way all lesson.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -373,13 +380,13 @@ function beat4(){
   h+='the duck bobs UP &nbsp;→&nbsp; a peak is passing under it right now<br>';
   h+='it bobs on a steady beat &nbsp;→&nbsp; the peaks are evenly spaced<br>';
   h+='it bobs HIGHER than before &nbsp;→&nbsp; the amplitude (energy) grew<br>';
-  h+='it’s still in about the same spot &nbsp;→&nbsp; waves pass THROUGH, they don’t drag</div>';
+  h+='it’s still in about the same spot &nbsp;→&nbsp; the wave passed THROUGH,<br>it didn’t haul the duck along with it</div>';
   h+='<div class="work"><div class="lab">Fair-test rule: hold the pond still</div>';
   h+='the duck test only works on a <b>still pond</b> — no wind, no current<br>';
   h+='why? &nbsp;→&nbsp; wind and currents push floating things around on their own<br>';
   h+='if the duck drifted, you couldn’t tell &nbsp;→&nbsp; was it the wave, or the breeze?<br>';
   h+='so scientists say it carefully &nbsp;→&nbsp; in this <b>simplified calm-water model</b>,<br>the wave bobs the duck and leaves it about where it started<br>';
-  h+='out on a real windy lake &nbsp;→&nbsp; floating things DO drift — but that drift comes<br>from the wind and the current, not from the pattern passing under them</div>';
+  h+='out on a real lake or ocean &nbsp;→&nbsp; floating things DO creep along slowly.<br>wind and currents push them, and real waves nudge them a little too.<br>but that creep is tiny next to the bobbing — the duck goes up and down<br>hundreds of times while inching forward. the big motion is the bob</div>';
   h+='<p>Surfers count wave patterns to pick their moment. Scientists read earthquake waves the same way. Even the duck is a measuring tool: watch what bobs, and you know what the wave is doing.</p>';
   h+='<div class="goal"><div class="lab">The idea</div><p>Waves repeat on a pattern you can measure and predict — and in a calm-water model, a passing wave sets objects in motion (up and down) without carrying them along.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
@@ -399,7 +406,7 @@ function beat5(){
   h+='if the WATER travels &nbsp;→&nbsp; the duck should ride it to the edge<br>';
   h+='what actually happens &nbsp;→&nbsp; the duck bobs up and down IN PLACE<br>';
   h+='so what’s moving outward? &nbsp;→&nbsp; the PATTERN — and the energy it carries<br>';
-  h+='the water &nbsp;→&nbsp; rises and falls, then stays right where it was</div></div>';
+  h+='the water &nbsp;→&nbsp; rises and falls, staying close to where it was —<br>it does not travel across the pond the way the pattern does</div></div>';
   h+='<div id="mfb"></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -408,7 +415,7 @@ function beat5(){
 function testMia(){
   el('mh').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>The duck sinks her claim.</b> If water traveled with the wave, every floating thing would wash to the edge with it. Instead the duck bobs in place while ring after ring passes underneath. That’s strong <b>evidence</b> that what crosses the pond is the <b>pattern</b>, carrying energy — the water just rises and falls where it is. (One calm-pond test isn’t proof on its own; scientists check the same idea with ropes, tanks, and slow-motion video before they trust it. They all agree.) Mia confused the messenger with the message.';
+  fb.innerHTML='<b>The duck sinks her claim.</b> If water traveled with the wave, every floating thing would wash to the edge with it. Instead the duck bobs in place while ring after ring passes underneath. That’s strong <b>evidence</b> that what crosses the pond is the <b>pattern</b>, carrying energy — the water just rises and falls close to where it already was. (One calm-pond test isn’t proof on its own; scientists check the same idea with ropes, tanks, and slow-motion video before they trust it. They all agree.) Mia confused the messenger with the message.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -427,8 +434,8 @@ var QUESTIONS=[
    a:['Washed up on the far shore','Underwater','Halfway to the edge','About where it started — it bobbed up and down in place'],correct:3,
    why:'A wave lifts and drops a floater as each peak passes, but doesn’t drag it along. (That’s why the pond has to be still — wind or a current would push the duck for reasons that have nothing to do with the wave.)'},
   {q:'Mia said the splash-water itself races to the pond’s edge. What actually travels outward?',
-   a:['The water, just like she said','The repeating pattern, carrying energy — the water rises and falls in place','The pebble','Nothing travels at all'],correct:1,
-   why:'That was Mia’s trap. The duck test shows it: pattern and energy cross the pond; the water rises and falls in place.'}
+   a:['The water, just like she said','The repeating pattern, carrying energy — the water rises and falls close to where it is','The pebble','Nothing travels at all'],correct:1,
+   why:'That was Mia’s trap. On the still pond of our model the duck bobs instead of riding away, which shows the pattern and its energy crossing the pond while the water stays close to home.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';

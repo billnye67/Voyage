@@ -319,8 +319,16 @@ function beat2(){
   h+='<tr><td>get water</td><td>roots</td><td>mouth, tongue</td></tr>';
   h+='<tr><td>protection</td><td>spines, thick bark</td><td>shell, quills, fur</td></tr>';
   h+='<tr><td>support</td><td>stem, trunk</td><td>bones, skeleton</td></tr>';
-  h+='<tr><td>sense the world</td><td>—</td><td>eyes, ears, nose, whiskers</td></tr>';
+  h+='<tr><td>sense the world</td><td>shoot tips (find the light), root tips (feel which way is down)</td><td>eyes, ears, nose, whiskers</td></tr>';
+  h+='<tr><td>move things inside</td><td>tubes in the stem carrying water up</td><td>blood vessels, heart</td></tr>';
   h+='<tr><td>make young</td><td>flowers, seeds</td><td>eggs, live young</td></tr></table>';
+  h+='<div class="work"><div class="lab">Plants sense too — they just do it slowly</div>';
+  h+='a plant has no eyes and no brain, but it still takes in<br>information about the world and responds:<br><br>';
+  h+='put a seedling by a window &nbsp;→&nbsp; over days its stem bends<br>toward the light, so the leaves catch more sun<br>';
+  h+='plant a seed upside down &nbsp;→&nbsp; the root still turns and grows<br>DOWN, the shoot still turns and grows UP<br>';
+  h+='brush a pea vine against a stick &nbsp;→&nbsp; it curls around it and climbs<br>';
+  h+='roots in dry soil &nbsp;→&nbsp; they grow toward the damper side<br><br>';
+  h+='the response takes hours or days instead of half a second —<br>which is why it’s easy to miss. it’s still receive → respond</div>';
   h+='<div class="work"><div class="lab">The claim–evidence frame, structure edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;a cactus’s spines are for protection<br>';
   h+='EVIDENCE: they’re sharp and cover the whole plant,<br>and desert animals that bite one get stabbed instead of a drink</div>';
@@ -399,7 +407,7 @@ function beat5(){
 function testNia(){
   el('mh').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>The removal test settles it.</b> Take the spines away and the cactus becomes a juice box in the middle of a desert — eaten fast. A part that changes whether its owner lives or dies is not decoration; it’s a survival tool. That’s the test to run on any body part you’re unsure about: <b>what happens without it?</b>';
+  fb.innerHTML='<b>The removal test answers her.</b> Take the spines away and the cactus becomes a juice box in the middle of a desert — eaten fast. A part that changes whether its owner survives is not decoration; it’s a survival tool. That’s the test to run on any body part you’re unsure about: <b>what happens without it?</b> (It gives you strong evidence rather than final proof — a part can also be doing more than one job at once. Cactus spines shade the plant a little, too.)';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -417,9 +425,9 @@ var QUESTIONS=[
   {q:'Which structure does the job of SUPPORT — holding a body up?',
    a:['A flower','A tree’s trunk (and an animal’s bones)','A leaf','A nose'],correct:1,
    why:'Trunks and skeletons are the support hardware; leaves and flowers have other jobs.'},
-  {q:'Nia called cactus spines “just decoration.” What proves her wrong?',
-   a:['Spines look nice','Nothing — she was right','Spines are made of wood','Remove them and thirsty desert animals eat the water-filled cactus — the spines decide whether it lives'],correct:3,
-   why:'That was Nia’s trap. The removal test — what happens without it? — separates survival tools from decoration.'}
+  {q:'Nia called cactus spines “just decoration.” What is the strongest evidence against her?',
+   a:['Spines look nice','Nothing — she was right','Spines are made of wood','Remove them and thirsty desert animals eat the water-filled cactus — so the spines are doing a survival job'],correct:3,
+   why:'That was Nia’s trap. The removal test — what happens without it? — is strong evidence that a part earns its keep, and it separates survival tools from decoration.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';

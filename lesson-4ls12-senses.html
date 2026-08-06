@@ -267,7 +267,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>The rabbit’s half-second</h2>';
-  h+='<p>Animal reactions run on a <b>three-link chain</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal inward</b>, and it gets figured out. <b>3. RESPOND</b> — a signal goes back out to the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Two rules to hold onto: <b>sense organs only receive</b> — an ear can’t decide anything — and for reactions that involve <b>recognizing, remembering, or choosing</b>, the processing happens in the <b>brain</b>. (One shortcut you’ll meet later: some automatic responses get handled faster and lower down, before the brain is involved at all.) Now walk the rabbit through its half-second.</p>';
+  h+='<p>Animal reactions run on a <b>three-link chain</b>. <b>1. RECEIVE</b> — a <b>sense organ</b> (eyes, ears, nose, skin, tongue) takes in information from the world. <b>2. PROCESS</b> — <b>nerves carry that signal inward</b>, and it gets figured out. <b>3. RESPOND</b> — a signal goes back out to the body, and the animal <b>acts</b>: run, freeze, pounce, chew. Two rules to hold onto: <b>sense organs only receive</b> — an ear can’t decide anything — and for reactions that involve <b>recognizing, remembering, or choosing</b>, the processing happens in the <b>brain</b>. (One shortcut you’ll meet later: some responses are <b>automatic</b> — no recognizing, no choosing, no thinking involved.) Now walk the rabbit through its half-second.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -316,13 +316,17 @@ function beat2(){
   h+='<div class="work"><div class="lab">The claim–evidence frame, behavior edition</div>';
   h+='CLAIM: &nbsp;&nbsp;&nbsp;the rabbit ran because its ears received the snap<br>';
   h+='EVIDENCE: it bolted the instant the sound happened,<br>and a DEAF rabbit in the same test keeps chewing —<br>break the receive link and the response never comes</div>';
-  h+='<div class="work"><div class="lab">The shortcut: reflexes</div>';
-  h+='touch a hot pan &nbsp;→&nbsp; your hand yanks back BEFORE you feel the pain<br>';
-  h+='why so fast? &nbsp;the signal reaches your <b>spinal cord</b> — the nerve<br>cable in your back — and it fires the muscles straight away<br>';
-  h+='your brain &nbsp;→&nbsp; gets the news a moment LATER (“ow!”)<br>';
-  h+='<b>reflexes</b> are fast automatic responses your body makes without<br>deciding. some protect you (yanking off a hot pan, blinking at a<br>puff of air); others just run the body quietly all day — your pupils<br>shrinking in bright light, your legs adjusting so you don’t topple over<br>';
-  h+='what they all share &nbsp;→&nbsp; no recognizing, no choosing, no waiting<br>for the brain. anything that DOES involve recognizing or choosing<br>goes to the brain</div>';
-  h+='<div class="goal"><div class="lab">The idea</div><p>Animals sense with organs, process the signal, and respond with the body. Recognizing and choosing happen in the <b>brain</b>. <b>Reflexes</b> skip that step — the signal is handled lower down, often by the spinal cord, so the body moves before the brain even knows. Some reflexes protect you; plenty of others run the body quietly all day long.</p></div>';
+  h+='<div class="work"><div class="lab">The automatic shortcut: reflexes</div>';
+  h+='a <b>reflex</b> is a response that happens <b>automatically</b><br>';
+  h+='you don’t recognize it, you don’t choose it — it just runs<br><br>';
+  h+='touch something painfully hot &nbsp;→&nbsp; your hand is already<br>yanking back before you feel the pain<br><br>';
+  h+='why so fast? &nbsp;→&nbsp; the signal never goes to the thinking,<br>deciding part of you. a built-in circuit handles it<br><br>';
+  h+='some reflexes protect you &nbsp;→&nbsp; yanking back, blinking<br>';
+  h+='others just run your body all day &nbsp;→&nbsp; pupils shrinking in<br>bright light, legs adjusting so you don’t topple over<br><br>';
+  h+='the real dividing line<br>';
+  h+='&nbsp;&nbsp;<b>automatic</b> &nbsp;→&nbsp; no recognizing, no choosing (reflex)<br>';
+  h+='&nbsp;&nbsp;<b>decided</b> &nbsp;→&nbsp; compare it to what you know, then choose</div>';
+  h+='<div class="goal"><div class="lab">The idea</div><p>Animals sense with organs, process the signal, and respond with the body. Recognizing something and choosing what to do take the thinking part of the <b>brain</b>. A <b>reflex</b> is the automatic shortcut — a built-in circuit fires the response with no recognizing and no choosing at all.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -455,7 +459,7 @@ function beatDone(){
   h+='<div class="done-icon">'+(pct>=80?'✓':'↻')+'</div>';
   h+='<h2 style="text-align:center">'+(pct>=80?'Lesson complete':'Worth one more pass')+'</h2>';
   h+='<p style="text-align:center;font-family:\'Space Mono\',monospace;color:var(--muted)">'+qCorrect+' of '+QUESTIONS.length+' correct</p>';
-  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trace any animal reaction through receive, process, respond; match an animal’s sense organs to the world it lives in; explain how stored memories change the way a brain reads the same signal; and tell a brain-processed reaction from a spinal-cord reflex.</p></div>';}
+  if(pct>=80){markCourseDone();h+='<div class="goal" style="margin-top:18px"><div class="lab">You can now</div><p>Trace any animal reaction through receive, process, respond; match an animal’s sense organs to the world it lives in; explain how stored memories change the way a brain reads the same signal; and tell a thought-out response from an automatic reflex.</p></div>';}
   else h+='<p style="margin-top:16px">Go back to Owen. Ears deliver, brains decide — and memory is why the same sound gets different answers.</p>';
   h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'science-course.html\'">Back to Science →</button></div>';
   el('stage').innerHTML=h;
