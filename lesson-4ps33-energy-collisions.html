@@ -271,7 +271,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Track the crash</h2>';
-  h+='<p>Quick recap first: a moving object carries <b>energy of motion</b>, and faster means more. Now the new rule: <b>when objects collide, energy changes hands — but it never vanishes</b>. In a crash, the moving object’s energy splits three ways: <b>most passes to the object it hits</b> (which starts moving), <b>some leaves as sound</b> (the clack you hear IS energy escaping through the air), and <b>a tiny bit becomes warmth</b> where they touched. And since a faster crash brings more energy, <b>everything it produces gets bigger</b> — faster targets, louder clacks. Watch marble A slam into resting marble B, and track the energy.</p>';
+  h+='<p>Quick recap first: a moving object carries <b>energy of motion</b>, and for the same object, faster means more. (Today every marble is identical, so speed is the only thing that changes.) Now the new rule: <b>when objects collide, energy changes hands — but it never vanishes</b>. In a crash, the moving object’s energy splits three ways: <b>most passes to the object it hits</b> (which starts moving), <b>some leaves as sound</b> (the clack you hear IS energy escaping through the air), and <b>a tiny bit becomes warmth</b> where they touched. And since a faster crash brings more energy, <b>everything it produces gets bigger</b> — faster targets, louder clacks. Watch marble A slam into resting marble B, and track the energy.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -401,7 +401,7 @@ var QUESTIONS=[
   {q:'A rolling bowling ball smashes into pins. The pins fly and the ball slows. What happened to the ball’s energy?',
    a:['It was destroyed by the impact','Much of it transferred to the pins — that’s why they’re suddenly flying','It returned to the bowler','Pins don’t need energy to fly'],correct:1,
    why:'Collisions hand energy over: the pins’ sudden motion came from the ball, which is why the ball slowed.'},
-  {q:'Every collision makes a sound — clack, thump, bang. What IS that sound?',
+  {q:'A collision you can hear makes a clack, a thump, or a bang. What IS that sound?',
    a:['A warning signal','Some of the crash energy escaping as a vibration through the air','Proof the objects broke','Nothing — sound isn’t real'],correct:1,
    why:'The sound is energy leaving the crash, shaking the air all the way to your ears.'},
   {q:'Marble A hits marble B twice: once slowly, once fast. Predict the FAST crash.',

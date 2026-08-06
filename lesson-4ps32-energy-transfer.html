@@ -133,7 +133,7 @@
   <div class="card">
     <div class="tag">Lesson · 4-PS3-2</div>
     <h1>How energy travels</h1>
-    <p>A drum booms across a gym and your chest feels it. The sun sits 150 million kilometers away and still warms your face. A switch on one wall lights a bulb on another. Energy is constantly on the move — and it only travels four ways. Learn the four carriers, and you can trace any energy delivery on Earth.</p>
+    <p>A drum booms across a gym and your chest feels it. The sun sits 150 million kilometers away and still warms your face. A switch on one wall lights a bulb on another. Energy is constantly on the move, and it needs something to travel by. Learn the four carriers behind most of the deliveries around you, and you can trace them hop by hop.</p>
     <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ 4-PS3-2</span></div>
     <button class="btn go" onclick="startLesson()">Start lesson →</button>
   </div>
@@ -270,7 +270,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Name the carrier</h2>';
-  h+='<p>Energy can move from one place to another — and it travels by <b>four carriers</b>. <b>Sound</b>: a vibration travels through air (or walls, or water) — that’s how a drum’s energy reaches your chest. <b>Light</b>: beams travel in straight lines, even through empty space — that’s how the sun’s energy reaches Earth. <b>Heat</b>: energy flows through materials <b>from warm ends to cool ends</b> — that’s how a pan handle gets hot. <b>Electric current</b>: energy flows <b>through wires</b> — that’s how a wall outlet feeds a lamp. Name the carrier in each delivery.</p>';
+  h+='<p>Energy can move from one place to another, and it always travels by <b>something</b>. Here are the <b>four carriers</b> we’ll work with today — the ones behind most everyday deliveries. (They aren’t the whole list: a rolling marble hands its energy to another marble by crashing into it, which you’ll meet in a later lesson.) <b>Sound</b>: a vibration travels through air (or walls, or water) — that’s how a drum’s energy reaches your chest. <b>Light</b>: beams travel in straight lines, even through empty space — that’s how the sun’s energy reaches Earth. <b>Heat</b>: energy flows through materials <b>from warm ends to cool ends</b> — that’s how a pan handle gets hot. <b>Electric current</b>: energy flows <b>through wires</b> — that’s how a wall outlet feeds a lamp. Name the carrier in each delivery.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
@@ -339,7 +339,7 @@ function beat3(){
   h+='sound? &nbsp;&nbsp;&nbsp;needs air to shake — space is empty ✗<br>';
   h+='heat? &nbsp;&nbsp;&nbsp;&nbsp;needs material to flow through — none for millions of km ✗<br>';
   h+='current? &nbsp;needs wires — no cosmic extension cord ✗<br>';
-  h+='light? &nbsp;&nbsp;&nbsp;&nbsp;travels through empty space ✓ — <b>the only carrier left</b></div>';
+  h+='light? &nbsp;&nbsp;&nbsp;&nbsp;travels through empty space ✓ — <b>the only one of our four left</b></div>';
   h+='<p>And notice what light delivers when it lands: your face <b>warms</b>, and your eyes <b>see</b>. A light beam is energy on the move — sunlight is the biggest energy delivery on Earth, powering plants, weather, everything.</p></div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -408,7 +408,7 @@ var QUESTIONS=[
   {q:'Trace the toaster: energy leaves the wall outlet and ends up browning the bread. What’s the carrier chain?',
    a:['Sound, then light','Electric current through the cord, then heat into the bread','Heat the whole way','Light, then sound'],correct:1,
    why:'A relay: current carries the energy through the cord to the glowing wires, then heat carries it into the bread.'},
-  {q:'Ren said the lamp makes its own energy and the cord is decoration. What proved him wrong?',
+  {q:'Ren said the lamp makes its own energy and the cord is decoration. What showed he was wrong?',
    a:['Lamps are too small to make energy','The bulb was warm','Unplugging it kills the light instantly — the energy was being DELIVERED by current through the wire','Nothing — he was right'],correct:2,
    why:'That was Ren’s trap. One unplug shows the truth: no delivery, no light. Devices receive energy and change its carrier — they don’t create it.'}
 ];

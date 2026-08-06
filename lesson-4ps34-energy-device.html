@@ -263,7 +263,7 @@ function beat1(){
   var T=TASKS[Math.min(wonCount,TASKS.length-1)],h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Wind it up</h2>';
-  h+='<p>Energy comes in more than one form. You know <b>energy of motion</b> — moving things carry it. Now meet <b>stored energy</b>: stretch a rubber band and it holds energy in the stretch, <b>waiting</b> — let go, and the band snaps back into motion, proof the energy was in there. A <b>device</b> like this car <b>converts</b> energy from one form to another: your winding stores energy in the band, and releasing it converts that store into motion. And the rule you already know still runs the show: <b>more energy stored in → more motion out</b>. Answer as you build.</p>';
+  h+='<p>Energy comes in more than one form. You know <b>energy of motion</b> — moving things carry it. Now meet <b>stored energy</b>: stretch a rubber band and it holds energy in the stretch, <b>waiting</b> — let go, and the band snaps back into motion, proof the energy was in there. A <b>device</b> like this car <b>converts</b> energy from one form to another: your winding stores energy in the band, and releasing it converts that store into motion. And the rule you already know still runs the show: <b>more energy stored in → more motion out</b> — provided the device itself can handle what you put in, which is exactly the sort of thing engineers test rather than assume. Answer as you build.</p>';
   for(var i=0;i<TASKS.length;i++){
     var cls=i<wonCount?'chal won':(i===wonCount?'chal':'chal locked');
     var st=i<wonCount?'✓ '+TASKS[i].won:(i===wonCount?'now':'locked');
