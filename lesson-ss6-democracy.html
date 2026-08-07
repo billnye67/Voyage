@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How democracy works · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- decider cards + tally ---------- */
+  .decider{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;font-size:15px;line-height:1.5}
+  .decider:hover{border-color:var(--blue)}
+  .decider.tried{border-color:var(--accent);background:rgba(240,102,63,.05);cursor:default}
+  .decider.winner{border-color:var(--green);background:rgba(46,125,91,.07);cursor:default}
+  .decider .dhead{font-weight:600;margin-bottom:3px}
+  .decider .dout{margin-top:8px;padding-top:8px;border-top:1px dashed var(--blue-line);font-size:14.5px}
+  .tally{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+  .trow{display:flex;align-items:center;gap:10px;font-size:14.5px}
+  .trow .tname{width:110px;flex-shrink:0;font-weight:600}
+  .tbar{height:20px;border-radius:5px;border:1.5px solid var(--ink)}
+  .trow .tn{font-family:'Space Mono',monospace;font-size:12px}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Civics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.C.2</div>
+    <h1>How democracy works</h1>
+    <p>Your class gets to pick ONE reward this month — but first someone has to decide <b>how to decide</b>. Try handing that power to different people and watch what happens. By the end you’ll know why “everyone votes” beat every other idea humans have tried — and how a whole country pulls it off.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.C.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.C.2</div>
+      <div class="side-title">How democracy works</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var tried={},voteRan=false;
+var majDone=false,repDone=false,loseDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Who gets to decide?'}]},
+  {phase:'Learn',   items:[{s:1, n:'One person, one vote'},{s:2, n:'Too big for a show of hands'},{s:3, n:'Losing a fair vote'},{s:4, n:'Catch Jae’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · who decides? ---------- */
+function tallyHtml(){
+  return '<div class="tally">'
+    +'<div class="trow"><span class="tname">Extra recess</span><div class="tbar" style="width:56%;background:rgba(46,125,91,.5)"></div><span class="tn">14</span></div>'
+    +'<div class="trow"><span class="tname">Movie day</span><div class="tbar" style="width:28%;background:rgba(27,79,138,.35)"></div><span class="tn">7</span></div>'
+    +'<div class="trow"><span class="tname">Pizza party</span><div class="tbar" style="width:12%;background:rgba(240,102,63,.4)"></div><span class="tn">3</span></div>'
+    +'</div>';
+}
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Who gets to decide?</h2>';
+  h+='<p>Your class of 24 gets ONE reward this month: extra recess, movie day, or a pizza party. Different kids want different things. <b>Try each way of deciding</b> — click all three and watch what each one produces:</p>';
+
+  h+='<div class="decider'+(tried.loud?' tried':'')+'" onclick="tryDecider(\'loud\')"><div class="dhead">① The loudest kid decides</div>Big Deacon just announces the answer.'
+    +(tried.loud?'<div class="dout">Deacon picks <b>pizza</b> — his favorite, though only 3 kids wanted it. 3 happy, 21 grumbling, and nobody remembers agreeing to let Deacon choose.</div>':'')+'</div>';
+
+  h+='<div class="decider'+(tried.fave?' tried':'')+'" onclick="tryDecider(\'fave\')"><div class="dhead">② One kid is picked to decide for everyone</div>The teacher hands the choice to one student.'
+    +(tried.fave?'<div class="dout">She picks <b>movie day</b> — her favorite. She’s thrilled. The other 23? Never asked. Choosing for a group without asking the group keeps landing on one person’s favorite.</div>':'')+'</div>';
+
+  h+='<div class="decider'+(voteRan?' winner':'')+'" onclick="tryDecider(\'vote\')"><div class="dhead">③ Everyone votes</div>All 24 kids mark a choice; count the votes.'
+    +(voteRan?'<div class="dout">'+tallyHtml()+'<b>Extra recess wins, 14 of 24.</b> Nobody shouted, nobody was skipped — every kid moved the result the exact same amount: one vote.</div>':'')+'</div>';
+
+  h+='<div id="decfb">'+(tried.loud&&tried.fave&&voteRan
+    ?'<div class="goal"><div class="lab">The idea</div><p>Deciding by loudness or by favorites keeps producing what ONE person wants. Deciding by <b>vote</b> is the only version where all 24 people push on the answer equally. That system has a name: <b>democracy</b>.</p></div>'
+    :'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(tried.loud&&tried.fave&&voteRan?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function tryDecider(k){
+  if(k==='vote')voteRan=true;else tried[k]=true;
+  beat1();
+}
+
+/* ---------- BEAT 1 · one person, one vote ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">The rules of voting</div>';
+  h+='<h2>One person, one vote</h2>';
+  h+='<p><b>Democracy</b> means the group decides — by voting. Two rules make it work:</p>';
+  h+='<div class="work"><div class="lab">The two rules</div>'
+    +'<b>One person, one vote</b> — every voter counts exactly the same, whether they’re loud, rich, popular, or brand-new<br>'
+    +'<b>The majority wins</b> — “majority” means <b>more than half</b> of all the voters</div>';
+  h+='<p>That “more than half” part is exact math, not a vibe. Your class has 24 kids, so half is 12. Watch out — 12 is exactly half, not <i>more</i> than half. So: what’s the <b>smallest</b> number of votes that makes a majority in your class?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickMaj(12)">12 votes</button>'
+    +'<button class="btn" onclick="pickMaj(13)">13 votes</button>'
+    +'<button class="btn" onclick="pickMaj(24)">24 votes</button></div>';
+  h+='<div id="majfb">'+(majDone?'<div class="fb ok"><b>13.</b> Half of 24 is 12, and majority means MORE than half — so 13 is the first number that clears the bar. (That’s why recess’s 14 votes won cleanly.)</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(majDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickMaj(n){
+  var fb=el('majfb');
+  if(n===13){majDone=true;fb.innerHTML='<div class="fb ok"><b>13.</b> Half of 24 is 12, and majority means MORE than half — so 13 is the first number that clears the bar. (That’s why recess’s 14 votes won cleanly.)</div>';el('nx').disabled=false;}
+  else if(n===12){fb.innerHTML='<div class="fb no"><b>12 is exactly half</b> — a 12-to-12 vote is a tie, and a tie decides nothing. Majority means MORE than half. What’s the first number past 12?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>24 would mean everyone agrees</b> — nice, but rare! A majority only needs more than half. Half of 24 is 12… so?</div>';}
+}
+
+/* ---------- BEAT 2 · representatives ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Scaling up</div>';
+  h+='<h2>Too big for a show of hands</h2>';
+  h+='<p>A class of 24 can vote on anything in two minutes. Now try a town of <b>50,000 people</b> facing <b>hundreds</b> of decisions a year — snowplow routes, park repairs, school budgets. Should all 50,000 gather every morning and vote on everything?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickRep(\'all\')">Yes — all 50,000 vote on every single issue</button>'
+    +'<button class="btn" onclick="pickRep(\'rep\')">Elect a few people to study the issues and vote for us</button></div>';
+  h+='<div id="repfb">'+(repDone?repOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(repDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function repOkHtml(){
+  return '<div class="fb ok"><b>Elect representatives.</b> The town votes once — in an <b>election</b> — to choose a few people whose whole job is studying the issues and voting on the town’s behalf. Democracy doesn’t disappear; it delegates.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>That’s <b>representative democracy</b>, and it’s how America runs at every level: city councils, state lawmakers, and Congress are all people who won an election to carry their neighbors’ votes. Don’t like how they vote? The next election is the town’s answer.</p></div>';
+}
+function pickRep(v){
+  var fb=el('repfb');
+  if(v==='rep'){repDone=true;fb.innerHTML=repOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Picture morning one:</b> 50,000 people, one gym, four hundred votes on the agenda — and everyone still has work and school. It collapses by lunch. What’s the workable version?</div>';}
+}
+
+/* ---------- BEAT 3 · losing a fair vote ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The hard part</div>';
+  h+='<h2>Losing a fair vote</h2>';
+  h+='<p>Back to the class vote: recess won 14, movie day got 7, pizza 3. Ten kids <b>lost</b>. Here’s the part that makes democracy actually work: what losing does — and doesn’t — mean.</p>';
+  h+='<div class="work"><div class="lab">When your side loses a fair vote</div>'
+    +'the majority’s choice happens — that part’s settled<br>'
+    +'you <b>keep every right you had</b>: speak up, disagree out loud, try to change minds<br>'
+    +'and there’s <b>always a next vote</b> — today’s losers convince people and become next month’s winners</div>';
+  h+='<p>The movie-day kids are disappointed. Which of these is how democracy expects them to respond?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickLose(\'campaign\')">Start convincing classmates for next month’s vote</button>'
+    +'<button class="btn" onclick="pickLose(\'block\')">Block the door at recess so nobody can enjoy it</button></div>';
+  h+='<div id="losefb">'+(loseDone?'<div class="fb ok"><b>Campaign for next time.</b> Losing a fair vote costs you the decision — never your voice. Convince three friends and movie day wins the next one 10-to-14… wait, better make it four friends.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(loseDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickLose(v){
+  var fb=el('losefb');
+  if(v==='campaign'){loseDone=true;fb.innerHTML='<div class="fb ok"><b>Campaign for next time.</b> Losing a fair vote costs you the decision — never your voice. Convince three friends and movie day wins the next one 10-to-14… wait, better make it four friends.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>That punishes everyone for voting.</b> The vote settled the decision — but the losers keep their voice, not a veto. What’s the move that uses the voice?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Jae’s mistake</h2>';
+  h+='<p>Jae voted movie day. Recess won 14–7–3. Jae storms off: <i>“My side lost, so the vote was <b>rigged</b>. Fair votes are the ones my side wins.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testJae()">Check what “fair” actually measures</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'did every kid get exactly one vote? &nbsp;<b>yes</b><br>'
+    +'were all the votes counted, in the open? &nbsp;<b>yes — 14, 7, 3, adds to 24</b><br>'
+    +'did the side with more than half win? &nbsp;<b>yes — 14 &gt; 12</b><br>'
+    +'<b>verdict: fair vote, disappointing result — those can both be true</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testJae();
+}
+function testJae(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Jae measured fairness by the result instead of the rules.</b> “Fair” asks: one person one vote, open count, majority wins? All yes — so the vote was fair, and Jae’s side simply had fewer votes. The democratic reply isn’t “rigged!” — it’s convincing more people before the next vote.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What does democracy mean?',
+   a:['The loudest person decides','The group decides by voting, and every person’s vote counts the same','The teacher decides everything','Whoever is oldest decides'],correct:1,
+   why:'One person, one vote — and the group’s choice comes from counting them all, not from volume or popularity.'},
+  {q:'A class has 24 voters. What’s the smallest number of votes that makes a majority?',
+   a:['12','13','20','24'],correct:1,
+   why:'Majority means MORE than half. Half of 24 is 12 — a tie — so 13 is the first number that clears it.'},
+  {q:'Why do big towns and the whole country elect representatives instead of voting on every issue themselves?',
+   a:['Most people aren’t allowed to vote','Millions of people can’t gather daily for hundreds of decisions — so they elect a few people to study and vote for them','Representatives are smarter than everyone','It’s an old habit nobody questions'],correct:1,
+   why:'That’s representative democracy: one election chooses the people who carry everyone’s votes through the year — city councils, state lawmakers, Congress.'},
+  {q:'The movie-day kids lost the class vote fair and square. What can they do in a democracy?',
+   a:['Nothing — losers lose their voice','Speak up, keep disagreeing, and convince classmates before the next vote','Block the recess door','Demand the votes be recounted until movie day wins'],correct:1,
+   why:'A fair loss settles the decision, not the discussion. The losers keep their voice — and next vote, they get another shot.'},
+  {q:'Jae says the vote was rigged because his side lost. What does “fair” actually measure?',
+   a:['Whether Jae’s side won','Whether the rules held: one person one vote, open count, majority wins','Whether the vote was exciting','Whether the teacher liked the result'],correct:1,
+   why:'Fairness lives in the rules, not the result. Every check passed — Jae’s side just needs more votes next time.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.C.2']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🗳️':'✋')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you know how the group decides':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>You can run a fair vote, do the majority math, explain why 330 million people elect representatives, and tell a fair loss from a rigged game. Next: the people who win those elections — and how their power gets split three ways so no one grabs it all.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “One person, one vote” and “Losing a fair vote” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;tried={};voteRan=false;majDone=false;repDone=false;loseDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

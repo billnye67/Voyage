@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why we have rules &amp; laws · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- game board ---------- */
+  .game{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:16px;margin:12px 0}
+  .track{display:flex;gap:5px;margin:10px 0}
+  .sq{flex:1;aspect-ratio:1;border:1.5px solid var(--blue-line);border-radius:7px;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);position:relative;min-width:0}
+  .sq .you{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:16px}
+  .sq .remy{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:16px}
+  .sq.goal-sq{background:rgba(46,125,91,.12);border-color:var(--green)}
+  .plab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+  .remyline{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:9px 13px;font-size:15px;margin:10px 0;font-style:italic}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Civics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.C.1</div>
+    <h1>Why we have rules &amp; laws</h1>
+    <p>You’re about to play a quick game against Remy. Fair warning: something is going to go very wrong — and by the time you figure out what, you’ll understand something most grown-ups can’t explain: why rules exist at all, and what turns a rule into a <b>law</b>.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.C.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.C.1</div>
+      <div class="side-title">Why we have rules &amp; laws</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var gameRound=0,youPos=0,remyPos=0,gameOver=false;
+var jobsSolved=[false,false,false],lawDone=false,consDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'A game against Remy'}]},
+  {phase:'Learn',   items:[{s:1, n:'The three jobs of rules'},{s:2, n:'From rules to laws'},{s:3, n:'Why consequences exist'},{s:4, n:'Catch Zoe’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · the rigged game ---------- */
+/* Race to square 10. Kid clicks "Roll" — always moves 3. Remy then "rolls,"
+   and each round invents a rule that moves himself more. Scripted, 3 rounds. */
+var ROUNDS=[
+  {you:3, remy:4, line:'“Oh — house rule: my rolls count double on Tuesdays. It’s Tuesday somewhere.” Remy moves 4.'},
+  {you:3, remy:4, line:'“New rule: red pieces get a speed bonus. My piece is red.” Remy moves 4 more.'},
+  {you:3, remy:2, line:'“Final rule: the finish line only counts if you’re ME.” Remy strolls in and declares victory.'}
+];
+function drawTrack(){
+  var h='<div class="track">';
+  for(var i=1;i<=10;i++){
+    h+='<div class="sq'+(i===10?' goal-sq':'')+'">'+i
+      +(youPos===i?'<span class="you">🔵</span>':'')
+      +(remyPos===i?'<span class="remy">🔴</span>':'')+'</div>';
+  }
+  h+='</div><div class="plab">🔵 you &nbsp;·&nbsp; 🔴 remy &nbsp;·&nbsp; first to square 10 wins</div>';
+  return h;
+}
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>A game against Remy</h2>';
+  h+='<p>The game is <b>Race to 10</b>. One rule was agreed before you started: <i>take turns, move what you roll.</i> Click <b>Roll</b> to take your turn.</p>';
+  h+='<div class="game">'+drawTrack()+'<div id="gamefb"></div>'
+    +'<div class="row" style="margin-bottom:0">'
+    +(gameOver?'':'<button class="btn" id="rollbtn" onclick="rollTurn()">🎲 Roll</button>')
+    +'</div></div>';
+  h+='<div id="gamewrap">'+(gameOver?gameRevealHtml():'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(gameOver?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(gameRound>0&&!gameOver)el('gamefb').innerHTML='<div class="remyline">'+ROUNDS[gameRound-1].line+'</div>';
+}
+function gameRevealHtml(){
+  return '<div class="fb no"><b>You never had a chance — and it wasn’t the dice.</b> Remy kept inventing rules mid-game, and every new rule just happened to help Remy. The game didn’t break because someone played badly. It broke because the rules weren’t <b>agreed, known, and the same for everyone</b>.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>A game needs rules the way a town needs laws — agreed in advance, known by all, applying to everyone the same. Take that away and you don’t get freedom. You get whoever’s loudest, winning.</p></div>';
+}
+function rollTurn(){
+  if(gameOver)return;
+  var r=ROUNDS[gameRound];
+  youPos=Math.min(10,youPos+r.you);
+  remyPos=Math.min(10,remyPos+r.remy);
+  gameRound++;
+  if(gameRound>=ROUNDS.length){gameOver=true;remyPos=10;}
+  beat1();
+}
+
+/* ---------- BEAT 1 · three jobs of rules ---------- */
+var JOBS=[
+  {ex:'“In our game, we take turns — nobody gets to move twice in a row.”', ans:'fair',
+   ok:'<b>Fair.</b> Taking turns gives every player the same chance — the exact thing Remy kept stealing.',
+   no:'Think about what taking turns protects: everyone getting the <i>same</i> chance. Which job is that?'},
+  {ex:'“Cars must stop when someone is in the crosswalk.”', ans:'safe',
+   ok:'<b>Safe.</b> This rule exists so nobody gets hurt — safety rules protect bodies, not just feelings.',
+   no:'What would happen without this rule? Someone gets <i>hurt</i>. Which job stops that?'},
+  {ex:'“In America, everyone drives on the right side of the road.”', ans:'pred',
+   ok:'<b>Predictable.</b> It doesn’t matter <i>which</i> side — it matters that everyone knows what everyone else will do. That’s predictability doing its quiet job.',
+   no:'Left side or right side — neither is “better.” The magic is that everyone knows what the other drivers will do. Which job is that?'}
+];
+function jobsDone(){return jobsSolved[0]&&jobsSolved[1]&&jobsSolved[2];}
+function beat2(){
+  var h='';
+  h+='<div class="tag">The point of rules</div>';
+  h+='<h2>The three jobs of rules</h2>';
+  h+='<p>Good rules aren’t there to boss you around. Every good rule is doing at least one of three jobs:</p>';
+  h+='<div class="work"><div class="lab">The three jobs</div>'
+    +'<b>Fair</b> — everyone gets the same chance<br>'
+    +'<b>Safe</b> — nobody gets hurt<br>'
+    +'<b>Predictable</b> — everyone knows what to expect, so plans actually work</div>';
+  h+='<p>Sort these three rules — which job is each one doing most?</p>';
+  for(var i=0;i<JOBS.length;i++){
+    var solved=jobsSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Rule '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +JOBS[i].ex
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickJob('+i+',\'fair\')">Fair</button>'
+        +'<button class="btn" onclick="pickJob('+i+',\'safe\')">Safe</button>'
+        +'<button class="btn" onclick="pickJob('+i+',\'pred\')">Predictable</button></div>')
+      +'</div>';
+  }
+  h+='<div id="jobfb">'+(jobsDone()?'<div class="fb ok"><b>Fair, safe, predictable.</b> Next time a rule annoys you, find its job. (And if a rule truly has no job — that’s a rule worth questioning. More on that soon.)</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(jobsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickJob(i,v){
+  if(jobsSolved[i])return;
+  if(v===JOBS[i].ans){jobsSolved[i]=true;beat2();if(!jobsDone())el('jobfb').innerHTML='<div class="fb ok">'+JOBS[i].ok+'</div>';}
+  else{beat2();el('jobfb').innerHTML='<div class="fb no">'+JOBS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 2 · from rules to laws ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Leveling up</div>';
+  h+='<h2>From rules to laws</h2>';
+  h+='<p>Your family has rules. Your school has rules. So what makes something a <b>law</b>? A law is a rule that leveled up — four ways at once:</p>';
+  h+='<div class="work"><div class="lab">What makes a law a law</div>'
+    +'made by the <b>government</b>, not one family or one teacher<br>'
+    +'covers the <b>whole community</b> — every person, every family<br>'
+    +'<b>written down</b>, so nobody can pull a Remy and change it mid-game<br>'
+    +'applies to <b>everyone the same</b> — kids, grown-ups, even the leaders who wrote it</div>';
+  h+='<p>Test yourself. Three rules — which one is a <b>law</b>?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickLaw(\'dinner\')">“No phones at the dinner table”</button>'
+    +'<button class="btn" onclick="pickLaw(\'belt\')">“Everyone in a car wears a seatbelt”</button>'
+    +'<button class="btn" onclick="pickLaw(\'pool\')">“No running by the pool”</button></div>';
+  h+='<div id="lawfb">'+(lawDone?'<div class="fb ok"><b>The seatbelt rule.</b> Made by government, covers everyone in the state, written down, applies to every single car. The dinner rule is one family’s; the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(lawDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickLaw(v){
+  var fb=el('lawfb');
+  if(v==='belt'){lawDone=true;fb.innerHTML='<div class="fb ok"><b>The seatbelt rule.</b> Made by government, covers everyone in the state, written down, applies to every single car. The dinner rule is one family’s; the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>';el('nx').disabled=false;}
+  else if(v==='dinner'){fb.innerHTML='<div class="fb no"><b>Run the checklist:</b> did the government make the dinner rule? Does it cover the whole town? No — that’s one family’s rule. Which of the three passes all four checks?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Close — it’s written on a sign!</b> But the pool rule was made by one pool, for one pool. A law has to come from the government and cover the whole community. Which one does?</div>';}
+}
+
+/* ---------- BEAT 3 · consequences ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Teeth</div>';
+  h+='<h2>Why consequences exist</h2>';
+  h+='<p>One more piece. Every law comes with a <b>consequence</b> — something that happens if you break it. A speeding ticket. A fine for littering. Why? Not revenge. A consequence is what keeps a rule <b>real</b>.</p>';
+  h+='<p>Run the experiment in your head: a town posts a speed limit of 25 near your school… but breaking it costs nothing. No tickets, ever. What happens to that speed limit?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickCons(\'ignore\')">Drivers start ignoring it</button>'
+    +'<button class="btn" onclick="pickCons(\'obey\')">Everyone obeys it anyway, forever</button></div>';
+  h+='<div id="consfb">'+(consDone?consOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(consDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function consOkHtml(){
+  return '<div class="fb ok"><b>It fades into a suggestion.</b> Most people are decent — but the few who aren’t will speed, and everyone else slowly follows. The consequence is the promise-keeper: it makes “25” mean 25.</div>'
+    +'<div class="goal"><div class="lab">One more thing</div><p>Fair consequences are <b>known ahead of time</b> — printed on the sign, same for everyone. And when a law itself turns out to be unfair? Communities can <b>change it</b> — that’s the next lesson: how a democracy decides.</p></div>';
+}
+function pickCons(v){
+  var fb=el('consfb');
+  if(v==='ignore'){consDone=true;fb.innerHTML=consOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Some would — for a while.</b> But with zero consequences, the drivers in a hurry speed first, and the rest slowly join them. What does the sign become then?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Zoe’s mistake</h2>';
+  h+='<p>Zoe’s had it with rules: <i>“Laws just exist to boss people around. A town with <b>zero</b> laws would be way more fun.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testZoe()">Spend one day in Zoe’s zero-law town</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">One day, zero laws</div>'
+    +'8 am — crossing to school: no crosswalk law, cars never stop &nbsp;<b>(safe: gone)</b><br>'
+    +'noon — your bike’s been taken; taking things isn’t against any rule &nbsp;<b>(fair: gone)</b><br>'
+    +'3 pm — game with friends: everyone pulls a Remy, nobody agrees on anything &nbsp;<b>(predictable: gone)</b><br>'
+    +'<b>verdict: the “fun” needed the rules all along</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testZoe();
+}
+function testZoe(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Zoe confused laws with bossiness.</b> Laws are the reason the fun parts work: streets you can cross, stuff that stays yours, games where winning means something. Zero laws doesn’t free everyone — it hands the town to whoever grabs hardest, like Remy with the rulebook.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What are the three jobs a good rule can do?',
+   a:['Fair, safe, predictable','Fast, cheap, easy','Loud, strict, scary','Old, famous, long'],correct:0,
+   why:'Every good rule keeps things fair (same chance for all), safe (nobody hurt), or predictable (everyone knows what to expect) — often more than one at once.'},
+  {q:'“No phones at dinner” is a family rule. “Everyone wears a seatbelt” is a law. What’s the difference?',
+   a:['Laws rhyme better','A law is made by government, covers the whole community, is written down, and applies to everyone the same','Laws are only for grown-ups','There is no difference'],correct:1,
+   why:'That’s the four-part level-up: government-made, community-wide, written, same for everyone — even the leaders.'},
+  {q:'Your game against Remy fell apart. What exactly broke it?',
+   a:['Bad luck with the dice','The board was too short','The rules weren’t agreed, known, and the same for everyone — Remy kept changing them to win','Games always end that way'],correct:2,
+   why:'The dice were fine. A game — like a town — only works when the rules are agreed in advance, known by all, and equal for everyone. Remy broke all three.'},
+  {q:'A town posts a speed limit but attaches no consequence for breaking it. What happens?',
+   a:['It slowly becomes a suggestion that drivers ignore','It works better than ever','The sign changes color','Cars can no longer speed'],correct:0,
+   why:'Consequences keep rules real. With nothing behind it, the hurried drivers speed first — and everyone else slowly follows.'},
+  {q:'Zoe says a town with zero laws would be more fun. What did her one-day experiment show?',
+   a:['She was right — pure fun','The fun parts of town life — safe streets, your stuff staying yours, games that work — were being held up by the laws',
+      'Towns don’t need streets','Fun is against the law'],correct:1,
+   why:'Zero laws didn’t free the town — it handed it to whoever grabs hardest. Fair, safe, and predictable were doing the fun’s heavy lifting all along.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.C.1']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'⚖️':'🎲')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you know what rules are for':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>You can spot a rule’s job (fair, safe, predictable), run the four-part test that separates a rule from a law, and explain why consequences keep both real. Next: when a community wants to <b>change</b> a rule — who decides? That’s democracy.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “The three jobs of rules” and “From rules to laws” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;gameRound=0;youPos=0;remyPos=0;gameOver=false;jobsSolved=[false,false,false];lawDone=false;consDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

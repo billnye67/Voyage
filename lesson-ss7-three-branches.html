@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The three branches · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- story steps + branch cards ---------- */
+  .moment{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .moment .mhead{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .moment.locked{opacity:.45}
+  .moment .marcus{font-style:italic;color:var(--accent)}
+  .branch{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;font-size:15px;line-height:1.55}
+  .branch:hover{border-color:var(--blue)}
+  .branch.seen{border-color:var(--green);background:rgba(46,125,91,.05)}
+  .branch .bhead{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:2px}
+  .branch .bicon{font-size:20px}
+  .branch .check{margin-left:auto;color:var(--green);font-weight:700;opacity:0}
+  .branch.seen .check{opacity:1}
+  .branch .bbody{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--blue-line);font-size:14.5px}
+  .branch.seen .bbody{display:block}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Civics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.C.3</div>
+    <h1>The three branches</h1>
+    <p>Last lesson your class elected people to decide things. But here’s the scary question nobody asked: what stops an elected leader from grabbing <b>all</b> the power? America’s answer is one of the cleverest ideas in history — chop the power into three pieces and make the pieces watch each other. First, feel the problem.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.C.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.C.3</div>
+      <div class="side-title">The three branches</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var moment=0;
+var branchSeen={},jobsSolved=[false,false,false],checkDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Marcus gets every job'}]},
+  {phase:'Learn',   items:[{s:1, n:'Three jobs, three teams'},{s:2, n:'Sort the job'},{s:3, n:'Checks and balances'},{s:4, n:'Catch Nora’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · Marcus gets every job ---------- */
+var MOMENTS=[
+  {btn:'Start the game', head:'3:00 pm — Marcus makes the rules',
+   body:'Your class lets Marcus run the kickball game. He announces: <span class="marcus">“New rule: red team gets four outs, blue team gets two.”</span> Marcus is on red.'},
+  {btn:'Keep playing', head:'3:10 pm — Marcus enforces the rules',
+   body:'You’re on blue. You make a close play, and referee Marcus — same Marcus — calls you out instantly: <span class="marcus">“Out! Rule-breaker!”</span> Red’s close plays somehow all go the other way.'},
+  {btn:'Appeal to the judge', head:'3:15 pm — you appeal… to Marcus',
+   body:'“That call was unfair — I want a judge!” The game’s judge steps forward. It’s Marcus. He reviews his own call. <span class="marcus">“I find myself correct. Also, new rule: no more appeals.”</span>'}
+];
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Marcus gets every job</h2>';
+  h+='<p>One kid, three jobs: he <b>makes</b> the rules, he <b>enforces</b> the rules, and he <b>judges</b> every argument about them. Click through the afternoon:</p>';
+  for(var i=0;i<MOMENTS.length;i++){
+    if(i<moment){
+      h+='<div class="moment"><div class="mhead">'+MOMENTS[i].head+'</div>'+MOMENTS[i].body+'</div>';
+    } else if(i===moment){
+      h+='<div class="row"><button class="btn" id="mombtn" onclick="nextMoment()">'+MOMENTS[i].btn+' →</button></div>';
+      break;
+    }
+  }
+  if(moment>=MOMENTS.length){
+    h+='<div class="fb no"><b>Notice what you just ran out of: places to turn.</b> The rule was unfair — but the rule-maker was Marcus. The call was unfair — but the enforcer was Marcus. You appealed — to Marcus. When one person holds all three jobs, “unfair” has nowhere to go.</div>';
+    h+='<div class="goal"><div class="lab">The idea</div><p>America’s founders feared exactly this — a king who made, enforced, AND judged the laws. Their fix: never let the three jobs live in the same hands. Split them into three <b>branches</b>, and teach the branches to stop each other.</p></div>';
+  }
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(moment>=MOMENTS.length?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function nextMoment(){moment++;beat1();scrollTo(0,document.body.scrollHeight);}
+
+/* ---------- BEAT 1 · three jobs, three teams ---------- */
+var BRANCHES=[
+  {k:'leg', icon:'📜', name:'Legislative — MAKES the laws',
+   body:'The rule-writers. For the whole country this is <b>Congress</b> — two houses, the Senate and the House of Representatives — full of people elected from every state. Your state has its own smaller version. Congress writes and votes on the laws; it also controls the money.'},
+  {k:'exe', icon:'🏛️', name:'Executive — CARRIES OUT the laws',
+   body:'The rule-doers. Led by the <b>President</b> for the country (a <b>governor</b> leads a state, a <b>mayor</b> a city), commanding big teams that put laws into action — from park rangers to the post office to the police enforcing the speed limit.'},
+  {k:'jud', icon:'⚖️', name:'Judicial — JUDGES the laws',
+   body:'The rule-referees: the <b>courts</b>. Judges decide what a law means when people disagree, whether it was applied fairly — and whether a law itself breaks the country’s highest rulebook, the <b>Constitution</b>. The top court is the Supreme Court.'}
+];
+function brDone(){var n=0;for(var k in branchSeen)n++;return n>=3;}
+function beat2(){
+  var h='';
+  h+='<div class="tag">The fix</div>';
+  h+='<h2>Three jobs, three teams</h2>';
+  h+='<p>Here’s the power, chopped into three <b>branches</b>. Marcus held all three jobs at once — in America, each job gets its own team. <b>Click each branch to meet it:</b></p>';
+  for(var i=0;i<BRANCHES.length;i++){
+    var b=BRANCHES[i];
+    h+='<div class="branch'+(branchSeen[b.k]?' seen':'')+'" onclick="seeBranch(\''+b.k+'\')">'
+      +'<div class="bhead"><span class="bicon">'+b.icon+'</span>'+b.name+'<span class="check">✓</span></div>'
+      +'<div class="bbody">'+b.body+'</div></div>';
+  }
+  h+='<div id="brfb">'+(brDone()?'<div class="fb ok"><b>Makes, carries out, judges — split three ways.</b> The same pattern repeats at every level: country, state, even your city. Nobody referees their own kickball call.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(brDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function seeBranch(k){branchSeen[k]=true;beat2();}
+
+/* ---------- BEAT 2 · sort the job ---------- */
+var SORTJOBS=[
+  {ex:'Congress votes on a brand-new law about seatbelts on school buses.', ans:'leg',
+   ok:'<b>Legislative.</b> Writing and voting on laws is the rule-makers’ whole job.',
+   no:'Someone is CREATING a law here — brand new, voted into existence. Which branch makes laws?'},
+  {ex:'A police officer pulls over a driver going 50 past your school.', ans:'exe',
+   ok:'<b>Executive.</b> The law already existed — the officer is carrying it out on the street. That’s the rule-doers’ team.',
+   no:'The law was already written. This is the law being put into ACTION on the street. Which branch carries laws out?'},
+  {ex:'The driver says the ticket was a mistake. A judge hears both sides and decides.', ans:'jud',
+   ok:'<b>Judicial.</b> A disagreement about how a law was applied lands in front of the referee — a court.',
+   no:'Two sides disagree, and someone neutral must decide who’s right. Which branch is the referee?'}
+];
+function sortDone(){return jobsSolved[0]&&jobsSolved[1]&&jobsSolved[2];}
+function beat3(){
+  var h='';
+  h+='<div class="tag">Your turn to sort</div>';
+  h+='<h2>Sort the job</h2>';
+  h+='<p>One seatbelt law, three moments in its life. Which branch is at work in each?</p>';
+  for(var i=0;i<SORTJOBS.length;i++){
+    var solved=jobsSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Moment '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +SORTJOBS[i].ex
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickSort('+i+',\'leg\')">Legislative</button>'
+        +'<button class="btn" onclick="pickSort('+i+',\'exe\')">Executive</button>'
+        +'<button class="btn" onclick="pickSort('+i+',\'jud\')">Judicial</button></div>')
+      +'</div>';
+  }
+  h+='<div id="sortfb">'+(sortDone()?'<div class="fb ok"><b>Made → carried out → judged.</b> Every law lives that same three-branch life. Different hands at every step — that’s the point.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(sortDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickSort(i,v){
+  if(jobsSolved[i])return;
+  if(v===SORTJOBS[i].ans){jobsSolved[i]=true;beat3();if(!sortDone())el('sortfb').innerHTML='<div class="fb ok">'+SORTJOBS[i].ok+'</div>';}
+  else{beat3();el('sortfb').innerHTML='<div class="fb no">'+SORTJOBS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 3 · checks and balances ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The tug-of-war</div>';
+  h+='<h2>Checks and balances</h2>';
+  h+='<p>Splitting the jobs isn’t enough — what if one branch starts grabbing? So each branch got tools to <b>stop</b> the others. Those tools are called <b>checks and balances</b>:</p>';
+  h+='<div class="work"><div class="lab">Each branch can push back</div>'
+    +'the President can <b>veto</b> — say NO to — a law Congress passed<br>'
+    +'Congress can <b>override</b> a veto if enough members agree, and controls the money<br>'
+    +'the courts can strike down a law that breaks the <b>Constitution</b> — the country’s highest rulebook</div>';
+  h+='<p>Try one. Congress passes a law the President thinks is a terrible idea. What’s the President’s legal move?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickCheck(\'veto\')">Veto it — send it back with a NO</button>'
+    +'<button class="btn" onclick="pickCheck(\'delete\')">Secretly delete the law at night</button>'
+    +'<button class="btn" onclick="pickCheck(\'fire\')">Fire everyone in Congress</button></div>';
+  h+='<div id="checkfb">'+(checkDone?checkOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(checkDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function checkOkHtml(){
+  return '<div class="fb ok"><b>Veto.</b> It’s open, it’s official, and it’s not final — Congress can override it with a big enough vote. Push and push-back, all in daylight.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>The branches hold each other in a permanent, polite tug-of-war. It’s slower than letting one boss decide — <b>on purpose</b>. Slow and shared beats fast and grabbed.</p></div>';
+}
+function pickCheck(v){
+  var fb=el('checkfb');
+  if(v==='veto'){checkDone=true;fb.innerHTML=checkOkHtml();el('nx').disabled=false;}
+  else if(v==='delete'){fb.innerHTML='<div class="fb no"><b>No branch gets secret powers</b> — that’s Marcus behavior. The President’s real tool is public and official. Which one?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Congress doesn’t work for the President</b> — its members were elected by their own states, and no branch can fire another. The real tool just says NO to the one law. Which is it?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Nora’s mistake</h2>';
+  h+='<p>Nora says: <i>“The President is the boss of America. He makes the laws, punishes lawbreakers, decides court cases — everything. That’s what president means.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testNora()">Check Nora’s claim against the three branches</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'can the President make laws? &nbsp;<b>no — Congress makes laws</b> (the President can only veto or sign)<br>'
+    +'can the President decide court cases? &nbsp;<b>no — judges do</b><br>'
+    +'so what does the President lead? &nbsp;<b>one branch of three — the executive</b><br>'
+    +'<b>verdict: America was built to NOT have a boss-of-everything</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testNora();
+}
+function testNora(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Nora described a king — the exact job America refused to create.</b> The President leads one branch: carrying out the laws. Making them belongs to Congress; judging them belongs to the courts. “Boss of everything” was Marcus at kickball, and the founders had met enough Marcuses.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Which branch of government MAKES the laws?',
+   a:['Executive','Judicial','Legislative — Congress','The police'],correct:2,
+   why:'Congress — the Senate plus the House of Representatives — writes and votes on the laws. That’s the legislative branch’s whole job.'},
+  {q:'A park ranger enforces the “no campfires in dry season” law. Which branch is at work?',
+   a:['Legislative','Executive — it carries out the laws','Judicial','None — rangers aren’t government'],correct:1,
+   why:'Carrying out laws on the ground — rangers, police, the President’s whole team — is the executive branch in action.'},
+  {q:'What is the judicial branch’s job?',
+   a:['Writing new laws','Collecting taxes','Deciding what laws mean, whether they were applied fairly, and whether they break the Constitution','Running the army'],correct:2,
+   why:'Courts are the referees: they settle disagreements about laws — and can strike down a law that breaks the country’s highest rulebook.'},
+  {q:'Why is the government’s power split into three branches at all?',
+   a:['So no one person or team can grab all the power — each branch can check the others','To create more jobs','Because three is a lucky number','So laws get made faster'],correct:0,
+   why:'One set of hands holding make-enforce-judge is a Marcus — or a king. Splitting the jobs and arming each branch with checks keeps every power-grab stoppable. And no — it’s slower on purpose.'},
+  {q:'Nora says the President “makes the laws and decides court cases.” What’s wrong with that?',
+   a:['Nothing — that’s the job','The President leads only the executive branch — Congress makes laws, and courts decide cases','Actually, judges make the laws','The President only handles holidays'],correct:1,
+   why:'The presidency is one branch of three: carrying out the laws. The other two jobs belong to Congress and the courts — by design.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.C.3']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🏛️':'📜')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — no more Marcuses':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Hand you any government action — a new law, a traffic stop, a court ruling — and you can name the branch and explain who could stop it. Next: the deal between you and all this government — your rights, and what you owe back.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “Three jobs, three teams” and “Checks and balances” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;moment=0;branchSeen={};jobsSolved=[false,false,false];checkDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

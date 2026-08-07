@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rights &amp; responsibilities · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  .moment{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .moment .mhead{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .noise{font-family:'Space Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.8;background:rgba(240,102,63,.05);border-radius:8px;padding:10px 12px;margin-top:8px}
+  .rightcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;font-size:15px;line-height:1.55}
+  .rightcard:hover{border-color:var(--blue)}
+  .rightcard.seen{border-color:var(--green);background:rgba(46,125,91,.05)}
+  .rightcard .bhead{display:flex;align-items:center;gap:10px;font-weight:600}
+  .rightcard .bicon{font-size:19px}
+  .rightcard .check{margin-left:auto;color:var(--green);font-weight:700;opacity:0}
+  .rightcard.seen .check{opacity:1}
+  .rightcard .bbody{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--blue-line);font-size:14.5px}
+  .rightcard.seen .bbody{display:block}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Civics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.C.4</div>
+    <h1>Rights &amp; responsibilities</h1>
+    <p>Being an American comes with a deal. One side of the deal is famous: your <b>rights</b> — the freedoms nobody is allowed to take from you. The other side almost never gets talked about — and without it, the famous side falls apart. Watch it fall apart first. Then learn to hold it up.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.C.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.C.4</div>
+      <div class="side-title">Rights &amp; responsibilities</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var moment=0;
+var rightSeen={},pairSolved=[false,false,false],juryDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Rights-only day'}]},
+  {phase:'Learn',   items:[{s:1, n:'Your rights'},{s:2, n:'The matching duties'},{s:3, n:'Citizen jobs'},{s:4, n:'Catch Devon’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · rights-only day ---------- */
+var MOMENTS=[
+  {btn:'Make your announcement', head:'9:00 am — you have the right to speak',
+   body:'You’ve planned a lost-dog announcement all morning. You stand up and start talking — and all 23 classmates, who also have the right to speak and today feel zero duty to listen, talk at the same time:'
+   +'<div class="noise">“—MY BIRTHDAY IS—” “—TRADE YOU MY—” “—AND THEN THE VIDEO—” “—PIZZA IS BETTER THAN—” “—WHO TOOK MY—” “—LALALALA—”</div>'
+   +'Your announcement — a real emergency — reaches no one.'},
+  {btn:'Go get your bike', head:'3:00 pm — you have the right to your stuff',
+   body:'Your bike is gone from the rack. Jordan has it. “It’s rights-only day,” Jordan shrugs, pedaling off. “I have a right to ride bikes. Nobody said I had a <i>responsibility</i> to leave yours alone.”'},
+  {btn:'Ask for fairness', head:'3:30 pm — you ask who’ll make it right',
+   body:'You look for help. But the crossing guard went home (“no duties today”), no one will hear your side (“listening is a responsibility”), and the kid who saw everything won’t say what he saw (“telling the truth? That’s a duty too”). Your rights are all still printed on the poster. None of them work.'}
+];
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Rights-only day</h2>';
+  h+='<p>Your class runs an experiment: today, everyone keeps ALL their rights — but nobody has to carry any <b>responsibilities</b>. Freedom, with none of the boring parts. Click through your day:</p>';
+  for(var i=0;i<MOMENTS.length;i++){
+    if(i<moment){
+      h+='<div class="moment"><div class="mhead">'+MOMENTS[i].head+'</div>'+MOMENTS[i].body+'</div>';
+    } else if(i===moment){
+      h+='<div class="row"><button class="btn" id="mombtn" onclick="nextMoment()">'+MOMENTS[i].btn+' →</button></div>';
+      break;
+    }
+  }
+  if(moment>=MOMENTS.length){
+    h+='<div class="fb no"><b>Every right on the poster was still yours. And none of them worked.</b> Your right to speak needed their duty to listen. Your right to your bike needed Jordan’s duty to leave it alone. Your right to fairness needed a witness willing to tell the truth.</div>';
+    h+='<div class="goal"><div class="lab">The idea</div><p>Rights aren’t solo equipment — every right you hold is held UP by other people’s responsibilities, and yours hold up theirs. That’s the whole deal of being a citizen: both sides, or neither works.</p></div>';
+  }
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(moment>=MOMENTS.length?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function nextMoment(){moment++;beat1();scrollTo(0,document.body.scrollHeight);}
+
+/* ---------- BEAT 1 · your rights ---------- */
+var RIGHTS=[
+  {k:'speak', icon:'🗣️', name:'Speak your mind',
+   body:'You can say what you think — out loud, in writing, on a poster — even when it disagrees with your neighbors or the government. (Remember the class vote? The losing side campaigning for next time IS this right at work.)'},
+  {k:'believe', icon:'🕊️', name:'Believe what you believe',
+   body:'Your religion, your ideas, your conscience — yours. Nobody, including the government, gets to pick them for you.'},
+  {k:'equal', icon:'🟰', name:'Equal treatment under the law',
+   body:'The law is supposed to weigh everyone the same — famous or unknown, rich or broke, newcomer or fifth-generation. Same rules, same scale.'},
+  {k:'fair', icon:'⚖️', name:'A fair hearing if accused',
+   body:'If someone says you broke a law, you don’t just get punished on the spot. You get to hear the accusation, tell your side, and have it decided fairly — by a court, not by whoever’s angriest.'},
+  {k:'learn', icon:'📚', name:'Go to school',
+   body:'Every kid in America gets an education. It’s a right — and it’s the one you’re literally using this second.'}
+];
+function rDone(){var n=0;for(var k in rightSeen)n++;return n>=RIGHTS.length;}
+function beat2(){
+  var h='';
+  h+='<div class="tag">Side one of the deal</div>';
+  h+='<h2>Your rights</h2>';
+  h+='<p>A <b>right</b> is a freedom or protection that belongs to you automatically — nobody handed it to you as a favor, and nobody’s allowed to take it away. <b>Click each one to meet it:</b></p>';
+  for(var i=0;i<RIGHTS.length;i++){
+    var r=RIGHTS[i];
+    h+='<div class="rightcard'+(rightSeen[r.k]?' seen':'')+'" onclick="seeRight(\''+r.k+'\')">'
+      +'<div class="bhead"><span class="bicon">'+r.icon+'</span>'+r.name+'<span class="check">✓</span></div>'
+      +'<div class="bbody">'+r.body+'</div></div>';
+  }
+  h+='<div id="rfb">'+(rDone()?'<div class="fb ok"><b>Five freedoms, automatically yours.</b> Now the question rights-only day forced on us: what keeps them standing?</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(rDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function seeRight(k){rightSeen[k]=true;beat2();}
+
+/* ---------- BEAT 2 · matching duties ---------- */
+var PAIRS=[
+  {right:'Your right to SPEAK your mind', ans:'listen',
+   ok:'<b>Let others speak — and listen.</b> That’s exactly what vanished at 9:00 am on rights-only day, and your announcement drowned.',
+   no:'Flip it around: on rights-only day, why did your announcement fail? What did the other 23 kids stop doing?'},
+  {right:'Your right to your own STUFF', ans:'hands',
+   ok:'<b>Leave other people’s stuff alone.</b> Your bike is only “yours” because everyone else carries this duty — and Jordan put it down.',
+   no:'Think of Jordan and the bike. What duty did Jordan drop that made your right stop working?'},
+  {right:'Your right to EQUAL, FAIR treatment', ans:'follow',
+   ok:'<b>Follow the laws and treat others equally.</b> Fair treatment for you is built out of everyone else playing by the same rules — and you’re part of everyone else.',
+   no:'Equal treatment is built out of everyone playing by the same rules. Which duty is that?'}
+];
+function pairsDone(){return pairSolved[0]&&pairSolved[1]&&pairSolved[2];}
+function beat3(){
+  var h='';
+  h+='<div class="tag">Side two of the deal</div>';
+  h+='<h2>The matching duties</h2>';
+  h+='<p>Every right has a <b>responsibility</b> riding with it — usually the same idea, pointed at other people. Match each right to the duty that keeps it standing:</p>';
+  for(var i=0;i<PAIRS.length;i++){
+    var solved=pairSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Right '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +'<b>'+PAIRS[i].right+'</b>'
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickPair('+i+',\'listen\')">Let others speak, and listen</button>'
+        +'<button class="btn" onclick="pickPair('+i+',\'hands\')">Leave others’ stuff alone</button>'
+        +'<button class="btn" onclick="pickPair('+i+',\'follow\')">Follow laws &amp; treat others equally</button></div>')
+      +'</div>';
+  }
+  h+='<div id="pairfb">'+(pairsDone()?'<div class="fb ok"><b>See the pattern?</b> Each duty is someone else’s right, seen from your side. Rights and responsibilities aren’t two lists — they’re one list, read from both ends.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(pairsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickPair(i,v){
+  if(pairSolved[i])return;
+  if(v===PAIRS[i].ans){pairSolved[i]=true;beat3();if(!pairsDone())el('pairfb').innerHTML='<div class="fb ok">'+PAIRS[i].ok+'</div>';}
+  else{beat3();el('pairfb').innerHTML='<div class="fb no">'+PAIRS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 3 · citizen jobs ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The bigger jobs</div>';
+  h+='<h2>Citizen jobs</h2>';
+  h+='<p>Some responsibilities go beyond mirroring a right — they’re jobs that keep the whole machine running:</p>';
+  h+='<div class="work"><div class="lab">Jobs citizens carry</div>'
+    +'<b>Vote</b> (at 18) — democracy only works if the voters show up<br>'
+    +'<b>Serve on a jury</b> — when courts decide big cases, the deciders are regular citizens<br>'
+    +'<b>Pay taxes</b> — the shared money that builds schools, roads, parks, fire trucks<br>'
+    +'<b>Pitch in</b> — speak at town meetings, volunteer, help neighbors (kids can start this one today)</div>';
+  h+='<p>The jury one puzzles people. Remember your right to a fair hearing if accused? Courts don’t hand the deciding to government officials — they call in twelve ordinary citizens. Why?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickJury(\'fair\')">So you’re judged by regular people like you — not by the powerful</button>'
+    +'<button class="btn" onclick="pickJury(\'cheap\')">Because citizens work for free</button>'
+    +'<button class="btn" onclick="pickJury(\'fun\')">Because jury duty is fun</button></div>';
+  h+='<div id="juryfb">'+(juryDone?juryOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(juryDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function juryOkHtml(){
+  return '<div class="fb ok"><b>Judged by your equals.</b> If only the powerful decided guilt, the powerful would always win. So the fair-hearing right leans on citizens answering the jury call — one person’s right, held up by twelve people’s responsibility.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>Every citizen job works like that: your vote guards elections, your taxes build what everyone shares, your jury seat guards someone’s fair trial. Skip the jobs, and the rights they hold up start to sag.</p></div>';
+}
+function pickJury(v){
+  var fb=el('juryfb');
+  if(v==='fair'){juryDone=true;fb.innerHTML=juryOkHtml();el('nx').disabled=false;}
+  else if(v==='cheap'){fb.innerHTML='<div class="fb no"><b>It’s not about the money.</b> Think about WHO you’d want deciding your fate if you were wrongly accused: officials with power over you, or people like you?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Ask anyone who’s served — “fun” isn’t the word.</b> It’s about who does the judging. If you were accused, who’s safer: the powerful, or people like you?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Devon’s mistake</h2>';
+  h+='<p>Devon’s take: <i>“Having rights means I can do whatever I want, whenever I want. That’s literally what freedom is.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testDevon()">Test Devon’s definition</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The test</div>'
+    +'Devon blasts music at 3 am — “my right!” &nbsp;→&nbsp; the neighbors’ right to sleep, crushed<br>'
+    +'Devon shouts over everyone at the meeting — “free speech!” &nbsp;→&nbsp; everyone else’s speech, silenced<br>'
+    +'Devon “borrows” whatever he likes &nbsp;→&nbsp; rights-only day, all over again<br>'
+    +'<b>verdict: “whatever I want” isn’t rights — it’s one kid’s wants crushing everyone else’s rights</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testDevon();
+}
+function testDevon(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Devon left out half the deal.</b> Everyone around Devon has the same rights he does — so his freedom runs exactly as far as the point where it starts crushing theirs. The responsibilities aren’t the opposite of freedom; they’re what keeps 330 million freedoms from flattening each other.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What is a right?',
+   a:['A prize for good behavior','A freedom or protection that belongs to every person automatically','A rule teachers invented','Something you buy'],correct:1,
+   why:'Rights aren’t earned or granted as favors — speaking, believing, equal treatment, a fair hearing, school — they’re yours automatically, and nobody may take them.'},
+  {q:'Your right to speak your mind is held up by which responsibility in others?',
+   a:['Letting you speak — and listening','Agreeing with everything you say','Speaking louder than you','Writing your speeches for you'],correct:0,
+   why:'Rights-only day proved it: 24 kids with the right to speak and zero duty to listen equals nobody heard at all. (Agreeing is never required — listening is the duty.)'},
+  {q:'Why are trials decided by juries of regular citizens?',
+   a:['Citizens work for free','So accused people are judged by equals — not only by the powerful','Judges are usually on vacation','It’s a very old typo'],correct:1,
+   why:'The fair-hearing right would be hollow if only the powerful decided guilt. Twelve ordinary citizens showing up is the responsibility that keeps that right real.'},
+  {q:'What do taxes actually pay for?',
+   a:['Nothing — the money disappears','The shared things a community needs: schools, roads, parks, fire trucks','Only birthday parties for mayors','Secret treasure vaults'],correct:1,
+   why:'Taxes are the pitch-in that builds what no single family could: the school you learn in, the roads you ride, the firefighters who come when called.'},
+  {q:'Devon says rights mean “I can do whatever I want, whenever.” What did his own examples prove?',
+   a:['He’s right — that’s freedom','Everyone else has rights too — so “whatever I want” ends where it starts crushing theirs','Rights are only for adults','Music at 3 am is a citizen job'],correct:1,
+   why:'The 3 am music, the shouting, the “borrowing” — each one was Devon’s wants flattening someone else’s rights. Real freedom is every person’s rights standing at once, held up by everyone’s responsibilities.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.C.4']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🤝':'🗽')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you know both sides of the deal':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>You can name your rights, find the responsibility holding each one up, and explain the citizen jobs — voting, juries, taxes, pitching in. That completes Civics. Next domain: money — why you can’t have everything, and how to choose.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “The matching duties” and “Citizen jobs” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;moment=0;rightSeen={};pairSolved=[false,false,false];juryDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
