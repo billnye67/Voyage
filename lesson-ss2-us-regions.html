@@ -212,18 +212,20 @@ function back(){if(step>0){step--;render();scrollTo(0,0);}}
    puzzle pieces. Not to exact scale (it says so on the map).
    Colors: W sage · SW sand · MW gold · SE moss · NE slate-blue
    ===================================================================== */
+/* A recognizable lower-48 silhouette: west coast, Baja angle, Texas point,
+   Gulf curve, Florida peninsula, Atlantic coast, New England arm, Great
+   Lakes notch, straight northern border. Region borders are straight lines. */
 var RGN={
   W: {name:'West',      color:'#b9cfc4', dark:'#4f7d6b',
-      path:'M30 40 C70 22 110 20 128 26 L138 96 L146 150 L128 218 C96 230 62 232 40 218 C22 176 18 92 30 40 Z'},
+      path:'M62 38 L150 50 L150 196 L86 206 C64 196 48 176 50 148 C51 118 53 98 55 88 C57 66 58 50 62 38 Z'},
   SW:{name:'Southwest', color:'#e8d5ae', dark:'#a5814a',
-      path:'M128 218 L146 150 L246 158 L252 208 L282 214 L286 262 C244 274 196 268 170 254 C152 244 136 232 128 218 Z'},
+      path:'M150 150 L255 150 L252 226 C240 248 226 260 208 268 C188 244 168 216 150 196 Z'},
   MW:{name:'Midwest',   color:'#f0dfB0', dark:'#a88a3c',
-      path:'M138 96 L146 150 L246 158 L340 150 L352 108 L346 62 C280 46 190 38 138 42 Z',
-      pathFix:'M138 96 L138 42 C190 38 280 46 346 62 L352 108 L340 150 L246 158 L146 150 Z'},
+      path:'M150 50 L250 55 C262 56 268 58 272 62 C282 74 286 84 295 88 C305 84 312 74 322 70 L335 150 L150 150 Z'},
   SE:{name:'Southeast', color:'#c8d6b2', dark:'#5f7d3f',
-      path:'M246 158 L340 150 L392 168 C404 196 402 238 386 268 C360 284 322 280 302 262 L286 262 L282 214 L252 208 Z'},
+      path:'M335 150 L405 128 C402 142 398 154 392 163 C386 176 380 188 372 198 C366 206 360 211 352 215 C362 236 368 260 368 288 C354 270 344 250 340 232 C312 228 280 227 252 226 L255 150 Z'},
   NE:{name:'Northeast', color:'#bcc9e2', dark:'#3f5f96',
-      path:'M340 150 L352 108 L346 62 C378 52 412 58 428 74 C438 96 434 130 420 150 C396 162 364 160 340 150 Z'}
+      path:'M322 70 L398 72 C410 62 420 54 428 52 C436 58 440 64 442 72 C432 82 420 92 412 100 C410 112 408 120 405 128 L335 150 Z'}
 };
 var RGNORDER=['W','SW','MW','SE','NE'];
 var RGNFACTS={
@@ -243,14 +245,13 @@ function drawUS(o){
     if(o.lit===k)cls+=' lit';
     if(o.dimOthers&&o.lit&&o.lit!==k)cls+=' dim';
     if(!o.clickable)cls+=' static';
-    var d=(k==='MW')?r.pathFix:r.path;
-    h+='<path class="'+cls+'" d="'+d+'" fill="'+r.color+'"'+(o.clickable?' onclick="'+o.clickable+'(\''+k+'\')"':'')+'/>';
+    h+='<path class="'+cls+'" d="'+r.path+'" fill="'+r.color+'"'+(o.clickable?' onclick="'+o.clickable+'(\''+k+'\')"':'')+'/>';
   }
   if(o.names){
-    var pos={W:[80,130],SW:[205,222],MW:[240,102],SE:[325,215],NE:[388,105]};
+    var pos={W:[100,122,14],SW:[198,192,14],MW:[242,110,14],SE:[312,186,14],NE:[386,96,11.5]};
     for(var j=0;j<RGNORDER.length;j++){
       var kk=RGNORDER[j];
-      h+='<text x="'+pos[kk][0]+'" y="'+pos[kk][1]+'" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="15" fill="'+RGN[kk].dark+'">'+RGN[kk].name+'</text>';
+      h+='<text x="'+pos[kk][0]+'" y="'+pos[kk][1]+'" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="'+pos[kk][2]+'" fill="'+RGN[kk].dark+'">'+RGN[kk].name+'</text>';
     }
   }
   h+='<text x="452" y="294" text-anchor="end" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">simplified map — not to exact scale</text>';

@@ -205,7 +205,7 @@ function back(){if(step>0){step--;render();scrollTo(0,0);}}
    PHYSICAL MAP — one silhouette of the lower 48 (same footprint as the
    region map in lesson 2), with landform overlays that can light up.
    ===================================================================== */
-var US_OUTLINE='M30 40 C70 22 110 20 128 26 L138 42 C190 38 280 46 346 62 C378 52 412 58 428 74 C438 96 434 130 420 150 L392 168 C404 196 402 238 386 268 C360 284 322 280 302 262 L286 262 C244 274 196 268 170 254 C152 244 136 232 128 218 C96 230 62 232 40 218 C22 176 18 92 30 40 Z';
+var US_OUTLINE='M62 38 L150 50 L250 55 C262 56 268 58 272 62 C282 74 286 84 295 88 C305 84 312 74 322 70 L398 72 C410 62 420 54 428 52 C436 58 440 64 442 72 C432 82 420 92 412 100 C410 112 408 120 405 128 C402 142 398 154 392 163 C386 176 380 188 372 198 C366 206 360 211 352 215 C362 236 368 260 368 288 C354 270 344 250 340 232 C312 228 280 227 252 226 C240 248 226 260 208 268 C188 244 168 216 150 196 L86 206 C64 196 48 176 50 148 C51 118 53 98 55 88 C57 66 58 50 62 38 Z';
 
 function mountains(pts,color){
   var h='';
@@ -220,19 +220,19 @@ function drawLand(o){
   function cls(k){var c='lf';if(o.lit===k)c+=' lit';if(o.lit&&o.lit!==k)c+=' dim';return c;}
   var h='<svg viewBox="0 0 460 300" role="img" aria-label="Physical map of the United States showing major landforms">';
   h+='<path d="'+US_OUTLINE+'" fill="#efe9d2" stroke="var(--ink)" stroke-width="2"/>';
-  h+='<g class="'+cls('plains')+'"><ellipse cx="235" cy="140" rx="72" ry="76" fill="rgba(240,223,176,.9)"/>'
-    +'<path d="M180 100 h110 M172 130 h126 M176 160 h118 M186 190 h96" stroke="#c8a94e" stroke-width="1.6" stroke-dasharray="2 5"/></g>';
-  h+='<g class="'+cls('rockies')+'">'+mountains([[118,90,20],[132,120,24],[120,152,22],[136,184,24],[124,214,18],[146,92,16],[148,150,16]],'#b9cfc4')+'</g>';
-  h+='<g class="'+cls('appalachians')+'">'+mountains([[344,118,15],[358,140,17],[344,162,14],[366,180,16],[352,200,13]],'#c8d6b2')+'</g>';
-  h+='<g class="'+cls('mississippi')+'"><path d="M268 72 C262 108 276 140 266 176 C258 206 272 236 268 266" fill="none" stroke="var(--blue)" stroke-width="3.4" stroke-linecap="round"/>'
-    +'<path d="M268 266 l-7 9 M268 266 l8 8 M268 266 l1 11" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></g>';
+  h+='<g class="'+cls('plains')+'"><ellipse cx="232" cy="138" rx="66" ry="66" fill="rgba(240,223,176,.9)"/>'
+    +'<path d="M182 108 h100 M174 134 h116 M178 160 h108 M190 186 h84" stroke="#c8a94e" stroke-width="1.6" stroke-dasharray="2 5"/></g>';
+  h+='<g class="'+cls('rockies')+'">'+mountains([[116,90,20],[132,118,24],[118,148,22],[134,176,22],[120,188,15],[146,92,15],[146,148,15]],'#b9cfc4')+'</g>';
+  h+='<g class="'+cls('appalachians')+'">'+mountains([[344,118,15],[358,140,17],[344,162,14],[364,178,16],[350,198,13]],'#c8d6b2')+'</g>';
+  h+='<g class="'+cls('mississippi')+'"><path d="M268 72 C262 104 276 136 266 168 C260 190 270 204 267 216" fill="none" stroke="var(--blue)" stroke-width="3.4" stroke-linecap="round"/>'
+    +'<path d="M267 216 l-7 8 M267 216 l8 7 M267 216 l1 10" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></g>';
   if(o.labels){
-    h+='<text x="118" y="248" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="12" fill="#4f7d6b">ROCKIES</text>';
-    h+='<text x="368" y="222" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#5f7d3f">APPALACHIANS</text>';
-    h+='<text x="228" y="146" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="12" fill="#a5814a">GREAT PLAINS</text>';
-    h+='<text x="296" y="96" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="var(--blue)">MISSISSIPPI R.</text>';
-    h+='<text x="18" y="290" font-family="Space Mono,monospace" font-size="10" fill="var(--muted)">← Pacific Ocean</text>';
-    h+='<text x="446" y="290" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--muted)">Atlantic Ocean →</text>';
+    h+='<text x="86" y="144" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#4f7d6b">ROCKIES</text>';
+    h+='<text x="392" y="224" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="10.5" fill="#5f7d3f">APPALACHIANS</text>';
+    h+='<text x="226" y="144" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="12" fill="#a5814a">GREAT PLAINS</text>';
+    h+='<text x="294" y="94" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="var(--blue)">MISSISSIPPI R.</text>';
+    h+='<text x="14" y="266" font-family="Space Mono,monospace" font-size="10" fill="var(--muted)">← Pacific</text>';
+    h+='<text x="448" y="266" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--muted)">Atlantic →</text>';
   }
   h+='<text x="452" y="14" text-anchor="end" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">simplified map — not to exact scale</text>';
   h+='</svg>';
