@@ -229,9 +229,9 @@ function drawLand(o){
         +'<text x="'+s.x+'" y="'+(s.y+8)+'" text-anchor="middle" font-family="Space Mono,monospace" font-weight="700" font-size="24" fill="var(--ink)">'+s.label+'</text></g>';
     }
     var halo=' stroke="#fff" stroke-width="4" style="paint-order:stroke"';
-    h+='<text x="614" y="530" text-anchor="middle" font-family="Space Mono,monospace" font-size="15" fill="var(--muted)"'+halo+'>coast + river mouth</text>';
-    h+='<text x="452" y="286" text-anchor="middle" font-family="Space Mono,monospace" font-size="15" fill="var(--muted)"'+halo+'>dry open plain</text>';
-    h+='<text x="286" y="270" text-anchor="middle" font-family="Space Mono,monospace" font-size="15" fill="var(--muted)"'+halo+'>high mountain ridge</text>';
+    h+='<text x="614" y="532" text-anchor="middle" font-family="Space Mono,monospace" font-size="19" fill="var(--muted)"'+halo+'>coast + river mouth</text>';
+    h+='<text x="452" y="288" text-anchor="middle" font-family="Space Mono,monospace" font-size="19" fill="var(--muted)"'+halo+'>dry open plain</text>';
+    h+='<text x="236" y="222" text-anchor="end" font-family="Space Mono,monospace" font-size="19" fill="var(--muted)"'+halo+'>high mountain ridge</text>';
   }
   if(o.cities){
     var cities=[[614,474],[852,160],[886,124],[820,228],[800,332],[628,182],[548,118],[588,330],[58,238],[95,332],[122,44],[772,462]];
@@ -239,7 +239,7 @@ function drawLand(o){
       h+='<circle cx="'+cities[c][0]+'" cy="'+cities[c][1]+'" r="9" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/>';
     h+='<text x="925" y="610" text-anchor="end" font-family="Space Mono,monospace" font-size="18" fill="var(--muted)">● = a big city</text>';
   }
-  h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="13" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
+  h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="18" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
   h+='</svg>';
   return h;
 }
