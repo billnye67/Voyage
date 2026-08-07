@@ -3,3 +3,8 @@ node_modules/
 .sidebar-report.txt
 /*.png
 .final-audit/
+.checker-*
+.reverify-*
+.rv*
+.map-shot*
+*.log
