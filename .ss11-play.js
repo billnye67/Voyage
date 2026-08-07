@@ -36,8 +36,8 @@ const path = require('path');
   await expectText('Looks have nothing', 'money wrong 1');
   await page.getByRole('button', { name: /illegal/ }).click();
   await expectText('perfectly legal', 'money wrong 2');
-  await page.getByRole('button', { name: /everyone accepts it/ }).click();
-  await expectText('guaranteed before you even ask', 'money correct');
+  await page.getByRole('button', { name: /nearly everyone accepts it/ }).click();
+  await expectText('no lucky match needed', 'money correct');
   await page.locator('#nx').click();
 
   // beat 3: wrong then up

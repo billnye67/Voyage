@@ -295,7 +295,7 @@ function beat3(){
     +'<b>③ Were they there?</b> — eyewitness, or heard it from someone else?</div>';
   h+='<p>Grill this one: your great-uncle Ray, at Thanksgiving <b>last year</b>, told everyone: “Oh, that school walk? THREE miles. I remember it perfectly — I mean, I was born in 1970, but everyone always said three.” Run the three questions. What’s the weak spot?</p>';
   h+='<div class="row">'
-    +'<button class="btn" onclick="pickTest(\'nothere\')">He wasn’t there — born eight years after that diary — and he’s repeating hearsay decades later</button>'
+    +'<button class="btn" onclick="pickTest(\'nothere\')">He wasn’t there — born eight years after that diary — and he’s repeating a story he only heard from others, decades later</button>'
     +'<button class="btn" onclick="pickTest(\'loud\')">He said it too loudly at dinner</button></div>';
   h+='<div id="testfb">'+(testDone?'<div class="fb ok"><b>Questions ② and ③ both fail.</b> Ray’s telling the story sixty years later, about a walk that ended before he was born, sourced from “everyone always said.” Nice guy — weak source. Grandma’s same-year diary beats him on every question.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(testDone?'':'disabled')+' onclick="next()">Next →</button></div>';
@@ -369,9 +369,9 @@ var QUESTIONS=[
   {q:'What are the historian’s three questions for grilling a source?',
    a:['Is it long? Is it fancy? Is it famous?','Who made it? When? Were they there?','Is it online? Is it in color? Is it fun?','Who owns it? What’s it worth? Where’s it kept?'],correct:1,
    why:'Who, when, and were-they-there — the three questions that sank Uncle Ray’s three-mile testimony and crowned the diary.'},
-  {q:'Two sources about the same event say different things. What’s the historian’s move?',
-   a:['Throw the older one out','Keep whichever makes the better story','Read each closely — they may both be true — and hunt for more sources','Flip a coin'],correct:2,
-   why:'“Some students walked two miles” and “Grandma walked one” both turned out true. Careful reading plus cross-checking beats tossing or story-picking every time.'},
+  {q:'A town cookbook says the Main Street bakery opened in 1912. A brass plaque on the building says 1914. What’s the historian’s move?',
+   a:['Trust the cookbook — books beat plaques','Read both closely and hunt for more sources — maybe the building went up in 1912 and the bakery opened in 1914','Split the difference and say 1913','Ignore both dates'],correct:1,
+   why:'Same move as the diary and the newspaper: read exactly what each source claims — they may both be right about different things — and let more sources sharpen the truth.'},
   {q:'Finn trusts the new website over the old diary because “newer is always more accurate.” What did he miss?',
    a:['Websites are always wrong','The diary was THERE — and good secondary sources are built from primaries like it','Old things are always right','Diaries can’t be sources'],correct:1,
    why:'Newer means recently written — not closer to the event. The diary’s age IS its authority: it’s firsthand. The website stands on sources exactly like it.'}

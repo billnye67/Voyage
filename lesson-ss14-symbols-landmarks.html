@@ -256,7 +256,7 @@ function decodeStars(){window.__askStars=true;beat1();}
 function decodeStripes(){window.__askStripes=true;beat1();}
 function ansStars(v){
   if(v==='states'){starsDone=true;beat1();}
-  else{beat1();el('starfb').innerHTML='<div class="fb no"><b>The country is way older than 50 years!</b> Think about what there are exactly fifty of — you listed them by region a few lessons ago.</div>';}
+  else{beat1();el('starfb').innerHTML='<div class="fb no"><b>The country is way older than 50 years!</b> Here’s a clue: the flag gained its 50th star in 1959, the year Hawaii joined the country. Fifty of what?</div>';}
 }
 function ansStripes(v){
   if(v==='colonies'){stripesDone=true;beat1();}
@@ -304,7 +304,7 @@ function pickSym(i,v){
 /* ---------- BEAT 2 · the famous five ---------- */
 var FAMOUS=[
   {k:'eagle', icon:'🦅', name:'The bald eagle',
-   body:'America’s official bird since 1782. Strong, free-flying, and living only in North America — it stands for the country’s <b>strength and freedom</b>. You’re carrying one right now if there’s a quarter in your pocket.'},
+   body:'America’s symbol since 1782, when it landed on the country’s Great Seal. Strong, free-flying, and living only in North America — it stands for the country’s <b>strength and freedom</b>. Find a one-dollar bill and flip it over: there’s the eagle, arrows and olive branch in its claws.'},
   {k:'liberty', icon:'🗽', name:'The Statue of Liberty',
    body:'A colossal copper woman raising a torch in New York Harbor — a <b>gift from France in 1886</b>. For millions of newcomers arriving by ship, she was the first glimpse of America: a symbol of <b>freedom and welcome</b>.'},
   {k:'bell', icon:'🔔', name:'The Liberty Bell',
@@ -347,13 +347,13 @@ function beat4(){
   el('stage').innerHTML=h;
 }
 function landOkHtml(){
-  return '<div class="fb ok"><b>The dome IS the message.</b> One glimpse and every viewer knows: lawmakers at work. The White House means the President the same way. The buildings became shorthand for the branches inside them.</div>'
+  return '<div class="fb ok"><b>The dome IS the message.</b> One glimpse and every viewer knows: lawmakers at work. The building became shorthand for the branch working inside it.</div>'
     +'<div class="goal"><div class="lab">The idea</div><p>Symbols and landmarks are the country’s memory made visible — a story you can fold (the flag), pocket (the eagle on a quarter), climb the steps of (the memorial), or spot from a mile away (the dome).</p></div>';
 }
 function pickLand(v){
   var fb=el('landfb');
   if(v==='stands'){landDone=true;fb.innerHTML=landOkHtml();el('nx').disabled=false;}
-  else{fb.innerHTML='<div class="fb no"><b>News time is expensive — nothing’s on screen “just because.”</b> Think about WHO works under that dome, and what they were doing in this lesson about laws… why show their building?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>News time is expensive — nothing’s on screen “just because.”</b> Think about WHO works under that dome — the country’s lawmakers. Why show their building?</div>';}
 }
 
 /* ---------- BEAT 4 · catch the mistake ---------- */

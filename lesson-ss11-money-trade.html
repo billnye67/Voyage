@@ -271,16 +271,16 @@ function beat3(){
     +'<b>It stores value</b> — a sandwich rots by Friday; three dollars keeps until you need it</div>';
   h+='<p>So pin it down. WHY does money kill the double match problem?</p>';
   h+='<div class="row">'
-    +'<button class="btn" onclick="pickMoney(\'yes\')">Because everyone accepts it — half ② can never break</button>'
+    +'<button class="btn" onclick="pickMoney(\'yes\')">Because nearly everyone accepts it — half ② almost never breaks</button>'
     +'<button class="btn" onclick="pickMoney(\'pretty\')">Because dollar bills are pretty</button>'
     +'<button class="btn" onclick="pickMoney(\'law\')">Because trading stuff is illegal now</button></div>';
-  h+='<div id="moneyfb">'+(moneyDone?'<div class="fb ok"><b>Everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you have IS what they want — always. The double match is guaranteed before you even ask.</div>':'')+'</div>';
+  h+='<div id="moneyfb">'+(moneyDone?'<div class="fb ok"><b>Because nearly everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you’re offering is the one thing sellers plan on taking — no lucky match needed.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(moneyDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
 function pickMoney(v){
   var fb=el('moneyfb');
-  if(v==='yes'){moneyDone=true;fb.innerHTML='<div class="fb ok"><b>Everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you have IS what they want — always. The double match is guaranteed before you even ask.</div>';el('nx').disabled=false;}
+  if(v==='yes'){moneyDone=true;fb.innerHTML='<div class="fb ok"><b>Because nearly everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you’re offering is the one thing sellers plan on taking — no lucky match needed.</div>';el('nx').disabled=false;}
   else if(v==='pretty'){fb.innerHTML='<div class="fb no"><b>Looks have nothing to do with it</b> — plain checks and boring bank numbers work exactly like crisp bills. Money’s power is about what everyone agrees to DO with it. Which answer says that?</div>';}
   else{fb.innerHTML='<div class="fb no"><b>Barter is still perfectly legal</b> — trade cards with your friends anytime. People dropped barter for everyday buying because money works better. What makes it work better?</div>';}
 }
@@ -343,15 +343,15 @@ var QUESTIONS=[
   {q:'What is barter, and what’s its famous flaw?',
    a:['Trading stuff for stuff — it needs a double match: each side must want what the other has','Buying with money — it’s too fast','Giving things away — nobody gains','Trading only sandwiches'],correct:0,
    why:'Stuff-for-stuff only works when BOTH halves match. Miss one — like Priya not wanting your sandwich — and you’re off on a trade-chain scavenger hunt.'},
-  {q:'What makes money fix the double match problem?',
-   a:['It’s colorful','Everyone accepts it — so what you’re offering is always wanted','It’s made of special paper','It’s heavier than sandwiches'],correct:1,
-   why:'Money’s superpower is the universal yes. Sell to anyone, buy from anyone — the “they don’t want what I have” problem can’t happen.'},
+  {q:'Rosa wants Deacon’s comic, but Deacon doesn’t want Rosa’s apple. If they could use money, how does the deal get rescued?',
+   a:['It can’t — no apple, no comic','Rosa sells her apple to anyone for dollars, and Deacon gladly takes dollars for the comic','Deacon must learn to like apples','They both give up'],correct:1,
+   why:'That’s money killing the double match problem: Rosa doesn’t need to find someone who wants HER stuff and has HIS comic — dollars work at every stop.'},
   {q:'Halloween candy goes stale by December — but the $10 in your birthday card is still perfect next summer. Which of money’s jobs is that?',
    a:['Measuring value','Storing value — it keeps until you need it','Making trades slower','Tasting better than candy'],correct:1,
    why:'Money holds value over time — the whole reason saving works. Candy, sandwiches, and strawberries all make terrible piggy banks.'},
-  {q:'A blizzard hits and the store is down to its last few shovels, which everyone suddenly needs. The price…',
-   a:['Drops — snow discounts everything','Climbs — high demand plus scarce supply','Stays exactly the same forever','Becomes free'],correct:1,
-   why:'Prices are messages: wanted + scarce = the price climbs. The same shovel whispers from the clearance rack every June.'},
+  {q:'A record heat wave hits, and the corner store is down to its last few electric fans — which everyone suddenly wants. The price…',
+   a:['Drops — heat melts prices','Climbs — high demand plus scarce supply','Stays exactly the same forever','Becomes free'],correct:1,
+   why:'Prices are messages: wanted + scarce = the price climbs. In October, that same fan whispers from the clearance rack.'},
   {q:'Ava spends all $5 the day she gets it because “saved money goes to waste.” What did she miss?',
    a:['Nothing — money does spoil','Money stores value, so saving is really spending LATER on something bigger','Allowances are illegal to save','Headphones are a need'],correct:1,
    why:'Dollars don’t rot. Six saved weeks buys the $30 thing no single week ever could — a bigger choice, not a wasted one.'}
