@@ -211,7 +211,7 @@ function mountains(pts,color){
 }
 function drawLand(o){
   o=o||{};
-  var h='<svg viewBox="10 0 920 585" role="img" aria-label="Physical map of the United States">';
+  var h='<svg viewBox="10 0 920 618" role="img" aria-label="Physical map of the United States">';
   for(var st in USALL)h+='<path d="'+USALL[st]+'" fill="#efe9d2" stroke="rgba(22,35,58,.4)" stroke-width="0.7"/>';
   h+=mountains([[268,140,36],[292,190,42],[264,240,38],[298,288,40],[274,330,32]],'#b9cfc4');
   h+=mountains([[766,208,28],[744,242,32],[722,276,28],[702,308,30]],'#c8d6b2');
@@ -237,7 +237,7 @@ function drawLand(o){
     var cities=[[614,474],[852,160],[886,124],[820,228],[800,332],[628,182],[548,118],[588,330],[58,238],[95,332],[122,44],[772,462]];
     for(var c=0;c<cities.length;c++)
       h+='<circle cx="'+cities[c][0]+'" cy="'+cities[c][1]+'" r="9" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/>';
-    h+='<text x="925" y="570" text-anchor="end" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">● = a big city</text>';
+    h+='<text x="925" y="610" text-anchor="end" font-family="Space Mono,monospace" font-size="18" fill="var(--muted)">● = a big city</text>';
   }
   h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="13" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
   h+='</svg>';

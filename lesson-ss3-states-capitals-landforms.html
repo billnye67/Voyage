@@ -219,7 +219,7 @@ function mountains(pts,color){
 function drawLand(o){
   o=o||{};
   function cls(k){var c='lf';if(o.lit===k)c+=' lit';if(o.lit&&o.lit!==k)c+=' dim';return c;}
-  var h='<svg viewBox="10 0 920 585" role="img" aria-label="Physical map of the United States showing major landforms">';
+  var h='<svg viewBox="10 0 920 618" role="img" aria-label="Physical map of the United States showing major landforms">';
   for(var st in USALL)h+='<path d="'+USALL[st]+'" fill="#efe9d2" stroke="rgba(22,35,58,.4)" stroke-width="0.7"/>';
   h+='<g class="'+cls('plains')+'"><ellipse cx="455" cy="255" rx="88" ry="165" fill="rgba(240,223,176,.75)"/>'
     +'<path d="M392 140 h130 M378 190 h158 M372 240 h166 M374 290 h160 M382 340 h146 M398 382 h116" stroke="#c8a94e" stroke-width="2.2" stroke-dasharray="3 8"/></g>';
@@ -233,8 +233,8 @@ function drawLand(o){
     h+='<text x="770" y="374" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#5f7d3f"'+halo+'>APPALACHIANS</text>';
     h+='<text x="458" y="262" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="26" fill="#a5814a"'+halo+'>GREAT PLAINS</text>';
     h+='<text x="622" y="122" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="var(--blue)"'+halo+'>MISSISSIPPI R.</text>';
-    h+='<text x="24" y="480" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">← Pacific</text>';
-    h+='<text x="925" y="490" text-anchor="end" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">Atlantic →</text>';
+    h+='<text x="24" y="610" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">← Pacific</text>';
+    h+='<text x="925" y="610" text-anchor="end" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">Atlantic →</text>';
   }
   h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="19" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
   h+='</svg>';
