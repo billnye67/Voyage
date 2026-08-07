@@ -24,7 +24,7 @@ const path = require('path');
   await page.getByRole('button', { name: 'The United Nations' }).click();
   await expectText('Closer to home', 'state wrong feedback');
   await page.getByRole('button', { name: /My state/ }).click();
-  await expectText('classic state-government job', 'state correct');
+  await expectText('classic state job', 'state correct');
   await page.locator('#nx').click();
 
   // beat 2: Chicago wrong then Springfield

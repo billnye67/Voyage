@@ -4,6 +4,13 @@ const path = require('path');
 
 const navRx=/^(next|back|.*review the lesson|again|back to)/i;
 const clean=s=>s.replace(/\s+/g,' ').trim();
+const passAnswers={
+  'lesson-ss1-map-skills.html':['South','Look it up in the legend','B4','3 miles','North is fixed'],
+  'lesson-ss2-us-regions.html':['The Midwest','Midwest','They share land','Southwest','Regions go by what states share'],
+  'lesson-ss3-states-capitals-landforms.html':['It’s where the state’s government','The capital is often NOT','The Rocky Mountains','The Great Plains','Ask where Texas’s government sits'],
+  'lesson-ss4-geography-shapes-life.html':['Water to drink','Fishing and shipping','People brought water','Building a dam','Cities cluster along coasts'],
+  'lesson-ss5-rules-laws.html':['Fair, safe, predictable','A law is made by government','The rules weren’t agreed','Books slowly stop coming back','The fun parts of town life']
+};
 
 if(process.argv[2]==='--layout'){
   (async()=>{const browser=await chromium.launch({headless:true});
@@ -30,13 +37,14 @@ if(process.argv[2]==='--summary'){
 
 (async()=>{
   const file=process.argv[2];
-  const out=path.join(process.cwd(),'.ela-audit',file.replace(/\.html$/,''));
+  const auditWidth=parseInt(process.env.SS_WIDTH||'1280',10);
+  const out=path.join(process.cwd(),'.ela-audit',file.replace(/\.html$/,'')+(auditWidth===1280?'':'-'+auditWidth));
   fs.mkdirSync(out,{recursive:true});
   const browser=await chromium.launch({headless:true});
-  const context=await browser.newContext({viewport:{width:1280,height:800}});
+  const context=await browser.newContext({viewport:{width:auditWidth,height:800}});
   const page=await context.newPage();
   await page.goto('file:///'+path.join(process.cwd(),file).replace(/\\/g,'/'));
-  let n=0, reviewed=false, reviewing=false, finished=false, mythClicks=0;
+  let n=0, reviewed=process.env.SS_PASS==='1', reviewing=false, finished=false, mythClicks=0;
   const tried=new Map(), seen=new Set(), log=[];
   async function body(){return await page.locator('body').innerText();}
   async function snap(label){
@@ -52,6 +60,8 @@ if(process.argv[2]==='--summary'){
   }
   function identity(txt){
     const q=txt.match(/QUESTION\s+\d+\s+OF\s+\d+/i);if(q)return q[0].toUpperCase();
+    const activeCard=txt.match(/(?:PEN PAL|POSTCARD|CASE|CHALLENGE)\s*#?\s*(\d+)[\s\S]{0,120}?(?:MATCHING NOW|NOW)/i);
+    if(activeCard){const p=txt.match(/P\.\s*\d+\s*\/\s*\d+/i);return (p?p[0]+' ':'')+'ACTIVE '+activeCard[1];}
     const now=txt.match(/(?:PATIENT|CHALLENGE|ROUND|CASE|PASSAGE|STEP|SENTENCE|CARD|EXAMPLE)\s+\d+[\s\S]{0,180}?\bnow\b/i);if(now)return clean(now[0]);
     const sciencePage=txt.match(/P\.\s*\d+\s*\/\s*\d+/i);if(sciencePage)return sciencePage[0].toUpperCase();
     return clean(txt).slice(0,420).replace(/(?:Correct|Not quite|Try again|No\.).*$/i,'');
@@ -59,7 +69,7 @@ if(process.argv[2]==='--summary'){
   for(let turn=0;turn<180&&!finished;turn++){
     const txt=await snap('screen');
     if(/Lesson complete|Worth one more pass/i.test(txt)){
-      const again=page.getByRole('button',{name:/Again/i});
+      const again=page.getByRole('button',{name:/^(?:↻\s*)?Again$/i});
       if(await again.count()){await again.click();await page.waitForTimeout(350);await snap('restart');}
       finished=true;break;
     }
@@ -77,6 +87,11 @@ if(process.argv[2]==='--summary'){
       if(await nx.count()&&await nx.isEnabled()){await nx.click();await page.waitForTimeout(350);continue;}
     }
 
+    const roll=page.getByRole('button',{name:/Roll/i});
+    if(await roll.count()&&await roll.isVisible()&&await roll.isEnabled()){
+      await roll.click();await page.waitForTimeout(900);continue;
+    }
+
     // Fill visible writing fields with a plausible fourth-grade response.
     const fields=page.locator('textarea:visible,input:visible');
     const fc=await fields.count();
@@ -90,7 +105,7 @@ if(process.argv[2]==='--summary'){
     for(let i=0;i<count;i++){
       const b=buttons.nth(i), name=clean(await b.innerText());
       const box=await b.boundingBox();
-      if(await b.isVisible()&&await b.isEnabled()&&!navRx.test(name)&&box&&box.x>280)candidates.push({b,name});
+      if(await b.isVisible()&&await b.isEnabled()&&!navRx.test(name)&&box&&(auditWidth<=500||box.x>280))candidates.push({b,name});
     }
     if(/Click each card to open its myth/i.test(txt)){
       if(mythClicks<3){
@@ -102,10 +117,50 @@ if(process.argv[2]==='--summary'){
       if(await mythNext.count()&&await mythNext.isEnabled()){await mythNext.click();await page.waitForTimeout(350);continue;}
     }
     const id=identity(txt), used=tried.get(id)||new Set();
-    let choice=candidates.find(x=>!used.has(x.name));
+    let choice;
+    if(process.env.SS_PASS==='1'){
+      const qm=txt.match(/QUESTION\s+(\d+)\s+OF/i), wanted=qm&&passAnswers[file]?.[Number(qm[1])-1];
+      if(wanted)choice=candidates.find(x=>x.name.startsWith(wanted));
+    }
+    if(!choice)choice=candidates.find(x=>!used.has(x.name));
     if(choice){
       used.add(choice.name);tried.set(id,used);
       await choice.b.click();await page.waitForTimeout(3000);continue;
+    }
+    const readyNext=page.getByRole('button',{name:/^Next/i});
+    if(await readyNext.count()&&await readyNext.isEnabled()){await readyNext.click();await page.waitForTimeout(400);continue;}
+    // Last-resort kid-style exploration of a visible diagram: click a grid of
+    // points inside the largest SVG, just as a student would tap map regions.
+    const svgs=page.locator('svg:visible');
+    let best=null;
+    for(let i=0;i<await svgs.count();i++){
+      const s=svgs.nth(i), b=await s.boundingBox();
+      if(b&&(auditWidth<=500||b.x>280)&&(!best||b.width*b.height>best.box.width*best.box.height))best={s,box:b};
+    }
+    if(best){
+      for(let gy=0;gy<9&&!choice;gy++)for(let gx=0;gx<9&&!choice;gx++){
+        const name='svg-'+gx+'-'+gy;
+        if(!used.has(name))choice={b:best.s,name,pos:{x:best.box.width*(gx+.5)/9,y:best.box.height*(gy+.5)/9}};
+      }
+    }
+    if(choice&&choice.pos){
+      used.add(choice.name);tried.set(id,used);
+      await choice.b.click({position:choice.pos});await page.waitForTimeout(180);continue;
+    }
+    // Generic lesson controls that are not semantic buttons (map cells,
+    // legend rows, region tiles, and SVG groups). Interact through visible
+    // locators only; never call lesson functions directly.
+    const extras=page.locator('[data-cell]:visible,.leg-row:visible,.rgn-row:visible,[role="button"]:visible,svg [onclick]:visible,svg path:visible,svg polygon:visible,svg rect:visible');
+    const ec=await extras.count();
+    for(let i=0;i<ec;i++){
+      const e=extras.nth(i), box=await e.boundingBox();
+      if(!box||(auditWidth>500&&box.x<=280))continue;
+      const name=clean((await e.innerText().catch(()=>''))||await e.getAttribute('data-cell')||await e.getAttribute('aria-label')||('extra-'+i));
+      if(!used.has(name)){choice={b:e,name,quick:true};break;}
+    }
+    if(choice){
+      used.add(choice.name);tried.set(id,used);
+      await choice.b.click({force:!!choice.quick});await page.waitForTimeout(choice.quick?180:3000);continue;
     }
     const nx=page.getByRole('button',{name:/^Next/i});
     if(await nx.count()&&await nx.isEnabled()){await nx.click();await page.waitForTimeout(400);continue;}

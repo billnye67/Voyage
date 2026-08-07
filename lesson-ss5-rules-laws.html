@@ -299,21 +299,21 @@ function beat3(){
   h+='<p>Your family has rules. Your school has rules. So what makes something a <b>law</b>? A law is a rule that leveled up — four ways at once:</p>';
   h+='<div class="work"><div class="lab">What makes a law a law</div>'
     +'made by the <b>government</b>, not one family or one teacher<br>'
-    +'covers the <b>whole community</b> — every person, every family<br>'
+    +'covers the <b>whole community</b> it’s written for — not just one family or one club<br>'
     +'<b>written down</b>, so nobody can pull a Remy and change it mid-game<br>'
-    +'applies to <b>everyone the same</b> — kids, grown-ups, even the leaders who wrote it</div>';
+    +'applies <b>fairly to everyone it covers</b> — including the leaders who wrote it</div>';
   h+='<p>Test yourself. Three rules — which one is a <b>law</b>?</p>';
   h+='<div class="row">'
     +'<button class="btn" onclick="pickLaw(\'dinner\')">“No phones at the dinner table”</button>'
     +'<button class="btn" onclick="pickLaw(\'belt\')">“Everyone in a car wears a seatbelt”</button>'
     +'<button class="btn" onclick="pickLaw(\'pool\')">“No running by the pool”</button></div>';
-  h+='<div id="lawfb">'+(lawDone?'<div class="fb ok"><b>The seatbelt rule.</b> Made by government, covers everyone in the state, written down, applies to every single car. The dinner rule is one family’s; the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>':'')+'</div>';
+  h+='<div id="lawfb">'+(lawDone?'<div class="fb ok"><b>The seatbelt rule.</b> Made by the government, written down, and covering drivers all across the state — while the dinner rule is one family’s and the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(lawDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
 function pickLaw(v){
   var fb=el('lawfb');
-  if(v==='belt'){lawDone=true;fb.innerHTML='<div class="fb ok"><b>The seatbelt rule.</b> Made by government, covers everyone in the state, written down, applies to every single car. The dinner rule is one family’s; the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>';el('nx').disabled=false;}
+  if(v==='belt'){lawDone=true;fb.innerHTML='<div class="fb ok"><b>The seatbelt rule.</b> Made by the government, written down, and covering drivers all across the state — while the dinner rule is one family’s and the pool rule is one building’s. Only the seatbelt rule leveled all the way up.</div>';el('nx').disabled=false;}
   else if(v==='dinner'){fb.innerHTML='<div class="fb no"><b>Run the checklist:</b> did the government make the dinner rule? Does it cover the whole town? No — that’s one family’s rule. Which of the three passes all four checks?</div>';}
   else{fb.innerHTML='<div class="fb no"><b>Close — it’s written on a sign!</b> But the pool rule was made by one pool, for one pool. A law has to come from the government and cover the whole community. Which one does?</div>';}
 }
@@ -323,7 +323,7 @@ function beat4(){
   var h='';
   h+='<div class="tag">Teeth</div>';
   h+='<h2>Why consequences exist</h2>';
-  h+='<p>One more piece. Every law comes with a <b>consequence</b> — something that happens if you break it. A speeding ticket. A fine for littering. Why? Not revenge. A consequence is what keeps a rule <b>real</b>.</p>';
+  h+='<p>One more piece. Breaking a law brings a <b>consequence</b> — something that happens to the rule-breaker. A speeding ticket. A fine for littering. Why? Not revenge. A consequence is what keeps a rule <b>real</b>.</p>';
   h+='<p>Run the experiment in your head: a town posts a speed limit of 25 near your school… but breaking it costs nothing. No tickets, ever. What happens to that speed limit?</p>';
   h+='<div class="row">'
     +'<button class="btn" onclick="pickCons(\'ignore\')">Drivers start ignoring it</button>'
@@ -372,12 +372,12 @@ var QUESTIONS=[
   {q:'What are the three jobs a good rule can do?',
    a:['Fair, safe, predictable','Fast, cheap, easy','Loud, strict, scary','Old, famous, long'],correct:0,
    why:'Every good rule keeps things fair (same chance for all), safe (nobody hurt), or predictable (everyone knows what to expect) — often more than one at once.'},
-  {q:'“No phones at dinner” is a family rule. “Everyone wears a seatbelt” is a law. What’s the difference?',
-   a:['Laws rhyme better','A law is made by government, covers the whole community, is written down, and applies to everyone the same','Laws are only for grown-ups','There is no difference'],correct:1,
-   why:'That’s the four-part level-up: government-made, community-wide, written, same for everyone — even the leaders.'},
-  {q:'Your game against Remy fell apart. What exactly broke it?',
-   a:['Bad luck with the dice','The board was too short','The rules weren’t agreed, known, and the same for everyone — Remy kept changing them to win','Games always end that way'],correct:2,
-   why:'The dice were fine. A game — like a town — only works when the rules are agreed in advance, known by all, and equal for everyone. Remy broke all three.'},
+  {q:'“Whisper in the library” is the library’s rule. “No littering in the park” is a city law. What makes the littering rule a LAW?',
+   a:['It rhymes better','It’s made by the government, written down, and covers the whole community — not just one building','Litter is heavier than noise','There is no difference'],correct:1,
+   why:'Run the level-up test: the library wrote its rule for its own rooms; the city government wrote the littering law for every park and street it covers, on the books for all.'},
+  {q:'At recess, Dana is refereeing the race — and she keeps moving the finish line so her own team wins. What ingredient of working rules is missing?',
+   a:['Faster runners','Rules that stay agreed, known, and the same for everyone — even the referee','Louder cheering','A longer racetrack'],correct:1,
+   why:'Dana is pulling a Remy: when the person in charge can bend the rules mid-race for their own side, “agreed, known, and equal” all vanish — and the race stops meaning anything.'},
   {q:'The library’s rule says “return books within two weeks” — but nothing ever happens to anyone who keeps them forever. Predict the shelves.',
    a:['Books slowly stop coming back — the rule fades into a suggestion','Books return faster than ever','The shelves reorganize themselves','Nothing changes, ever'],correct:0,
    why:'Consequences keep rules real. With nothing behind the rule, the forgetful keep books first — and everyone else slowly follows. Same story as any rule with no teeth.'},

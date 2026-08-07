@@ -229,14 +229,14 @@ function drawLand(o){
     +'<path d="M612 466 l-13 15 M612 466 l15 13 M612 466 l2 19" stroke="var(--blue)" stroke-width="3.6" stroke-linecap="round"/></g>';
   if(o.labels){
     var halo=' stroke="#fff" stroke-width="4" style="paint-order:stroke"';
-    h+='<text x="252" y="392" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="20" fill="#4f7d6b"'+halo+'>ROCKIES</text>';
-    h+='<text x="770" y="374" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="17" fill="#5f7d3f"'+halo+'>APPALACHIANS</text>';
-    h+='<text x="458" y="262" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="20" fill="#a5814a"'+halo+'>GREAT PLAINS</text>';
-    h+='<text x="622" y="122" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="17" fill="var(--blue)"'+halo+'>MISSISSIPPI R.</text>';
-    h+='<text x="24" y="480" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">← Pacific</text>';
-    h+='<text x="925" y="490" text-anchor="end" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">Atlantic →</text>';
+    h+='<text x="252" y="392" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="26" fill="#4f7d6b"'+halo+'>ROCKIES</text>';
+    h+='<text x="770" y="374" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#5f7d3f"'+halo+'>APPALACHIANS</text>';
+    h+='<text x="458" y="262" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="26" fill="#a5814a"'+halo+'>GREAT PLAINS</text>';
+    h+='<text x="622" y="122" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="var(--blue)"'+halo+'>MISSISSIPPI R.</text>';
+    h+='<text x="24" y="480" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">← Pacific</text>';
+    h+='<text x="925" y="490" text-anchor="end" font-family="Space Mono,monospace" font-size="20" fill="var(--muted)">Atlantic →</text>';
   }
-  h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="13" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
+  h+='<text x="925" y="18" text-anchor="end" font-family="Space Mono,monospace" font-size="19" fill="var(--muted)">Alaska &amp; Hawaii not shown</text>';
   h+='</svg>';
   return h;
 }
@@ -289,19 +289,19 @@ function beat2(){
   h+='<div class="tag">First things first</div>';
   h+='<h2>What a state is</h2>';
   h+='<p>The United States is <b>50 states</b> stitched into one country. A state isn’t just a shape on the map — each one has its own <b>borders</b>, its own <b>government</b>, and its own rules for lots of everyday things: how many days you go to school, what the speed limit is on its highways, what its license plates look like.</p>';
-  h+='<p>The country’s government in Washington, D.C. handles country-sized jobs — the army, the money, the deals with other nations. But the everyday rules of life in your town? Mostly your state’s call.</p>';
-  h+='<p>Quick check: your school year’s length gets decided. Who made that rule?</p>';
+  h+='<p>The country’s government in Washington, D.C. handles country-sized jobs — the army, the money, the deals with other nations. Your town and your school district handle the closest-to-home rules — trash pickup day, your school’s exact calendar. In between sits a huge slice of everyday life — driving laws, state parks, how schools are run and funded — and that slice is your <b>state’s</b> call.</p>';
+  h+='<p>Quick check: the age you must reach before you can get a driver’s license gets decided. Who sets that rule?</p>';
   h+='<div class="row">'
     +'<button class="btn" onclick="pickState(\'state\')">My state’s government</button>'
     +'<button class="btn" onclick="pickState(\'un\')">The United Nations</button></div>';
-  h+='<div id="statefb">'+(stateDone?'<div class="fb ok"><b>Your state.</b> School rules are a classic state-government job — which is why school looks a little different from state to state.</div>':'')+'</div>';
+  h+='<div id="statefb">'+(stateDone?'<div class="fb ok"><b>Your state.</b> Driving laws are a classic state job — which is why the rules shift a little every time you cross a state line.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(stateDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
 function pickState(v){
   var fb=el('statefb');
-  if(v==='state'){stateDone=true;fb.innerHTML='<div class="fb ok"><b>Your state.</b> School rules are a classic state-government job — which is why school looks a little different from state to state.</div>';el('nx').disabled=false;}
-  else{fb.innerHTML='<div class="fb no"><b>Closer to home than that.</b> Everyday rules — school days, speed limits — come from each state’s own government.</div>';}
+  if(v==='state'){stateDone=true;fb.innerHTML='<div class="fb ok"><b>Your state.</b> Driving laws are a classic state job — which is why the rules shift a little every time you cross a state line.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Closer to home than that.</b> Driver’s licenses come from each state’s own government — there’s no United Nations driving test.</div>';}
 }
 
 /* ---------- BEAT 2 · the government's address ---------- */

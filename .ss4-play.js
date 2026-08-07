@@ -41,7 +41,7 @@ const path = require('path');
   await page.getByRole('button', { name: /raining more/ }).click();
   await expectText('the people changed it', 'push wrong feedback');
   await page.getByRole('button', { name: /Canals bringing/ }).click();
-  await expectText('a classic modify', 'push correct');
+  await expectText('classic case of changing the land', 'push correct');
   await page.locator('#nx').click();
 
   // beat 4: Kai

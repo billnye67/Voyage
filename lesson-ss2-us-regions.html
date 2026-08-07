@@ -225,7 +225,7 @@ var RGN={
 var RGNORDER=['W','SW','MW','SE','NE'];
 var RGNFACTS={
   W: {states:'California, Oregon, Washington, Nevada, Colorado — plus Alaska and Hawaii, far off this map', line:'Tall mountains, Pacific coast, and a little of everything — rainforest to ski slopes.'},
-  SW:{states:'Texas, Oklahoma, New Mexico, Arizona', line:'Hot and dry — deserts, canyons, and cactus country.'},
+  SW:{states:'Texas, Oklahoma, New Mexico, Arizona', line:'Mostly hot and dry — deserts, canyons, and cactus country.'},
   MW:{states:'Ohio, Illinois, Minnesota, Kansas, and their neighbors', line:'Flat land, rich soil, huge farms, and the Great Lakes.'},
   SE:{states:'Florida, Georgia, Virginia, Louisiana, and more', line:'Warm and wet — long summers, mild winters, beaches and swamps.'},
   NE:{states:'New York, Massachusetts, Pennsylvania, and more', line:'The smallest region — crowded cities, snowy winters, the country’s oldest towns.'}
@@ -246,13 +246,13 @@ function drawUS(o){
     h+='</g>';
   }
   if(o.names){
-    var pos={W:[185,205,27],SW:[330,432,27],MW:[545,200,27],SE:[690,400,27],NE:[830,120,19]};
+    var pos={W:[185,205,33],SW:[330,432,33],MW:[545,200,33],SE:[690,400,33],NE:[830,118,23]};
     for(var j=0;j<RGNORDER.length;j++){
       var kk=RGNORDER[j];
       h+='<text x="'+pos[kk][0]+'" y="'+pos[kk][1]+'" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="'+pos[kk][2]+'" fill="'+RGN[kk].dark+'" stroke="#fff" stroke-width="5" style="paint-order:stroke">'+RGN[kk].name+'</text>';
     }
   }
-  h+='<text x="925" y="578" text-anchor="end" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">real state lines · Alaska &amp; Hawaii not shown</text>';
+  h+='<text x="925" y="578" text-anchor="end" font-family="Space Mono,monospace" font-size="21" fill="var(--muted)">real state lines · Alaska &amp; Hawaii not shown</text>';
   h+='</svg>';
   return h;
 }
@@ -312,7 +312,7 @@ function beat2(){
   h+='<p>Here are the five pieces with their names. A group of neighboring states like this is called a <b>region</b>. <b>Click each region in the list</b> to light it up and meet it:</p>';
   h+='<div class="mapwrap">'+drawUS({names:true,lit:window.__lit,dimOthers:true})+'</div>';
   h+='<div class="rgnlist" id="rlist"></div>';
-  h+='<div id="tourfb">'+(tourDone()?'<div class="fb ok"><b>That’s the whole country in five handshakes.</b> Notice the map note: Alaska and Hawaii sit far off this map, but they count as part of the West.</div>':'')+'</div>';
+  h+='<div id="tourfb">'+(tourDone()?'<div class="fb ok"><b>That’s the whole country in five handshakes.</b> Alaska and Hawaii sit far off this map, but they count as part of the West. And one honest note: this five-region split is the one most American schools use — other maps slice the country differently (the Census Bureau uses four regions!). Regions are tools people made, not lines nature drew.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(tourDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
   var lg='';
@@ -332,7 +332,7 @@ function beat3(){
   var h='';
   h+='<div class="tag">Why</div>';
   h+='<h2>What makes a region?</h2>';
-  h+='<p>Nobody drew these lines by accident. States get grouped into a region because they <b>share things</b>:</p>';
+  h+='<p>These groups weren’t drawn at random. States get grouped into a region because they <b>share things</b>:</p>';
   h+='<div class="work"><div class="lab">What states in a region share</div>'
     +'<b>Land</b> — mountains, plains, deserts, coasts<br>'
     +'<b>Climate</b> — what the weather usually does there<br>'
@@ -393,7 +393,7 @@ function beat5(){
   h+='<div id="mh" class="hide">';
   h+='<div class="work"><div class="lab">The check</div>'
     +'is a region about where the name sounds like it is? &nbsp;<b>no — it’s about what the states share</b><br>'
-    +'what is Texas like? &nbsp;hot and dry — desert and canyon country<br>'
+    +'what is WEST Texas like? &nbsp;hot and dry — desert and canyon country (the east is greener)<br>'
     +'which region shares that? &nbsp;the <b>Southwest</b> — Texas, Oklahoma, New Mexico, Arizona<br>'
     +'<b>verdict: Texas is Southwest, not Midwest</b></div></div>';
   h+='<div id="mfb"></div>';
@@ -406,7 +406,7 @@ function testLeo(){
   el('mh').classList.remove('hide');
   el('leomap').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>Leo matched the word, not the land.</b> Regions are built from what states <b>share</b> — land, climate, ways of living — not from what their position sounds like. Texas shares desert heat with New Mexico and Arizona, so it rides with the Southwest.';
+  fb.innerHTML='<b>Leo matched the word, not the land.</b> Regions are built from what states <b>share</b> — land, climate, ways of living — not from what their position sounds like. Texas’s big dry west shares desert country with New Mexico and Arizona, so it rides with the Southwest.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -425,8 +425,8 @@ var QUESTIONS=[
    a:['Northeast','Southeast','Midwest','Southwest'],correct:3,
    why:'Canyons, dry heat, scarce water — the Southwest’s calling card: Texas, Oklahoma, New Mexico, Arizona.'},
   {q:'Leo said Texas is in the Midwest “because it’s in the middle.” What was wrong with his thinking?',
-   a:['Nothing — Texas is in the Midwest','Regions go by what states share, and Texas shares desert heat with the Southwest','Texas is actually in the Northeast','Regions change every year, so nobody knows'],correct:1,
-   why:'That was Leo’s trap: he matched the word instead of the land. Texas shares hot, dry country with New Mexico and Arizona — Southwest.'}
+   a:['Nothing — Texas is in the Midwest','Regions go by what states share, and Texas’s dry west shares desert country with the Southwest','Texas is actually in the Northeast','Regions change every year, so nobody knows'],correct:1,
+   why:'That was Leo’s trap: he matched the word instead of the land. West Texas shares hot, dry canyon country with New Mexico and Arizona — Southwest.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';

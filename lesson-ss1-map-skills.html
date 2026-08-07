@@ -272,8 +272,8 @@ function drawMap(o){
     h+='<line x1="'+GX+'" y1="'+(GY+i*CELL)+'" x2="'+(GX+5*CELL)+'" y2="'+(GY+i*CELL)+'" stroke="var(--blue-line)" stroke-width="1"/>';
   }
   if(o.labels){
-    for(var c=0;c<5;c++)h+='<text x="'+cellCx(c)+'" y="'+(GY-9)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" font-weight="700" fill="var(--blue)">'+COLS[c]+'</text>';
-    for(var r=0;r<5;r++)h+='<text x="'+(GX-16)+'" y="'+(cellCy(r)+5)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" font-weight="700" fill="var(--blue)">'+ROWS[r]+'</text>';
+    for(var c=0;c<5;c++)h+='<text x="'+cellCx(c)+'" y="'+(GY-9)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="17" font-weight="700" fill="var(--blue)">'+COLS[c]+'</text>';
+    for(var r=0;r<5;r++)h+='<text x="'+(GX-16)+'" y="'+(cellCy(r)+5)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="17" font-weight="700" fill="var(--blue)">'+ROWS[r]+'</text>';
   }
   for(var m=0;m<MARKS.length;m++){
     var mk=MARKS[m];
@@ -287,10 +287,10 @@ function drawMap(o){
       +'<circle r="24" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>'
       +'<path d="M0 -17 L5 4 L0 0 L-5 4 Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1"/>'
       +'<path d="M0 17 L5 -1 L0 3 L-5 -1 Z" fill="#fff" stroke="var(--ink)" stroke-width="1" transform="rotate(180)" opacity="0"/>'
-      +'<text y="-30" text-anchor="middle" font-family="Space Mono,monospace" font-size="13" font-weight="700" fill="var(--ink)">N</text>'
-      +'<text y="44" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">S</text>'
-      +'<text x="32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">E</text>'
-      +'<text x="-32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">W</text>'
+      +'<text y="-30" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" font-weight="700" fill="var(--ink)">N</text>'
+      +'<text y="44" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">S</text>'
+      +'<text x="32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">E</text>'
+      +'<text x="-32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" fill="var(--muted)">W</text>'
       +'</g>';
   }
   if(o.scale){
@@ -298,7 +298,7 @@ function drawMap(o){
       +'<line x1="0" y1="0" x2="'+CELL+'" y2="0" stroke="var(--ink)" stroke-width="2.4"/>'
       +'<line x1="0" y1="-4" x2="0" y2="4" stroke="var(--ink)" stroke-width="2.4"/>'
       +'<line x1="'+CELL+'" y1="-4" x2="'+CELL+'" y2="4" stroke="var(--ink)" stroke-width="2.4"/>'
-      +'<text x="'+(CELL+10)+'" y="4" font-family="Space Mono,monospace" font-size="12" fill="var(--ink)">1 square = 1 mile</text></g>';
+      +'<text x="'+(CELL+10)+'" y="4" font-family="Space Mono,monospace" font-size="15" fill="var(--ink)">1 square = 1 mile</text></g>';
   }
   if(o.cells){
     for(var rr=0;rr<5;rr++)for(var cc=0;cc<5;cc++){
@@ -402,7 +402,7 @@ function beat4(){
   h+='<p>“It’s over there, kind of near the middle” is how places get lost. Maps fix that with a <b>grid</b>: letters run across the top (columns), numbers run down the side (rows). Where column <b>D</b> crosses row <b>1</b>, that square’s address is <b>D1</b> — letter first, then number. Look: that’s exactly where the lighthouse stands.</p>';
   h+='<p>Your turn. The ranger radios: “Meet me at <b>D2</b>.” <b>Click that square.</b></p>';
   h+='<div class="mapwrap">'+drawMap({compass:true,labels:true,cells:true,picked:window.__gridPick,onCell:'pickCell'})+'</div>';
-  h+='<div id="gridfb">'+(gridDone?'<div class="fb ok"><b>D2 it is</b> — slide down from the D at the top, slide across from the 2 on the side, and stop where they cross. Every square on Earth’s maps can be named this way.</div>':'')+'</div>';
+  h+='<div id="gridfb">'+(gridDone?'<div class="fb ok"><b>D2 it is</b> — slide down from the D at the top, slide across from the 2 on the side, and stop where they cross. Any map that has a grid can name its squares this way.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(gridDone?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
