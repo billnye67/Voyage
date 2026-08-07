@@ -40,7 +40,7 @@ const path = require('path');
   await page.getByRole('button', { name: /Secretly delete/ }).click();
   await expectText('Marcus behavior', 'check wrong 1');
   await page.getByRole('button', { name: /Fire everyone/ }).click();
-  await expectText('no branch can fire another', 'check wrong 2');
+  await expectText('impeachment', 'check wrong 2');
   await page.getByRole('button', { name: /Veto it/ }).click();
   await expectText('polite tug-of-war', 'check correct');
   await page.locator('#nx').click();

@@ -231,7 +231,7 @@ function beat1(){
   }
   if(moment>=MOMENTS.length){
     h+='<div class="fb no"><b>Notice what you just ran out of: places to turn.</b> The rule was unfair — but the rule-maker was Marcus. The call was unfair — but the enforcer was Marcus. You appealed — to Marcus. When one person holds all three jobs, “unfair” has nowhere to go.</div>';
-    h+='<div class="goal"><div class="lab">The idea</div><p>America’s founders feared exactly this — a king who made, enforced, AND judged the laws. Their fix: never let the three jobs live in the same hands. Split them into three <b>branches</b>, and teach the branches to stop each other.</p></div>';
+    h+='<div class="goal"><div class="lab">The idea</div><p>America’s founders feared exactly this — too much power piling up in the same few hands, like the faraway king’s government they had just broken away from. Their fix: never let the three jobs live in the same hands. Split them into three <b>branches</b>, and teach the branches to stop each other.</p></div>';
   }
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(moment>=MOMENTS.length?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
@@ -330,7 +330,7 @@ function pickCheck(v){
   var fb=el('checkfb');
   if(v==='veto'){checkDone=true;fb.innerHTML=checkOkHtml();el('nx').disabled=false;}
   else if(v==='delete'){fb.innerHTML='<div class="fb no"><b>No branch gets secret powers</b> — that’s Marcus behavior. The President’s real tool is public and official. Which one?</div>';}
-  else{fb.innerHTML='<div class="fb no"><b>Congress doesn’t work for the President</b> — its members were elected by their own states, and no branch can fire another. The real tool just says NO to the one law. Which is it?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Congress doesn’t work for the President</b> — its members were elected by their own states. (Removing an official IS possible — it’s a careful public process called impeachment, run by Congress — but it’s for serious wrongdoing, never for disliking one law.) The everyday tool just says NO to the law itself. Which is it?</div>';}
 }
 
 /* ---------- BEAT 4 · catch the mistake ---------- */
@@ -363,9 +363,9 @@ var QUESTIONS=[
   {q:'Which branch of government MAKES the laws?',
    a:['Executive','Judicial','Legislative — Congress','The police'],correct:2,
    why:'Congress — the Senate plus the House of Representatives — writes and votes on the laws. That’s the legislative branch’s whole job.'},
-  {q:'A park ranger enforces the “no campfires in dry season” law. Which branch is at work?',
-   a:['Legislative','Executive — it carries out the laws','Judicial','None — rangers aren’t government'],correct:1,
-   why:'Carrying out laws on the ground — rangers, police, the President’s whole team — is the executive branch in action.'},
+  {q:'A city health inspector visits restaurants to check that they’re following the food-safety law. Which branch is at work?',
+   a:['Legislative','Executive — it carries out the laws','Judicial','None — inspectors aren’t government'],correct:1,
+   why:'The law already existed; the inspector is putting it into action on the ground. Carrying laws out is the executive branch’s whole job.'},
   {q:'What is the judicial branch’s job?',
    a:['Writing new laws','Collecting taxes','Deciding what laws mean, whether they were applied fairly, and whether they break the Constitution','Running the army'],correct:2,
    why:'Courts are the referees: they settle disagreements about laws — and can strike down a law that breaks the country’s highest rulebook.'},

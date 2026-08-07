@@ -226,7 +226,7 @@ function beat1(){
   var h='';
   h+='<div class="tag">Challenge</div>';
   h+='<h2>Spend it on Main Street</h2>';
-  h+='<p>Six stops, six purchases. After each one, ask the only question that matters: <b>did I walk away HOLDING a thing, or did someone DO something for me?</b> Holding a thing = <b>good</b>. Work done for you = <b>service</b>. Sort all six:</p>';
+  h+='<p>Six stops, six purchases. After each one, ask the question that sorts almost everything: <b>did I walk away HOLDING a thing, or did someone DO something for me?</b> Holding a thing = <b>good</b>. Work done for you = <b>service</b>. Sort all six:</p>';
   for(var i=0;i<SHOPS.length;i++){
     var s=SHOPS[i],solved=shopSolved[i];
     h+='<div class="shopfront'+(solved?' solved':'')+'"><span class="semoji">'+s.emoji+'</span><span class="sname">'+s.name+'</span>'+(solved?'<span class="tick">✓</span>':'')
@@ -236,7 +236,7 @@ function beat1(){
         +'<button class="btn" onclick="pickShop('+i+',\'service\')">A service</button></div>')
       +'</div>';
   }
-  h+='<div id="shopfb">'+(shopsDone()?'<div class="goal"><div class="lab">The idea</div><p>Every dollar ever spent buys one of exactly two things: a <b>good</b> (a thing) or a <b>service</b> (work done for you). Six shops, two categories, no exceptions — and that split runs the entire economy.</p></div>':'')+'</div>';
+  h+='<div id="shopfb">'+(shopsDone()?'<div class="goal"><div class="lab">The idea</div><p>Anything you ever buy is one of two things: a <b>good</b> (a thing) or a <b>service</b> (work done for you). Six shops, two categories — and that split runs all through the economy. (Soon you’ll meet a purchase that’s both at once.)</p></div>':'')+'</div>';
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(shopsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -358,7 +358,7 @@ function beat5(){
 function testTheo(){
   el('mh').classList.remove('hide');
   var fb=el('mfb');fb.className='fb no';
-  fb.innerHTML='<b>Theo forgot half of what money buys.</b> Producers make goods <b>or provide services</b> — and services are half the economy: dentists, teachers, firefighters, barbers, dog-walkers. If “real work” meant only things-you-can-hold, your teacher, your doctor, and every bus driver would all be unemployed. They’re not — they’re producers.';
+  fb.innerHTML='<b>Theo forgot half of what money buys.</b> Producers make goods <b>or provide services</b> — and services are a giant slice of the economy: dentists, teachers, firefighters, barbers, dog-walkers. If “real work” meant only things-you-can-hold, your teacher, your doctor, and every bus driver would all be unemployed. They’re not — they’re producers.';
   mistakeTested=true;if(el('nx'))el('nx').disabled=false;
 }
 
@@ -366,7 +366,7 @@ function testTheo(){
 var QUESTIONS=[
   {q:'What’s the difference between a good and a service?',
    a:['Goods cost money; services are free','A good is a thing you can hold or keep; a service is work someone does for you','Goods are better than services','Services only happen in stores'],correct:1,
-   why:'The hold-it test: bread and puzzles are goods; haircuts, repairs, and dog-walks are services. Both cost money — every dollar buys one or the other.'},
+   why:'The hold-it test: bread and puzzles are goods; haircuts, repairs, and dog-walks are services. Both cost money — when you buy something, it’s one or the other.'},
   {q:'You pay for a ride across town on the city bus. What did you buy?',
    a:['A good — the bus','A service — the driver and bus doing work for you','Nothing','The road'],correct:1,
    why:'You walk off holding nothing — the driving was done FOR you. Work done for you is a service.'},
@@ -378,7 +378,7 @@ var QUESTIONS=[
    why:'Roles are moments, not name tags. Walking dogs for pay: producer. Spending her earnings on a puzzle: consumer. Everyone in the economy flips back and forth all day.'},
   {q:'Theo says a dentist “isn’t a producer because she makes nothing you can hold.” What’s wrong with that?',
    a:['Nothing — Theo’s right','Producers provide services too — the dentist produces skilled work people pay for','Dentists secretly make goods','Only Theo can decide who produces'],correct:1,
-   why:'Services are half the economy. The dentist, the teacher, and the bus driver all produce work people gladly pay for — no holdable thing required.'}
+   why:'Services are a giant slice of the economy. The dentist, the teacher, and the bus driver all produce work people gladly pay for — no holdable thing required.'}
 ];
 function beatQ(){
   var Q=QUESTIONS[qIndex],h='';

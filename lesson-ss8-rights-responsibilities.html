@@ -230,7 +230,7 @@ function beat1(){
     }
   }
   if(moment>=MOMENTS.length){
-    h+='<div class="fb no"><b>Every right on the poster was still yours. And none of them worked.</b> Your right to speak needed their duty to listen. Your right to your bike needed Jordan’s duty to leave it alone. Your right to fairness needed a witness willing to tell the truth.</div>';
+    h+='<div class="fb no"><b>Every right on the poster was still yours. And none of them worked.</b> Your right to speak only worked when others let a speaker be heard. Your right to your bike needed Jordan’s duty to leave it alone. Your right to fairness needed a witness willing to tell the truth.</div>';
     h+='<div class="goal"><div class="lab">The idea</div><p>Rights aren’t solo equipment — every right you hold is held UP by other people’s responsibilities, and yours hold up theirs. That’s the whole deal of being a citizen: both sides, or neither works.</p></div>';
   }
   h+='<div class="nav"><span></span><button class="btn" id="nx" '+(moment>=MOMENTS.length?'':'disabled')+' onclick="next()">Next →</button></div>';
@@ -241,7 +241,7 @@ function nextMoment(){moment++;beat1();scrollTo(0,document.body.scrollHeight);}
 /* ---------- BEAT 1 · your rights ---------- */
 var RIGHTS=[
   {k:'speak', icon:'🗣️', name:'Speak your mind',
-   body:'You can say what you think — out loud, in writing, on a poster — even when it disagrees with your neighbors or the government. (Remember the class vote? The losing side campaigning for next time IS this right at work.)'},
+   body:'You can say what you think — out loud, in writing, on a poster — even when it disagrees with your neighbors or the government. Nobody official may silence you for your opinion. (Remember the class vote? The losing side campaigning for next time IS this right at work.)'},
   {k:'believe', icon:'🕊️', name:'Believe what you believe',
    body:'Your religion, your ideas, your conscience — yours. Nobody, including the government, gets to pick them for you.'},
   {k:'equal', icon:'🟰', name:'Equal treatment under the law',
@@ -249,7 +249,7 @@ var RIGHTS=[
   {k:'fair', icon:'⚖️', name:'A fair hearing if accused',
    body:'If someone says you broke a law, you don’t just get punished on the spot. You get to hear the accusation, tell your side, and have it decided fairly — by a court, not by whoever’s angriest.'},
   {k:'learn', icon:'📚', name:'Go to school',
-   body:'Every kid in America gets an education. It’s a right — and it’s the one you’re literally using this second.'}
+   body:'Every kid in America gets a free public education — a promise written into every state’s own laws. And it’s the right you’re literally using this second.'}
 ];
 function rDone(){var n=0;for(var k in rightSeen)n++;return n>=RIGHTS.length;}
 function beat2(){
@@ -272,7 +272,7 @@ function seeRight(k){rightSeen[k]=true;beat2();}
 /* ---------- BEAT 2 · matching duties ---------- */
 var PAIRS=[
   {right:'Your right to SPEAK your mind', ans:'listen',
-   ok:'<b>Let others speak — and listen.</b> That’s exactly what vanished at 9:00 am on rights-only day, and your announcement drowned.',
+   ok:'<b>Let others speak — don’t drown them out.</b> That’s exactly what vanished at 9:00 am on rights-only day, and your announcement sank in the noise. (Nobody has to agree — everyone’s owed the chance to be heard.)',
    no:'Flip it around: on rights-only day, why did your announcement fail? What did the other 23 kids stop doing?'},
   {right:'Your right to your own STUFF', ans:'hands',
    ok:'<b>Leave other people’s stuff alone.</b> Your bike is only “yours” because everyone else carries this duty — and Jordan put it down.',
@@ -297,7 +297,7 @@ function beat3(){
         +'<button class="btn" onclick="pickPair('+i+',\'follow\')">Follow laws &amp; treat others equally</button></div>')
       +'</div>';
   }
-  h+='<div id="pairfb">'+(pairsDone()?'<div class="fb ok"><b>See the pattern?</b> Each duty is someone else’s right, seen from your side. Rights and responsibilities aren’t two lists — they’re one list, read from both ends.</div>':'')+'</div>';
+  h+='<div id="pairfb">'+(pairsDone()?'<div class="fb ok"><b>See the pattern?</b> Each duty here is someone else’s right, seen from your side. Not every right and duty pairs up this neatly — but the lean is real: rights stay standing because people carry the duties that hold them up.</div>':'')+'</div>';
   h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(pairsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
   el('stage').innerHTML=h;
 }
@@ -315,10 +315,10 @@ function beat4(){
   h+='<p>Some responsibilities go beyond mirroring a right — they’re jobs that keep the whole machine running:</p>';
   h+='<div class="work"><div class="lab">Jobs citizens carry</div>'
     +'<b>Vote</b> (at 18) — democracy only works if the voters show up<br>'
-    +'<b>Serve on a jury</b> — when courts decide big cases, the deciders are regular citizens<br>'
+    +'<b>Serve on a jury</b> — in jury trials, guilt is decided by a group of ordinary citizens called in from the community<br>'
     +'<b>Pay taxes</b> — the shared money that builds schools, roads, parks, fire trucks<br>'
     +'<b>Pitch in</b> — speak at town meetings, volunteer, help neighbors (kids can start this one today)</div>';
-  h+='<p>The jury one puzzles people. Remember your right to a fair hearing if accused? Courts don’t hand the deciding to government officials — they call in twelve ordinary citizens. Why?</p>';
+  h+='<p>The jury one puzzles people. Remember your right to a fair hearing if accused? In a jury trial, the deciding isn’t left only to officials — a group of ordinary citizens, often twelve, is called in from the community. Why?</p>';
   h+='<div class="row">'
     +'<button class="btn" onclick="pickJury(\'fair\')">So you’re judged by regular people like you — not by the powerful</button>'
     +'<button class="btn" onclick="pickJury(\'cheap\')">Because citizens work for free</button>'
@@ -328,7 +328,7 @@ function beat4(){
   el('stage').innerHTML=h;
 }
 function juryOkHtml(){
-  return '<div class="fb ok"><b>Judged by your equals.</b> If only the powerful decided guilt, the powerful would always win. So the fair-hearing right leans on citizens answering the jury call — one person’s right, held up by twelve people’s responsibility.</div>'
+  return '<div class="fb ok"><b>Judged by your equals.</b> A jury makes sure guilt isn’t decided only by the powerful. So the fair-hearing right leans on citizens answering the jury call — one person’s right, held up by a jury-box full of responsibility.</div>'
     +'<div class="goal"><div class="lab">The idea</div><p>Every citizen job works like that: your vote guards elections, your taxes build what everyone shares, your jury seat guards someone’s fair trial. Skip the jobs, and the rights they hold up start to sag.</p></div>';
 }
 function pickJury(v){
@@ -371,9 +371,9 @@ var QUESTIONS=[
   {q:'Your classmate is giving her book report. Her right to speak is held up by which responsibility in YOU?',
    a:['Letting her finish — and listening','Agreeing with everything she says','Giving the report for her','Clapping the loudest'],correct:0,
    why:'Same pairing, other direction: on rights-only day YOUR announcement drowned when listening vanished. Her right leans on your duty exactly like yours leaned on theirs. (Agreeing is never required — listening is.)'},
-  {q:'Why are trials decided by juries of regular citizens?',
-   a:['Citizens work for free','So accused people are judged by equals — not only by the powerful','Judges are usually on vacation','It’s a very old typo'],correct:1,
-   why:'The fair-hearing right would be hollow if only the powerful decided guilt. Twelve ordinary citizens showing up is the responsibility that keeps that right real.'},
+  {q:'Maya’s mom gets a jury-duty letter and grumbles about missing work. If she skips, what actually sags?',
+   a:['Nothing — juries are decoration','A stranger’s right to a fair hearing decided by ordinary citizens','Her boss’s lunch plans','The courthouse paint'],correct:1,
+   why:'Somewhere in town, an accused person’s fair hearing depends on ordinary citizens showing up. Her grumble is real — and so is the right her seat holds up.'},
   {q:'What do taxes actually pay for?',
    a:['Nothing — the money disappears','The shared things a community needs: schools, roads, parks, fire trucks','Only birthday parties for mayors','Secret treasure vaults'],correct:1,
    why:'Taxes are the pitch-in that builds what no single family could: the school you learn in, the roads you ride, the firefighters who come when called.'},

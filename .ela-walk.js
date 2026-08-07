@@ -44,7 +44,7 @@ if(process.argv[2]==='--summary'){
   const context=await browser.newContext({viewport:{width:auditWidth,height:800}});
   const page=await context.newPage();
   await page.goto('file:///'+path.join(process.cwd(),file).replace(/\\/g,'/'));
-  let n=0, reviewed=process.env.SS_PASS==='1', reviewing=false, finished=false, mythClicks=0;
+  let n=0, reviewed=process.env.SS_PASS==='1', reviewing=false, finished=false, mythClicks=0, timelineClicks=0;
   const tried=new Map(), seen=new Set(), log=[];
   async function body(){return await page.locator('body').innerText();}
   async function snap(label){
@@ -63,7 +63,7 @@ if(process.argv[2]==='--summary'){
     const activeCard=txt.match(/(?:PEN PAL|POSTCARD|CASE|CHALLENGE)\s*#?\s*(\d+)[\s\S]{0,120}?(?:MATCHING NOW|NOW)/i);
     if(activeCard){const p=txt.match(/P\.\s*\d+\s*\/\s*\d+/i);return (p?p[0]+' ':'')+'ACTIVE '+activeCard[1];}
     const now=txt.match(/(?:PATIENT|CHALLENGE|ROUND|CASE|PASSAGE|STEP|SENTENCE|CARD|EXAMPLE)\s+\d+[\s\S]{0,180}?\bnow\b/i);if(now)return clean(now[0]);
-    const sciencePage=txt.match(/P\.\s*\d+\s*\/\s*\d+/i);if(sciencePage)return sciencePage[0].toUpperCase();
+    const sciencePage=txt.match(/P\.\s*\d+\s*\/\s*\d+/i);if(sciencePage)return sciencePage[0].toUpperCase()+' '+txt.length+' '+clean(txt).slice(-120);
     return clean(txt).slice(0,420).replace(/(?:Correct|Not quite|Try again|No\.).*$/i,'');
   }
   for(let turn=0;turn<180&&!finished;turn++){
@@ -87,6 +87,28 @@ if(process.argv[2]==='--summary'){
       if(await nx.count()&&await nx.isEnabled()){await nx.click();await page.waitForTimeout(350);continue;}
     }
 
+    if(false&&/P\. 1 \/ 11/i.test(txt)&&(/MARCUS GETS EVERY JOB|RIGHTS-ONLY DAY/i.test(txt))&&timelineClicks<3){
+      const labels=/MARCUS GETS EVERY JOB/i.test(txt)
+        ? ['3:00 PM — MARCUS MAKES THE RULES','3:10 PM — MARCUS ENFORCES THE RULES','3:15 PM — YOU APPEAL… TO MARCUS']
+        : ['9:00 AM — YOU HAVE THE RIGHT TO SPEAK','3:00 PM — YOU HAVE THE RIGHT TO YOUR STUFF','3:30 PM — YOU ASK WHO’LL MAKE IT RIGHT'];
+      const loc=page.getByText(labels[timelineClicks],{exact:true}).first();
+      if(await loc.count()&&await loc.isVisible()){const box=await loc.boundingBox();if(box){await page.mouse.click(box.x+Math.min(40,box.width/2),box.y+box.height/2);timelineClicks++;await page.waitForTimeout(400);continue;}}
+    }
+
+    // Visible-text fallbacks for controls whose custom markup has no usable
+    // accessibility role in these social-studies lessons.
+    if(/P\. 1 \/ 11/i.test(txt)&&(/MARCUS GETS EVERY JOB|RIGHTS-ONLY DAY/i.test(txt))){
+      const nxText=page.getByText(/^Next\s*→?$/i,{exact:false}).last();
+      if(await nxText.count()&&await nxText.isVisible()&&await nxText.isEnabled()){await nxText.click();await page.waitForTimeout(400);continue;}
+      if(await nxText.count()&&await nxText.isVisible()){await page.waitForTimeout(2600);if(await nxText.isEnabled()){await nxText.click();await page.waitForTimeout(400);continue;}}
+    }
+    if(/A warm coat, with winter coming/i.test(txt)&&!/A warm coat, with winter coming\s*✓/i.test(txt)){
+      const need=page.getByText('Need',{exact:true}).first();if(await need.count()&&await need.isVisible()){await need.click();await page.waitForTimeout(400);continue;}
+    }
+    if(/The lemonade stand/i.test(txt)&&!/The lemonade stand\s*✓/i.test(txt)){
+      const good=page.getByText('A good',{exact:true}).last();if(await good.count()&&await good.isVisible()){await good.click();await page.waitForTimeout(400);continue;}
+    }
+
     const roll=page.getByRole('button',{name:/Roll/i});
     if(await roll.count()&&await roll.isVisible()&&await roll.isEnabled()){
       await roll.click();await page.waitForTimeout(900);continue;
@@ -105,7 +127,7 @@ if(process.argv[2]==='--summary'){
     for(let i=0;i<count;i++){
       const b=buttons.nth(i), name=clean(await b.innerText());
       const box=await b.boundingBox();
-      if(await b.isVisible()&&await b.isEnabled()&&!navRx.test(name)&&box&&(auditWidth<=500||box.x>280))candidates.push({b,name});
+      if(await b.isVisible()&&await b.isEnabled()&&!navRx.test(name)&&box&&(auditWidth<=500||box.x>280))candidates.push({b,name,key:'btn-'+i+'-'+name});
     }
     if(/Click each card to open its myth/i.test(txt)){
       if(mythClicks<3){
@@ -117,15 +139,22 @@ if(process.argv[2]==='--summary'){
       if(await mythNext.count()&&await mythNext.isEnabled()){await mythNext.click();await page.waitForTimeout(350);continue;}
     }
     const id=identity(txt), used=tried.get(id)||new Set();
+    const visibleTaps=[];
+    let tapChoice;
+    for(const label of visibleTaps){
+      if(used.has('tap-'+label))continue;
+      const loc=page.getByText(label,{exact:true}).first();
+      if(await loc.count()&&await loc.isVisible()){tapChoice={b:loc.locator('..'),name:label,key:'tap-'+label,quick:true};break;}
+    }
     let choice;
     if(process.env.SS_PASS==='1'){
       const qm=txt.match(/QUESTION\s+(\d+)\s+OF/i), wanted=qm&&passAnswers[file]?.[Number(qm[1])-1];
       if(wanted)choice=candidates.find(x=>x.name.startsWith(wanted));
     }
-    if(!choice)choice=candidates.find(x=>!used.has(x.name));
+    if(!choice)choice=tapChoice||candidates.find(x=>!used.has(x.key||x.name));
     if(choice){
-      used.add(choice.name);tried.set(id,used);
-      await choice.b.click();await page.waitForTimeout(3000);continue;
+      used.add(choice.key||choice.name);tried.set(id,used);
+      await choice.b.click();await page.waitForTimeout(choice.quick?350:3000);continue;
     }
     const readyNext=page.getByRole('button',{name:/^Next/i});
     if(await readyNext.count()&&await readyNext.isEnabled()){await readyNext.click();await page.waitForTimeout(400);continue;}

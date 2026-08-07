@@ -21,7 +21,7 @@ const path = require('path');
   await page.evaluate(() => pickShop(3, 'service'));
   await page.evaluate(() => pickShop(4, 'good'));
   await page.evaluate(() => pickShop(5, 'service'));
-  await expectText('no exceptions', 'shops complete');
+  await expectText('runs all through the economy', 'shops complete');
   await page.locator('#nx').click();
 
   // beat 1: pizza wrong then both

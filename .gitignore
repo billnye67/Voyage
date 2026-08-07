@@ -2,3 +2,4 @@ node_modules/
 .ela-audit/
 .sidebar-report.txt
 /*.png
+.final-audit/

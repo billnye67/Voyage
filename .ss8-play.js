@@ -33,7 +33,7 @@ const path = require('path');
   await page.evaluate(() => pickPair(0, 'listen'));
   await page.evaluate(() => pickPair(1, 'hands'));
   await page.evaluate(() => pickPair(2, 'follow'));
-  await expectText('one list, read from both ends', 'pairs complete');
+  await expectText('rights stay standing', 'pairs complete');
   await page.locator('#nx').click();
 
   // beat 3: wrong then jury-fair
