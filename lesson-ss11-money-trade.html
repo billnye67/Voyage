@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money, trade &amp; choices · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  .kid{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:12px 15px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .kid.traded{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .kid .kname{font-weight:600}
+  .kid .kemoji{font-size:19px;margin-right:7px}
+  .kid .tick{color:var(--green);font-weight:700;float:right}
+  .kid .speech{font-style:italic;color:var(--muted);margin-top:3px}
+  .haveline{background:rgba(27,79,138,.06);border-radius:9px;padding:9px 13px;font-size:14.5px;margin:10px 0;font-family:'Space Mono',monospace}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Economics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.E.3</div>
+    <h1>Money, trade &amp; choices</h1>
+    <p>It’s Trade Day at school — no money allowed, stuff-for-stuff only. Sounds fun until you actually try to get what you want. You’re about to run the most annoying scavenger hunt of your life… and then discover the 3,000-year-old invention that made the whole world stop trading like this.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.E.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.E.3</div>
+      <div class="side-title">Money, trade &amp; choices</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var tradeStage=0; /* 0=start 1=refused 2=apple-traded 3=comic-traded 4=markers-won */
+var barterDone=false,moneyDone=false,priceDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Trade Day'}]},
+  {phase:'Learn',   items:[{s:1, n:'The double match problem'},{s:2, n:'The everyone-yes invention'},{s:3, n:'Prices are messages'},{s:4, n:'Catch Ava’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · trade day ---------- */
+function haveWhat(){
+  if(tradeStage<=1)return 'You’re holding: 🥪 your extra sandwich · You want: 🖍️ Priya’s markers';
+  if(tradeStage===2)return 'You’re holding: 🍎 an apple · You want: 🖍️ Priya’s markers';
+  if(tradeStage===3)return 'You’re holding: 📖 a comic · You want: 🖍️ Priya’s markers';
+  return 'You’re holding: 🖍️ THE MARKERS. Finally.';
+}
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Trade Day</h2>';
+  h+='<p>You brought an extra sandwich, and you’re after Priya’s marker set. Simple trade, right? Make your moves:</p>';
+  h+='<div class="haveline">'+haveWhat()+'</div>';
+
+  h+='<div class="kid'+(tradeStage>=4?' traded':'')+'"><span class="kemoji">🖍️</span><span class="kname">Priya</span>'+(tradeStage>=4?'<span class="tick">✓</span>':'')
+    +'<div class="speech">'+(tradeStage>=4?'“A comic! Deal — markers are yours.”':'“A sandwich? Ew, no. I’ll ONLY trade my markers for a comic book.”')+'</div>'
+    +(tradeStage===0?'<div class="row" style="margin-bottom:0"><button class="btn sm" onclick="tryTrade(1)">Offer your sandwich</button></div>':'')
+    +(tradeStage===3?'<div class="row" style="margin-bottom:0"><button class="btn sm" onclick="tryTrade(4)">Trade the comic for the markers</button></div>':'')
+    +'</div>';
+
+  if(tradeStage>=1){
+    h+='<div class="kid'+(tradeStage>=3?' traded':'')+'"><span class="kemoji">📖</span><span class="kname">Deacon</span>'+(tradeStage>=3?'<span class="tick">✓</span>':'')
+      +'<div class="speech">'+(tradeStage>=3?'“An apple! My favorite. Comic’s yours.”':'“I’ve got a comic, but I don’t want a sandwich. I want an apple.”')+'</div>'
+      +(tradeStage===2?'<div class="row" style="margin-bottom:0"><button class="btn sm" onclick="tryTrade(3)">Trade the apple for the comic</button></div>':'')
+      +'</div>';
+  }
+  if(tradeStage>=1){
+    h+='<div class="kid'+(tradeStage>=2?' traded':'')+'"><span class="kemoji">🍎</span><span class="kname">Rosa</span>'+(tradeStage>=2?'<span class="tick">✓</span>':'')
+      +'<div class="speech">'+(tradeStage>=2?'“Sandwich acquired. Enjoy the apple!”':'“I have an apple… and honestly, a sandwich sounds amazing.”')+'</div>'
+      +(tradeStage===1?'<div class="row" style="margin-bottom:0"><button class="btn sm" onclick="tryTrade(2)">Trade your sandwich for the apple</button></div>':'')
+      +'</div>';
+  }
+  h+='<div id="tradefb">'+(tradeStage>=4
+    ?'<div class="fb no"><b>You got them — after THREE trades.</b> Sandwich → apple → comic → markers. One want, three deals, and it only worked because a lucky chain existed. Imagine doing this for groceries. Every day. For everything.</div>'
+     +'<div class="goal"><div class="lab">The idea</div><p>Stuff-for-stuff trading is called <b>barter</b>, and you just hit its famous flaw: a trade only works when BOTH sides happen to want exactly what the other has. Humans got sick of this — and invented something better.</p></div>'
+    :'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(tradeStage>=4?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function tryTrade(n){tradeStage=n;beat1();}
+
+/* ---------- BEAT 1 · double match ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">Naming the problem</div>';
+  h+='<h2>The double match problem</h2>';
+  h+='<p>Trading stuff directly for stuff is called <b>barter</b> — the oldest way humans traded. And it has one giant flaw, which you just lived through:</p>';
+  h+='<div class="work"><div class="lab">Barter’s flaw</div>'
+    +'A barter trade needs a <b>double match</b>:<br>'
+    +'① they have what YOU want, <b>and</b> ② you have what THEY want.<br>'
+    +'Miss either half, and there’s no deal — you’re off hunting a chain of lucky trades.</div>';
+  h+='<p>Check it against Trade Day. Your first offer — sandwich for Priya’s markers — failed. Which half of the double match was missing?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickBarter(\'half2\')">Half ② — Priya didn’t want what you had</button>'
+    +'<button class="btn" onclick="pickBarter(\'half1\')">Half ① — Priya didn’t have markers</button></div>';
+  h+='<div id="barterfb">'+(barterDone?'<div class="fb ok"><b>Half ② broke.</b> Priya had exactly what you wanted — but your sandwich wasn’t what SHE wanted. One missing half, and off you went on a three-trade scavenger hunt.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(barterDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickBarter(v){
+  var fb=el('barterfb');
+  if(v==='half2'){barterDone=true;fb.innerHTML='<div class="fb ok"><b>Half ② broke.</b> Priya had exactly what you wanted — but your sandwich wasn’t what SHE wanted. One missing half, and off you went on a three-trade scavenger hunt.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Check again — Priya definitely had the markers.</b> Half ① was fine. The deal died on the other half: what did Priya think of your sandwich?</div>';}
+}
+
+/* ---------- BEAT 2 · money ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">The invention</div>';
+  h+='<h2>The everyone-yes invention</h2>';
+  h+='<p>The fix humans landed on: <b>money</b> — a special thing whose whole job is that <b>everyone says yes to it</b>. Watch it dissolve Trade Day’s mess:</p>';
+  h+='<div class="work"><div class="lab">Money’s three jobs</div>'
+    +'<b>Everyone accepts it</b> — sell your sandwich to ANYONE for $3, hand Priya $3 for the markers. No chain, no luck<br>'
+    +'<b>It measures value</b> — prices let you compare anything to anything: the $3 sandwich, the $3 markers, the $300 bike<br>'
+    +'<b>It stores value</b> — a sandwich rots by Friday; three dollars keeps until you need it</div>';
+  h+='<p>So pin it down. WHY does money kill the double match problem?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickMoney(\'yes\')">Because everyone accepts it — half ② can never break</button>'
+    +'<button class="btn" onclick="pickMoney(\'pretty\')">Because dollar bills are pretty</button>'
+    +'<button class="btn" onclick="pickMoney(\'law\')">Because trading stuff is illegal now</button></div>';
+  h+='<div id="moneyfb">'+(moneyDone?'<div class="fb ok"><b>Everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you have IS what they want — always. The double match is guaranteed before you even ask.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(moneyDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickMoney(v){
+  var fb=el('moneyfb');
+  if(v==='yes'){moneyDone=true;fb.innerHTML='<div class="fb ok"><b>Everyone accepts it.</b> Barter kept failing on “they don’t want what I have.” With money, what you have IS what they want — always. The double match is guaranteed before you even ask.</div>';el('nx').disabled=false;}
+  else if(v==='pretty'){fb.innerHTML='<div class="fb no"><b>Looks have nothing to do with it</b> — plain checks and boring bank numbers work exactly like crisp bills. Money’s power is about what everyone agrees to DO with it. Which answer says that?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Barter is still perfectly legal</b> — trade cards with your friends anytime. People dropped barter for everyday buying because money works better. What makes it work better?</div>';}
+}
+
+/* ---------- BEAT 3 · prices ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Reading the numbers</div>';
+  h+='<h2>Prices are messages</h2>';
+  h+='<p>Once everything has a money price, the prices start <b>talking</b>. A price mostly says two things at once:</p>';
+  h+='<div class="work"><div class="lab">What a price tells you</div>'
+    +'how much people <b>want</b> a thing, and how <b>hard it is to get</b> (how scarce it is)<br>'
+    +'wanted + scarce → price climbs &nbsp;·&nbsp; easy to get or few takers → price drops<br>'
+    +'<span style="color:var(--muted)">strawberries in June: cheap (mountains of them) · strawberries in February: pricey (scarce — shipped from far away)</span></div>';
+  h+='<p>Now predict: a surprise blizzard hits town, everyone needs a snow shovel TODAY, and the hardware store is down to its last few. What happens to the price of those shovels?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickPrice(\'up\')">It climbs — everyone wants one and there aren’t many</button>'
+    +'<button class="btn" onclick="pickPrice(\'down\')">It drops — snow makes everything cheaper</button></div>';
+  h+='<div id="pricefb">'+(priceDone?priceOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(priceDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function priceOkHtml(){
+  return '<div class="fb ok"><b>It climbs.</b> Maximum want, minimum supply — the price message reads “rare and needed right now.” In June, that same shovel gathers dust on the clearance rack.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>Prices aren’t random and they aren’t punishment — they’re messages about scarcity and demand. Learn to read them and the whole store starts making sense: what’s plentiful whispers, what’s scarce shouts.</p></div>';
+}
+function pickPrice(v){
+  var fb=el('pricefb');
+  if(v==='up'){priceDone=true;fb.innerHTML=priceOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Run the two dials:</b> want — everyone, urgently. Scarcity — last few on the shelf. Both dials cranked to maximum push the price which way?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Ava’s mistake</h2>';
+  h+='<p>Ava gets $5 allowance and spends every cent by sundown, every week. Her reasoning: <i>“Saving is pointless. Money is for spending — if you just sit on it, it goes to waste.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testAva()">Test Ava’s theory against money’s jobs</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The test</div>'
+    +'does money spoil like a sandwich? &nbsp;<b>no — storing value is one of its three jobs</b><br>'
+    +'what does $5-every-sundown buy? &nbsp;<b>only things under $5, forever</b><br>'
+    +'what does 6 weeks of saved $5 buy? &nbsp;<b>a $30 pair of headphones Ava wants way more than six candy runs</b><br>'
+    +'<b>verdict: saved money isn’t wasted — it’s aimed at something bigger</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testAva();
+}
+function testAva(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Ava treated dollars like sandwiches.</b> Sandwiches rot — spend those fast! But storing value is exactly what money was built to do. Saving isn’t NOT-spending; it’s spending <b>later</b>, on something bigger than any single week could afford. Ava’s $5 ceiling is a choice, not a law.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What is barter, and what’s its famous flaw?',
+   a:['Trading stuff for stuff — it needs a double match: each side must want what the other has','Buying with money — it’s too fast','Giving things away — nobody gains','Trading only sandwiches'],correct:0,
+   why:'Stuff-for-stuff only works when BOTH halves match. Miss one — like Priya not wanting your sandwich — and you’re off on a trade-chain scavenger hunt.'},
+  {q:'What makes money fix the double match problem?',
+   a:['It’s colorful','Everyone accepts it — so what you’re offering is always wanted','It’s made of special paper','It’s heavier than sandwiches'],correct:1,
+   why:'Money’s superpower is the universal yes. Sell to anyone, buy from anyone — the “they don’t want what I have” problem can’t happen.'},
+  {q:'Your sandwich rots by Friday, but three dollars doesn’t. Which of money’s jobs is that?',
+   a:['Measuring value','Storing value — it keeps until you need it','Making trades slower','Feeding people'],correct:1,
+   why:'Money holds value over time — which is the entire reason saving works and sandwiches make terrible piggy banks.'},
+  {q:'A blizzard hits and the store is down to its last few shovels, which everyone suddenly needs. The price…',
+   a:['Drops — snow discounts everything','Climbs — high demand plus scarce supply','Stays exactly the same forever','Becomes free'],correct:1,
+   why:'Prices are messages: wanted + scarce = the price climbs. The same shovel whispers from the clearance rack every June.'},
+  {q:'Ava spends all $5 the day she gets it because “saved money goes to waste.” What did she miss?',
+   a:['Nothing — money does spoil','Money stores value, so saving is really spending LATER on something bigger','Allowances are illegal to save','Headphones are a need'],correct:1,
+   why:'Dollars don’t rot. Six saved weeks buys the $30 thing no single week ever could — a bigger choice, not a wasted one.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.E.3']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'💵':'🥪')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you outgrew Trade Day':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Barter and its double match flaw, money’s three jobs, prices as scarcity messages, and why saving is just aiming your spending at something bigger. That completes Economics. Final domain: history — how we actually know what happened before we were born.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “The everyone-yes invention” and “Prices are messages” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;tradeStage=0;barterDone=false;moneyDone=false;priceDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

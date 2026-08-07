@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goods, services, producers &amp; consumers · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  .shopfront{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:12px 15px;margin-bottom:10px;font-size:15px;line-height:1.5}
+  .shopfront.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .shopfront .sname{font-weight:600}
+  .shopfront .semoji{font-size:19px;margin-right:7px}
+  .shopfront .tick{color:var(--green);font-weight:700;float:right}
+  .sbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .sbtns .btn{font-size:13px;padding:7px 12px;box-shadow:2px 2px 0 var(--ink)}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Economics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.E.2</div>
+    <h1>Goods, services, producers &amp; consumers</h1>
+    <p>You’ve got birthday money and a whole main street to spend it on. But look closely at what you’re actually buying in each shop — sometimes you walk out <b>holding</b> something, and sometimes you walk out with… nothing in your hands, yet somehow you still paid. Cracking that difference cracks open how the whole economy works.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.E.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.E.2</div>
+      <div class="side-title">Goods, services, producers &amp; consumers</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var shopSolved=[false,false,false,false,false,false];
+var bundleDone=false,roleSolved=[false,false,false],bothDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Spend it on Main Street'}]},
+  {phase:'Learn',   items:[{s:1, n:'The hold-it test'},{s:2, n:'Producers and consumers'},{s:3, n:'You’re both, every day'},{s:4, n:'Catch Theo’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · main street ---------- */
+var SHOPS=[
+  {emoji:'🥖', name:'The bakery', buy:'You buy a warm loaf of bread.', ans:'good',
+   ok:'You walk out <b>holding bread</b>. Thing in hand → that’s a <b>good</b>.',
+   no:'Check your hands on the way out — there’s a loaf in them. What does that make it?'},
+  {emoji:'💈', name:'The barber shop', buy:'You get a haircut.', ans:'service',
+   ok:'You walk out holding… nothing. But someone spent 20 minutes <b>doing something for you</b>. Work done for you → a <b>service</b>.',
+   no:'What’s in your hands when you leave? Nothing — but your hair looks great. You paid for someone’s WORK. What’s that called?'},
+  {emoji:'🧸', name:'The toy shop', buy:'You buy a puzzle.', ans:'good',
+   ok:'Puzzle in the bag — a thing you keep. <b>Good.</b>',
+   no:'You’re carrying it home in a bag. Thing you can hold and keep — which is that?'},
+  {emoji:'🐕', name:'The dog-walking stand', buy:'You pay Ana to walk your dog while you shop.', ans:'service',
+   ok:'Ana handed you nothing — she <b>did</b> something: an hour of walking. <b>Service.</b>',
+   no:'Ana gives you nothing to hold. You paid for an hour of her time and effort. What’s that?'},
+  {emoji:'🍋', name:'The lemonade stand', buy:'You buy a cold cup of lemonade.', ans:'good',
+   ok:'Cup in hand (briefly!). Even things you use up fast count — you bought a <b>thing</b>, so it’s a <b>good</b>.',
+   no:'It disappears fast, but for one glorious minute you are holding it. Thing in hand →?'},
+  {emoji:'🔧', name:'The bike repair cart', buy:'You pay Sam to fix your squeaky brakes.', ans:'service',
+   ok:'The bike was already yours — what you bought was Sam’s <b>skill and time</b>. <b>Service.</b>',
+   no:'You didn’t buy the bike — you already own it. You bought Sam’s time and know-how fixing it. What’s that called?'}
+];
+function shopsDone(){for(var i=0;i<6;i++)if(!shopSolved[i])return false;return true;}
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Spend it on Main Street</h2>';
+  h+='<p>Six stops, six purchases. After each one, ask the only question that matters: <b>did I walk away HOLDING a thing, or did someone DO something for me?</b> Holding a thing = <b>good</b>. Work done for you = <b>service</b>. Sort all six:</p>';
+  for(var i=0;i<SHOPS.length;i++){
+    var s=SHOPS[i],solved=shopSolved[i];
+    h+='<div class="shopfront'+(solved?' solved':'')+'"><span class="semoji">'+s.emoji+'</span><span class="sname">'+s.name+'</span>'+(solved?'<span class="tick">✓</span>':'')
+      +'<div>'+s.buy+'</div>'
+      +(solved?'':'<div class="sbtns">'
+        +'<button class="btn" onclick="pickShop('+i+',\'good\')">A good</button>'
+        +'<button class="btn" onclick="pickShop('+i+',\'service\')">A service</button></div>')
+      +'</div>';
+  }
+  h+='<div id="shopfb">'+(shopsDone()?'<div class="goal"><div class="lab">The idea</div><p>Every dollar ever spent buys one of exactly two things: a <b>good</b> (a thing) or a <b>service</b> (work done for you). Six shops, two categories, no exceptions — and that split runs the entire economy.</p></div>':'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(shopsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickShop(i,v){
+  if(shopSolved[i])return;
+  if(v===SHOPS[i].ans){shopSolved[i]=true;beat1();if(!shopsDone())el('shopfb').innerHTML='<div class="fb ok">'+SHOPS[i].ok+'</div>';}
+  else{beat1();el('shopfb').innerHTML='<div class="fb no">'+SHOPS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 1 · the hold-it test ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">Locking it in</div>';
+  h+='<h2>The hold-it test</h2>';
+  h+='<div class="work"><div class="lab">The two things money buys</div>'
+    +'<b>Goods</b> — things you can hold, keep, or use up: bread, puzzles, lemonade, bikes, houses<br>'
+    +'<b>Services</b> — work someone does FOR you: haircuts, dog-walking, repairs, bus rides, teaching, doctor visits</div>';
+  h+='<p>One wrinkle: plenty of purchases are <b>both at once</b>. Think about a pizza restaurant. The pizza itself is a thing you (briefly) hold. But somebody also took your order, cooked it, brought it to your table, and will wash your plate. So when the bill comes… what did you actually pay for?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickBundle(\'both\')">Both — a good (the pizza) and services (cooking &amp; serving)</button>'
+    +'<button class="btn" onclick="pickBundle(\'good\')">Just a good — pizza is a thing</button></div>';
+  h+='<div id="bundlefb">'+(bundleDone?'<div class="fb ok"><b>Both.</b> The pizza is the good; the cooking, serving, and cleanup are services bundled in. That’s why the same pizza costs more at a restaurant than frozen at the store — at the restaurant, you’re buying the work too.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(bundleDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickBundle(v){
+  var fb=el('bundlefb');
+  if(v==='both'){bundleDone=true;fb.innerHTML='<div class="fb ok"><b>Both.</b> The pizza is the good; the cooking, serving, and cleanup are services bundled in. That’s why the same pizza costs more at a restaurant than frozen at the store — at the restaurant, you’re buying the work too.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Then who cooked it?</b> If you only paid for the pizza-thing, the chef, the server, and the dishwasher all worked for free. Their work is part of your bill — so what did you really buy?</div>';}
+}
+
+/* ---------- BEAT 2 · producers and consumers ---------- */
+var ROLES=[
+  {scene:'The baker, pulling forty loaves out of the oven to sell', ans:'producer',
+   ok:'<b>Producer.</b> Making goods to sell is the textbook producer move.',
+   no:'The baker is MAKING the thing that gets sold. Which role makes?'},
+  {scene:'You, buying a comic with your birthday money', ans:'consumer',
+   ok:'<b>Consumer.</b> Buying and using — that’s the consumer side of the counter.',
+   no:'You’re the one paying and taking the comic home to enjoy. Which role buys and uses?'},
+  {scene:'Ana, out walking three customers’ dogs at once', ans:'producer',
+   ok:'<b>Producer.</b> No factory needed — providing a service IS producing. Ana produces dog-walks.',
+   no:'Careful — Ana isn’t making a thing, but she IS providing something customers pay for. Providing a service counts as which role?'}
+];
+function rolesDone(){return roleSolved[0]&&roleSolved[1]&&roleSolved[2];}
+function beat3(){
+  var h='';
+  h+='<div class="tag">The two roles</div>';
+  h+='<h2>Producers and consumers</h2>';
+  h+='<p>Every good and every service has two people attached:</p>';
+  h+='<div class="work"><div class="lab">Who’s who</div>'
+    +'<b>Producer</b> — the one who MAKES the good or PROVIDES the service<br>'
+    +'<b>Consumer</b> — the one who BUYS and USES it</div>';
+  h+='<p>Call the role in each scene:</p>';
+  for(var i=0;i<ROLES.length;i++){
+    var solved=roleSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Scene '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +ROLES[i].scene
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickRole('+i+',\'producer\')">Producer</button>'
+        +'<button class="btn" onclick="pickRole('+i+',\'consumer\')">Consumer</button></div>')
+      +'</div>';
+  }
+  h+='<div id="rolefb">'+(rolesDone()?'<div class="fb ok"><b>Makers and buyers, goods and services</b> — four words that describe every shop, stand, and store on Earth.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(rolesDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickRole(i,v){
+  if(roleSolved[i])return;
+  if(v===ROLES[i].ans){roleSolved[i]=true;beat3();if(!rolesDone())el('rolefb').innerHTML='<div class="fb ok">'+ROLES[i].ok+'</div>';}
+  else{beat3();el('rolefb').innerHTML='<div class="fb no">'+ROLES[i].no+'</div>';}
+}
+
+/* ---------- BEAT 3 · you're both ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The circle</div>';
+  h+='<h2>You’re both, every day</h2>';
+  h+='<p>Here’s the part that makes the economy a <b>circle</b> instead of a line: nobody is only one role. The baker sells you bread (producer)… then takes that money to the barber for a haircut. Follow the money:</p>';
+  h+='<div class="work"><div class="lab">One dollar’s afternoon</div>'
+    +'you → pay the <b>baker</b> for bread (you: consumer · baker: producer)<br>'
+    +'baker → pays the <b>barber</b> for a haircut (baker: ??? · barber: producer)<br>'
+    +'barber → pays <b>Ana</b> to walk his dog (and around it goes…)</div>';
+  h+='<p>So — in the middle line, the moment the baker sits in the barber’s chair, the baker is a…</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickBoth(\'consumer\')">Consumer — buying a service like anyone else</button>'
+    +'<button class="btn" onclick="pickBoth(\'producer\')">Still a producer — bakers are always producers</button></div>';
+  h+='<div id="bothfb">'+(bothDone?bothOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(bothDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function bothOkHtml(){
+  return '<div class="fb ok"><b>Consumer.</b> Roles aren’t name tags — they’re moments. Selling bread: producer. Buying a haircut: consumer. Same person, ten minutes apart.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>And you’re in the circle too — a consumer with your birthday money, and a producer whenever you run a lemonade stand, rake a neighbor’s leaves, or babysit. Everyone’s money is someone’s pay, around and around.</p></div>';
+}
+function pickBoth(v){
+  var fb=el('bothfb');
+  if(v==='consumer'){bothDone=true;fb.innerHTML=bothOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Look at what the baker is doing in that chair</b> — not baking! He’s paying someone else for their work. What do we call the person who buys and uses?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Theo’s mistake</h2>';
+  h+='<p>Theo declares: <i>“Only people who make actual THINGS are producers. A dentist makes nothing you can hold — so a dentist isn’t a producer. Not real work, honestly.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testTheo()">Check Theo’s claim against the definitions</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'what does a producer do? &nbsp;<b>makes goods OR provides services</b><br>'
+    +'is dentistry a service? &nbsp;<b>yes — skilled work done for you</b>, like the barber and the bike repair<br>'
+    +'do people pay for it? &nbsp;<b>gladly — ever had a toothache?</b><br>'
+    +'<b>verdict: the dentist produces all day long — the product is just work, not a thing</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testTheo();
+}
+function testTheo(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Theo forgot half of what money buys.</b> Producers make goods <b>or provide services</b> — and services are half the economy: dentists, teachers, firefighters, barbers, dog-walkers. If “real work” meant only things-you-can-hold, your teacher, your doctor, and every bus driver would all be unemployed. They’re not — they’re producers.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What’s the difference between a good and a service?',
+   a:['Goods cost money; services are free','A good is a thing you can hold or keep; a service is work someone does for you','Goods are better than services','Services only happen in stores'],correct:1,
+   why:'The hold-it test: bread and puzzles are goods; haircuts, repairs, and dog-walks are services. Both cost money — every dollar buys one or the other.'},
+  {q:'You pay for a ride across town on the city bus. What did you buy?',
+   a:['A good — the bus','A service — the driver and bus doing work for you','Nothing','The road'],correct:1,
+   why:'You walk off holding nothing — the driving was done FOR you. Work done for you is a service.'},
+  {q:'Who counts as a producer?',
+   a:['Only factory workers','Only people who make things you can hold','Anyone who makes goods OR provides services','Only adults'],correct:2,
+   why:'Both halves count. The baker producing bread and Ana producing dog-walks are equally producers — one makes a good, one provides a service.'},
+  {q:'The baker takes his bread money and buys a haircut. In the barber’s chair, the baker is…',
+   a:['A producer — bakers are always producers','A consumer — in that moment he’s buying and using a service','Neither','The barber'],correct:1,
+   why:'Roles are moments, not name tags. Selling bread: producer. Buying a haircut: consumer. Everyone in the economy flips back and forth all day.'},
+  {q:'Theo says a dentist “isn’t a producer because she makes nothing you can hold.” What’s wrong with that?',
+   a:['Nothing — Theo’s right','Producers provide services too — the dentist produces skilled work people pay for','Dentists secretly make goods','Only Theo can decide who produces'],correct:1,
+   why:'Services are half the economy. The dentist, the teacher, and the bus driver all produce work people gladly pay for — no holdable thing required.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.E.2']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🏪':'🥖')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — Main Street makes sense now':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Goods vs services, producers vs consumers, and the circle that connects them — you can name every role on any street in America. Next: the money itself — trade, prices, and why choices always cost more than the price tag.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “The hold-it test” and “Producers and consumers” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;shopSolved=[false,false,false,false,false,false];bundleDone=false;roleSolved=[false,false,false];bothDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

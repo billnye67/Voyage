@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Needs vs wants · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- shop ---------- */
+  .budget{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1.5px solid var(--ink);border-radius:11px;
+    padding:11px 16px;margin:12px 0;font-family:'Space Mono',monospace;font-size:14px}
+  .budget b{font-size:18px}
+  .budget .over{color:var(--accent)}
+  .shopgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+  .item{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:11px 13px;cursor:pointer;transition:.15s;font-size:14.5px;line-height:1.4}
+  .item:hover{border-color:var(--blue)}
+  .item.inbag{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .item .iname{font-weight:600}
+  .item .iprice{font-family:'Space Mono',monospace;font-size:12.5px;color:var(--muted)}
+  .item .itick{float:right;color:var(--green);font-weight:700;opacity:0}
+  .item.inbag .itick{opacity:1}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+  @media(max-width:520px){.shopgrid{grid-template-columns:1fr}}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Economics</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.E.1</div>
+    <h1>Needs vs wants</h1>
+    <p>A storm is rolling in, the power might go out all weekend, and you’re holding the family’s $50 for one last store run. The cart can’t fit everything you’d like — no cart ever can. That gap between “everything I’d like” and “what I can actually get” is where every money decision on Earth begins.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.E.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.E.1</div>
+      <div class="side-title">Needs vs wants</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var bag={},shopWon=false,ranOnce=false;
+var sortSolved=[false,false,false],upgDone=false,tradeDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'The $50 storm run'}]},
+  {phase:'Learn',   items:[{s:1, n:'The need test'},{s:2, n:'Wants aren’t the enemy'},{s:3, n:'Every choice has a trade'},{s:4, n:'Catch Mia’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- BEAT 0 · the $50 storm run ---------- */
+var ITEMS=[
+  {k:'water', name:'Water jugs', price:10, need:true,  gone:'no drinking water when the taps stop'},
+  {k:'food',  name:'Bread + peanut butter', price:12, need:true, gone:'dinner is whatever crumbs are left'},
+  {k:'batt',  name:'Flashlight batteries', price:8, need:true, gone:'the house goes pitch dark at 8 pm'},
+  {k:'socks', name:'Warm dry socks', price:6, need:true, gone:'cold wet feet all weekend'},
+  {k:'game',  name:'Video game gift card', price:15, need:false},
+  {k:'candy', name:'Mega candy bucket', price:10, need:false},
+  {k:'slime', name:'Glitter slime kit', price:9, need:false},
+  {k:'comic', name:'Comic 3-pack', price:12, need:false}
+];
+function bagTotal(){var t=0;for(var i=0;i<ITEMS.length;i++)if(bag[ITEMS[i].k])t+=ITEMS[i].price;return t;}
+function beat1(){
+  var t=bagTotal();
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>The $50 storm run</h2>';
+  h+='<p>The forecast: power and water could be out until Monday. <b>Click items to put them in the cart</b> (click again to put back), then run the weekend and see how it goes.</p>';
+  h+='<div class="budget"><span>Cart total</span><b class="'+(t>50?'over':'')+'">$'+t+' / $50</b></div>';
+  h+='<div class="shopgrid">';
+  for(var i=0;i<ITEMS.length;i++){
+    var it=ITEMS[i];
+    h+='<div class="item'+(bag[it.k]?' inbag':'')+'" onclick="toggleItem(\''+it.k+'\')"><span class="itick">✓</span>'
+      +'<div class="iname">'+it.name+'</div><div class="iprice">$'+it.price+'</div></div>';
+  }
+  h+='</div>';
+  h+='<div class="row"><button class="btn" onclick="runWeekend()">⛈️ Run the weekend</button></div>';
+  h+='<div id="shopfb">'+(shopWon?shopWinHtml():'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(shopWon?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function shopWinHtml(){
+  var extras=[];
+  for(var i=0;i<ITEMS.length;i++)if(bag[ITEMS[i].k]&&!ITEMS[i].need)extras.push(ITEMS[i].name.toLowerCase());
+  return '<div class="fb ok"><b>The weekend goes fine.</b> Water, food, light, dry feet — covered. '
+    +(extras.length?('And with the needs handled first, the leftover money even bought fun: '+extras.join(', ')+'.') :'You even left money unspent — that’s allowed too!')
+    +'</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>You just ran the most important money rule on Earth without being taught it: some things are <b>needs</b>, some are <b>wants</b> — and when money is limited (it always is), needs go in the cart first.</p></div>';
+}
+function toggleItem(k){
+  if(shopWon)return;
+  bag[k]=!bag[k];
+  beat1();
+}
+function runWeekend(){
+  ranOnce=true;
+  var t=bagTotal();
+  var fb=el('shopfb');
+  if(t>50){fb.innerHTML='<div class="fb no"><b>The cashier shakes her head — that’s $'+t+' and you have $50.</b> Something has to go back on the shelf. Choose what matters most.</div>';return;}
+  var missing=[];
+  for(var i=0;i<ITEMS.length;i++)if(ITEMS[i].need&&!bag[ITEMS[i].k])missing.push(ITEMS[i]);
+  if(missing.length===0){
+    shopWon=true;beat1();
+  } else {
+    var lines='';
+    for(var m=0;m<missing.length;m++)lines+='<br>· no <b>'+missing[m].name.toLowerCase()+'</b> — '+missing[m].gone;
+    fb.innerHTML='<div class="fb no"><b>Rough weekend.</b>'+lines+'<br><br>Whatever fun made it into the cart stopped being fun fast. Put back what you can live without, and cover what you can’t.</div>';
+  }
+}
+
+/* ---------- BEAT 1 · the need test ---------- */
+var SORTS=[
+  {ex:'Tonight’s dinner', ans:'need',
+   ok:'<b>Need.</b> Skip dinners for a while and you’re not sad — you’re sick. Food is on the short list.',
+   no:'Run the test: go without dinners for a while. Is the result “disappointed” — or “actually harmed”?'},
+  {ex:'A warm coat, with winter coming', ans:'need',
+   ok:'<b>Need.</b> Clothing that keeps you safe from the weather passes the test — winter without a coat isn’t sad, it’s dangerous.',
+   no:'It’s January and you’re walking to school. Go without a coat for weeks — disappointed, or harmed?'},
+  {ex:'A new phone case in this year’s colors', ans:'want',
+   ok:'<b>Want.</b> Life without it: exactly the same, slightly less stylish. That’s the want signature — nice, not necessary.',
+   no:'Go without the new case for a month. What actually happens to you? If the honest answer is “nothing bad,” which is it?'}
+];
+function sortDone(){return sortSolved[0]&&sortSolved[1]&&sortSolved[2];}
+function beat2(){
+  var h='';
+  h+='<div class="tag">The test</div>';
+  h+='<h2>The need test</h2>';
+  h+='<p>Here’s the official line between the two:</p>';
+  h+='<div class="work"><div class="lab">One question decides it</div>'
+    +'<b>“What happens if I go without it for a while?”</b><br>'
+    +'If the answer is real harm — hungry, sick, freezing, unsafe → it’s a <b>need</b><br>'
+    +'If the answer is just disappointment → it’s a <b>want</b><br>'
+    +'<span style="color:var(--muted)">The short list of needs: food, water, shelter, clothing, health care.</span></div>';
+  h+='<p>Run the test on these three:</p>';
+  for(var i=0;i<SORTS.length;i++){
+    var solved=sortSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Item '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +SORTS[i].ex
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickSort('+i+',\'need\')">Need</button>'
+        +'<button class="btn" onclick="pickSort('+i+',\'want\')">Want</button></div>')
+      +'</div>';
+  }
+  h+='<div id="sortfb">'+(sortDone()?'<div class="fb ok"><b>The test never lies.</b> Not “do I really really like it” — but “what happens without it.” Feelings vote loudly; the test just counts harm.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(sortDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickSort(i,v){
+  if(sortSolved[i])return;
+  if(v===SORTS[i].ans){sortSolved[i]=true;beat2();if(!sortDone())el('sortfb').innerHTML='<div class="fb ok">'+SORTS[i].ok+'</div>';}
+  else{beat2();el('sortfb').innerHTML='<div class="fb no">'+SORTS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 2 · wants aren't the enemy ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Plot twist</div>';
+  h+='<h2>Wants aren’t the enemy</h2>';
+  h+='<p>Here’s what this lesson is NOT saying: “wants are bad.” Candy, comics, slime — wants are most of the fun in life! The skill isn’t deleting wants. It’s <b>putting them second in line</b> — exactly like your storm cart: needs covered, then fun with what’s left.</p>';
+  h+='<p>One more twist: sometimes a single item is <b>both</b>. You genuinely need shoes for school. The $30 pair fits great. The $95 light-up pair also fits great — and glows. Where’s the line between need and want inside that $95?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickUpg(\'extra\')">Shoes are the need; the extra $65 of glow is the want</button>'
+    +'<button class="btn" onclick="pickUpg(\'all\')">The whole $95 is a need — I need shoes!</button></div>';
+  h+='<div id="upgfb">'+(upgDone?'<div class="fb ok"><b>Exactly.</b> The need is “working shoes” — $30 covers it. Everything above that price is upgrade, and upgrade is want. Nothing wrong with wanting the glow — just know which dollars are doing which job.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(upgDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickUpg(v){
+  var fb=el('upgfb');
+  if(v==='extra'){upgDone=true;fb.innerHTML='<div class="fb ok"><b>Exactly.</b> The need is “working shoes” — $30 covers it. Everything above that price is upgrade, and upgrade is want. Nothing wrong with wanting the glow — just know which dollars are doing which job.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Run the need test on the glow.</b> Go without light-up soles for a month: any harm? The $30 pair already keeps your feet safe and school-ready. So what job are the other $65 doing?</div>';}
+}
+
+/* ---------- BEAT 3 · every choice has a trade ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The hidden price</div>';
+  h+='<h2>Every choice has a trade</h2>';
+  h+='<p>Why does any of this matter? Because money is <b>limited</b> — there’s never enough for everything, which means every yes secretly says no to something else. Economists call the thing you give up <b>the trade</b>.</p>';
+  h+='<div class="work"><div class="lab">The trade, in action</div>'
+    +'You have $10. Two things you’d love:<br>'
+    +'· a movie ticket tonight — costs exactly $10<br>'
+    +'· a $30 skateboard you’re saving for — you have $20 saved so far</div>';
+  h+='<p>You pick the movie. Fun night! But what did the movie <b>really</b> cost you, besides the $10?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickTrade(\'board\')">Being $10 from the skateboard — it’s now weeks away again</button>'
+    +'<button class="btn" onclick="pickTrade(\'nothing\')">Nothing — the ticket was only $10</button></div>';
+  h+='<div id="tradefb">'+(tradeDone?tradeOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(tradeDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function tradeOkHtml(){
+  return '<div class="fb ok"><b>The skateboard was the hidden price.</b> With that $10 you’d have hit $30 — board bought this week. Every dollar can only be spent once, so every choice quietly costs the best thing you didn’t pick.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>Smart spenders ask two questions, every time: <b>need or want?</b> and <b>what am I trading away?</b> Neither question forbids the movie — they just make sure you saw the whole price tag.</p></div>';
+}
+function pickTrade(v){
+  var fb=el('tradefb');
+  if(v==='board'){tradeDone=true;fb.innerHTML=tradeOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Check your savings jar.</b> You had $20 of $30 saved. That $10 was the finish line. The ticket’s price tag said $10 — but what ELSE walked away when you spent it?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Mia’s mistake</h2>';
+  h+='<p>Mia had $40 and two things on her list: school shoes ($20 — her old ones have holes) and a video game ($25). The game was <b>30% off, today only!</b> So she grabbed the game first. Now she’s $5 short for shoes. <i>“It was on sale,”</i> she says. <i>“Buying it first was the smart money move.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testMia()">Check Mia’s move against the two questions</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'need test: holes in her only shoes → shoes are a <b>need</b>; the game is a <b>want</b><br>'
+    +'the order: wants jumped the line in front of a need<br>'
+    +'the trade: the “sale savings” cost her… dry feet<br>'
+    +'<b>verdict: a discount changes the price — never the order</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMia();
+}
+function testMia(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>“On sale” hijacked Mia’s order.</b> A discount makes a want cheaper — it doesn’t make it a need. Needs first, always; THEN if the leftover money catches a sale, that’s the sweet spot. Mia saved $7.50 on a game and lost her $20 shoes.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What’s the test that separates a need from a want?',
+   a:['“Do I really, really like it?”','“What happens if I go without it for a while?” — harm means need, disappointment means want','“Is it expensive?”','“Is it on sale?”'],correct:1,
+   why:'Feelings and price tags both lie. The go-without test just counts harm: food, water, shelter, clothing, and health care pass it; almost everything else is a want.'},
+  {q:'Which of these is a NEED?',
+   a:['Movie night','Tonight’s dinner','A sticker pack','A second skateboard'],correct:1,
+   why:'Go without the other three: disappointed. Go without dinners: harmed. That’s the whole test.'},
+  {q:'You need school shoes. The $30 pair works fine; the $95 light-up pair also fits. What’s the want here?',
+   a:['The whole $95 — shoes are shoes','The extra $65 of glow above the $30 that covers the need','Shoes are always wants','The $30 pair'],correct:1,
+   why:'The need is “working shoes,” covered at $30. Every dollar above that buys upgrade — and upgrade is want, even when it’s attached to a need.'},
+  {q:'You spend your $10 on a movie instead of finishing your $30 skateboard fund ($20 saved). What was the movie’s hidden price?',
+   a:['Nothing — it cost $10 exactly','The skateboard — you were $10 away, and that chance walked out with the ticket','The popcorn','There are no hidden prices'],correct:1,
+   why:'Every dollar spends once. The real cost of any choice includes the best thing you gave up for it — the trade.'},
+  {q:'Mia bought a discounted game first and couldn’t afford her needed shoes. What’s the rule she broke?',
+   a:['Never buy games','Sales are always traps','Needs come first — a discount changes the price, never the order','Shoes don’t matter'],correct:2,
+   why:'The sale made the want cheaper, not more important. Cover needs first; then let leftover money chase the deals.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.E.1']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🛒':'⛈️')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — your cart is smarter than most adults’':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>The go-without test, needs-first ordering, spotting the want hiding inside an upgrade, and seeing every choice’s hidden trade. Next: where all that stuff in the store comes from — goods, services, and the people who make them.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “The need test” and “Every choice has a trade” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;bag={};shopWon=false;ranOnce=false;sortSolved=[false,false,false];upgDone=false;tradeDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
