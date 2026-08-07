@@ -41,9 +41,6 @@
   .btn.go{background:var(--accent);color:#fff}
   .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
   .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
-  .steps{display:flex;gap:6px;margin-bottom:20px}
-  .steps .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line)}
-  .steps .seg.on{background:var(--blue)}
   .hide{display:none}
   .barlab{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px}
   .barwrap{position:relative;margin-bottom:4px}
@@ -80,12 +77,60 @@
   .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
   .attrib{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.5}
   @media(max-width:620px){.shell{padding:20px 15px 60px}.card{padding:24px 18px}h1{font-size:27px}}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
 </style>
 </head>
 <body>
-<div class="shell">
-
-<div id="intro">
+<div class="shell" id="intro">
   <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Fractions</div>
   <div class="card">
     <div class="tag">Lesson · 4.NF.A.1</div>
@@ -96,23 +141,74 @@
   </div>
 </div>
 
-<div id="lesson" class="hide">
-  <div class="crumb">Grade 4 Math &nbsp;›&nbsp; Equivalent fractions</div>
-  <div class="steps" id="steps"></div>
-  <div class="card" id="stage"></div>
-</div>
-
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="math-course.html">← Grade 4 Math</a>
+      <div class="side-kick">Lesson · 4.NF.A.1</div>
+      <div class="side-title">Equivalent fractions</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-var step=0,TOTAL=11;
+var step=0,TOTAL=11,maxStep=0;
 var won={},predictDone=false,mistakeTested=false;
 var qIndex=0,qCorrect=0,answered=false;
 var pieces=4,shaded=0;
 
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Eat as much as Jamie'}]},
+  {phase:'Learn',   items:[{s:1, n:'Three bars, same amount'},{s:2, n:'Predict first'},{s:3, n:'What the numbers did'},{s:4, n:'Catch Maya’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
 function el(i){return document.getElementById(i);}
-function startLesson(){el('intro').classList.add('hide');el('lesson').classList.remove('hide');render();scrollTo(0,0);}
-function drawSteps(){var h='';for(var i=0;i<TOTAL;i++)h+='<div class="seg'+(i<=step?' on':'')+'"></div>';el('steps').innerHTML=h;}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
 function next(){step++;render();scrollTo(0,0);}
 function back(){if(step>0){step--;render();scrollTo(0,0);}}
 
@@ -329,10 +425,10 @@ function beatDone(){
   
   el('stage').innerHTML=h;
 }
-function restart(){step=0;won={};predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;pieces=4;shaded=0;render();scrollTo(0,0);}
+function restart(){step=0;maxStep=0;won={};predictDone=false;mistakeTested=false;qIndex=0;qCorrect=0;pieces=4;shaded=0;render();scrollTo(0,0);}
 
 function render(){
-  drawSteps();
+  drawSide();
   if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
   else if(step===3)beat4();else if(step===4)beat5();
   else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
