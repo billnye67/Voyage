@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U.S. symbols &amp; landmarks · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  .flagbox{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:14px;margin:12px 0}
+  .flagbox svg{display:block;width:100%;height:auto}
+  .fpart{cursor:pointer;transition:.15s}
+  .fpart:hover{opacity:.85}
+  .fpart.decoded{outline:none}
+  .symcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;font-size:15px;line-height:1.55}
+  .symcard:hover{border-color:var(--blue)}
+  .symcard.seen{border-color:var(--green);background:rgba(46,125,91,.05)}
+  .symcard .bhead{display:flex;align-items:center;gap:10px;font-weight:600}
+  .symcard .bicon{font-size:20px}
+  .symcard .check{margin-left:auto;color:var(--green);font-weight:700;opacity:0}
+  .symcard.seen .check{opacity:1}
+  .symcard .bbody{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--blue-line);font-size:14.5px}
+  .symcard.seen .bbody{display:block}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+</style>
+<style>
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; History</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.H.3</div>
+    <h1>U.S. symbols &amp; landmarks</h1>
+    <p>The American flag is a message written in numbers — and most people salute it their whole lives without ever counting. Today you crack the flag’s code, meet the eagle, the statue, and the cracked bell, and learn why a country carves its memory into copper, marble, and mountainsides.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.H.3</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.H.3</div>
+      <div class="side-title">U.S. symbols &amp; landmarks</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var starsDone=false,stripesDone=false;
+var symMatch=[false,false,false],famousSeen={},landDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Crack the flag’s code'}]},
+  {phase:'Learn',   items:[{s:1, n:'What a symbol is'},{s:2, n:'The famous five'},{s:3, n:'Landmarks hold memory'},{s:4, n:'Catch Jade’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- flag SVG ---------- */
+function drawFlag(){
+  var W=460,H=242,SH=H/13;
+  var h='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="The United States flag">';
+  h+='<g class="fpart" onclick="decodeStripes()">';
+  for(var i=0;i<13;i++)h+='<rect x="0" y="'+(i*SH)+'" width="'+W+'" height="'+SH+'" fill="'+(i%2===0?'#c0392b':'#ffffff')+'"/>';
+  h+='</g>';
+  h+='<g class="fpart" onclick="decodeStars()"><rect x="0" y="0" width="'+(W*0.4)+'" height="'+(SH*7)+'" fill="#1b3a6b"/>';
+  for(var r=0;r<9;r++){
+    var cols=(r%2===0)?6:5, offx=(r%2===0)?16:31;
+    for(var c=0;c<cols;c++){
+      h+='<text x="'+(offx+c*30)+'" y="'+(14+r*14.5)+'" font-size="11" fill="#fff" text-anchor="middle">★</text>';
+    }
+  }
+  h+='</g>';
+  h+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+  h+='</svg>';
+  return h;
+}
+
+/* ---------- BEAT 0 · crack the code ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Crack the flag’s code</h2>';
+  h+='<p>Two numbers are hiding in this flag, and each one means something exact. <b>Click the star field</b>, then <b>click the stripes</b>, and answer what each number stands for:</p>';
+  h+='<div class="flagbox">'+drawFlag()+'</div>';
+  h+='<div id="starq" class="'+(window.__askStars?'':'hide')+'">'
+    +'<p><b>The stars — there are exactly 50.</b> Fifty of what?</p>'
+    +'<div class="row">'
+    +'<button class="btn" onclick="ansStars(\'states\')">One star per state</button>'
+    +'<button class="btn" onclick="ansStars(\'years\')">One star per year of history</button></div>'
+    +'<div id="starfb">'+(starsDone?'<div class="fb ok"><b>One per state — all 50.</b> When Hawaii joined in 1959, the flag literally got a new star. The flag keeps count of the country.</div>':'')+'</div></div>';
+  h+='<div id="stripeq" class="'+(window.__askStripes?'':'hide')+'">'
+    +'<p><b>The stripes — count them: 13.</b> Thirteen of what?</p>'
+    +'<div class="row">'
+    +'<button class="btn" onclick="ansStripes(\'colonies\')">The 13 original colonies that started the country</button>'
+    +'<button class="btn" onclick="ansStripes(\'presidents\')">The first 13 presidents</button></div>'
+    +'<div id="stripefb">'+(stripesDone?'<div class="fb ok"><b>The 13 original colonies</b> — the little states along the Atlantic that declared independence in 1776 and became the United States. The stripes are the country’s baby picture.</div>':'')+'</div></div>';
+  if(starsDone&&stripesDone){
+    h+='<div class="goal"><div class="lab">The idea</div><p>Fifty stars = the country <b>today</b>. Thirteen stripes = the country at its <b>birth</b>. One piece of cloth telling both at once — because that’s what symbols do: pack a big story into a small picture.</p></div>';
+  }
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(starsDone&&stripesDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function decodeStars(){window.__askStars=true;beat1();}
+function decodeStripes(){window.__askStripes=true;beat1();}
+function ansStars(v){
+  if(v==='states'){starsDone=true;beat1();}
+  else{beat1();el('starfb').innerHTML='<div class="fb no"><b>The country is way older than 50 years!</b> Think about what there are exactly fifty of — you listed them by region a few lessons ago.</div>';}
+}
+function ansStripes(v){
+  if(v==='colonies'){stripesDone=true;beat1();}
+  else{beat1();el('stripefb').innerHTML='<div class="fb no"><b>Not presidents.</b> The stripes were on the very FIRST flag — before most presidents existed. What thirteen things did the country begin as?</div>';}
+}
+
+/* ---------- BEAT 1 · what a symbol is ---------- */
+var SYMS=[
+  {ex:'❤️ A heart drawn on a birthday card', ans:'love',
+   ok:'<b>Love.</b> Nobody thinks it’s a picture of an actual heart — the shape stands for the feeling.',
+   no:'Nobody sends anatomy diagrams on birthday cards. What is the heart shape universally understood to mean?'},
+  {ex:'💀 A skull printed on a bottle', ans:'danger',
+   ok:'<b>Danger.</b> One little picture does the job of a whole warning paragraph — instantly, in any language.',
+   no:'That bottle isn’t decorated for Halloween. The skull is a warning. Of what?'},
+  {ex:'🦅 A bald eagle on official U.S. seals and coins', ans:'america',
+   ok:'<b>America itself.</b> Chosen in 1782: a bird that’s strong, free-flying, and found only in North America. It stands for the whole country’s spirit.',
+   no:'This bird is on the money, the president’s seal, the passport… it stands for something much bigger than birds. What?'}
+];
+function symDone(){return symMatch[0]&&symMatch[1]&&symMatch[2];}
+function beat2(){
+  var h='';
+  h+='<div class="tag">The definition</div>';
+  h+='<h2>What a symbol is</h2>';
+  h+='<p>A <b>symbol</b> is a thing that <b>stands for a bigger idea</b>. You’ve been reading symbols fluently since you were little — match these:</p>';
+  for(var i=0;i<SYMS.length;i++){
+    var solved=symMatch[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Symbol '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +SYMS[i].ex
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickSym('+i+',\'love\')">Love</button>'
+        +'<button class="btn" onclick="pickSym('+i+',\'danger\')">Danger</button>'
+        +'<button class="btn" onclick="pickSym('+i+',\'america\')">America</button></div>')
+      +'</div>';
+  }
+  h+='<div id="symfb">'+(symDone()?'<div class="fb ok"><b>See how fast you read them?</b> That’s the power a country borrows when it picks its symbols: one image, and every citizen — and the whole world — knows what’s meant.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(symDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickSym(i,v){
+  if(symMatch[i])return;
+  if(v===SYMS[i].ans){symMatch[i]=true;beat2();if(!symDone())el('symfb').innerHTML='<div class="fb ok">'+SYMS[i].ok+'</div>';}
+  else{beat2();el('symfb').innerHTML='<div class="fb no">'+SYMS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 2 · the famous five ---------- */
+var FAMOUS=[
+  {k:'eagle', icon:'🦅', name:'The bald eagle',
+   body:'America’s official bird since 1782. Strong, free-flying, and living only in North America — it stands for the country’s <b>strength and freedom</b>. You’re carrying one right now if there’s a quarter in your pocket.'},
+  {k:'liberty', icon:'🗽', name:'The Statue of Liberty',
+   body:'A colossal copper woman raising a torch in New York Harbor — a <b>gift from France in 1886</b>. For millions of newcomers arriving by ship, she was the first glimpse of America: a symbol of <b>freedom and welcome</b>.'},
+  {k:'bell', icon:'🔔', name:'The Liberty Bell',
+   body:'A big bronze bell in Philadelphia, rung in the era when the 13 colonies declared <b>independence</b> — with a famous crack it earned along the way. Cracked but still standing: Americans love it partly for that.'},
+  {k:'dc', icon:'🏛️', name:'The White House &amp; the Capitol',
+   body:'Two working buildings in Washington, D.C. that became symbols: the <b>White House</b>, where the President lives and works, and the domed <b>Capitol</b>, where Congress makes the laws. Two branches, two famous roofs.'},
+  {k:'rushmore', icon:'⛰️', name:'Mount Rushmore',
+   body:'Four presidents — Washington, Jefferson, Theodore Roosevelt, Lincoln — carved <b>sixty feet tall</b> into a South Dakota mountain. A monument so big it turns geography itself into a history book.'}
+];
+function famDone(){var n=0;for(var k in famousSeen)n++;return n>=FAMOUS.length;}
+function beat3(){
+  var h='';
+  h+='<div class="tag">The roster</div>';
+  h+='<h2>The famous five</h2>';
+  h+='<p>Beyond the flag, five symbols come up constantly — on money, in movies, on the news. <b>Click each to meet it:</b></p>';
+  for(var i=0;i<FAMOUS.length;i++){
+    var f=FAMOUS[i];
+    h+='<div class="symcard'+(famousSeen[f.k]?' seen':'')+'" onclick="seeFam(\''+f.k+'\')">'
+      +'<div class="bhead"><span class="bicon">'+f.icon+'</span>'+f.name+'<span class="check">✓</span></div>'
+      +'<div class="bbody">'+f.body+'</div></div>';
+  }
+  h+='<div id="famfb">'+(famDone()?'<div class="fb ok"><b>Eagle, statue, bell, two buildings, one mountain.</b> Each one packs a chapter of the country’s story into a single image — strength, welcome, independence, government at work, and the leaders remembered in stone.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(famDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function seeFam(k){famousSeen[k]=true;beat3();}
+
+/* ---------- BEAT 3 · landmarks ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Places that remember</div>';
+  h+='<h2>Landmarks hold memory</h2>';
+  h+='<p>A <b>landmark</b> is a place that holds a story — and a <b>monument</b> is a landmark built ON PURPOSE to remember: the Lincoln Memorial for a president, the Washington Monument spiking 555 feet over the capital. Countries build them so the story has an address you can visit.</p>';
+  h+='<p>Here’s symbols doing real work: whenever Congress debates a big law, the TV news shows the <b>Capitol dome</b> — just the building. Why show a BUILDING to talk about a law?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickLand(\'stands\')">The building stands for what happens inside — Congress making laws</button>'
+    +'<button class="btn" onclick="pickLand(\'pretty\')">Domes just look nice on TV</button></div>';
+  h+='<div id="landfb">'+(landDone?landOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(landDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function landOkHtml(){
+  return '<div class="fb ok"><b>The dome IS the message.</b> One glimpse and every viewer knows: lawmakers at work. The White House means the President the same way. The buildings became shorthand for the branches inside them.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>Symbols and landmarks are the country’s memory made visible — a story you can fold (the flag), pocket (the eagle on a quarter), climb the steps of (the memorial), or spot from a mile away (the dome).</p></div>';
+}
+function pickLand(v){
+  var fb=el('landfb');
+  if(v==='stands'){landDone=true;fb.innerHTML=landOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>News time is expensive — nothing’s on screen “just because.”</b> Think about WHO works under that dome, and what they were doing in this lesson about laws… why show their building?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Jade’s mistake</h2>';
+  h+='<p>Jade’s doing a flag report: <i>“The 50 stars stand for the 50 most famous Americans, and the 13 stripes are for the 13 branches of government.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testJade()">Check Jade’s report against the flag’s real code</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'50 stars — 50 famous people? &nbsp;<b>no — one star per STATE.</b> Hawaii joined in 1959; the flag added a star, not a celebrity<br>'
+    +'13 stripes — 13 branches? &nbsp;<b>no — there are 3 branches.</b> The stripes are the 13 original COLONIES of 1776<br>'
+    +'<b>verdict: a symbol’s meaning isn’t a guess — it has a real, checkable story</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testJade();
+}
+function testJade(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Jade invented meanings that sounded right.</b> But symbols aren’t guess-what-I-mean — each one has a real story you can look up: stars count the states, stripes remember the founding colonies. Half the fun of a symbol is knowing the true story it carries.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'What is a symbol?',
+   a:['A kind of drum','A thing that stands for a bigger idea','Any old object','A secret code only adults know'],correct:1,
+   why:'Heart = love, skull = danger, eagle = America. Small image, big meaning — that’s a symbol’s whole job.'},
+  {q:'On the U.S. flag, what do the 50 stars and 13 stripes stand for?',
+   a:['50 famous people and 13 wars','50 states and the 13 original colonies','50 years and 13 presidents','Nobody knows'],correct:1,
+   why:'Stars count the country today — one per state. Stripes remember its birth — the 13 colonies of 1776.'},
+  {q:'The Statue of Liberty was…',
+   a:['Carved from a mountain','A gift from France in 1886, standing for freedom and welcome','Built to scare off ships','Originally a lighthouse for whales'],correct:1,
+   why:'France sent her in 1886; her torch greeted millions arriving by ship — freedom and welcome, 150 feet tall.'},
+  {q:'Why does the news show the Capitol dome when Congress debates a law?',
+   a:['Domes look nice','The building stands for what happens inside — Congress at work','It’s the only building in Washington','Cameras get lost easily'],correct:1,
+   why:'The dome is shorthand: one glimpse means “the lawmakers are working.” Buildings can be symbols too.'},
+  {q:'Jade said the stripes stand for “13 branches of government.” Besides there being only 3 branches, what’s the bigger lesson?',
+   a:['Stripes mean whatever you want','A symbol’s meaning is a real, checkable story — not a guess that sounds good','Flags are unknowable','Reports don’t need facts'],correct:1,
+   why:'Every national symbol carries a true story you can look up. Guessing meanings that “sound right” is how the three-mile legends of history get started.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.H.3']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🇺🇸':'🔔')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Course complete — you finished Grade 4 Social Studies!':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Maps and regions. Rules, votes, branches, and rights. Needs, money, and trade. Evidence, change, and the symbols that carry it all. That’s the whole Grade 4 map of how your country works — and you walked every mile of it. 🎉</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “Crack the flag’s code” and “The famous five” in the sidebar, then try again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;starsDone=false;stripesDone=false;window.__askStars=false;window.__askStripes=false;symMatch=[false,false,false];famousSeen={};landDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

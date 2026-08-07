@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5}
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
@@ -16,53 +16,49 @@
   .app{display:flex;max-width:1080px;margin:0 auto;min-height:100vh}
   .side{width:290px;flex-shrink:0;border-right:1.5px solid var(--blue-line);padding:22px 16px;background:rgba(251,250,245,.6)}
   .side .brand{font-family:'Fraunces',serif;font-weight:700;font-size:22px;margin-bottom:2px}
+  .side .brand a{color:inherit;text-decoration:none}
   .side .sub{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   #pcount{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px}
   #pbar{height:5px;border-radius:3px;background:var(--blue-line);margin-bottom:6px;overflow:hidden}
-  #pfill{height:100%;width:0;background:#2e7d5b;transition:width .3s}
+  #pfill{height:100%;width:0;background:var(--green);transition:width .3s}
   .domain{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--blue-line)}
   .skill-btn{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:none;border:none;cursor:pointer;
     padding:9px 10px;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);line-height:1.25;margin-bottom:1px}
   .skill-btn:hover{background:rgba(27,79,138,.07)}
   .skill-btn.active{background:var(--blue);color:#fff;box-shadow:2px 2px 0 rgba(27,79,138,.25)}
   .skill-btn .check{flex-shrink:0;font-size:13px;color:var(--blue-line);width:16px;text-align:center}
-  .skill-btn.done .check{color:#2e7d5b}
+  .skill-btn.done .check{color:var(--green)}
   .skill-btn.active .check{color:#fff}
   .skill-btn.done .stitle{color:var(--muted)}
   .skill-btn.active .stitle,.skill-btn.active.done .stitle{color:#fff}
   .stitle{flex:1}
+  .lessonmark{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);flex-shrink:0}
+  .skill-btn.active .lessonmark{color:#fff}
   .main{flex:1;padding:26px 30px 60px;min-width:0}
   .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-  .progress{display:flex;gap:6px;margin-bottom:22px}
-  .progress .seg{height:5px;border-radius:3px;flex:1;background:var(--blue-line);transition:background .25s}
-  .progress .seg.on{background:var(--blue)}
   .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:28px 26px;min-height:340px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
   .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-  .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;line-height:1.15;margin-bottom:14px}
-  .card p{font-size:16px;line-height:1.6;margin-bottom:12px}
+  .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;line-height:1.15;margin-bottom:14px}
+  .card p{font-size:16px;line-height:1.62;margin-bottom:12px}
   .card p b{font-weight:600}
-  .card .ex{background:var(--paper);border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.6;margin:4px 0 8px}
-  .payoff{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:15.5px;margin-top:4px}
-  .qlist{margin:8px 0}
-  .qlist .q{font-size:16px;line-height:1.5;padding:8px 0;border-bottom:1px dashed var(--blue-line)}
-  .qlist .q:last-child{border-bottom:none}
-  .ans{color:#2e7d5b;font-weight:600;margin-left:6px;display:none}
-  .ans.show{display:inline}
-  .btn{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;padding:10px 18px;border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 20px}
+  .goalbox{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:15px;margin:4px 0 18px}
+  .goalbox .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+  .donebadge{display:inline-flex;align-items:center;gap:7px;background:rgba(46,125,91,.12);border:1.5px solid var(--green);color:var(--green);
+    font-weight:600;font-size:14px;border-radius:20px;padding:6px 14px;margin-bottom:14px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s;text-decoration:none;display:inline-block}
   .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
   .btn.ghost{border-color:var(--blue-line);box-shadow:none;color:var(--muted)}
   .btn.sm{font-size:13px;padding:7px 13px;box-shadow:2px 2px 0 var(--ink)}
-  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
-  .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
-  .proj-note b{color:var(--accent);font-style:normal}
-  #revBox.show{display:block!important}
   @media(max-width:760px){.app{flex-direction:column}.side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}.main{padding:22px 18px 50px}}
 </style>
 </head>
 <body>
 <div class="app">
   <nav class="side">
-    <div class="brand">Voyage</div>
+    <div class="brand"><a href="home.html">Voyage</a></div>
     <div class="sub">Grade 4 · Social Studies</div>
     <div id="pcount"></div>
     <div id="pbar"><div id="pfill"></div></div>
@@ -71,191 +67,114 @@
   </nav>
   <main class="main">
     <div class="crumb" id="crumb"></div>
-    <div class="progress" id="progress"></div>
     <div class="card" id="card"></div>
-    <div class="nav">
-      <button class="btn ghost" id="back">Back</button>
-      <span class="crumb" id="counter" style="margin:0"></span>
-      <button class="btn" id="next">Next</button>
-    </div>
   </main>
 </div>
 
 <script>
-const COURSE = {
-  subject:"Grade 4 · Social Studies",
-  domains:[
-  { name:"Geography", skills:[
-    { title:"Map skills", proj:"Plotting where your plane landed \u2014 maps use directions and symbols.",
-      cards:[
-        {tag:"Learn", body:`<p>Maps have tools to read them: a <b>compass rose</b> (N, S, E, W), a <b>legend/key</b> (what the symbols mean), and a <b>scale</b> (how map distance = real distance). Learn the tools and any map opens up.</p>`},
-        {tag:"Example", body:`<div class="ex">A blue line on a map might mean a river \u2014 the legend tells you. The compass rose tells you the river flows north.</div>`},
-        {tag:"Your turn", practice:[["What does a compass rose show?","Directions (N, S, E, W)"],["What does the map legend tell you?","What the symbols mean"]]},
-        {tag:"Prove it", body:`<p>You see a symbol on a map you don\u2019t recognize. Where do you look?</p>`, reveal:`The legend (key) \u2014 it explains every symbol on the map.`}
-      ]},
-    { title:"The 5 U.S. regions", proj:"Understanding the country your projects are made in.",
-      cards:[
-        {tag:"Learn", body:`<p>The United States splits into five <b>regions</b>: the <b>Northeast</b>, <b>Southeast</b>, <b>Midwest</b>, <b>Southwest</b>, and <b>West</b>. Each has its own geography, climate, and way of life.</p>`},
-        {tag:"Example", body:`<div class="ex">The Southwest is hot and dry (deserts); the Northeast has big cities and cold winters. Same country, very different places.</div>`},
-        {tag:"Your turn", practice:[["How many regions is the U.S. usually divided into?","Five"],["Name two U.S. regions","(Northeast, Southeast, Midwest, Southwest, West)"]]},
-        {tag:"Prove it", body:`<p>Why do people in different U.S. regions live differently?</p>`, reveal:`Because geography and climate differ \u2014 desert life, mountain life, and coastal city life aren\u2019t the same.`}
-      ]},
-    { title:"States, capitals & landforms", proj:"Knowing the map before you map anything.",
-      cards:[
-        {tag:"Learn", body:`<p>The U.S. has <b>50 states</b>, each with a <b>capital</b> (where its government sits). The land has <b>landforms</b> \u2014 mountains, plains, rivers, coasts \u2014 that shape each state.</p>`},
-        {tag:"Example", body:`<div class="ex">Colorado\u2019s capital is Denver, and it\u2019s full of mountains (the Rockies). Kansas is flat plains \u2014 great for farming.</div>`},
-        {tag:"Your turn", practice:[["How many states are in the U.S.?","50"],["What is a state capital?","The city where its government is"],["Name a landform","(mountain, river, plain, coast\u2026)"]]},
-        {tag:"Prove it", body:`<p>Why might a state with lots of rivers grow differently than a desert state?</p>`, reveal:`Rivers give water for farming, travel, and cities \u2014 geography shapes how a place develops.`}
-      ]},
-    { title:"How geography shapes life", proj:"Place changes how people build \u2014 like your project\u2019s materials.",
-      cards:[
-        {tag:"Learn", body:`<p>Where people live shapes <b>how</b> they live \u2014 their jobs, food, homes, and clothes. Geography isn\u2019t just maps; it explains why life looks different from place to place.</p>`},
-        {tag:"Example", body:`<div class="ex">People near the ocean often fish; people on the plains often farm; mountain towns build for snow. The land decides a lot.</div>`},
-        {tag:"Your turn", practice:[["Why might a coastal town have many fishers?","The ocean is right there"],["Geography affects jobs, food, and what else?","(homes, clothes, travel\u2026)"]]},
-        {tag:"Prove it", body:`<p>Why do people in cold, snowy places build different homes than people in hot deserts?</p>`, reveal:`Homes are built for the climate \u2014 insulation and steep roofs for snow, cooling and shade for deserts. Geography drives the design.`}
-      ]}
+const SAVE_KEY='voyage_g4ss_progress';
+const DOMAINS=[
+  {name:'Geography', skills:[
+    {code:'SS.4.G.1', title:'Map skills', file:'lesson-ss1-map-skills.html', mins:15,
+     blurb:'A supply cache is buried on Gull Island, and the ranger’s note is useless — until you can read a map. Earn the four tools: compass, legend, grid, and scale.',
+     goal:'Read any map like a ranger: direction, symbols, addresses, and distance.'},
+    {code:'SS.4.G.2', title:'The 5 U.S. regions', file:'lesson-ss2-us-regions.html', mins:15,
+     blurb:'Fifty states is a lot to hold in your head — so Americans fold them into five big neighborhoods. Match mystery postcards to the map and meet all five.',
+     goal:'Name the five regions and predict a place’s land, weather, and daily life from its region.'},
+    {code:'SS.4.G.3', title:'States, capitals & landforms', file:'lesson-ss3-states-capitals-landforms.html', mins:15,
+     blurb:'Quick: what’s the capital of New York? If you said New York City, this lesson is for you. Then read the land itself — Rockies, Appalachians, Great Plains, Mississippi.',
+     goal:'Run the one true capital test, and sketch the country’s landform skeleton from memory.'},
+    {code:'SS.4.G.4', title:'How geography shapes life', file:'lesson-ss4-geography-shapes-life.html', mins:15,
+     blurb:'Play city founder in 1800: pick the spot, watch the land decide your town’s fate — then learn the two moves people use to push back.',
+     goal:'Explain where cities grow, what jobs the land hands out, and adapt vs modify.'}
   ]},
-  { name:"Civics & Government", skills:[
-    { title:"Why we have rules & laws", proj:"A game needs rules the same way a country needs laws.",
-      cards:[
-        {tag:"Learn", body:`<p><b>Rules</b> and <b>laws</b> keep people safe and treat everyone fairly. Without them, things get chaotic and unfair. Government makes and enforces laws so a community can live together.</p>`},
-        {tag:"Example", body:`<div class="ex">Traffic laws (stop at red) keep drivers safe. Imagine an intersection with no rules \u2014 chaos and crashes. Laws prevent that.</div>`},
-        {tag:"Your turn", practice:[["Why do communities have laws?","To keep people safe and fair"],["What would happen with no rules at all?","Chaos / unfairness"]]},
-        {tag:"Prove it", body:`<p>How is a law like a rule in a game you designed?</p>`, reveal:`Both set fair limits everyone agrees to follow, so the game (or the community) works and isn\u2019t chaos.`}
-      ]},
-    { title:"How democracy works", proj:"Voting on the best design \u2014 the group decides.",
-      cards:[
-        {tag:"Learn", body:`<p>In a <b>democracy</b>, the people have power \u2014 they <b>vote</b> to choose leaders and decide things. The choice with the most votes wins (majority rules), while still protecting everyone\u2019s rights.</p>`},
-        {tag:"Example", body:`<div class="ex">A class votes on a field trip: beach gets 18 votes, museum gets 10. The beach wins \u2014 that\u2019s majority rule, democracy in action.</div>`},
-        {tag:"Your turn", practice:[["In a democracy, who has the power?","The people"],["How do people make choices in a democracy?","By voting"]]},
-        {tag:"Prove it", body:`<p>Why is voting fairer than one person deciding everything?</p>`, reveal:`Everyone gets a say, so the decision reflects the whole group \u2014 not just one person\u2019s wishes.`}
-      ]},
-    { title:"The three branches", proj:"Different jobs that check each other \u2014 like a build team.",
-      cards:[
-        {tag:"Learn", body:`<p>The U.S. government has <b>three branches</b>: the <b>Legislative</b> (makes laws \u2014 Congress), the <b>Executive</b> (carries out laws \u2014 the President), and the <b>Judicial</b> (decides what laws mean \u2014 the courts). They check each other so no one has too much power.</p>`},
-        {tag:"Example", body:`<div class="ex">Congress writes a law, the President signs it, and courts decide if it\u2019s fair. Three jobs, split up on purpose.</div>`},
-        {tag:"Your turn", practice:[["Which branch makes laws?","Legislative (Congress)"],["Which branch carries out laws?","Executive (President)"],["Which branch decides what laws mean?","Judicial (courts)"]]},
-        {tag:"Prove it", body:`<p>Why split government into three branches instead of one?</p>`, reveal:`So no single branch gets too much power \u2014 they check and balance each other.`}
-      ]},
-    { title:"Citizens: rights & responsibilities", proj:"Being fair to teammates \u2014 rights come with responsibilities.",
-      cards:[
-        {tag:"Learn", body:`<p>Citizens have <b>rights</b> (things they\u2019re free to do \u2014 speak, vote, be treated fairly) AND <b>responsibilities</b> (things they should do \u2014 follow laws, help the community, respect others). Rights and responsibilities go together.</p>`},
-        {tag:"Example", body:`<div class="ex">You have the right to speak your opinion, and the responsibility to let others speak theirs too.</div>`},
-        {tag:"Your turn", practice:[["Name a right a citizen has","(speak, vote, be treated fairly\u2026)"],["Name a responsibility a citizen has","(follow laws, help others, respect people\u2026)"]]},
-        {tag:"Prove it", body:`<p>Why do rights come with responsibilities?</p>`, reveal:`If everyone used their rights but ignored responsibilities, rights would clash. Responsibilities keep things fair for all.`}
-      ]}
+  {name:'Civics', skills:[
+    {code:'SS.4.C.1', title:'Why we have rules & laws', file:'lesson-ss5-rules-laws.html', mins:15,
+     blurb:'Play a game against Remy, who keeps inventing rules that help Remy. Feel exactly why rules exist — then learn what levels a rule up into a law.',
+     goal:'Spot a rule’s job (fair, safe, predictable) and run the four-part rule-vs-law test.'},
+    {code:'SS.4.C.2', title:'How democracy works', file:'lesson-ss6-democracy.html', mins:15,
+     blurb:'Your class gets ONE reward — but who decides? Try the loudest kid, then a favorite, then a vote. Then scale it up to a country of millions.',
+     goal:'Run a fair vote, do the majority math, and explain representatives and fair losses.'},
+    {code:'SS.4.C.3', title:'The three branches', file:'lesson-ss7-three-branches.html', mins:15,
+     blurb:'Marcus makes the rules, enforces the rules, AND judges every appeal. Live one afternoon under Marcus — then meet America’s fix: three branches watching each other.',
+     goal:'Name what each branch does and how checks and balances stop a power grab.'},
+    {code:'SS.4.C.4', title:'Rights & responsibilities', file:'lesson-ss8-rights-responsibilities.html', mins:15,
+     blurb:'A day with all your rights and nobody’s responsibilities — and watch every right collapse. Then learn both sides of the citizen’s deal.',
+     goal:'Name your rights, the duties holding each one up, and the citizen jobs beyond them.'}
   ]},
-  { name:"Economics", skills:[
-    { title:"Needs vs wants", proj:"Deciding what your project money must go to first.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>need</b> is something you must have to live (food, water, shelter). A <b>want</b> is something you\u2019d like but can live without (toys, candy). Smart choices cover needs first.</p>`},
-        {tag:"Example", body:`<div class="ex">Water = need. A video game = want. Both are fine to have, but if money\u2019s tight, needs come first.</div>`},
-        {tag:"Your turn", practice:[["Is food a need or a want?","Need"],["Is a new toy a need or a want?","Want"]]},
-        {tag:"Prove it", body:`<p>You have $5 and you\u2019re hungry. Why buy lunch before a toy?</p>`, reveal:`Food is a need (you must eat); the toy is a want. Needs come first when money is limited.`}
-      ]},
-    { title:"Goods, services, producers & consumers", proj:"Your game IS a service people use \u2014 you\u2019re the producer.",
-      cards:[
-        {tag:"Learn", body:`<p>A <b>good</b> is a thing you can hold (a toy, an apple). A <b>service</b> is work someone does for you (a haircut, teaching). A <b>producer</b> makes goods or gives services; a <b>consumer</b> uses them.</p>`},
-        {tag:"Example", body:`<div class="ex">A baker (producer) makes bread (a good). You (consumer) buy it. A teacher provides a service \u2014 teaching.</div>`},
-        {tag:"Your turn", practice:[["Is a haircut a good or a service?","Service"],["Someone who makes/sells things is a?","Producer"],["Someone who buys/uses things is a?","Consumer"]]},
-        {tag:"Prove it", body:`<p>When you build a game your friends play, are you a producer or consumer? Why?</p>`, reveal:`A producer \u2014 you made something (a service/experience) that others use. Your friends are the consumers.`}
-      ]},
-    { title:"Money, trade & choices", proj:"Every project has trade-offs \u2014 you can\u2019t buy everything.",
-      cards:[
-        {tag:"Learn", body:`<p>People use <b>money</b> to <b>trade</b> for goods and services. But money is limited, so every choice has a <b>trade-off</b> \u2014 pick one thing, give up another. Long ago people bartered (traded goods directly) before money.</p>`},
-        {tag:"Example", body:`<div class="ex">You have $10. A book is $10, so is a game. Buy the book \u2192 you gave up the game. That\u2019s a trade-off (opportunity cost).</div>`},
-        {tag:"Your turn", practice:[["Trading goods directly, with no money, is called?","Bartering"],["When you pick one thing, what happens to the other?","You give it up (trade-off)"]]},
-        {tag:"Prove it", body:`<p>Why can\u2019t you buy everything you want?</p>`, reveal:`Money is limited, so you choose \u2014 and every choice means giving something else up. That\u2019s the trade-off.`}
-      ]}
+  {name:'Economics', skills:[
+    {code:'SS.4.E.1', title:'Needs vs wants', file:'lesson-ss9-needs-wants.html', mins:15,
+     blurb:'A storm is coming and you hold the family’s $50. The cart can’t fit everything — choose wrong and the weekend gets dark and thirsty.',
+     goal:'Use the go-without test, put needs first, and see every choice’s hidden trade.'},
+    {code:'SS.4.E.2', title:'Goods, services, producers & consumers', file:'lesson-ss10-goods-services.html', mins:15,
+     blurb:'Six shops on Main Street — sometimes you leave holding a thing, sometimes with empty hands and a lighter pocket. Crack the difference and meet the circle of makers and buyers.',
+     goal:'Sort goods from services and switch between producer and consumer like everyone does daily.'},
+    {code:'SS.4.E.3', title:'Money, trade & choices', file:'lesson-ss11-money-trade.html', mins:15,
+     blurb:'Trade Day: no money allowed. Three exhausting trades later, you’ll understand exactly why humans invented money — and what prices are quietly telling you.',
+     goal:'Explain barter’s flaw, money’s three jobs, and read prices as scarcity messages.'}
   ]},
-  { name:"History", skills:[
-    { title:"How we know about the past", proj:"Your flight log is a primary source of how your build changed.",
-      cards:[
-        {tag:"Learn", body:`<p>We learn about the past from <b>evidence</b>. A <b>primary source</b> comes from the time itself (a diary, photo, old letter). A <b>secondary source</b> is written later about it (a textbook). Primary sources are like eyewitnesses.</p>`},
-        {tag:"Example", body:`<div class="ex">A soldier\u2019s actual letter from a war = primary source. A book written 100 years later about that war = secondary source.</div>`},
-        {tag:"Your turn", practice:[["A diary from the actual time is a ___ source","Primary"],["A textbook written much later is a ___ source","Secondary"]]},
-        {tag:"Prove it", body:`<p>Why is a photo from an event often more trusted than a story told 50 years later?</p>`, reveal:`The photo is a primary source \u2014 from the moment itself. Later stories can change or forget details.`}
-      ]},
-    { title:"How communities change over time", proj:"Tracking how your project improved, step by step.",
-      cards:[
-        {tag:"Learn", body:`<p>Communities <b>change over time</b> \u2014 in population, technology, jobs, and buildings. Historians look at <b>cause and effect</b>: why a change happened and what it led to.</p>`},
-        {tag:"Example", body:`<div class="ex">A town got a railroad (cause) \u2192 more people and businesses moved in (effect) \u2192 it grew from a village into a city.</div>`},
-        {tag:"Your turn", practice:[["Historians study why things happened \u2014 that\u2019s called?","Cause and effect"],["Name one way communities change over time","(population, technology, jobs, buildings\u2026)"]]},
-        {tag:"Prove it", body:`<p>How could a new invention change a whole community?</p>`, reveal:`It causes ripple effects \u2014 e.g. cars led to roads, gas stations, and suburbs. One change causes many.`}
-      ]},
-    { title:"U.S. symbols & landmarks", proj:"Symbols carry meaning \u2014 like a logo for your project.",
-      cards:[
-        {tag:"Learn", body:`<p>A country uses <b>symbols</b> to stand for its ideas and history: the <b>flag</b>, the <b>bald eagle</b>, the <b>Statue of Liberty</b>, landmarks like the White House. Each carries meaning beyond just the object.</p>`},
-        {tag:"Example", body:`<div class="ex">The 50 stars on the U.S. flag stand for the 50 states; the 13 stripes stand for the original 13 colonies. The flag tells a story.</div>`},
-        {tag:"Your turn", practice:[["What do the 50 stars on the flag stand for?","The 50 states"],["Name a U.S. symbol","(flag, eagle, Statue of Liberty\u2026)"]]},
-        {tag:"Prove it", body:`<p>Why does a country use symbols like a flag instead of just a name?</p>`, reveal:`Symbols carry shared meaning and pride at a glance \u2014 they stand for a country\u2019s history and values.`}
-      ]}
+  {name:'History', skills:[
+    {code:'SS.4.H.1', title:'How we know about the past', file:'lesson-ss12-knowing-the-past.html', mins:15,
+     blurb:'Family legend says Grandma walked three miles to school. Her own 1962 diary says otherwise. Become a history detective: primary sources, secondary sources, and the three grilling questions.',
+     goal:'Sort primary from secondary sources and cross-check them like a historian.'},
+    {code:'SS.4.H.2', title:'How communities change over time', file:'lesson-ss13-communities-change.html', mins:15,
+     blurb:'Three shuffled photos of the same street corner across a century. Put the story back in order and find the engines — inventions, arrivals, jobs — that rebuild every town.',
+     goal:'Order the past from clues, name the engines of change, and build a timeline.'},
+    {code:'SS.4.H.3', title:'U.S. symbols & landmarks', file:'lesson-ss14-symbols-landmarks.html', mins:15,
+     blurb:'The flag is a message written in numbers — 50 of something, 13 of something else. Crack the code, then meet the eagle, the statue, the cracked bell, and the mountain with faces.',
+     goal:'Decode the flag and tell the true story behind America’s famous symbols and landmarks.'}
   ]}
-  ]
-};
+];
 
-/* ---- engine (same as other courses) ---- */
-let flat = [];
-COURSE.domains.forEach(d => d.skills.forEach(s => flat.push({...s, domain:d.name})));
-let si = 0, ci = 0;
-const SAVE_KEY = 'voyage_g4ss_progress';
-let progress = { done:{}, lastSkill:0 };
-function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) progress=JSON.parse(raw); }catch(e){} }
+let progress={done:{},lastSkill:0};
+function loadProgress(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(raw)progress=Object.assign({done:{},lastSkill:0},JSON.parse(raw)); }catch(e){} if(!progress.done)progress.done={}; }
 function saveProgress(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); }catch(e){} }
-function markSkillDone(i){ progress.done[flat[i].title]=true; saveProgress(); }
-function resetProgress(){ progress={done:{},lastSkill:0}; saveProgress(); loadSkill(0); }
-function buildMenu(){
-  let html='';
-  COURSE.domains.forEach(d=>{
-    html += `<div class="domain">${d.name}</div>`;
+
+const flat=[];
+DOMAINS.forEach(d=>d.skills.forEach(s=>{s.domain=d.name;flat.push(s);}));
+let cur=0;
+
+function drawMenu(){
+  let h='';let idx=0;
+  DOMAINS.forEach(d=>{
+    h+='<div class="domain">'+d.name+'</div>';
     d.skills.forEach(s=>{
-      const idx = flat.findIndex(f=>f.title===s.title);
-      html += `<button class="skill-btn" data-i="${idx}"><span class="check">\u25cb</span><span class="stitle">${s.title}</span></button>`;
+      const done=!!progress.done[s.code];
+      h+='<button class="skill-btn'+(idx===cur?' active':'')+(done?' done':'')+'" data-i="'+idx+'">'
+        +'<span class="check">'+(done?'✓':'○')+'</span><span class="stitle">'+s.title+'</span><span class="lessonmark">◆</span></button>';
+      idx++;
     });
   });
-  const m=document.getElementById('menu'); m.innerHTML=html;
-  m.addEventListener('click',e=>{ const b=e.target.closest('.skill-btn'); if(b) loadSkill(+b.dataset.i); });
+  document.getElementById('menu').innerHTML=h;
+  document.querySelectorAll('.skill-btn').forEach(b=>b.addEventListener('click',()=>{cur=+b.dataset.i;progress.lastSkill=cur;saveProgress();draw();}));
+  const doneCount=flat.filter(s=>progress.done[s.code]).length;
+  document.getElementById('pcount').textContent=doneCount+' / '+flat.length+' skills mastered';
+  document.getElementById('pfill').style.width=Math.round(doneCount/flat.length*100)+'%';
 }
-function loadSkill(i){ si=i; ci=0; progress.lastSkill=i; saveProgress(); render(); }
-function go(d){ const cards=flat[si].cards; if(ci+d<0) return; if(ci+d>=cards.length){ if(si<flat.length-1) loadSkill(si+1); return; } ci+=d; render(); }
-function reveal(){ document.querySelectorAll('.ans').forEach(a=>a.classList.add('show')); document.querySelector('[data-act="reveal"]')?.remove(); }
-function revealOne(){ const box=document.getElementById('revBox'); if(box){box.style.display='block';box.classList.add('show');} document.querySelector('[data-act="revealOne"]')?.remove(); }
-function render(){
-  const s=flat[si], c=s.cards[ci];
-  document.getElementById('crumb').textContent = `${COURSE.subject}  \u203a  ${s.title}`;
-  let inner=`<div class="tag">${c.tag}</div>`;
-  if(ci===0) inner+=`<h2>${s.title}</h2>`;
-  if(c.body) inner+=c.body;
-  if(c.practice){
-    inner+=`<div class="qlist">`;
-    c.practice.forEach(q=> inner+=`<div class="q">${q[0]}<span class="ans">\u2192 ${q[1]}</span></div>`);
-    inner+=`</div><button class="btn sm" data-act="reveal">Reveal answers</button>`;
-  }
-  if(c.reveal){ inner+=`<button class="btn sm" data-act="revealOne">Show the answer</button><div class="payoff" id="revBox" style="display:none;margin-top:14px">${c.reveal}</div>`; }
-  if(ci===s.cards.length-1 && s.proj){ inner+=`<div class="proj-note"><b>In your build:</b> ${s.proj}</div>`; }
-  document.getElementById('card').innerHTML=inner;
-  const doneCount=Object.keys(progress.done).length;
-  document.getElementById('pcount').textContent=`${doneCount} / ${flat.length} skills complete`;
-  document.getElementById('pfill').style.width=(doneCount/flat.length*100)+'%';
-  document.getElementById('progress').innerHTML=s.cards.map((_,k)=>`<div class="seg ${k<=ci?'on':''}"></div>`).join('');
-  document.getElementById('counter').textContent=`${ci+1} / ${s.cards.length}`;
-  document.getElementById('back').style.visibility=ci===0?'hidden':'visible';
-  document.getElementById('next').textContent=(ci===s.cards.length-1)?(si<flat.length-1?'Next skill \u2192':'Done'):'Next';
-  if(ci===s.cards.length-1){ markSkillDone(si); }
-  document.querySelectorAll('.skill-btn').forEach(b=>{
-    const idx=+b.dataset.i, isDone=!!progress.done[flat[idx].title];
-    b.classList.toggle('active',idx===si);
-    b.classList.toggle('done',isDone);
-    const chk=b.querySelector('.check'); if(chk) chk.textContent=isDone?'\u2714':'\u25cb';
-  });
+
+function drawCard(){
+  const s=flat[cur];
+  const done=!!progress.done[s.code];
+  document.getElementById('crumb').textContent='Grade 4 Social Studies  ›  '+s.domain;
+  let h='<div class="tag">Lesson · '+s.code+'</div>';
+  h+='<h2>'+s.title+'</h2>';
+  if(done)h+='<div class="donebadge">✓ Mastered — replay any time</div>';
+  h+='<p>'+s.blurb+'</p>';
+  h+='<div class="goalbox"><div class="lab">You’ll be able to</div>'+s.goal+'</div>';
+  h+='<div class="meta"><span>⏱ ~'+s.mins+' minutes</span><span>✎ 5 questions</span><span>◆ '+s.code+'</span></div>';
+  h+='<a class="btn go" href="'+s.file+'">'+(done?'Replay lesson →':'Start lesson →')+'</a>';
+  document.getElementById('card').innerHTML=h;
 }
+
+function draw(){drawMenu();drawCard();}
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(confirm('Reset all Social Studies progress?')){progress={done:{},lastSkill:0};saveProgress();cur=0;draw();}
+});
+
 loadProgress();
-buildMenu();
-document.getElementById('back').addEventListener('click',()=>go(-1));
-document.getElementById('next').addEventListener('click',()=>go(1));
-document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress?')) resetProgress(); });
-document.getElementById('card').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b) return; if(b.dataset.act==='reveal') reveal(); if(b.dataset.act==='revealOne') revealOne(); });
-loadSkill(progress.lastSkill||0);
+cur=Math.min(progress.lastSkill||0,flat.length-1);
+draw();
 </script>
 </body>
 </html>
