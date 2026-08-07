@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map skills · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- map ---------- */
+  .mapwrap{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:14px;margin:12px 0}
+  .mapwrap svg{display:block;width:100%;height:auto}
+  .cell{fill:transparent;stroke:none;cursor:pointer}
+  .cell:hover{fill:rgba(27,79,138,.08)}
+  .cell.dug{fill:rgba(240,102,63,.18);cursor:default}
+  .cell.found{fill:rgba(46,125,91,.22)}
+  .cell.picked{fill:rgba(27,79,138,.16)}
+  .legend{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+  .leg-row{display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:9px 13px;cursor:pointer;font-size:15px;transition:.15s}
+  .leg-row:hover{border-color:var(--blue)}
+  .leg-row.seen{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .leg-row .sym{width:30px;flex-shrink:0;text-align:center}
+  .leg-row .sym svg{width:26px;height:26px;display:block;margin:0 auto}
+  .leg-row .check{margin-left:auto;color:var(--green);font-weight:700;opacity:0}
+  .leg-row.seen .check{opacity:1}
+  .dirbtns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+  .dirbtns .btn{padding:12px 0;text-align:center}
+  .sym-glow{filter:drop-shadow(0 0 5px rgba(240,102,63,.9))}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Geography</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.G.1</div>
+    <h1>Map skills</h1>
+    <p>Somewhere on Gull Island, a supply cache is buried. You have the island map and one note from the ranger who buried it. That should be enough — <b>if</b> you can read what the map is telling you. Most people can't. By the end of this lesson, you'll read maps like a ranger: direction, symbols, addresses, and distance.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.G.1</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.G.1</div>
+      <div class="side-title">Map skills</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=12,maxStep=0;
+var digs=[],compassDone=false,legendSeen={},gridDone=false,scaleDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Dig for the cache'}]},
+  {phase:'Learn',   items:[{s:1, n:'The compass rose'},{s:2, n:'The legend'},{s:3, n:'Grid addresses'},{s:4, n:'Scale: squares to miles'},{s:5, n:'Catch Mira’s mistake'}]},
+  {phase:'Show it', items:[{s:6, n:'Question 1'},{s:7, n:'Question 2'},{s:8, n:'Question 3'},{s:9, n:'Question 4'},{s:10, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:11, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=6&&s<TOTAL-1){qIndex=s-6;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=6&&it.s<TOTAL-1?(it.s-5):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* =====================================================================
+   THE MAP — one SVG used on every beat, with tools shown or hidden.
+   Grid: columns A–E (left→right), rows 1–5 (top→bottom). 64px cells.
+   Landmarks: lighthouse D1 · camp D4 · palm grove B4 · reef A2 · harbor C5
+   The cache: 2 squares north of camp = D2.
+   opts: {compass, labels, legend-glow sym, clickable, dug/found/picked cells}
+   ===================================================================== */
+var CELL=64, GX=46, GY=30;
+var COLS=['A','B','C','D','E'], ROWS=['1','2','3','4','5'];
+
+function symLighthouse(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<path d="M-7 12 L-3 -10 L3 -10 L7 12 Z" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>'
+  +'<rect x="-5" y="-16" width="10" height="7" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.6"/>'
+  +'<path d="M-4 2 L4 2 M-5 7 L5 7" stroke="var(--accent)" stroke-width="2"/></g>';}
+function symTent(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<path d="M-11 10 L0 -10 L11 10 Z" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>'
+  +'<path d="M0 -10 L0 10 M-4 10 L0 2 L4 10" fill="none" stroke="var(--ink)" stroke-width="1.4"/></g>';}
+function symPalm(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<path d="M0 12 C1 4 1 -2 -1 -6" fill="none" stroke="var(--ink)" stroke-width="2"/>'
+  +'<path d="M-1 -6 C-8 -10 -12 -8 -14 -4 M-1 -6 C-4 -13 -9 -14 -13 -12 M-1 -6 C3 -13 9 -14 12 -11 M-1 -6 C6 -9 10 -6 12 -2" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></g>';}
+function symReef(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<path d="M-12 6 Q-8 0 -4 6 T4 6 T12 6" fill="none" stroke="var(--blue)" stroke-width="2"/>'
+  +'<path d="M-8 -2 Q-4 -8 0 -2 T8 -2" fill="none" stroke="var(--blue)" stroke-width="2"/>'
+  +'<path d="M-2 -12 L2 -8 M2 -12 L-2 -8" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></g>';}
+function symAnchor(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<circle cx="0" cy="-8" r="3" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+  +'<path d="M0 -5 L0 10 M-6 -1 L6 -1 M-9 5 Q-6 11 0 10 Q6 11 9 5 M-9 5 L-6 4 M9 5 L6 4" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/></g>';}
+function symChest(x,y){return '<g transform="translate('+x+','+y+')">'
+  +'<rect x="-11" y="-4" width="22" height="13" rx="2" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.6"/>'
+  +'<path d="M-11 -4 Q0 -14 11 -4" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.6"/>'
+  +'<rect x="-2.5" y="-2" width="5" height="6" rx="1" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/></g>';}
+
+var MARKS=[
+  {sym:'lighthouse', col:3, row:0, name:'Lighthouse'},
+  {sym:'tent',       col:3, row:3, name:'Ranger camp'},
+  {sym:'palm',       col:1, row:3, name:'Palm grove'},
+  {sym:'reef',       col:0, row:1, name:'Shipwreck reef'},
+  {sym:'anchor',     col:2, row:4, name:'Harbor'}
+];
+function drawSym(kind,x,y){
+  if(kind==='lighthouse')return symLighthouse(x,y);
+  if(kind==='tent')return symTent(x,y);
+  if(kind==='palm')return symPalm(x,y);
+  if(kind==='reef')return symReef(x,y);
+  if(kind==='anchor')return symAnchor(x,y);
+  if(kind==='chest')return symChest(x,y);
+  return '';
+}
+function cellCx(c){return GX+c*CELL+CELL/2;}
+function cellCy(r){return GY+r*CELL+CELL/2;}
+
+function drawMap(o){
+  o=o||{};
+  var W=GX+5*CELL+66, H=GY+5*CELL+14;
+  var h='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Map of Gull Island">';
+  h+='<rect x="'+GX+'" y="'+GY+'" width="'+(5*CELL)+'" height="'+(5*CELL)+'" fill="rgba(27,79,138,.05)"/>';
+  h+='<path d="M'+(GX+18)+' '+(GY+92)+' C'+(GX+34)+' '+(GY+18)+' '+(GX+120)+' '+(GY+6)+' '+(GX+196)+' '+(GY+22)
+    +' C'+(GX+266)+' '+(GY+36)+' '+(GX+306)+' '+(GY+86)+' '+(GX+300)+' '+(GY+166)
+    +' C'+(GX+295)+' '+(GY+240)+' '+(GX+236)+' '+(GY+300)+' '+(GX+150)+' '+(GY+304)
+    +' C'+(GX+70)+' '+(GY+308)+' '+(GX+18)+' '+(GY+250)+' '+(GX+12)+' '+(GY+176)
+    +' C'+(GX+8)+' '+(GY+134)+' '+(GX+10)+' '+(GY+116)+' '+(GX+18)+' '+(GY+92)+' Z"'
+    +' fill="rgba(46,125,91,.13)" stroke="var(--green)" stroke-width="2"/>';
+  for(var i=0;i<=5;i++){
+    h+='<line x1="'+(GX+i*CELL)+'" y1="'+GY+'" x2="'+(GX+i*CELL)+'" y2="'+(GY+5*CELL)+'" stroke="var(--blue-line)" stroke-width="1"/>';
+    h+='<line x1="'+GX+'" y1="'+(GY+i*CELL)+'" x2="'+(GX+5*CELL)+'" y2="'+(GY+i*CELL)+'" stroke="var(--blue-line)" stroke-width="1"/>';
+  }
+  if(o.labels){
+    for(var c=0;c<5;c++)h+='<text x="'+cellCx(c)+'" y="'+(GY-9)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" font-weight="700" fill="var(--blue)">'+COLS[c]+'</text>';
+    for(var r=0;r<5;r++)h+='<text x="'+(GX-16)+'" y="'+(cellCy(r)+5)+'" text-anchor="middle" font-family="Space Mono,monospace" font-size="14" font-weight="700" fill="var(--blue)">'+ROWS[r]+'</text>';
+  }
+  for(var m=0;m<MARKS.length;m++){
+    var mk=MARKS[m];
+    var glow=(o.glow===mk.sym)?' class="sym-glow"':'';
+    h+='<g'+glow+'>'+drawSym(mk.sym,cellCx(mk.col),cellCy(mk.row))+'</g>';
+  }
+  if(o.chest)h+=drawSym('chest',cellCx(3),cellCy(1));
+  if(o.compass){
+    var cx=W-34, cy=GY+40;
+    h+='<g transform="translate('+cx+','+cy+')">'
+      +'<circle r="24" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>'
+      +'<path d="M0 -17 L5 4 L0 0 L-5 4 Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1"/>'
+      +'<path d="M0 17 L5 -1 L0 3 L-5 -1 Z" fill="#fff" stroke="var(--ink)" stroke-width="1" transform="rotate(180)" opacity="0"/>'
+      +'<text y="-30" text-anchor="middle" font-family="Space Mono,monospace" font-size="13" font-weight="700" fill="var(--ink)">N</text>'
+      +'<text y="44" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">S</text>'
+      +'<text x="32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">E</text>'
+      +'<text x="-32" y="4" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--muted)">W</text>'
+      +'</g>';
+  }
+  if(o.scale){
+    h+='<g transform="translate('+GX+','+(GY+5*CELL+10)+')">'
+      +'<line x1="0" y1="0" x2="'+CELL+'" y2="0" stroke="var(--ink)" stroke-width="2.4"/>'
+      +'<line x1="0" y1="-4" x2="0" y2="4" stroke="var(--ink)" stroke-width="2.4"/>'
+      +'<line x1="'+CELL+'" y1="-4" x2="'+CELL+'" y2="4" stroke="var(--ink)" stroke-width="2.4"/>'
+      +'<text x="'+(CELL+10)+'" y="4" font-family="Space Mono,monospace" font-size="12" fill="var(--ink)">1 square = 1 mile</text></g>';
+  }
+  if(o.cells){
+    for(var rr=0;rr<5;rr++)for(var cc=0;cc<5;cc++){
+      var id=COLS[cc]+ROWS[rr], cls='cell';
+      if(o.dug&&o.dug.indexOf(id)>=0)cls+=' dug';
+      if(o.found===id)cls+=' found';
+      if(o.picked===id)cls+=' picked';
+      h+='<rect class="'+cls+'" data-cell="'+id+'" x="'+(GX+cc*CELL)+'" y="'+(GY+rr*CELL)+'" width="'+CELL+'" height="'+CELL+'"'
+        +(o.onCell?' onclick="'+o.onCell+'(\''+id+'\')"':'')+'/>';
+    }
+  }
+  h+='</svg>';
+  return h;
+}
+
+/* ---------- BEAT 0 · warm-up: dig blind ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Dig for the cache</h2>';
+  h+='<p>Here is Gull Island, and here is the ranger’s note:</p>';
+  h+='<div class="work"><div class="lab">The ranger’s note</div>“The cache is buried <b>2 squares north of my camp</b>.”</div>';
+  h+='<p>Simple enough. Click a square to dig.</p>';
+  h+='<div class="mapwrap">'+drawMap({cells:true,dug:digs,onCell:'digCell'})+'</div>';
+  h+='<div id="digfb">'+(digs.length>=2?digRevealHtml():'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(digs.length>=2?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function digRevealHtml(){
+  return '<div class="fb no"><b>Sand. And more sand.</b> Here’s the problem: the note is perfectly clear — but this map hasn’t told you which way <b>north</b> is, which of those little drawings is the <b>camp</b>, or how big a <b>square</b> really is. You weren’t digging. You were guessing.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>A map is a message written in tools: a compass for direction, a legend for symbols, a grid for addresses, a scale for distance. Learn the four tools and the note stops being a riddle.</p></div>';
+}
+function digCell(id){
+  if(digs.length>=2)return;
+  if(digs.indexOf(id)>=0)return;
+  digs.push(id);
+  if(digs.length<2){
+    beat1();
+    el('digfb').innerHTML='<div class="fb no"><b>You dug at '+id+'… sand.</b> Hmm. Try one more spot — anywhere you like.</div>';
+  } else {
+    beat1();
+  }
+}
+
+/* ---------- BEAT 1 · compass rose ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">Tool 1 · Direction</div>';
+  h+='<h2>The compass rose</h2>';
+  h+='<p>The first tool just appeared in the corner: the <b>compass rose</b>. Its arrow points <b>north</b>. On this map — and on most maps — north is the <b>top</b> of the page. South is the bottom, east is the right, west is the left.</p>';
+  h+='<p>One thing north is <b>not</b>: it is not “wherever you happen to be facing.” You can spin in a circle all day — north stays exactly where the compass rose says it is.</p>';
+  h+='<div class="mapwrap">'+drawMap({compass:true})+'</div>';
+  h+='<p>Try it: the ferry leaves the harbor (the bottom of the map) and sails toward the lighthouse (the top). <b>Which direction is it sailing?</b></p>';
+  h+='<div class="dirbtns">'
+    +'<button class="btn" onclick="pickDir(\'N\')">North</button>'
+    +'<button class="btn" onclick="pickDir(\'S\')">South</button>'
+    +'<button class="btn" onclick="pickDir(\'E\')">East</button>'
+    +'<button class="btn" onclick="pickDir(\'W\')">West</button></div>';
+  h+='<div id="dirfb">'+(compassDone?'<div class="fb ok"><b>North.</b> Bottom to top is south-to-north — the rose says so, no matter which way the captain is facing.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(compassDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickDir(d){
+  var fb=el('dirfb');
+  if(d==='N'){compassDone=true;fb.innerHTML='<div class="fb ok"><b>North.</b> Bottom to top is south-to-north — the rose says so, no matter which way the captain is facing.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Check the rose.</b> Its arrow marks north at the <b>top</b>. The ferry is moving from the bottom of the map toward the top — so which one is that?</div>';}
+}
+
+/* ---------- BEAT 2 · legend ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Tool 2 · Symbols</div>';
+  h+='<h2>The legend</h2>';
+  h+='<p>Those little drawings on the island aren’t decoration — each one stands for a real place. The decoder is the <b>legend</b> (some maps call it the <b>key</b>): a box that lists every symbol and what it means. Never guess a symbol. Look it up.</p>';
+  h+='<p><b>Click each row of the legend</b> to light up that place on the map:</p>';
+  h+='<div class="mapwrap">'+drawMap({compass:true,glow:window.__glow})+'</div>';
+  h+='<div class="legend" id="leg"></div>';
+  h+='<div id="legfb">'+(legDone()?'<div class="fb ok"><b>Decoded.</b> Now you know which drawing is the ranger’s camp — the tent at the island’s east side. The note is starting to make sense.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(legDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  var lg='';
+  for(var i=0;i<MARKS.length;i++){
+    var mk=MARKS[i];
+    lg+='<div class="leg-row'+(legendSeen[mk.sym]?' seen':'')+'" onclick="seeLegend(\''+mk.sym+'\')">'
+      +'<span class="sym"><svg viewBox="-16 -18 32 34">'+drawSym(mk.sym,0,0)+'</svg></span>'
+      +'<span>'+mk.name+'</span><span class="check">✓</span></div>';
+  }
+  el('leg').innerHTML=lg;
+}
+function legDone(){var n=0;for(var k in legendSeen)n++;return n>=MARKS.length;}
+function seeLegend(sym){
+  legendSeen[sym]=true;window.__glow=sym;
+  beat3();
+}
+
+/* ---------- BEAT 3 · grid addresses ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Tool 3 · Addresses</div>';
+  h+='<h2>Grid addresses</h2>';
+  h+='<p>“It’s over there, kind of near the middle” is how places get lost. Maps fix that with a <b>grid</b>: letters run across the top (columns), numbers run down the side (rows). Where column <b>D</b> crosses row <b>1</b>, that square’s address is <b>D1</b> — letter first, then number. Look: that’s exactly where the lighthouse stands.</p>';
+  h+='<p>Your turn. The ranger radios: “Meet me at <b>D2</b>.” <b>Click that square.</b></p>';
+  h+='<div class="mapwrap">'+drawMap({compass:true,labels:true,cells:true,picked:window.__gridPick,onCell:'pickCell'})+'</div>';
+  h+='<div id="gridfb">'+(gridDone?'<div class="fb ok"><b>D2 it is</b> — slide down from the D at the top, slide across from the 2 on the side, and stop where they cross. Every square on Earth’s maps can be named this way.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(gridDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickCell(id){
+  window.__gridPick=id;
+  if(id==='D2'){gridDone=true;beat4();}
+  else{
+    beat4();
+    el('gridfb').innerHTML='<div class="fb no"><b>That square is '+id+'.</b> For D2: find the <b>D</b> at the top and come straight down that column, then find the <b>2</b> on the left side and come straight across that row. Click where they meet.</div>';
+  }
+}
+
+/* ---------- BEAT 4 · scale ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Tool 4 · Distance</div>';
+  h+='<h2>Scale: squares to miles</h2>';
+  h+='<p>Last tool, bottom corner: the <b>scale</b>. It tells you what map-distance means in real-distance. On this map, <b>one square = one mile</b>. So you can measure a hike without leaving your chair: count the squares.</p>';
+  h+='<p>Count with me: the ranger’s camp sits at <b>D4</b>. The lighthouse is at <b>D1</b>, straight north up column D. D4 → D3 → D2 → D1. <b>How many miles is that walk?</b></p>';
+  h+='<div class="mapwrap">'+drawMap({compass:true,labels:true,scale:true})+'</div>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickMiles(2)">2 miles</button>'
+    +'<button class="btn" onclick="pickMiles(3)">3 miles</button>'
+    +'<button class="btn" onclick="pickMiles(4)">4 miles</button></div>';
+  h+='<div id="scalefb">'+(scaleDone?scaleOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(scaleDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function scaleOkHtml(){
+  return '<div class="fb ok"><b>3 miles.</b> Three square-hops — D4 to D3, D3 to D2, D2 to D1 — and the scale turns each hop into a mile.</div>'
+    +'<div class="goal"><div class="lab">All four tools</div><p>Now reread the note: “2 squares <b>north</b> of my <b>camp</b>.” Compass: north is up. Legend: the camp is the tent at D4. Grid: two squares up from D4 is <b>D2</b>. Scale: that’s a 2-mile walk. You already stood on the answer.</p></div>';
+}
+function pickMiles(n){
+  var fb=el('scalefb');
+  if(n===3){scaleDone=true;fb.innerHTML=scaleOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>Count the hops, not the squares you touch.</b> D4→D3 is one, D3→D2 is two, D2→D1 is three. Try again.</div>';}
+}
+
+/* ---------- BEAT 5 · catch the mistake ---------- */
+function beat6(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Mira’s mistake</h2>';
+  h+='<p>Mira read the same note. At the camp, she faced the palm grove — because that’s the way she happened to be looking — called that direction “north,” walked 2 squares, and dug at <b>B4</b>. Sand.</p>';
+  h+='<div class="row"><button class="btn sm" onclick="testMira()">Check Mira’s plan against the tools</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The tool check</div>'
+    +'compass: does north move when Mira turns? &nbsp;<b>never — the rose holds it at the top</b><br>'
+    +'her path: camp D4, facing the palm grove, is walking <b>west</b><br>'
+    +'the true path: 2 squares north of D4 &nbsp;→&nbsp; D3 → <b>D2</b><br>'
+    +'<b>verdict: the cache was never at B4</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div id="chestwrap" class="hide"><div class="mapwrap">'+drawMap({compass:true,labels:true,scale:true,chest:true,found:'D2'})+'</div></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testMira();
+}
+function testMira(){
+  el('mh').classList.remove('hide');
+  el('chestwrap').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Mira trusted her face instead of the compass.</b> Directions on a map never depend on where you’re standing or looking — that’s the whole point of the rose. Two squares north of the camp is <b>D2</b>… and look what was waiting there.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'On this map, the harbor sits at the bottom edge and the lighthouse at the top. A boat going from the harbor to the lighthouse is heading…',
+   a:['East','North','South','Wherever the captain is facing'],correct:1,
+   why:'The compass rose pins north to the top of the map. Bottom to top is a trip north — and no amount of turning your head changes that.'},
+  {q:'You spot a symbol on a map that you’ve never seen before. What’s the one sure way to find out what it means?',
+   a:['Guess from its shape','Look it up in the legend (the key)','Assume it’s a town','Skip it — symbols are decoration'],correct:1,
+   why:'The legend is the map’s decoder: every symbol, spelled out. Guessing is how Mira ended up digging in sand.'},
+  {q:'The palm grove grows where column B crosses row 4. What is its grid address?',
+   a:['4B','B4','Row B, column 4','Near the middle'],correct:1,
+   why:'Letter first, then number: column B, row 4 → B4. “Near the middle” is how places get lost.'},
+  {q:'The scale says 1 square = 1 mile. A trail runs straight from A2 to A5. How long is the hike?',
+   a:['2 miles','5 miles','3 miles','You can’t tell from a map'],correct:2,
+   why:'Count the hops: A2→A3, A3→A4, A4→A5 — three hops, and the scale makes each one a mile.'},
+  {q:'Mira insists: “North is whichever way I’m facing.” What’s the truth?',
+   a:['She’s right — north follows you','North is fixed — the compass rose shows it, top of this map','North is wherever the sun is','Only rangers know where north is'],correct:1,
+   why:'North never moves. The compass rose holds it in place — which is exactly why her “2 squares north” landed in the sand at B4 instead of the cache at D2.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:6+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.G.1']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🗺️':'🧭')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you read the map':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Compass for direction, legend for symbols, grid for addresses, scale for distance — the four tools that turn any map from a picture into a message. Next up: using them on a map of the whole United States.</p></div>';
+  } else {
+    h+='<p style="text-align:center">The four tools are all in the Learn steps in the sidebar — revisit any of them, then try the questions again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;digs=[];compassDone=false;legendSeen={};window.__glow=null;window.__gridPick=null;gridDone=false;scaleDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();else if(step===5)beat6();
+  else if(step>=6&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

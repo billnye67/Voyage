@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How geography shapes life · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- map ---------- */
+  .mapwrap{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:14px;margin:12px 0}
+  .mapwrap svg{display:block;width:100%;height:auto}
+  .spot{cursor:pointer}
+  .spot circle{transition:.15s}
+  .spot:hover circle{stroke-width:3}
+  .spot.picked circle{fill:rgba(46,125,91,.25);stroke:var(--green)}
+  .jobcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .jobcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .jobcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .jobcard .tick{color:var(--green);font-weight:700;float:right}
+  .jobbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .jobbtns .btn{font-size:13.5px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Geography</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.G.4</div>
+    <h1>How geography shapes life</h1>
+    <p>Cities don’t land where they land by luck. The land underneath decides almost everything — where people settle, what jobs they do, even what their houses look like. Today you play city founder: pick a spot, watch what the land does to your plans, and learn the two tricks humans use to push back.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.G.4</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.G.4</div>
+      <div class="side-title">How geography shapes life</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var founded=null,waterDone=false,jobsSolved=[false,false,false],pushDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Found your city'}]},
+  {phase:'Learn',   items:[{s:1, n:'Water writes the map'},{s:2, n:'The land hands out jobs'},{s:3, n:'People push back'},{s:4, n:'Catch Kai’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* ---------- the physical map (same skeleton as lesson 3) ---------- */
+var US_OUTLINE='M30 40 C70 22 110 20 128 26 L138 42 C190 38 280 46 346 62 C378 52 412 58 428 74 C438 96 434 130 420 150 L392 168 C404 196 402 238 386 268 C360 284 322 280 302 262 L286 262 C244 274 196 268 170 254 C152 244 136 232 128 218 C96 230 62 232 40 218 C22 176 18 92 30 40 Z';
+function mountains(pts,color){
+  var h='';
+  for(var i=0;i<pts.length;i++){
+    var p=pts[i],w=p[2]||16;
+    h+='<path d="M'+(p[0]-w/2)+' '+p[1]+' L'+p[0]+' '+(p[1]-w*0.95)+' L'+(p[0]+w/2)+' '+p[1]+' Z" fill="'+color+'" stroke="var(--ink)" stroke-width="1.3"/>';
+  }
+  return h;
+}
+function drawLand(o){
+  o=o||{};
+  var h='<svg viewBox="0 0 460 300" role="img" aria-label="Physical map of the United States">';
+  h+='<path d="'+US_OUTLINE+'" fill="#efe9d2" stroke="var(--ink)" stroke-width="2"/>';
+  h+=mountains([[118,90,20],[132,120,24],[120,152,22],[136,184,24],[124,214,18]],'#b9cfc4');
+  h+=mountains([[344,118,15],[358,140,17],[344,162,14],[366,180,16]],'#c8d6b2');
+  h+='<path d="M268 72 C262 108 276 140 266 176 C258 206 272 236 268 266" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round"/>';
+  if(o.spots){
+    var spots=[
+      {id:'harbor', x:404, y:196, label:'A'},
+      {id:'plains', x:216, y:130, label:'B'},
+      {id:'peak',   x:127, y:135, label:'C'}
+    ];
+    for(var i=0;i<spots.length;i++){
+      var s=spots[i];
+      h+='<g class="spot'+(founded===s.id?' picked':'')+'" onclick="foundCity(\''+s.id+'\')">'
+        +'<circle cx="'+s.x+'" cy="'+s.y+'" r="15" fill="rgba(240,102,63,.14)" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>'
+        +'<text x="'+s.x+'" y="'+(s.y+5)+'" text-anchor="middle" font-family="Space Mono,monospace" font-weight="700" font-size="14" fill="var(--ink)">'+s.label+'</text></g>';
+    }
+    h+='<text x="404" y="228" text-anchor="middle" font-family="Space Mono,monospace" font-size="9.5" fill="var(--muted)">coast + river mouth</text>';
+    h+='<text x="216" y="160" text-anchor="middle" font-family="Space Mono,monospace" font-size="9.5" fill="var(--muted)">dry open plain</text>';
+    h+='<text x="127" y="166" text-anchor="middle" font-family="Space Mono,monospace" font-size="9.5" fill="var(--muted)">high mountain ridge</text>';
+  }
+  if(o.cities){
+    var cities=[[404,196],[418,110],[386,240],[268,262],[272,120],[262,196],[52,130],[44,196],[60,74],[300,86],[352,220]];
+    for(var c=0;c<cities.length;c++)
+      h+='<circle cx="'+cities[c][0]+'" cy="'+cities[c][1]+'" r="5" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.3"/>';
+    h+='<text x="452" y="288" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--muted)">● = a big city</text>';
+  }
+  h+='<text x="452" y="14" text-anchor="end" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">simplified map — not to exact scale</text>';
+  h+='</svg>';
+  return h;
+}
+
+/* ---------- BEAT 0 · found your city ---------- */
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Found your city</h2>';
+  h+='<p>The year is 1800 — no trucks, no pipes, no power lines. You’re leading two hundred settlers, and you get to place their new town. <b>Click spot A, B, or C.</b> Think about what two hundred people need every single day.</p>';
+  h+='<div class="mapwrap">'+drawLand({spots:true})+'</div>';
+  h+='<div id="cityfb">'+(founded?cityFb():'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(founded?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function cityFb(){
+  if(founded==='harbor')return '<div class="fb ok"><b>Spot A — the one real founders picked, again and again.</b> Fresh river water to drink, rich soil where the river drops mud, and boats: the only trucks 1800 had. Look at where America’s oldest big cities actually sit — harbors and river mouths, almost every one.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>Geography goes first, people go second. The land offers water, soil, and travel — and towns sprout exactly where the offer is best.</p></div>';
+  if(founded==='plains')return '<div class="fb no"><b>Spot B is farmable — but thirsty.</b> A dry plain far from the river means hauling every bucket of water by hand. Some towns tried it; most stayed tiny until people found ways to bring water in. In 1800, the winning spot has water already there — see spot A, on the coast where the river meets the sea? Water to drink, and boats for moving everything. Click it to compare.</div>';
+  return '<div class="fb no"><b>Spot C has the view — and the winter.</b> Steep slopes mean thin soil, brutal cold, and no boats. Mountain towns stayed small for a reason. The winning spot in 1800 is A: river water to drink, and the sea for ships. Click it to compare.</div>';
+}
+function foundCity(id){
+  if(founded==='harbor')return;
+  founded=id;
+  beat1();
+  if(id==='harbor')el('nx').disabled=false;
+}
+
+/* ---------- BEAT 1 · water writes the map ---------- */
+function beat2(){
+  var h='';
+  h+='<div class="tag">Settlement</div>';
+  h+='<h2>Water writes the map</h2>';
+  h+='<p>Why does water win every time? In 1800, a river or harbor was three gifts in one:</p>';
+  h+='<div class="work"><div class="lab">What water gave a town</div>'
+    +'<b>Drinking &amp; farming</b> — people and crops both need it daily<br>'
+    +'<b>Rich soil</b> — rivers drop fresh mud that makes fields grow like crazy<br>'
+    +'<b>The highway</b> — before trucks and trains, heavy things moved by <b>boat</b> or they didn’t move</div>';
+  h+='<p>That’s why, when you dot America’s big old cities onto the map, they hug the coasts and rivers. Try the logic yourself: in 1800, two brand-new towns are born the same week — one where a river meets the sea, one in the dry middle of nowhere. Fifty years later, which one has the crowds?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickWater(\'river\')">The river-mouth town</button>'
+    +'<button class="btn" onclick="pickWater(\'dry\')">The dry inland town</button></div>';
+  h+='<div id="waterfb">'+(waterDone?'<div class="fb ok"><b>The river-mouth town</b> — it can drink, grow, and trade without waiting for anyone to invent the truck. Water was the head start.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(waterDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickWater(v){
+  var fb=el('waterfb');
+  if(v==='river'){waterDone=true;fb.innerHTML='<div class="fb ok"><b>The river-mouth town</b> — it can drink, grow, and trade without waiting for anyone to invent the truck. Water was the head start.</div>';el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>The dry town is stuck hauling water</b> and waiting for roads. The river town drinks, farms, and ships from day one. Which of the three gifts does the dry town have? None yet.</div>';}
+}
+
+/* ---------- BEAT 2 · the land hands out jobs ---------- */
+var JOBS=[
+  {place:'A town on the wide, flat Great Plains with deep rich soil', ans:'farm',
+   ok:'<b>Farming.</b> Flat land + rich soil is a giant invitation to plant. The plains became America’s bread basket.',
+   no:'Look at what the land offers: flat, rich soil for miles. What grows out of an offer like that?'},
+  {place:'A town on a rocky coast with a deep, calm harbor', ans:'fish',
+   ok:'<b>Fishing and shipping.</b> A deep harbor is a parking lot for boats — so the sea becomes the town’s farm and its highway at once.',
+   no:'The soil is rocky, but the harbor is deep and calm. The sea itself is this town’s treasure. Which job works the sea?'},
+  {place:'A town high in the snowy Rocky Mountains', ans:'ski',
+   ok:'<b>Mining and skiing.</b> Mountains hide metal in their rock, and their snow sells lift tickets. The land is steep — so the jobs go up instead of out.',
+   no:'You can’t plow a cliff and there’s no harbor. But mountains hold two treasures: what’s buried in the rock, and what falls on it every winter.'}
+];
+function jobsDone(){return jobsSolved[0]&&jobsSolved[1]&&jobsSolved[2];}
+function beat3(){
+  var h='';
+  h+='<div class="tag">Work</div>';
+  h+='<h2>The land hands out jobs</h2>';
+  h+='<p>Geography doesn’t stop at picking the spot — it also picks a lot of the <b>work</b>. Each place below, choose the job its land is offering:</p>';
+  for(var i=0;i<JOBS.length;i++){
+    var solved=jobsSolved[i];
+    h+='<div class="jobcard'+(solved?' solved':'')+'"><div class="from">Place '+(i+1)+(solved?'<span class="tick">✓</span>':'')+'</div>'
+      +JOBS[i].place
+      +(solved?'':'<div class="jobbtns">'
+        +'<button class="btn" onclick="pickJob('+i+',\'farm\')">Farming</button>'
+        +'<button class="btn" onclick="pickJob('+i+',\'fish\')">Fishing &amp; shipping</button>'
+        +'<button class="btn" onclick="pickJob('+i+',\'ski\')">Mining &amp; skiing</button></div>')
+      +'</div>';
+  }
+  h+='<div id="jobfb">'+(jobsDone()?'<div class="fb ok"><b>Three lands, three livings.</b> Ask what the land offers, and you can predict what the people do — before you ever visit.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(jobsDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickJob(i,v){
+  if(jobsSolved[i])return;
+  if(v===JOBS[i].ans){jobsSolved[i]=true;beat3();if(!jobsDone())el('jobfb').innerHTML='<div class="fb ok">'+JOBS[i].ok+'</div>';}
+  else{beat3();el('jobfb').innerHTML='<div class="fb no">'+JOBS[i].no+'</div>';}
+}
+
+/* ---------- BEAT 3 · people push back ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">The comeback</div>';
+  h+='<h2>People push back</h2>';
+  h+='<p>Geography moves first — but people get a move too. Two different moves, actually:</p>';
+  h+='<div class="work"><div class="lab">The two human moves</div>'
+    +'<b>Adapt</b> — change <i>yourself</i> to fit the land: wear the coat, build the steep snow-shedding roof, plant crops that love your weather<br>'
+    +'<b>Modify</b> — change <i>the land</i> to fit you: dam a river, dig canals to carry water, cut a tunnel through a mountain</div>';
+  h+='<p>Here’s the move that built a giant: Phoenix, Arizona sits in a desert — remember the hot, dry Southwest — yet it grew into one of America’s biggest cities. What made that possible?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickPush(\'canal\')">Canals bringing river water to the city</button>'
+    +'<button class="btn" onclick="pickPush(\'rain\')">The desert started raining more</button>'
+    +'<button class="btn" onclick="pickPush(\'wish\')">People just got used to thirst</button></div>';
+  h+='<div id="pushfb">'+(pushDone?pushOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(pushDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pushOkHtml(){
+  return '<div class="fb ok"><b>Canals — a classic modify.</b> People rerouted river water across the desert, and a city bloomed where the land alone said “no.” (Air conditioning — an adapt — helped too.)</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>The land deals the cards, but people play the hand: adapt yourself to the land, or modify the land itself. Every dam, canal, tunnel, and snow-proof roof is one of those two moves.</p></div>';
+}
+function pickPush(v){
+  var fb=el('pushfb');
+  if(v==='canal'){pushDone=true;fb.innerHTML=pushOkHtml();el('nx').disabled=false;}
+  else if(v==='rain'){fb.innerHTML='<div class="fb no"><b>The desert didn’t change — the people changed it.</b> Phoenix’s weather is as dry as ever. Something carries water TO the city. Which answer does that?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Nobody gets used to no water.</b> A city of a million people needs a river’s worth of it, delivered. Which answer delivers?</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Kai’s mistake</h2>';
+  h+='<p>Kai glances at a map of America’s big cities and shrugs: <i>“They’re just sprinkled around randomly. A city can pop up anywhere.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testKai()">Dot the big cities onto the physical map</button></div>';
+  h+='<div id="mh" class="hide"><div class="mapwrap">'+drawLand({cities:true})+'</div>';
+  h+='<div class="work"><div class="lab">Read the dots</div>'
+    +'where do they cluster? &nbsp;<b>the coasts, and up and down the big river</b><br>'
+    +'the dry plains and high peaks? &nbsp;<b>far fewer dots</b><br>'
+    +'<b>verdict: not random — the dots follow the water</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testKai();
+}
+function testKai(){
+  el('mh').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Kai never checked the land under the dots.</b> Cities cluster where geography made the best offer — harbors, river mouths, rich valleys. “Random” disappears the moment you lay the cities over the landforms.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Why did so many early American cities grow where rivers meet the sea?',
+   a:['The views were better','Water to drink, rich soil, and boats to move everything','It was the law','Rivers kept the bugs away'],correct:1,
+   why:'A river mouth was three gifts at once: drinking and farming water, fresh rich soil, and the boat highway — the only highway 1800 had.'},
+  {q:'A town sits on a rocky coast with a deep, calm harbor. What work does its land offer?',
+   a:['Wheat farming','Fishing and shipping','Skiing','Desert hiking'],correct:1,
+   why:'Rocky soil says no to plows, but a deep harbor parks boats — so the sea becomes both the farm and the highway.'},
+  {q:'Phoenix grew huge in a bone-dry desert. What made that possible?',
+   a:['The desert got rainier','Canals carrying river water to the city','The city needs no water','It’s actually not a desert'],correct:1,
+   why:'People modified the land — rerouting river water through canals — so a city could bloom where the land alone said no.'},
+  {q:'Which of these is people MODIFYING the land — changing the land itself?',
+   a:['Wearing a heavy coat in winter','Building a dam across a river','Planting crops that like your weather','Building a steep roof so snow slides off'],correct:1,
+   why:'A dam changes the land — the river itself gets rearranged. Coats, weather-suited crops, and snow roofs are adapting: changing yourself to fit the land.'},
+  {q:'Kai says big cities are “sprinkled randomly” across the map. What does laying the cities over the landforms actually show?',
+   a:['He’s right — it’s random','Cities cluster along coasts and rivers, where the land’s offer was best','Cities avoid water','Cities only grow in mountains'],correct:1,
+   why:'The dots follow the water. Geography made its best offers at harbors and river mouths — and that’s exactly where the crowds are.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.G.4']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🏙️':'🏞️')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — you think like a founder':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Show me any spot on a map and you can predict the town: whether people settled there, what work they found, and which of the two human moves — adapt or modify — they had to make. That completes Geography. Next domain: who makes the rules, and why.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit “Water writes the map” and “People push back” in the sidebar, then try the questions again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;founded=null;waterDone=false;jobsSolved=[false,false,false];pushDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>

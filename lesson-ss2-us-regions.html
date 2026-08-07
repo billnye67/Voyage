@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 5 U.S. regions · Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3f0e6;--ink:#16233a;--blue:#1b4f8a;--blue-line:#b9cbdf;--accent:#f0663f;--muted:#5d6b7e;--grid:rgba(27,79,138,.10);--card:#fbfaf5;--green:#2e7d5b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;min-height:100vh}
+  .shell{max-width:740px;margin:0 auto;padding:26px 22px 80px}
+  .crumb{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .card{background:var(--card);border:1.5px solid var(--blue-line);border-radius:16px;padding:30px 28px;box-shadow:4px 4px 0 rgba(27,79,138,.08)}
+  .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:32px;line-height:1.1;margin-bottom:14px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:25px;line-height:1.15;margin-bottom:13px}
+  p{font-size:16px;line-height:1.65;margin-bottom:12px}
+  p b{font-weight:600}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);margin:16px 0 22px}
+  .btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;padding:11px 20px;border-radius:11px;
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.go{background:var(--accent);color:#fff}
+  .btn.sm{font-size:13.5px;padding:8px 14px;box-shadow:2px 2px 0 var(--ink)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed;box-shadow:none}
+  .hide{display:none}
+  .work{background:#fff;border:1.5px dashed var(--blue-line);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:15px;line-height:1.7}
+  .work .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .fb{border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.55;margin:12px 0}
+  .fb.ok{background:rgba(46,125,91,.1);border-left:3px solid var(--green)}
+  .fb.no{background:rgba(240,102,63,.09);border-left:3px solid var(--accent)}
+  .goal{background:rgba(240,102,63,.08);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .goal .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .goal p{margin:0;font-size:15.5px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .choice{display:block;width:100%;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:15.5px;line-height:1.45;
+    background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .choice:hover{border-color:var(--blue)}
+  .choice.sel-ok{border-color:var(--green);background:rgba(46,125,91,.08)}
+  .choice.sel-no{border-color:var(--accent);background:rgba(240,102,63,.07)}
+  .choice[disabled]{cursor:default;opacity:.75}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .qcount{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .done-icon{font-size:44px;text-align:center;margin-bottom:8px}
+
+  /* ---------- region map ---------- */
+  .mapwrap{background:#fff;border:1.5px solid var(--blue-line);border-radius:12px;padding:14px;margin:12px 0}
+  .mapwrap svg{display:block;width:100%;height:auto}
+  .rgn{cursor:pointer;transition:.15s;stroke:var(--ink);stroke-width:1.8}
+  .rgn:hover{filter:brightness(.96)}
+  .rgn.lit{stroke-width:3;filter:drop-shadow(0 0 4px rgba(240,102,63,.65))}
+  .rgn.dim{opacity:.35}
+  .rgn.static{cursor:default}
+  .postcard{background:#fff;border:1.5px solid var(--blue-line);border-radius:11px;padding:13px 16px;margin-bottom:10px;font-size:15px;line-height:1.55}
+  .postcard.solved{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .postcard .from{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .postcard .tick{color:var(--green);font-weight:700;float:right}
+  .rgnlist{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+  .rgn-row{display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid var(--blue-line);border-radius:10px;
+    padding:10px 13px;cursor:pointer;font-size:15px;line-height:1.5;transition:.15s;text-align:left;width:100%;font-family:'Space Grotesk',sans-serif}
+  .rgn-row:hover{border-color:var(--blue)}
+  .rgn-row.seen{border-color:var(--green);background:rgba(46,125,91,.06)}
+  .rgn-row .swatch{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--ink);flex-shrink:0}
+  .rgn-row .check{margin-left:auto;color:var(--green);font-weight:700;opacity:0;flex-shrink:0}
+  .rgn-row.seen .check{opacity:1}
+  .rgn-row b{font-weight:600}
+
+  /* ---------- lesson app shell (sidebar) ---------- */
+  .app{display:none}
+  .app.on{display:flex;min-height:100vh;align-items:stretch}
+  .side{width:272px;flex-shrink:0;background:var(--card);border-right:1.5px solid var(--blue-line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .side-head{padding:18px 20px 14px;border-bottom:1.5px dashed var(--blue-line)}
+  .side-exit{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:12px}
+  .side-exit:hover{color:var(--ink)}
+  .side-kick{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .side-title{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.2}
+  .toc{flex:1;padding:10px 12px 16px}
+  .toc-phase{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:14px 10px 6px}
+  .toc-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);padding:8px 10px;border-radius:9px;
+    cursor:pointer;line-height:1.3}
+  .toc-item:hover{background:rgba(27,79,138,.06)}
+  .toc-item.locked{color:var(--muted);opacity:.55;cursor:default}
+  .toc-item.locked:hover{background:none}
+  .toc-item.cur{background:var(--ink);color:#fff;font-weight:600}
+  .toc-item.cur:hover{background:var(--ink)}
+  .dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--blue-line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted)}
+  .toc-item.cur .dot{border-color:#fff;background:var(--accent);color:#fff;font-weight:700}
+  .toc-item.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+  .side-foot{padding:14px 20px 18px;border-top:1.5px dashed var(--blue-line)}
+  .side-foot .lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+  .pbar{height:7px;border-radius:4px;background:var(--blue-line);overflow:hidden}
+  .pbar>div{height:100%;background:var(--green);border-radius:4px;transition:width .3s}
+  .main{flex:1;min-width:0}
+  .main-inner{max-width:720px;margin:0 auto;padding:30px 30px 90px}
+  .stepkick{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .stepkick .where{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stepkick .where b{color:var(--blue);font-weight:700}
+
+  @media(max-width:760px){
+    .shell{padding:20px 15px 60px}h1{font-size:26px}
+    .app.on{display:block}
+    .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1.5px solid var(--blue-line)}
+    .toc{display:flex;overflow-x:auto;padding:8px 10px}
+    .toc-phase{display:none}
+    .toc-item{width:auto;flex-shrink:0}
+    .toc-item span.tocname{display:none}
+    .side-head{padding:12px 16px 10px}
+    .side-foot{display:none}
+    .main-inner{padding:20px 15px 70px}
+    .card{padding:24px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="intro">
+  <div class="crumb">Grade 4 Social Studies &nbsp;›&nbsp; Geography</div>
+  <div class="card">
+    <div class="tag">Lesson · SS.4.G.2</div>
+    <h1>The 5 U.S. regions</h1>
+    <p>Fifty states is a lot to keep in your head. So Americans use a shortcut: they group the states into <b>five big neighborhoods</b> called regions. Learn the five, and suddenly the whole country fits in your pocket — you'll know what the land looks like, what the weather does, and what people are up to in a state you've never even visited.</p>
+    <div class="meta"><span>⏱ ~15 minutes</span><span>✎ 5 questions</span><span>◆ SS.4.G.2</span></div>
+    <button class="btn go" onclick="startLesson()">Start lesson →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head">
+      <a class="side-exit" href="social-studies-course.html">← Grade 4 Social Studies</a>
+      <div class="side-kick">Lesson · SS.4.G.2</div>
+      <div class="side-title">The 5 U.S. regions</div>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">
+      <div class="lab"><span>Progress</span><span id="pctlab"></span></div>
+      <div class="pbar"><div id="pfill" style="width:0%"></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="main-inner">
+      <div class="stepkick"><span class="where" id="where"></span><span class="where" id="pageno"></span></div>
+      <div class="card" id="stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,TOTAL=11,maxStep=0;
+var pcSolved=[false,false,false],pcActive=0;
+var tourSeen={},predictDone=false,lifeDone=false,mistakeTested=false;
+var qIndex=0,qCorrect=0,answered=false;
+
+var OUTLINE=[
+  {phase:'Warm-up', items:[{s:0, n:'Match the postcards'}]},
+  {phase:'Learn',   items:[{s:1, n:'Tour the five regions'},{s:2, n:'What makes a region?'},{s:3, n:'One country, five Januaries'},{s:4, n:'Catch Leo’s mistake'}]},
+  {phase:'Show it', items:[{s:5, n:'Question 1'},{s:6, n:'Question 2'},{s:7, n:'Question 3'},{s:8, n:'Question 4'},{s:9, n:'Question 5'}]},
+  {phase:'Finish',  items:[{s:10, n:'Wrap-up'}]}
+];
+
+function el(i){return document.getElementById(i);}
+function startLesson(){el('intro').classList.add('hide');el('app').classList.add('on');render();scrollTo(0,0);}
+
+function goStep(s){
+  if(s>maxStep)return;
+  if(s>=5&&s<TOTAL-1){qIndex=s-5;}
+  step=s;render();scrollTo(0,0);
+}
+
+function drawSide(){
+  if(step>maxStep)maxStep=step;
+  var h='';
+  for(var p=0;p<OUTLINE.length;p++){
+    h+='<div class="toc-phase">'+OUTLINE[p].phase+'</div>';
+    for(var i=0;i<OUTLINE[p].items.length;i++){
+      var it=OUTLINE[p].items[i];
+      var state;
+      if(it.s===step)state='cur';
+      else if(it.s<maxStep||step===TOTAL-1)state='done';
+      else state='locked';
+      var dot=state==='done'?'✓':(it.s>=5&&it.s<TOTAL-1?(it.s-4):'·');
+      h+='<button class="toc-item '+state+'" onclick="goStep('+it.s+')"><span class="dot">'+dot+'</span><span class="tocname">'+it.n+'</span></button>';
+    }
+  }
+  el('toc').innerHTML=h;
+  var doneCount=(step===TOTAL-1)?TOTAL:maxStep;
+  var pct=Math.round(doneCount/TOTAL*100);
+  el('pfill').style.width=pct+'%';
+  el('pctlab').innerHTML=pct+'%';
+  var phaseName='',stepName='';
+  for(var p2=0;p2<OUTLINE.length;p2++)for(var i2=0;i2<OUTLINE[p2].items.length;i2++)
+    if(OUTLINE[p2].items[i2].s===step){phaseName=OUTLINE[p2].phase;stepName=OUTLINE[p2].items[i2].n;}
+  el('where').innerHTML='<b>'+phaseName+'</b> &nbsp;›&nbsp; '+stepName;
+  el('pageno').innerHTML='p. '+(step+1)+' / '+TOTAL;
+}
+function next(){step++;render();scrollTo(0,0);}
+function back(){if(step>0){step--;render();scrollTo(0,0);}}
+
+/* =====================================================================
+   THE REGION MAP — a simplified diagram of the lower 48, five chunky
+   puzzle pieces. Not to exact scale (it says so on the map).
+   Colors: W sage · SW sand · MW gold · SE moss · NE slate-blue
+   ===================================================================== */
+var RGN={
+  W: {name:'West',      color:'#b9cfc4', dark:'#4f7d6b',
+      path:'M30 40 C70 22 110 20 128 26 L138 96 L146 150 L128 218 C96 230 62 232 40 218 C22 176 18 92 30 40 Z'},
+  SW:{name:'Southwest', color:'#e8d5ae', dark:'#a5814a',
+      path:'M128 218 L146 150 L246 158 L252 208 L282 214 L286 262 C244 274 196 268 170 254 C152 244 136 232 128 218 Z'},
+  MW:{name:'Midwest',   color:'#f0dfB0', dark:'#a88a3c',
+      path:'M138 96 L146 150 L246 158 L340 150 L352 108 L346 62 C280 46 190 38 138 42 Z',
+      pathFix:'M138 96 L138 42 C190 38 280 46 346 62 L352 108 L340 150 L246 158 L146 150 Z'},
+  SE:{name:'Southeast', color:'#c8d6b2', dark:'#5f7d3f',
+      path:'M246 158 L340 150 L392 168 C404 196 402 238 386 268 C360 284 322 280 302 262 L286 262 L282 214 L252 208 Z'},
+  NE:{name:'Northeast', color:'#bcc9e2', dark:'#3f5f96',
+      path:'M340 150 L352 108 L346 62 C378 52 412 58 428 74 C438 96 434 130 420 150 C396 162 364 160 340 150 Z'}
+};
+var RGNORDER=['W','SW','MW','SE','NE'];
+var RGNFACTS={
+  W: {states:'California, Oregon, Washington, Nevada, Colorado — plus Alaska and Hawaii, far off this map', line:'Tall mountains, Pacific coast, and a little of everything — rainforest to ski slopes.'},
+  SW:{states:'Texas, Oklahoma, New Mexico, Arizona', line:'Hot and dry — deserts, canyons, and cactus country.'},
+  MW:{states:'Ohio, Illinois, Minnesota, Kansas, and their neighbors', line:'Flat land, rich soil, huge farms, and the Great Lakes.'},
+  SE:{states:'Florida, Georgia, Virginia, Louisiana, and more', line:'Warm and wet — long summers, mild winters, beaches and swamps.'},
+  NE:{states:'New York, Massachusetts, Pennsylvania, and more', line:'The smallest region — crowded cities, snowy winters, the country’s oldest towns.'}
+};
+
+function drawUS(o){
+  o=o||{};
+  var h='<svg viewBox="0 0 460 300" role="img" aria-label="Simplified map of the five United States regions">';
+  for(var i=0;i<RGNORDER.length;i++){
+    var k=RGNORDER[i],r=RGN[k];
+    var cls='rgn';
+    if(o.lit===k)cls+=' lit';
+    if(o.dimOthers&&o.lit&&o.lit!==k)cls+=' dim';
+    if(!o.clickable)cls+=' static';
+    var d=(k==='MW')?r.pathFix:r.path;
+    h+='<path class="'+cls+'" d="'+d+'" fill="'+r.color+'"'+(o.clickable?' onclick="'+o.clickable+'(\''+k+'\')"':'')+'/>';
+  }
+  if(o.names){
+    var pos={W:[80,130],SW:[205,222],MW:[240,102],SE:[325,215],NE:[388,105]};
+    for(var j=0;j<RGNORDER.length;j++){
+      var kk=RGNORDER[j];
+      h+='<text x="'+pos[kk][0]+'" y="'+pos[kk][1]+'" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="15" fill="'+RGN[kk].dark+'">'+RGN[kk].name+'</text>';
+    }
+  }
+  h+='<text x="452" y="294" text-anchor="end" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">simplified map — not to exact scale</text>';
+  h+='</svg>';
+  return h;
+}
+
+/* ---------- BEAT 0 · postcards ---------- */
+var POSTCARDS=[
+  {from:'Pen pal #1', text:'“It’s January and I wore shorts to the beach. Our orange tree is FULL of oranges.”', rgn:'SE',
+   ok:'Warm in January, oranges growing — that’s the <b>bottom-right</b> corner of the country, where winters stay mild.',
+   no:'Read the clues again: warm in January, orange trees. Which patch of the country stays warm all winter? Try the bottom-right.'},
+  {from:'Pen pal #2', text:'“Flat fields of corn as far as I can see. My grandpa’s combine is taller than our house.”', rgn:'MW',
+   ok:'Endless flat farm fields — the <b>middle-top</b> of the country, the land of corn and combines.',
+   no:'Flat land and giant farms — that’s the wide patch in the <b>middle-top</b> of the map. Give it a click.'},
+  {from:'Pen pal #3', text:'“We hiked in the desert today. I counted twelve cactuses and zero puddles.”', rgn:'SW',
+   ok:'Desert, cactus, no puddles — the hot, dry <b>bottom-middle</b> patch.',
+   no:'Desert and cactus means hot and dry. On this map that’s the <b>bottom-middle</b> patch. Try it.'}
+];
+function pcDone(){return pcSolved[0]&&pcSolved[1]&&pcSolved[2];}
+function beat1(){
+  var h='';
+  h+='<div class="tag">Challenge</div>';
+  h+='<h2>Match the postcards</h2>';
+  h+='<p>Three pen pals sent you postcards, but the postmarks smudged. The map below shows the U.S. split into its five big pieces — no names yet. <b>Read the clues, then click the piece each postcard came from.</b></p>';
+  var cur=POSTCARDS[pcActive];
+  for(var i=0;i<POSTCARDS.length;i++){
+    var pc=POSTCARDS[i];
+    h+='<div class="postcard'+(pcSolved[i]?' solved':'')+'">'
+      +'<div class="from">'+pc.from+(pcSolved[i]?'<span class="tick">✓ matched</span>':(i===pcActive?'<span class="tick" style="color:var(--accent)">← matching now</span>':''))+'</div>'
+      +pc.text+'</div>';
+  }
+  h+='<div class="mapwrap">'+drawUS({clickable:pcDone()?null:'pcPick'})+'</div>';
+  h+='<div id="pcfb">'+(pcDone()
+    ?'<div class="fb ok"><b>All three matched — using nothing but the land and the weather.</b> That’s the secret: each piece of the country has its own personality. Those pieces have names, and knowing them is like knowing the whole country at once.</div>'
+    :'')+'</div>';
+  h+='<div class="nav"><span></span><button class="btn" id="nx" '+(pcDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pcPick(k){
+  if(pcDone())return;
+  var pc=POSTCARDS[pcActive];
+  if(k===pc.rgn){
+    pcSolved[pcActive]=true;
+    while(pcActive<3&&pcSolved[pcActive])pcActive++;
+    beat1();
+    if(!pcDone())el('pcfb').innerHTML='<div class="fb ok"><b>Matched!</b> '+pc.ok+' Next postcard.</div>';
+  } else {
+    beat1();
+    el('pcfb').innerHTML='<div class="fb no"><b>Not that one.</b> '+pc.no+'</div>';
+  }
+}
+
+/* ---------- BEAT 1 · tour ---------- */
+function tourDone(){var n=0;for(var k in tourSeen)n++;return n>=5;}
+function beat2(){
+  var h='';
+  h+='<div class="tag">The five regions</div>';
+  h+='<h2>Tour the five regions</h2>';
+  h+='<p>Here are the five pieces with their names. A group of neighboring states like this is called a <b>region</b>. <b>Click each region in the list</b> to light it up and meet it:</p>';
+  h+='<div class="mapwrap">'+drawUS({names:true,lit:window.__lit,dimOthers:true})+'</div>';
+  h+='<div class="rgnlist" id="rlist"></div>';
+  h+='<div id="tourfb">'+(tourDone()?'<div class="fb ok"><b>That’s the whole country in five handshakes.</b> Notice the map note: Alaska and Hawaii sit far off this map, but they count as part of the West.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(tourDone()?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  var lg='';
+  for(var i=0;i<RGNORDER.length;i++){
+    var k=RGNORDER[i];
+    lg+='<button class="rgn-row'+(tourSeen[k]?' seen':'')+'" onclick="tourSee(\''+k+'\')">'
+      +'<span class="swatch" style="background:'+RGN[k].color+'"></span>'
+      +'<span><b>'+RGN[k].name+'</b> — '+RGNFACTS[k].line+'<br><span style="color:var(--muted);font-size:13.5px">'+RGNFACTS[k].states+'</span></span>'
+      +'<span class="check">✓</span></button>';
+  }
+  el('rlist').innerHTML=lg;
+}
+function tourSee(k){tourSeen[k]=true;window.__lit=k;beat2();}
+
+/* ---------- BEAT 2 · what makes a region ---------- */
+function beat3(){
+  var h='';
+  h+='<div class="tag">Why</div>';
+  h+='<h2>What makes a region?</h2>';
+  h+='<p>Nobody drew these lines by accident. States get grouped into a region because they <b>share things</b>:</p>';
+  h+='<div class="work"><div class="lab">What states in a region share</div>'
+    +'<b>Land</b> — mountains, plains, deserts, coasts<br>'
+    +'<b>Climate</b> — what the weather usually does there<br>'
+    +'<b>Ways of living</b> — the jobs and daily life the land makes possible</div>';
+  h+='<p>Watch how those three snap together. The Midwest has <b>flat land</b> and <b>rich soil</b> (land), with rainy springs and hot summers (climate). Put those together and you get… what job, everywhere you look?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickJob(\'fish\')">Deep-sea fishing</button>'
+    +'<button class="btn" onclick="pickJob(\'farm\')">Farming</button>'
+    +'<button class="btn" onclick="pickJob(\'ski\')">Ski resorts</button></div>';
+  h+='<div id="jobfb">'+(predictDone?'<div class="fb ok"><b>Farming.</b> Flat land + rich soil + rain = the country’s bread basket. The region’s personality comes straight out of its geography.</div>':'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(predictDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function pickJob(j){
+  var fb=el('jobfb');
+  if(j==='farm'){predictDone=true;fb.innerHTML='<div class="fb ok"><b>Farming.</b> Flat land + rich soil + rain = the country’s bread basket. The region’s personality comes straight out of its geography.</div>';el('nx').disabled=false;}
+  else if(j==='fish'){fb.innerHTML='<div class="fb no"><b>Check the map</b> — the Midwest doesn’t touch an ocean. What does flat land with rich soil and rain grow best?</div>';}
+  else{fb.innerHTML='<div class="fb no"><b>Ski resorts need mountains</b> — and the Midwest is famous for being flat. What does flat, rich, rainy land do best?</div>';}
+}
+
+/* ---------- BEAT 3 · five Januaries ---------- */
+function beat4(){
+  var h='';
+  h+='<div class="tag">Regions in real life</div>';
+  h+='<h2>One country, five Januaries</h2>';
+  h+='<p>Same country, same month — completely different days. That’s regions at work:</p>';
+  h+='<div class="work"><div class="lab">January, coast to coast</div>'
+    +'<b>Northeast</b> — shoveling snow off the steps before school<br>'
+    +'<b>Southeast</b> — mild enough for a beach walk; the orange harvest is in<br>'
+    +'<b>Midwest</b> — frozen lakes, ice skating on the pond<br>'
+    +'<b>Southwest</b> — dry desert sunshine, hiking weather<br>'
+    +'<b>West</b> — depends where you stand: surfing in California, skiing in Colorado</div>';
+  h+='<p>So if you know someone’s region, you can make a smart guess about their day. Your pen pal writes: <i>“School was cancelled again — third blizzard this month, and the snowplow buried our mailbox.”</i> Which region is the <b>better</b> guess?</p>';
+  h+='<div class="row">'
+    +'<button class="btn" onclick="pickJan(\'NE\')">Northeast</button>'
+    +'<button class="btn" onclick="pickJan(\'SE\')">Southeast</button></div>';
+  h+='<div id="janfb">'+(lifeDone?janOkHtml():'')+'</div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(lifeDone?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+}
+function janOkHtml(){
+  return '<div class="fb ok"><b>Northeast.</b> Blizzards and snowplows are a normal Northeast January. In the Southeast, January is orange-picking weather.</div>'
+    +'<div class="goal"><div class="lab">The idea</div><p>A region’s name isn’t just a label — it’s a bundle of good guesses: about the land, the weather, and what today looks like for the people living there.</p></div>';
+}
+function pickJan(k){
+  var fb=el('janfb');
+  if(k==='NE'){lifeDone=true;fb.innerHTML=janOkHtml();el('nx').disabled=false;}
+  else{fb.innerHTML='<div class="fb no"><b>The Southeast’s January is mild</b> — that’s when the oranges come in. Blizzards belong to the snowy-winter region up in the top-right corner.</div>';}
+}
+
+/* ---------- BEAT 4 · catch the mistake ---------- */
+function beat5(){
+  var h='';
+  h+='<div class="tag">Catch the mistake</div>';
+  h+='<h2>Catch Leo’s mistake</h2>';
+  h+='<p>Leo looks at the map and announces: <i>“Texas is basically in the middle of the country, so it must be in the <b>Midwest</b>. Middle — Midwest. Easy.”</i></p>';
+  h+='<div class="row"><button class="btn sm" onclick="testLeo()">Check Leo’s logic against what regions really are</button></div>';
+  h+='<div id="mh" class="hide">';
+  h+='<div class="work"><div class="lab">The check</div>'
+    +'is a region about where the name sounds like it is? &nbsp;<b>no — it’s about what the states share</b><br>'
+    +'what is Texas like? &nbsp;hot and dry — desert and canyon country<br>'
+    +'which region shares that? &nbsp;the <b>Southwest</b> — Texas, Oklahoma, New Mexico, Arizona<br>'
+    +'<b>verdict: Texas is Southwest, not Midwest</b></div></div>';
+  h+='<div id="mfb"></div>';
+  h+='<div id="leomap" class="hide"><div class="mapwrap">'+drawUS({names:true,lit:'SW',dimOthers:true})+'</div></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="back()">← Back</button><button class="btn" id="nx" '+(mistakeTested?'':'disabled')+' onclick="next()">Next →</button></div>';
+  el('stage').innerHTML=h;
+  if(mistakeTested)testLeo();
+}
+function testLeo(){
+  el('mh').classList.remove('hide');
+  el('leomap').classList.remove('hide');
+  var fb=el('mfb');fb.className='fb no';
+  fb.innerHTML='<b>Leo matched the word, not the land.</b> Regions are built from what states <b>share</b> — land, climate, ways of living — not from what their position sounds like. Texas shares desert heat with New Mexico and Arizona, so it rides with the Southwest.';
+  mistakeTested=true;if(el('nx'))el('nx').disabled=false;
+}
+
+/* ---------- questions ---------- */
+var QUESTIONS=[
+  {q:'Americans usually split the 50 states into five regions. Which of these is one of them?',
+   a:['The Snowbelt','The Midwest','The Eastside','The Middle Kingdom'],correct:1,
+   why:'The five are: Northeast, Southeast, Midwest, Southwest, and West.'},
+  {q:'A pen pal describes “flat land, rich soil, and corn fields past the horizon.” Which region?',
+   a:['Northeast','Southwest','Midwest','West'],correct:2,
+   why:'Flat land + rich soil + big farms is the Midwest’s whole personality — the country’s bread basket.'},
+  {q:'What actually makes a group of states a region?',
+   a:['They share land, climate, and ways of living','Their names start with the same letter','They’re all exactly the same size','They all touch an ocean'],correct:0,
+   why:'Regions are bundles of shared geography — land, climate, and the daily life those two make possible.'},
+  {q:'A postcard reads: “Desert hike today — cactus everywhere, and my water bottle was empty by noon.” Best guess?',
+   a:['Northeast','Southeast','Midwest','Southwest'],correct:3,
+   why:'Hot, dry, desert, cactus — that’s the Southwest: Texas, Oklahoma, New Mexico, Arizona.'},
+  {q:'Leo said Texas is in the Midwest “because it’s in the middle.” What was wrong with his thinking?',
+   a:['Nothing — Texas is in the Midwest','Regions go by what states share, and Texas shares desert heat with the Southwest','Texas is actually in the Northeast','Regions change every year, so nobody knows'],correct:1,
+   why:'That was Leo’s trap: he matched the word instead of the land. Texas shares hot, dry country with New Mexico and Arizona — Southwest.'}
+];
+function beatQ(){
+  var Q=QUESTIONS[qIndex],h='';
+  h+='<div class="tag">Your turn</div><div class="qcount">Question '+(qIndex+1)+' of '+QUESTIONS.length+'</div>';
+  h+='<h2 style="margin-top:10px">'+Q.q+'</h2>';
+  for(var i=0;i<Q.a.length;i++)h+='<button class="choice" id="ch'+i+'" onclick="pick('+i+')">'+Q.a[i]+'</button>';
+  h+='<div id="qfb"></div>';
+  h+='<div class="nav"><button class="btn sm" onclick="reviewLesson()">← Review the lesson</button><button class="btn" id="nx" disabled onclick="nextQ()">Next →</button></div>';
+  el('stage').innerHTML=h;answered=false;
+}
+function pick(i){
+  if(answered)return;answered=true;
+  var Q=QUESTIONS[qIndex];
+  for(var j=0;j<Q.a.length;j++)el('ch'+j).disabled=true;
+  var fb=el('qfb');
+  if(i===Q.correct){qCorrect++;el('ch'+i).classList.add('sel-ok');fb.innerHTML='<div class="fb ok"><b>Yes.</b> '+Q.why+'</div>';}
+  else{el('ch'+i).classList.add('sel-no');el('ch'+Q.correct).classList.add('sel-ok');fb.innerHTML='<div class="fb no"><b>Not quite.</b> '+Q.why+'</div>';}
+  el('nx').disabled=false;
+}
+function nextQ(){
+  qIndex++;
+  step=(qIndex>=QUESTIONS.length)?TOTAL-1:5+qIndex;
+  render();scrollTo(0,0);
+}
+function reviewLesson(){step=1;render();scrollTo(0,0);}
+
+/* ---------- done ---------- */
+function markCourseDone(){
+  try{
+    var KEY='voyage_g4ss_progress';
+    var cur={};var raw=localStorage.getItem(KEY);
+    if(raw){try{cur=JSON.parse(raw)||{};}catch(e){cur={};}}
+    if(!cur.done)cur.done={};
+    cur.done['SS.4.G.2']=true;
+    localStorage.setItem(KEY,JSON.stringify(cur));
+  }catch(e){}
+}
+function beatDone(){
+  var passed=qCorrect>=4,h='';
+  h+='<div class="done-icon">'+(passed?'🇺🇸':'🧭')+'</div>';
+  h+='<h2 style="text-align:center">'+(passed?'Lesson complete — five regions, one country':'Worth one more pass')+'</h2>';
+  h+='<p style="text-align:center">You got <b>'+qCorrect+' of '+QUESTIONS.length+'</b> correct.</p>';
+  if(passed){
+    markCourseDone();
+    h+='<div class="goal"><div class="lab">What you can do now</div><p>Hand you any state, any postcard, any January — and you can place it: Northeast, Southeast, Midwest, Southwest, or West, and say <b>why</b> it belongs there. Next: zooming in on the states themselves — capitals and landforms.</p></div>';
+  } else {
+    h+='<p style="text-align:center">Revisit the tour and “What makes a region?” in the sidebar, then try the questions again.</p>';
+  }
+  h+='<div class="nav"><button class="btn sm" onclick="restart()">↻ Again</button><button class="btn go" onclick="location.href=\'social-studies-course.html\'">Back to Social Studies →</button></div>';
+  el('stage').innerHTML=h;
+}
+function restart(){step=0;maxStep=0;pcSolved=[false,false,false];pcActive=0;tourSeen={};window.__lit=null;predictDone=false;lifeDone=false;mistakeTested=false;qIndex=0;qCorrect=0;render();scrollTo(0,0);}
+
+function render(){
+  drawSide();
+  if(step===0)beat1();else if(step===1)beat2();else if(step===2)beat3();
+  else if(step===3)beat4();else if(step===4)beat5();
+  else if(step>=5&&step<TOTAL-1)beatQ();else beatDone();
+}
+</script>
+</body>
+</html>
