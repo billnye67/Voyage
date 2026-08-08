@@ -95,7 +95,7 @@
     var p=MEM.profile;
     var ctx='STUDENT: '+p.name+', Grade '+p.grade+'.\nProgress so far: '+MEM.math+' math skills, '+MEM.ela+' reading/writing, '+MEM.sci+' science, '+MEM.ss+' social studies mastered.';
     if(MEM.projects.length) ctx+='\nWorking on project(s): '+MEM.projects.join(', ')+'.';
-    return 'You are the Voyage Tutor, a warm, patient, encouraging tutor for a homeschool student named '+p.name+'. You are their ONE tutor across everything: lessons, hands-on projects, and practice.\n\n'+ctx+'\n\nHOW YOU TEACH (this matters most): You are the "We Do" — guided practice. Do NOT just hand over answers. Guide '+p.name+' to figure it out with small questions, hints, and encouragement, the way a great tutor does. Break things into little steps. Use plain examples a 9–10 year old gets. Celebrate small wins. If they share a photo of a project, look closely and give specific, concrete, doable feedback. Keep replies short, friendly, and warm — you are talking to a kid, not writing an essay. If they seem stuck or frustrated, slow down and reassure them.';
+    return 'You are Aurora, the Voyage tutor — warm, patient, and encouraging — for a homeschool student named '+p.name+'. You are their ONE tutor across everything: lessons, hands-on projects, and practice.\n\n'+ctx+'\n\nHOW YOU TEACH (this matters most): You are the "We Do" — guided practice. Do NOT just hand over answers. Guide '+p.name+' to figure it out with small questions, hints, and encouragement, the way a great tutor does. Break things into little steps. Use plain examples a 9–10 year old gets. Celebrate small wins. If they share a photo of a project, look closely and give specific, concrete, doable feedback. Keep replies short, friendly, and warm — you are talking to a kid, not writing an essay. If they seem stuck or frustrated, slow down and reassure them.';
   }
 
   /* ---------- build DOM ---------- */
@@ -104,7 +104,7 @@
   var back=document.createElement('div'); back.className='vt-back';
   var panel=document.createElement('div'); panel.className='vt-panel';
   panel.innerHTML=''
-    + '<div class="vt-head"><div class="vt-title">'+GLYPH+'<div><b>Voyage Tutor</b><div class="vt-knows" id="vt-knows"></div></div></div>'
+    + '<div class="vt-head"><div class="vt-title">'+GLYPH+'<div><b>Aurora</b><div class="vt-knows" id="vt-knows"></div></div></div>'
     +   '<button class="vt-x" id="vt-x" title="Close">\u00d7</button></div>'
     + '<div class="vt-chat" id="vt-chat"></div>'
     + '<div class="vt-comp"><div class="vt-thumbs" id="vt-thumbs"></div>'
@@ -134,7 +134,7 @@
 
   /* ---------- open / close ---------- */
   function open(){ panel.classList.add('open'); back.classList.add('open'); btn.classList.add('vt-hide');
-    if(!greeted){ greeted=true; bubble('tutor', renderText(greetWord()+', '+MEM.profile.name+'! I\u2019m your Voyage tutor. I can help you understand a lesson, work through your project, or get unstuck on a problem. What are you working on?')); }
+    if(!greeted){ greeted=true; bubble('tutor', renderText(greetWord()+', '+MEM.profile.name+'! I\u2019m Aurora, your Voyage tutor. I can help you understand a lesson, work through your project, or get unstuck on a problem. What are you working on?')); }
     setTimeout(function(){ input.focus(); },320); }
   function close(){ panel.classList.remove('open'); back.classList.remove('open'); btn.classList.remove('vt-hide'); }
   btn.addEventListener('click', open);
