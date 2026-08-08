@@ -11,8 +11,7 @@
   if (window.__voyageTutor) return; window.__voyageTutor = true;
 
   var C = { paper:'#f3f0e6', ink:'#16233a', blue:'#1b4f8a', line:'#b9cbdf',
-            accent:'#f0663f', muted:'#5d6b7e', card:'#fbfaf5', green:'#2e7d5b',
-            aurora:'#5d3a9e' };  /* Aurora's own identity color — deep violet */
+            accent:'#f0663f', muted:'#5d6b7e', card:'#fbfaf5', green:'#2e7d5b' };
 
   /* ---------- the orbiting-planet glyph ---------- */
   var GLYPH = ''
@@ -32,7 +31,7 @@
   /* ---------- styles ---------- */
   var css = ''
   + '.vt-btn{position:fixed;bottom:22px;right:22px;z-index:99998;display:flex;align-items:center;gap:9px;'
-  +   'padding:11px 17px 11px 12px;background:'+C.aurora+';color:#fff;border:2px solid '+C.ink+';border-radius:30px;'
+  +   'padding:11px 17px 11px 12px;background:'+C.blue+';color:#fff;border:2px solid '+C.ink+';border-radius:30px;'
   +   'cursor:pointer;box-shadow:3px 3px 0 '+C.ink+';font-family:"Space Grotesk",system-ui,sans-serif;font-weight:600;font-size:15px;transition:transform .08s,box-shadow .08s}'
   + '.vt-btn:hover{transform:translateY(-1px)}'
   + '.vt-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 '+C.ink+'}'
@@ -46,7 +45,7 @@
   + '.vt-panel.open{transform:translateX(0)}'
   + '.vt-head{flex-shrink:0;padding:15px 18px;border-bottom:1.5px solid '+C.line+';display:flex;align-items:center;justify-content:space-between;gap:10px}'
   + '.vt-title{display:flex;align-items:center;gap:9px}'
-  + '.vt-title .vt-g{width:34px;height:34px;overflow:visible;color:'+C.aurora+'}'
+  + '.vt-title .vt-g{width:34px;height:34px;overflow:visible;color:'+C.blue+'}'
   + '.vt-title b{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:18px}'
   + '.vt-knows{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.muted+';margin-top:1px}'
   + '.vt-x{background:none;border:none;cursor:pointer;font-size:24px;line-height:1;color:'+C.muted+';padding:2px 6px;border-radius:8px}'
@@ -54,13 +53,13 @@
   + '.vt-chat{flex:1;overflow-y:auto;padding:18px}'
   + '.vt-msg{display:flex;margin-bottom:15px;gap:9px}'
   + '.vt-who{flex-shrink:0;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;border-radius:11px}'
-  + '.vt-msg.tutor .vt-who{color:'+C.aurora+'}'
+  + '.vt-msg.tutor .vt-who{color:'+C.blue+'}'
   + '.vt-msg.tutor .vt-who .vt-g{width:40px;height:40px;overflow:visible}'
   + '.vt-msg.kid .vt-who{background:'+C.accent+';color:#fff}'
   + '.vt-msg.tutor.think .vt-who .vt-m,.vt-msg.tutor.think .vt-who .vt-o{}'
   + '.vt-bub{background:'+C.card+';border:1.5px solid '+C.line+';border-radius:14px;padding:11px 14px;font-size:15px;line-height:1.55;max-width:80%}'
   + '.vt-msg.kid{flex-direction:row-reverse}'
-  + '.vt-msg.kid .vt-bub{background:'+C.aurora+';color:#fff;border-color:'+C.aurora+'}'
+  + '.vt-msg.kid .vt-bub{background:'+C.blue+';color:#fff;border-color:'+C.blue+'}'
   + '.vt-bub img{max-width:180px;border-radius:8px;display:block;margin-bottom:6px}'
   + '.vt-bub p{margin:0 0 8px}.vt-bub p:last-child{margin:0}'
   + '.vt-typing{color:'+C.muted+';font-style:italic;font-size:14px}'
@@ -69,7 +68,7 @@
   + '.vt-thumbs img{height:42px;border-radius:6px;border:1.5px solid '+C.line+'}'
   + '.vt-cbox{display:flex;gap:8px;align-items:flex-end}'
   + '.vt-cbox textarea{flex:1;font-family:inherit;font-size:15px;padding:12px 13px;border:1.5px solid '+C.line+';border-radius:12px;background:#fff;color:'+C.ink+';outline:none;resize:none;max-height:110px;min-height:44px;line-height:1.4;overflow-y:hidden}'
-  + '.vt-cbox textarea:focus{border-color:'+C.aurora+'}'
+  + '.vt-cbox textarea:focus{border-color:'+C.blue+'}'
   + '.vt-ic{flex-shrink:0;width:44px;height:44px;border-radius:11px;border:1.5px solid '+C.ink+';background:#fff;cursor:pointer;font-size:17px;box-shadow:2px 2px 0 '+C.ink+';display:flex;align-items:center;justify-content:center;transition:transform .08s,box-shadow .08s}'
   + '.vt-ic:active{transform:translate(2px,2px);box-shadow:0 0 0 '+C.ink+'}'
   + '.vt-send{background:'+C.accent+';color:#fff}'
