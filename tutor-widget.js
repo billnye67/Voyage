@@ -142,7 +142,10 @@
   var convo=[]; var pendingImages=[]; var greeted=false;
 
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function renderText(t){ return esc(t).split(/\n\n+/).map(function(p){return '<p>'+p.replace(/\n/g,'<br>')+'</p>';}).join(''); }
+  function renderText(t){ return esc(t).split(/\n\n+/).map(function(p){
+    p = p.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/\*([^*\n]+)\*/g,'<i>$1</i>');
+    return '<p>'+p.replace(/\n/g,'<br>')+'</p>';
+  }).join(''); }
   function bubble(role, html){
     var d=document.createElement('div'); d.className='vt-msg '+(role==='kid'?'kid':'tutor');
     var who = role==='kid' ? (MEM.profile.name[0]||'K').toUpperCase() : GLYPH;
