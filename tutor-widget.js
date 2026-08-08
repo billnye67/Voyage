@@ -31,11 +31,12 @@
   /* ---------- styles ---------- */
   var css = ''
   + '.vt-btn{position:fixed;bottom:22px;right:22px;z-index:99998;display:flex;align-items:center;gap:9px;'
-  +   'padding:11px 17px 11px 12px;background:'+C.blue+';color:#fff;border:2px solid '+C.ink+';border-radius:30px;'
+  +   'padding:11px 17px 11px 12px;background:'+C.card+';color:'+C.blue+';border:2px solid '+C.ink+';border-radius:30px;'
   +   'cursor:pointer;box-shadow:3px 3px 0 '+C.ink+';font-family:"Space Grotesk",system-ui,sans-serif;font-weight:600;font-size:15px;transition:transform .08s,box-shadow .08s}'
   + '.vt-btn:hover{transform:translateY(-1px)}'
   + '.vt-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 '+C.ink+'}'
   + '.vt-btn .vt-g{width:30px;height:30px;overflow:visible}'
+  + '.vt-btn span{color:'+C.ink+'}'
   + '.vt-btn.vt-hide{display:none}'
   + '.vt-back{position:fixed;inset:0;z-index:99998;background:rgba(22,35,58,.28);opacity:0;pointer-events:none;transition:opacity .3s}'
   + '.vt-back.open{opacity:1;pointer-events:auto}'
