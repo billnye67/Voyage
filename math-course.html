@@ -74,16 +74,27 @@
   .nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
   .proj-note{margin-top:16px;font-size:13.5px;color:var(--muted);font-style:italic;border-top:1px dashed var(--blue-line);padding-top:12px}
   .proj-note b{color:var(--accent);font-style:normal}
+  .side-toggle{display:none}
+  .side-back{display:none}
   @media(max-width:760px){
-    .app{flex-direction:column}
-    .side{width:100%;border-right:none;border-bottom:1.5px solid var(--blue-line)}
-    .main{padding:22px 18px 50px}
+    .side{position:fixed;top:0;left:0;bottom:0;width:290px;z-index:9000;background:var(--paper);
+      border-right:2px solid var(--ink);overflow-y:auto;transform:translateX(-105%);transition:transform .28s}
+    .side.open{transform:none;box-shadow:6px 0 24px rgba(22,35,58,.25)}
+    .side-toggle{display:inline-flex;align-items:center;gap:8px;position:fixed;top:12px;left:12px;z-index:8999;
+      background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:30px;padding:8px 15px;
+      cursor:pointer;box-shadow:3px 3px 0 var(--ink);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
+    .side-toggle:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+    .side-back{position:fixed;inset:0;z-index:8998;background:rgba(22,35,58,.28)}
+    .side-back.open{display:block}
+    .main{padding:60px 18px 50px}
   }
 </style>
 </head>
 <body>
+<button class="side-toggle" id="sideToggle">&#9776; Lessons</button>
+<div class="side-back" id="sideBack"></div>
 <div class="app">
-  <nav class="side">
+  <nav class="side" id="sideNav">
     <div class="brand">Voyage</div>
     <div class="sub">Grade 4 · Math</div>
     <div id="pcount" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px"></div>
@@ -681,6 +692,15 @@ document.getElementById('card').addEventListener('click', e=>{
   if(b.dataset.act==='gennew') newProblem();
 });
 loadSkill(progress.lastSkill || 0);
+
+/* mobile sidebar drawer */
+(function(){
+  const nav=document.getElementById('sideNav'), tog=document.getElementById('sideToggle'), bk=document.getElementById('sideBack');
+  function setOpen(o){ nav.classList.toggle('open',o); bk.classList.toggle('open',o); }
+  tog.addEventListener('click', ()=>setOpen(!nav.classList.contains('open')));
+  bk.addEventListener('click', ()=>setOpen(false));
+  nav.addEventListener('click', e=>{ if(e.target.closest('.skill-btn')) setOpen(false); });
+})();
 </script>
   <script src="tutor-widget.js"></script>
 </body>
