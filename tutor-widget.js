@@ -91,10 +91,29 @@
   }
   var MEM = buildMemory();
 
+  /* What the student is looking at RIGHT NOW — re-read on every send so it
+     tracks them through the lesson. Lessons render into #stage (#intro before
+     they start); course pages use .card. */
+  function captureScreen(){
+    var el = null;
+    var ids = ['stage','intro'];
+    for (var i=0;i<ids.length;i++){
+      var c = document.getElementById(ids[i]);
+      if (c && c.offsetParent !== null && c.innerText && c.innerText.trim()){ el = c; break; }
+    }
+    if (!el){ var card = document.querySelector('.card'); if (card && card.innerText) el = card; }
+    if (!el) return '';
+    var txt = el.innerText.replace(/\n{3,}/g,'\n\n').trim();
+    if (txt.length > 2000) txt = txt.slice(0, 2000) + '…';
+    return 'WHAT IS ON '+MEM.profile.name.toUpperCase()+"'S SCREEN RIGHT NOW (page: "+document.title+'):\n---\n'+txt+'\n---\nAssume their question is about this screen unless they say otherwise — never ask them to describe what they are looking at. If the screen shows a quiz question, do NOT give away the answer; guide them to it.';
+  }
+
   function systemPrompt(){
     var p=MEM.profile;
     var ctx='STUDENT: '+p.name+', Grade '+p.grade+'.\nProgress so far: '+MEM.math+' math skills, '+MEM.ela+' reading/writing, '+MEM.sci+' science, '+MEM.ss+' social studies mastered.';
     if(MEM.projects.length) ctx+='\nWorking on project(s): '+MEM.projects.join(', ')+'.';
+    var screen=captureScreen();
+    if(screen) ctx+='\n\n'+screen;
     return 'You are Aurora, the Voyage tutor — warm, patient, and encouraging — for a homeschool student named '+p.name+'. You are their ONE tutor across everything: lessons, hands-on projects, and practice.\n\n'+ctx+'\n\nHOW YOU TEACH (this matters most): You are the "We Do" — guided practice. Do NOT just hand over answers. Guide '+p.name+' to figure it out with small questions, hints, and encouragement, the way a great tutor does. Break things into little steps. Use plain examples a 9–10 year old gets. Celebrate small wins. If they share a photo of a project, look closely and give specific, concrete, doable feedback. LENGTH RULE: say exactly as much as the idea needs, then stop. Articulate the concept fully and clearly — but zero filler: no "great question!", no restating what they said, no recapping, no tacked-on extras. One concept or one question per reply; let the back-and-forth carry the rest. If they seem stuck or frustrated, slow down and reassure them.';
   }
 
